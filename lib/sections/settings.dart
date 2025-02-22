@@ -11,10 +11,9 @@ class _SettingsState extends State<Settings> {
   final Map<String, String> version = {"version":"1.0.0","type":"Stable Build"};
   @override
   Widget build(BuildContext context) {
-    return ScaffoldPage(
-      content: SingleChildScrollView(
+    return SingleChildScrollView(
         child: Padding(
-          padding: const EdgeInsets.only(left: 20, right: 20, bottom: 20),
+          padding: const EdgeInsets.only(left: 20, right: 20, bottom: 20,top: 10),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -60,8 +59,7 @@ class _SettingsState extends State<Settings> {
             ],
           ),
         ),
-      ),
-    );
+      );
   }
 }
 
@@ -85,6 +83,7 @@ class GeneralSection extends StatelessWidget {
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(10),
             color: FluentTheme.of(context).micaBackgroundColor,
+            border: Border.all(color: FluentTheme.of(context).inactiveBackgroundColor,width: 1)
           ),
           child:const Column(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -118,6 +117,7 @@ class NotificationSection extends StatelessWidget {
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(10),
             color: FluentTheme.of(context).micaBackgroundColor,
+            border: Border.all(color: FluentTheme.of(context).inactiveBackgroundColor,width: 1)
           ),
           child:const Column(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -153,12 +153,13 @@ class DataSection extends StatelessWidget {
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(10),
             color: FluentTheme.of(context).micaBackgroundColor,
+            border: Border.all(color: FluentTheme.of(context).inactiveBackgroundColor,width: 1)
           ),
           child:const Column(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              OptionSetting(title: "Clear Data",description: "Clear all the history and other related data",optionType: "button",),
-              OptionSetting(title: "Reset Settings",description: "Reset all the settings",optionType: "button"),
+              OptionSetting(title: "Clear Data",description: "Clear all the history and other related data",optionType: "button",buttonType: "data",),
+              OptionSetting(title: "Reset Settings",description: "Reset all the settings",optionType: "button",buttonType: "settings",),
             ],
           ),
         )
@@ -182,12 +183,13 @@ class AboutSection extends StatelessWidget {
         const Text("Version",style: TextStyle(fontSize: 16,fontWeight: FontWeight.w600),),
         const SizedBox(height: 15,),
         Container(
-          height: 75,
+          height: 77,
           padding:const EdgeInsets.all(20),
           width: MediaQuery.of(context).size.width,
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(10),
             color: FluentTheme.of(context).micaBackgroundColor,
+            border: Border.all(color: FluentTheme.of(context).inactiveBackgroundColor,width: 1)
           ),
           child:Column(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -195,7 +197,7 @@ class AboutSection extends StatelessWidget {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Column(
+                  const Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                     Text("Version",style: TextStyle(fontWeight: FontWeight.bold),),
@@ -221,12 +223,14 @@ class OptionSetting extends StatelessWidget {
   final String title;
   final String description;
   final String optionType;
+  final String buttonType;
 
   const OptionSetting({
     super.key,
     required this.title,
     required this.description,
     this.optionType = "options", // Default to "options"
+    this.buttonType = "",
   });
 
   @override
@@ -241,12 +245,12 @@ class OptionSetting extends StatelessWidget {
             Text(description, style: const TextStyle(fontSize: 12)),
           ],
         ),
-        _buildOptionWidget(), // Function to return the correct widget
+        _buildOptionWidget(buttonType), // Function to return the correct widget
       ],
     );
   }
 
-  Widget _buildOptionWidget() {
+  Widget _buildOptionWidget(buttonType) {
     switch (optionType) {
       case "switch":
         return ToggleSwitch(
@@ -257,11 +261,11 @@ class OptionSetting extends StatelessWidget {
         );
       case "button":
         return FilledButton(
-          style:const ButtonStyle(backgroundColor: WidgetStatePropertyAll(Color(0xffDC143C)),foregroundColor: WidgetStatePropertyAll(Color.fromARGB(255, 171, 134, 142)),padding: WidgetStatePropertyAll(EdgeInsets.symmetric(horizontal: 30,vertical: 10))),
+          style:const ButtonStyle(backgroundColor: WidgetStatePropertyAll(Color(0xffDC143C)),foregroundColor: WidgetStatePropertyAll(Color.fromARGB(255, 171, 134, 142)),padding: WidgetStatePropertyAll(EdgeInsets.symmetric(horizontal: 20,vertical: 8))),
           onPressed: () {
             // Handle button press
           },
-          child: const Text("Click Me", style: TextStyle(color: Colors.white,fontWeight: FontWeight.bold)),
+          child: Text(buttonType == "data" ? "Clear Data" : "Reset Settings", style:const TextStyle(color: Colors.white,fontWeight: FontWeight.bold)),
         );
       case "options":
       default:

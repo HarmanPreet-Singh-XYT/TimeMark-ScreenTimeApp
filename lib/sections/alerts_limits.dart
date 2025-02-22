@@ -9,10 +9,9 @@ class AlertsLimits extends StatefulWidget {
 class _AlertsLimitsState extends State<AlertsLimits> {
   @override
   Widget build(BuildContext context) {
-    return ScaffoldPage(
-      content: SingleChildScrollView(
+    return SingleChildScrollView(
         child: Padding(
-          padding: const EdgeInsets.only(left: 20, right: 20, bottom: 20),
+          padding: const EdgeInsets.only(left: 20, right: 20, bottom: 20,top: 10),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -24,7 +23,8 @@ class _AlertsLimitsState extends State<AlertsLimits> {
                 padding:const EdgeInsets.all(20),
                 decoration: BoxDecoration(
                   color: FluentTheme.of(context).micaBackgroundColor,
-                  borderRadius: BorderRadius.circular(10)
+                  borderRadius: BorderRadius.circular(10),
+                  border: Border.all(color: FluentTheme.of(context).inactiveBackgroundColor,width: 1)
                 ),
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -88,7 +88,8 @@ class _AlertsLimitsState extends State<AlertsLimits> {
                 width: MediaQuery.of(context).size.width * 1,
                 decoration: BoxDecoration(
                   color: FluentTheme.of(context).micaBackgroundColor,
-                  borderRadius: BorderRadius.circular(10)
+                  borderRadius: BorderRadius.circular(10),
+                  border: Border.all(color: FluentTheme.of(context).inactiveBackgroundColor,width: 1)
                 ),
                 child:const Column(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -103,8 +104,7 @@ class _AlertsLimitsState extends State<AlertsLimits> {
             ],
           ),
         ),
-      ),
-    );
+      );
   }
 }
 
@@ -124,6 +124,7 @@ class ApplicationLimits extends StatelessWidget {
       decoration: BoxDecoration(
         color: FluentTheme.of(context).micaBackgroundColor,
         borderRadius: BorderRadius.circular(10),
+        border: Border.all(color: FluentTheme.of(context).inactiveBackgroundColor,width: 1)
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -147,7 +148,7 @@ class ApplicationLimits extends StatelessWidget {
               ],
             ),
           ),
-          Container(height: 1, color: FluentTheme.of(context).inactiveColor),
+          Container(height: 1, color: FluentTheme.of(context).inactiveBackgroundColor),
           const SizedBox(height: 10),
           // Wrap List of Applications in Expanded and SingleChildScrollView
           Expanded(
@@ -224,7 +225,7 @@ class Application extends StatelessWidget {
             ],
           ),
         ),
-        Container(height: 1, color: FluentTheme.of(context).inactiveColor),
+        Container(height: 1, color: FluentTheme.of(context).inactiveBackgroundColor),
       ],
     );
   }

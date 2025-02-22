@@ -9,10 +9,9 @@ class Reports extends StatefulWidget {
 class _ReportsState extends State<Reports> {
   @override
   Widget build(BuildContext context) {
-    return ScaffoldPage(
-      content: SingleChildScrollView(
+    return SingleChildScrollView(
         child: Padding(
-          padding:const EdgeInsets.only(left: 20,right: 20,bottom: 20),
+          padding:const EdgeInsets.only(left: 20,right: 20,bottom: 20,top: 10),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
@@ -29,7 +28,8 @@ class _ReportsState extends State<Reports> {
                       height: MediaQuery.of(context).size.height * 0.45,
                       decoration: BoxDecoration(
                         color: FluentTheme.of(context).micaBackgroundColor,
-                        borderRadius: BorderRadius.circular(10)
+                        borderRadius: BorderRadius.circular(10),
+                        border: Border.all(color: FluentTheme.of(context).inactiveBackgroundColor,width: 1)
                       ),
                     ),
                   ),
@@ -40,7 +40,8 @@ class _ReportsState extends State<Reports> {
                       height: MediaQuery.of(context).size.height * 0.45,
                       decoration: BoxDecoration(
                         color: FluentTheme.of(context).micaBackgroundColor,
-                        borderRadius: BorderRadius.circular(10)
+                        borderRadius: BorderRadius.circular(10),
+                        border: Border.all(color: FluentTheme.of(context).inactiveBackgroundColor,width: 1)
                       ),
                     ),
                   ),
@@ -52,15 +53,15 @@ class _ReportsState extends State<Reports> {
                 width: MediaQuery.of(context).size.width * 1,
                 decoration: BoxDecoration(
                   color: FluentTheme.of(context).micaBackgroundColor,
-                  borderRadius: BorderRadius.circular(10)
+                  borderRadius: BorderRadius.circular(10),
+                  border: Border.all(color: FluentTheme.of(context).inactiveBackgroundColor,width: 1)
                 ),
                 child:const ApplicationUsage(),
               )
             ],
           ),
         ),
-      ),
-    );
+      );
   }
 }
 
@@ -206,7 +207,7 @@ class ApplicationUsage extends StatelessWidget {
               ],
             ),
           ),
-          Container(height: 1, color: FluentTheme.of(context).inactiveColor),
+          Container(height: 1, color: FluentTheme.of(context).inactiveBackgroundColor),
           const SizedBox(height: 10),
           // Wrap List of Applications in Expanded and SingleChildScrollView
           Expanded(
@@ -267,7 +268,7 @@ class Application extends StatelessWidget {
             ],
           ),
         ),
-        Container(height: 1, color: FluentTheme.of(context).inactiveColor),
+        Container(height: 1, color: FluentTheme.of(context).inactiveBackgroundColor),
       ],
     );
   }

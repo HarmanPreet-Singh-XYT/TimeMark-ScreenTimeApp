@@ -11,10 +11,9 @@ class FocusMode extends StatefulWidget {
 class _FocusModeState extends State<FocusMode> {
   @override
   Widget build(BuildContext context) {
-    return ScaffoldPage(
-      content: SingleChildScrollView(
+    return SingleChildScrollView(
         child: Padding(
-          padding: const EdgeInsets.only(left: 20, right: 20, bottom: 20),
+          padding: const EdgeInsets.only(left: 20, right: 20, bottom: 20,top: 10),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -27,7 +26,8 @@ class _FocusModeState extends State<FocusMode> {
                 width: MediaQuery.of(context).size.width * 1,
                 decoration: BoxDecoration(
                   color: FluentTheme.of(context).micaBackgroundColor,
-                  borderRadius: BorderRadius.circular(10)
+                  borderRadius: BorderRadius.circular(10),
+                  border: Border.all(color: FluentTheme.of(context).inactiveBackgroundColor,width: 1)
                 ),
               ),
               const SizedBox(height: 20),
@@ -36,7 +36,8 @@ class _FocusModeState extends State<FocusMode> {
                 width: MediaQuery.of(context).size.width * 1,
                 decoration: BoxDecoration(
                   color: FluentTheme.of(context).micaBackgroundColor,
-                  borderRadius: BorderRadius.circular(10)
+                  borderRadius: BorderRadius.circular(10),
+                  border: Border.all(color: FluentTheme.of(context).inactiveBackgroundColor,width: 1)
                 ),
               ),
               const SizedBox(height: 20),
@@ -50,7 +51,8 @@ class _FocusModeState extends State<FocusMode> {
                       width: MediaQuery.of(context).size.width * 0.35,
                       decoration: BoxDecoration(
                         color: FluentTheme.of(context).micaBackgroundColor,
-                        borderRadius: BorderRadius.circular(10)
+                        borderRadius: BorderRadius.circular(10),
+                        border: Border.all(color: FluentTheme.of(context).inactiveBackgroundColor,width: 1)
                       ),
                     ),
                   ),
@@ -62,7 +64,8 @@ class _FocusModeState extends State<FocusMode> {
                       width: MediaQuery.of(context).size.width * 0.35,
                       decoration: BoxDecoration(
                         color: FluentTheme.of(context).micaBackgroundColor,
-                        borderRadius: BorderRadius.circular(10)
+                        borderRadius: BorderRadius.circular(10),
+                        border: Border.all(color: FluentTheme.of(context).inactiveBackgroundColor,width: 1)
                       ),
                       child:const SessionHistory(),
                     ),
@@ -73,8 +76,7 @@ class _FocusModeState extends State<FocusMode> {
             ],
           ),
         ),
-      ),
-    );
+      );
   }
 }
 
@@ -108,9 +110,13 @@ class Meter extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center, // Centers buttons in row
           children: [
             // 🔄 Reload Button (Smaller)
-            SizedBox(
+            Container(
               width: 50,
               height: 50,
+              decoration: BoxDecoration(
+                border: Border.all(color: FluentTheme.of(context).inactiveBackgroundColor,width: 1),
+                borderRadius: BorderRadius.circular(100)
+              ),
               child: Button(
                 onPressed: () => debugPrint('Reload Pressed'),
                 style: ButtonStyle(
@@ -166,9 +172,13 @@ class Meter extends StatelessWidget {
             //     ),
             //   ),
             // ),
-            SizedBox(
+            Container(
               width: 50,
               height: 50,
+              decoration: BoxDecoration(
+                border: Border.all(color: FluentTheme.of(context).inactiveBackgroundColor,width: 1),
+                borderRadius: BorderRadius.circular(100)
+              ),
               child: Button(
                 onPressed: () => debugPrint('Reload Pressed'),
                 style: ButtonStyle(
@@ -241,7 +251,7 @@ class SessionHistory extends StatelessWidget {
               ],
             ),
           ),
-          Container(height: 1, color: FluentTheme.of(context).inactiveColor),
+          Container(height: 1, color: FluentTheme.of(context).inactiveBackgroundColor),
           const SizedBox(height: 10),
           // Wrap List of Sessions in Expanded and SingleChildScrollView
           Expanded(
@@ -287,7 +297,7 @@ class Session extends StatelessWidget {
             ],
           ),
         ),
-        Container(height: 1, color: FluentTheme.of(context).inactiveColor),
+        Container(height: 1, color: FluentTheme.of(context).inactiveBackgroundColor),
       ],
     );
   }

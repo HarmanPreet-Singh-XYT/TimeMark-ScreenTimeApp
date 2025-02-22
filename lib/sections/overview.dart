@@ -10,10 +10,9 @@ class Overview extends StatefulWidget {
 class _OverviewState extends State<Overview> {
   @override
   Widget build(BuildContext context) {
-    return const ScaffoldPage(
-      content: SingleChildScrollView(
+    return const SingleChildScrollView(
         child: Padding(
-          padding:EdgeInsets.only(left: 20,right: 20,bottom: 20),
+          padding:EdgeInsets.only(left: 20,right: 20,bottom: 20,top: 10),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
@@ -27,8 +26,7 @@ class _OverviewState extends State<Overview> {
             ],
           ),
         ),
-      ),
-    );
+      );
   }
 }
 
@@ -50,7 +48,8 @@ class MidSection extends StatelessWidget {
             width: MediaQuery.of(context).size.width * 0.35,
             decoration: BoxDecoration(
               color: FluentTheme.of(context).micaBackgroundColor,
-              borderRadius: BorderRadius.circular(10)
+              borderRadius: BorderRadius.circular(10),
+              border: Border.all(color: FluentTheme.of(context).inactiveBackgroundColor,width: 1)
             ),
             child:const TopApplications(),
           ),
@@ -64,7 +63,8 @@ class MidSection extends StatelessWidget {
             width: MediaQuery.of(context).size.width * 0.35,
             decoration: BoxDecoration(
               color: FluentTheme.of(context).micaBackgroundColor,
-              borderRadius: BorderRadius.circular(10)
+              borderRadius: BorderRadius.circular(10),
+              border: Border.all(color: FluentTheme.of(context).inactiveBackgroundColor,width: 1)
             ),
             child:const CategoryBreakdown(),
           ),
@@ -266,7 +266,8 @@ class BottomSection extends StatelessWidget {
             width: MediaQuery.of(context).size.width * 0.38,
             decoration: BoxDecoration(
               color: FluentTheme.of(context).micaBackgroundColor,
-              borderRadius: BorderRadius.circular(10)
+              borderRadius: BorderRadius.circular(10),
+              border: Border.all(color: FluentTheme.of(context).inactiveBackgroundColor,width: 1)
             ),
             child:const ApplicationLimits(),
           ),
@@ -279,7 +280,8 @@ class BottomSection extends StatelessWidget {
             width: MediaQuery.of(context).size.width * 0.15,
             decoration: BoxDecoration(
               color: FluentTheme.of(context).micaBackgroundColor,
-              borderRadius: BorderRadius.circular(10)
+              borderRadius: BorderRadius.circular(10),
+              border: Border.all(color: FluentTheme.of(context).inactiveBackgroundColor,width: 1)
             ),
             child: Center(
               child:CircularPercentIndicator(
@@ -316,7 +318,8 @@ class BottomSection extends StatelessWidget {
             width: MediaQuery.of(context).size.width * 0.15,
             decoration: BoxDecoration(
               color: FluentTheme.of(context).micaBackgroundColor,
-              borderRadius: BorderRadius.circular(10)
+              borderRadius: BorderRadius.circular(10),
+              border: Border.all(color: FluentTheme.of(context).inactiveBackgroundColor,width: 1)
             ),
             child: Center(
               child:CircularPercentIndicator(

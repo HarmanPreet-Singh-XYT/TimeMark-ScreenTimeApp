@@ -10,10 +10,9 @@ class Applications extends StatefulWidget {
 class _ApplicationsState extends State<Applications> {
   @override
   Widget build(BuildContext context) {
-    return ScaffoldPage(
-      content: SingleChildScrollView(
+    return SingleChildScrollView(
         child: Padding(
-          padding: const EdgeInsets.only(left: 20, right: 20, bottom: 20),
+          padding: const EdgeInsets.only(left: 20, right: 20, bottom: 20,top: 10),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -25,7 +24,8 @@ class _ApplicationsState extends State<Applications> {
                 width: MediaQuery.of(context).size.width * 1,
                 decoration: BoxDecoration(
                   color: FluentTheme.of(context).micaBackgroundColor,
-                  borderRadius: BorderRadius.circular(10)
+                  borderRadius: BorderRadius.circular(10),
+                  border: Border.all(color: FluentTheme.of(context).inactiveBackgroundColor,width: 1)
                 ),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -62,7 +62,8 @@ class _ApplicationsState extends State<Applications> {
                 width: MediaQuery.of(context).size.width * 1,
                 decoration: BoxDecoration(
                   color: FluentTheme.of(context).micaBackgroundColor,
-                  borderRadius: BorderRadius.circular(10)
+                  borderRadius: BorderRadius.circular(10),
+                  border: Border.all(color: FluentTheme.of(context).inactiveBackgroundColor,width: 1)
                 ),
                 child: Column(
                   children: [
@@ -75,31 +76,31 @@ class _ApplicationsState extends State<Applications> {
                             child: Center(
                               child: Text("Name",style: TextStyle(fontSize: 14,fontWeight: FontWeight.w600))
                           )),
-                          Container(width: 2,color: FluentTheme.of(context).inactiveColor),
+                          Container(width: 2,color: FluentTheme.of(context).inactiveBackgroundColor),
                           const Expanded(
                             flex: 1,
                             child: Center(
                               child: Text("Category",style: TextStyle(fontSize: 14,fontWeight: FontWeight.w600))
                           )),
-                          Container(width: 2,color: FluentTheme.of(context).inactiveColor),
+                          Container(width: 2,color: FluentTheme.of(context).inactiveBackgroundColor),
                           const Expanded(
                             flex: 1,
                             child: Center(
                               child: Text("Screen Time",style: TextStyle(fontSize: 14,fontWeight: FontWeight.w600))
                           )),
-                          Container(width: 2,color: FluentTheme.of(context).inactiveColor),
+                          Container(width: 2,color: FluentTheme.of(context).inactiveBackgroundColor),
                           const Expanded(
                             flex: 1,
                             child: Center(
                               child: Text("Tracking",style: TextStyle(fontSize: 14,fontWeight: FontWeight.w600))
                           )),
-                          Container(width: 2,color: FluentTheme.of(context).inactiveColor),
+                          Container(width: 2,color: FluentTheme.of(context).inactiveBackgroundColor),
                           const Expanded(
                             flex: 1,
                             child: Center(
                               child: Text("Hidden/Visible",style: TextStyle(fontSize: 14,fontWeight: FontWeight.w600))
                           )),
-                          Container(width: 2,color: FluentTheme.of(context).inactiveColor),
+                          Container(width: 2,color: FluentTheme.of(context).inactiveBackgroundColor),
                           const Expanded(
                             flex: 1,
                             child: Center(
@@ -108,7 +109,7 @@ class _ApplicationsState extends State<Applications> {
                         ],
                       ),
                     ),
-                    Container(width: MediaQuery.of(context).size.width * 1,height: 1,color: FluentTheme.of(context).inactiveColor),
+                    Container(width: MediaQuery.of(context).size.width * 1,height: 1,color: FluentTheme.of(context).inactiveBackgroundColor),
                     Expanded(
                       child: SingleChildScrollView(
                         child: Column(
@@ -125,8 +126,7 @@ class _ApplicationsState extends State<Applications> {
             ],
           ),
         ),
-      ),
-    );
+      );
   }
 }
 
@@ -149,7 +149,7 @@ class Application extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        Container(width: MediaQuery.of(context).size.width * 1,height: 1,color: FluentTheme.of(context).inactiveColor),
+        Container(width: MediaQuery.of(context).size.width * 1,height: 1,color: FluentTheme.of(context).inactiveBackgroundColor),
         SizedBox(
           height: 45,
           child: Row(
@@ -159,31 +159,31 @@ class Application extends StatelessWidget {
                 child: Center(
                   child: Text(name,style:const TextStyle(fontSize: 14))
               )),
-              Container(width: 1,color: FluentTheme.of(context).inactiveColor),
+              Container(width: 1,color: FluentTheme.of(context).inactiveBackgroundColor),
               Expanded(
                 flex: 1,
                 child: Center(
                   child: Text(category,style:const TextStyle(fontSize: 14))
               )),
-              Container(width: 1,color: FluentTheme.of(context).inactiveColor),
+              Container(width: 1,color: FluentTheme.of(context).inactiveBackgroundColor),
               Expanded(
                 flex: 1,
                 child: Center(
                   child: Text(screenTime,style:const TextStyle(fontSize: 14))
               )),
-              Container(width: 1,color: FluentTheme.of(context).inactiveColor),
+              Container(width: 1,color: FluentTheme.of(context).inactiveBackgroundColor),
               Expanded(
                 flex: 1,
                 child: Center(
                   child: ToggleSwitch(checked: tracking, onChanged: (v)=>{print(v)})
               )),
-              Container(width: 1,color: FluentTheme.of(context).inactiveColor),
+              Container(width: 1,color: FluentTheme.of(context).inactiveBackgroundColor),
               Expanded(
                 flex: 1,
                 child: Center(
                   child: ToggleSwitch(checked: isHidden, onChanged: (v)=>{print(v)})
               )),
-              Container(width: 1,color: FluentTheme.of(context).inactiveColor),
+              Container(width: 1,color: FluentTheme.of(context).inactiveBackgroundColor),
               Expanded(
                 flex: 1,
                 child: Center(
