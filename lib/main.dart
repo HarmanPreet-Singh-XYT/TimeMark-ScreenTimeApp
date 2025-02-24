@@ -45,7 +45,7 @@ class MyApp extends StatelessWidget {
         ),
         scaffoldBackgroundColor: const Color.fromARGB(255, 20, 20, 20)
       ),
-      initial: AdaptiveThemeMode.light,
+      initial: AdaptiveThemeMode.dark,
       builder: (theme, darkTheme) => FluentApp(
         title: 'Fluent Adaptive Theme Demo',
         theme: theme,

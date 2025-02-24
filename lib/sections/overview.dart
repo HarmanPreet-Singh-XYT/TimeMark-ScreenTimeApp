@@ -440,18 +440,18 @@ class Header extends StatelessWidget {
               ),
               onPressed: () => debugPrint('pressed button'),
             ),
-            const SizedBox(width: 25,),
-            Button(
-              style: ButtonStyle(padding: WidgetStateProperty.all(const EdgeInsets.only(top: 8,bottom: 8,left: 14,right: 14))),
-              child:const Row(
-                children: [
-                  Icon(FluentIcons.app_icon_default_list,size: 18,),
-                  SizedBox(width: 10,),
-                  Text('Add Application',style: TextStyle(fontWeight: FontWeight.w600),),
-                ],
-              ),
-              onPressed: () => debugPrint('pressed button'),
-            ),
+            // const SizedBox(width: 25,),
+            // Button(
+            //   style: ButtonStyle(padding: WidgetStateProperty.all(const EdgeInsets.only(top: 8,bottom: 8,left: 14,right: 14))),
+            //   child:const Row(
+            //     children: [
+            //       Icon(FluentIcons.app_icon_default_list,size: 18,),
+            //       SizedBox(width: 10,),
+            //       Text('Add Application',style: TextStyle(fontWeight: FontWeight.w600),),
+            //     ],
+            //   ),
+            //   onPressed: () => debugPrint('pressed button'),
+            // ),
           ],
         )
       ],

@@ -1,4 +1,5 @@
 import 'package:fluent_ui/fluent_ui.dart';
+import '../variables/settings_data.dart';
 class AlertsLimits extends StatefulWidget {
   const AlertsLimits({super.key});
 
@@ -7,8 +8,48 @@ class AlertsLimits extends StatefulWidget {
 }
 
 class _AlertsLimitsState extends State<AlertsLimits> {
+  SettingsManager settingsManager = SettingsManager();
+  bool popupAlerts = false;
+  bool frequentAlerts = false;
+  bool soundAlerts = false;
+  bool systemAlerts = false;
   @override
+  void initState() {
+    super.initState();
+    popupAlerts = settingsManager.getSetting("limitsAlerts.popup");
+    frequentAlerts = settingsManager.getSetting("limitsAlerts.frequent");
+    soundAlerts = settingsManager.getSetting("limitsAlerts.sound");
+    systemAlerts = settingsManager.getSetting("limitsAlerts.system");
+  }
   Widget build(BuildContext context) {
+    void setSetting(String key, dynamic value) {
+      switch (key) {
+        case 'popup':
+          setState(() {
+            popupAlerts = value;
+            settingsManager.updateSetting("limitsAlerts.popup", value);
+          });
+          break;
+        case 'frequent':
+          setState(() {
+            frequentAlerts = value;
+            settingsManager.updateSetting("limitsAlerts.frequent", value);
+          });
+          break;
+        case 'sound':
+          setState(() {
+            soundAlerts = value;
+            settingsManager.updateSetting("limitsAlerts.sound", value);
+          });
+          break;
+        case 'system':
+          setState(() {
+            systemAlerts = value;
+            settingsManager.updateSetting("limitsAlerts.system", value);
+          });
+          break;
+      }
+    }
     return SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.only(left: 20, right: 20, bottom: 20,top: 10),
@@ -37,41 +78,41 @@ class _AlertsLimitsState extends State<AlertsLimits> {
                         Row(
                           children: [
                             ToggleSwitch(
-                              checked: true,
-                              onChanged: (v) => setState(() => print(v)),
+                              checked: popupAlerts,
+                              onChanged: (v) => setSetting('popup', v),
                             ),
                             const SizedBox(width: 15,),
-                            const Text("Tracking",style: TextStyle(fontSize: 16,fontWeight: FontWeight.w600),),
+                            const Text("Pop-up Alerts",style: TextStyle(fontSize: 16,fontWeight: FontWeight.w600),),
                           ],
                         ),
                         Row(
                           children: [
                             ToggleSwitch(
-                              checked: true,
-                              onChanged: (v) => setState(() => print(v)),
+                              checked: frequentAlerts,
+                              onChanged: (v) => setSetting('frequent', v),
                             ),
                             const SizedBox(width: 15,),
-                            const Text("Tracking",style: TextStyle(fontSize: 16,fontWeight: FontWeight.w600),),
+                            const Text("Frequent Alerts",style: TextStyle(fontSize: 16,fontWeight: FontWeight.w600),),
                           ],
                         ),
                         Row(
                           children: [
                             ToggleSwitch(
-                              checked: true,
-                              onChanged: (v) => setState(() => print(v)),
+                              checked: soundAlerts,
+                              onChanged: (v) => setSetting('sound', v),
                             ),
                             const SizedBox(width: 15,),
-                            const Text("Tracking",style: TextStyle(fontSize: 16,fontWeight: FontWeight.w600),),
+                            const Text("Sound Alerts",style: TextStyle(fontSize: 16,fontWeight: FontWeight.w600),),
                           ],
                         ),
                         Row(
                           children: [
                             ToggleSwitch(
-                              checked: true,
-                              onChanged: (v) => setState(() => print(v)),
+                              checked: systemAlerts,
+                              onChanged: (v) => setSetting('system', v),
                             ),
                             const SizedBox(width: 15,),
-                            const Text("Tracking",style: TextStyle(fontSize: 16,fontWeight: FontWeight.w600),),
+                            const Text("System Alerts",style: TextStyle(fontSize: 16,fontWeight: FontWeight.w600),),
                           ],
                         ),
                       ],
@@ -231,11 +272,16 @@ class Application extends StatelessWidget {
   }
 }
 
-class Header extends StatelessWidget {
+class Header extends StatefulWidget {
   const Header({
     super.key,
   });
 
+  @override
+  State<Header> createState() => _HeaderState();
+}
+
+class _HeaderState extends State<Header> {
   @override
   Widget build(BuildContext context) {
     return Row(
@@ -253,11 +299,37 @@ class Header extends StatelessWidget {
                   Text('Reset All',style: TextStyle(fontWeight: FontWeight.w600),),
                 ],
               ),
-              onPressed: () => debugPrint('pressed button'),
+              onPressed: () => showContentDialog(context),
             ),
           ],
         )
       ],
     );
+  }
+  
+  void showContentDialog(BuildContext context) async {
+    final result = await showDialog<String>(
+      context: context,
+      builder: (context) => ContentDialog(
+        title: const Text('Reset Settings?'),
+        content: const Text(
+          'If you reset settings, you won\'t be able to recover it. Do you want to reset it?',
+        ),
+        actions: [
+          Button(
+            child: const Text('Reset All'),
+            onPressed: () {
+              Navigator.pop(context, 'User deleted file');
+              // Delete file here
+            },
+          ),
+          FilledButton(
+            child: const Text('Cancel'),
+            onPressed: () => Navigator.pop(context, 'User canceled dialog'),
+          ),
+        ],
+      ),
+    );
+    setState(() {});
   }
 }

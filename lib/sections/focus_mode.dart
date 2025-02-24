@@ -80,11 +80,16 @@ class _FocusModeState extends State<FocusMode> {
   }
 }
 
-class Meter extends StatelessWidget {
+class Meter extends StatefulWidget {
   const Meter({
     super.key,
   });
 
+  @override
+  State<Meter> createState() => _MeterState();
+}
+
+class _MeterState extends State<Meter> {
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -180,7 +185,7 @@ class Meter extends StatelessWidget {
                 borderRadius: BorderRadius.circular(100)
               ),
               child: Button(
-                onPressed: () => debugPrint('Reload Pressed'),
+                onPressed: () => showContentDialog(context),
                 style: ButtonStyle(
                   shape: WidgetStateProperty.all(const CircleBorder()),
                   backgroundColor: WidgetStateProperty.all(FluentTheme.of(context).micaBackgroundColor),
@@ -192,6 +197,29 @@ class Meter extends StatelessWidget {
         )
       ],
     );
+  }
+
+  void showContentDialog(BuildContext context) async {
+    final result = await showDialog<String>(
+      context: context,
+      builder: (context) => ContentDialog(
+        title: const Text('Focus Mode Settings'),
+        actions: [
+          Button(
+            child: const Text('Reset All'),
+            onPressed: () {
+              Navigator.pop(context, 'User deleted file');
+              // Delete file here
+            },
+          ),
+          FilledButton(
+            child: const Text('Cancel'),
+            onPressed: () => Navigator.pop(context, 'User canceled dialog'),
+          ),
+        ],
+      ),
+    );
+    setState(() {});
   }
 }
 

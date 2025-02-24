@@ -1,5 +1,5 @@
 import 'package:fluent_ui/fluent_ui.dart';
-
+import '../variables/settings_data.dart';
 class Applications extends StatefulWidget {
   const Applications({super.key});
 
@@ -8,8 +8,32 @@ class Applications extends StatefulWidget {
 }
 
 class _ApplicationsState extends State<Applications> {
+  SettingsManager settingsManager = SettingsManager();
+  bool isTracking = false;
+  bool isHidden = false;
   @override
+  void initState() {
+    super.initState();
+    isTracking = settingsManager.getSetting("applications.tracking");
+    isHidden = settingsManager.getSetting("applications.isHidden");
+  }
   Widget build(BuildContext context) {
+    void setSetting(String key, dynamic value) {
+      switch (key) {
+        case 'tracking':
+          setState(() {
+            isTracking = value;
+            settingsManager.updateSetting("applications.tracking", value);
+          });
+          break;
+        case 'isHidden':
+          setState(() {
+            isHidden = value;
+            settingsManager.updateSetting("applications.isHidden", value);
+          });
+          break;
+      }
+    }
     return SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.only(left: 20, right: 20, bottom: 20,top: 10),
@@ -33,15 +57,15 @@ class _ApplicationsState extends State<Applications> {
                   Row(
                     children: [
                       ToggleSwitch(
-                        checked: true,
-                        onChanged: (v) => setState(() => print(v)),
+                        checked: isTracking,
+                        onChanged: (v) => setSetting('tracking', v),
                       ),
                       const SizedBox(width: 10,),
                       const Text("Tracking",style: TextStyle(fontSize: 16,fontWeight: FontWeight.w600),),
                       const SizedBox(width: 40,),
                       ToggleSwitch(
-                        checked: true,
-                        onChanged: (v) => setState(() => print(v)),
+                        checked: isHidden,
+                        onChanged: (v) => setSetting('isHidden', v),
                       ),
                       const SizedBox(width: 10,),
                       const Text("Hidden/Visible",style: TextStyle(fontSize: 16,fontWeight: FontWeight.w600),),
