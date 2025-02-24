@@ -141,8 +141,8 @@ class _GeneralSectionState extends State<GeneralSection> {
   SettingsManager settingsManager = SettingsManager();
   String theme = "";
   String language = "English";
-  List<String> themeOptions = ["System","Dark"];
-  List<String> languageOptions = ["English"];
+  List<dynamic> themeOptions = ["System","Dark"];
+  List<dynamic> languageOptions = ["English"];
   bool launchAtStartup = false;
   @override
   void initState() {
@@ -380,7 +380,7 @@ class OptionSetting extends StatelessWidget {
   final String settingType;
   final void Function(String type, dynamic value)? changeValue; // Nullable function
   final String optionsValue;
-  final List<String> options;
+  final List<dynamic> options;
 
   const OptionSetting({
     super.key,
@@ -412,7 +412,7 @@ class OptionSetting extends StatelessWidget {
     );
   }
 
-  Widget _buildOptionWidget(String buttonType, bool isChecked, String optionsValue,List<String> options) {
+  Widget _buildOptionWidget(String buttonType, bool isChecked, String optionsValue,List<dynamic> options) {
     switch (optionType) {
       case "switch":
         return ToggleSwitch(

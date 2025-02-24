@@ -6,13 +6,15 @@ import './sections/focus_mode.dart';
 import './sections/reports.dart';
 import './sections/settings.dart';
 import './sections/help.dart';
+import './variables/settings_data.dart';
 import 'package:adaptive_theme_fluent_ui/adaptive_theme_fluent_ui.dart';
 import 'package:adaptive_theme/adaptive_theme.dart';
 import 'package:bitsdojo_window/bitsdojo_window.dart';
 import 'package:system_tray/system_tray.dart';
 
-void main() {
+void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  await SettingsManager().init();
   runApp(const MyApp());
   doWhenWindowReady(() {
     final win = appWindow;

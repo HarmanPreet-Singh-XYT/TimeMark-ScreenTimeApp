@@ -1,4 +1,6 @@
 import 'package:fluent_ui/fluent_ui.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'dart:convert';
 
 class SettingsManager {
   static final SettingsManager _instance = SettingsManager._internal();
@@ -7,17 +9,19 @@ class SettingsManager {
     return _instance;
   }
 
-  SettingsManager._internal(); // Private constructor
+  SettingsManager._internal();
+
+  late SharedPreferences _prefs;
 
   /// Settings Map
-  final Map<String, dynamic> settings = {
+  Map<String, dynamic> settings = {
     "theme": {
-      "selected":"System",
-      "available":["System","Dark","Light"]
+      "selected": "System",
+      "available": ["System", "Dark", "Light"]
     },
     "language": {
-      "selected":"English",
-      "available":["English"]
+      "selected": "English",
+      "available": ["English"]
     },
     "launchAtStartup": true,
     "notifications": {
@@ -38,19 +42,36 @@ class SettingsManager {
     }
   };
 
+  /// Initialize SharedPreferences and load settings
+  Future<void> init() async {
+    _prefs = await SharedPreferences.getInstance();
+    _loadSettings();
+  }
+
+  /// Load settings from SharedPreferences
+  void _loadSettings() {
+    String? storedSettings = _prefs.getString("screenTime_settings");
+    if (storedSettings != null) {
+      settings = jsonDecode(storedSettings);
+    }
+  }
+
+  /// Save settings to SharedPreferences
+  void _saveSettings() {
+    _prefs.setString("screenTime_settings", jsonEncode(settings));
+  }
+
   /// 📌 Update any setting dynamically
   void updateSetting(String key, dynamic value) {
     List<String> keys = key.split(".");
 
     if (keys.length == 1) {
-      // Direct top-level setting update
       if (settings.containsKey(keys[0])) {
         settings[keys[0]] = value;
       } else {
-        debugPrint("❌ ERROR: Invalid setting: \${keys[0]}");
+        debugPrint("❌ ERROR: Invalid setting: ${keys[0]}");
       }
     } else {
-      // Nested setting update (e.g., notifications.focusMode)
       dynamic current = settings;
       for (int i = 0; i < keys.length - 1; i++) {
         if (current is Map && current.containsKey(keys[i])) {
@@ -64,6 +85,7 @@ class SettingsManager {
         current[keys.last] = value;
       }
     }
+    _saveSettings(); // Save updated settings
   }
 
   /// 📌 Get any setting dynamically
