@@ -5,6 +5,7 @@
 list(APPEND FLUTTER_PLUGIN_LIST
   bitsdojo_window_linux
   system_tray
+  tray_manager
 )
 
 list(APPEND FLUTTER_FFI_PLUGIN_LIST

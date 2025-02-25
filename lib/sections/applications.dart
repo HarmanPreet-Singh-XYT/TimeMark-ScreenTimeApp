@@ -72,7 +72,7 @@ class _ApplicationsState extends State<Applications> {
                     ]
                   ),
                   DropDownButton(
-                    title:const Text('Email'),
+                    title:const Text('Select a Category',style: TextStyle(fontSize: 14,fontWeight: FontWeight.w600),),
                     items: [
                       MenuFlyoutItem(text: const Text('Send'), onPressed: () {}),
                     ],

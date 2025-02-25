@@ -19,6 +19,7 @@ dependencies:
   adaptive_theme: ^3.6.0
   adaptive_theme_fluent_ui: ^1.3.0
   fl_chart: ^0.70.2
+  tray_manager: ^0.3.2
 
 dev_dependencies:
   flutter_test:
@@ -27,3 +28,5 @@ dev_dependencies:
 
 flutter:
   uses-material-design: true
+  assets:
+    - assets/icons/tray_icon.png

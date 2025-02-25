@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:fluent_ui/fluent_ui.dart';
 import './sections/overview.dart';
 import './sections/applications.dart';
@@ -10,7 +12,7 @@ import './variables/settings_data.dart';
 import 'package:adaptive_theme_fluent_ui/adaptive_theme_fluent_ui.dart';
 import 'package:adaptive_theme/adaptive_theme.dart';
 import 'package:bitsdojo_window/bitsdojo_window.dart';
-import 'package:system_tray/system_tray.dart';
+import 'package:tray_manager/tray_manager.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -27,36 +29,131 @@ void main() async {
   });
 }
 
-class MyApp extends StatelessWidget {
+class MyApp extends StatefulWidget {
   const MyApp({super.key});
+
+  @override
+  State<MyApp> createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> with TrayListener {
+  bool notificationsEnabled = true;
+  final String appVersion = "v1.0.0";
+
+  @override
+  void initState() {
+    super.initState();
+    _initTray();
+    trayManager.addListener(this);
+  }
+
+  Future<void> _initTray() async {
+    await trayManager.setIcon('assets/tray_icon.png'); // Set tray icon
+    await trayManager.setToolTip("Productive ScreenTime");
+    await _updateTrayMenu();
+  }
+
+  Future<void> _updateTrayMenu() async {
+    await trayManager.setContextMenu(
+      Menu(items: [
+        MenuItem(label: 'Show Window', onClick: (_) => appWindow.show()),
+        MenuItem(label: 'Start Focus Mode', onClick: (_) => _startFocusMode()),
+        MenuItem.separator(),
+        MenuItem(label: 'Reports', onClick: (_) => _openReports()),
+        MenuItem(label: 'Alerts & Limits', onClick: (_) => _openAlerts()),
+        MenuItem(label: 'Applications', onClick: (_) => _openApplications()),
+        MenuItem.separator(),
+        MenuItem(label: notificationsEnabled ? 'Disable Notifications' : 'Enable Notifications', onClick: (_) => _toggleNotifications()),
+        MenuItem(label: 'Version: $appVersion', checked: false),
+        MenuItem.separator(),
+        MenuItem(label: 'Exit', onClick: (_) => _exitApp()),
+      ]),
+    );
+  }
+
+  void _exitApp() {
+    appWindow.hide(); // Minimize to tray instead of exiting
+  }
+
+  void _startFocusMode() {
+    // Implement focus mode activation
+    debugPrint("Focus Mode Started");
+  }
+
+  void _openReports() {
+    // Implement opening reports section
+    debugPrint("Reports Opened");
+  }
+
+  void _openAlerts() {
+    // Implement opening alerts section
+    debugPrint("Alerts Opened");
+  }
+
+  void _openApplications() {
+    // Implement opening applications section
+    debugPrint("Applications Opened");
+  }
+
+  void _toggleNotifications() {
+    setState(() {
+      notificationsEnabled = !notificationsEnabled;
+    });
+    _updateTrayMenu();
+  }
+
+  @override
+  void onTrayIconMouseDown() {
+    appWindow.show();
+  }
+
+  @override
+  void onTrayMenuItemClick(MenuItem menuItem) {
+    if (menuItem.label == 'Show Window') {
+      appWindow.show();
+    } else if (menuItem.label == 'Exit') {
+      _exitApp();
+    } else if (menuItem.label == 'Start Focus Mode') {
+      _startFocusMode();
+    } else if (menuItem.label == 'Reports') {
+      _openReports();
+    } else if (menuItem.label == 'Alerts & Limits') {
+      _openAlerts();
+    } else if (menuItem.label == 'Applications') {
+      _openApplications();
+    } else if (menuItem.label!.contains('Notifications')) {
+      _toggleNotifications();
+    }
+  }
+
+  @override
+  void dispose() {
+    trayManager.removeListener(this);
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
     return FluentAdaptiveTheme(
       light: FluentThemeData(
-        brightness: Brightness.dark,
-        cardColor:const Color(
-          0xff202020
-        ),
-        scaffoldBackgroundColor: const Color.fromARGB(255, 20, 20, 20)
-      ),
+          brightness: Brightness.dark,
+          cardColor: const Color(0xff202020),
+          scaffoldBackgroundColor: const Color.fromARGB(255, 20, 20, 20)),
       dark: FluentThemeData(
-        brightness: Brightness.dark,
-        cardColor:const Color(
-          0xff202020
-        ),
-        scaffoldBackgroundColor: const Color.fromARGB(255, 20, 20, 20)
-      ),
+          brightness: Brightness.dark,
+          cardColor: const Color(0xff202020),
+          scaffoldBackgroundColor: const Color.fromARGB(255, 20, 20, 20)),
       initial: AdaptiveThemeMode.dark,
       builder: (theme, darkTheme) => FluentApp(
         title: 'Fluent Adaptive Theme Demo',
         theme: theme,
         darkTheme: darkTheme,
-        home:const HomePage(),
+        home: const HomePage(),
       ),
     );
   }
 }
+
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -234,7 +331,7 @@ class WindowButtons extends StatelessWidget {
             child: const Text('Exit'),
             onPressed: () {
               Navigator.pop(context, 'User confirmed exit');
-              appWindow.close(); // Hides the window instead of closing
+              appWindow.hide(); // Hides the window instead of closing
             },
           ),
         ],

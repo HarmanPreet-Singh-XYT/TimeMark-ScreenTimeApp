@@ -16,8 +16,9 @@ class SettingsManager {
   /// Settings Map
   Map<String, dynamic> settings = {
     "theme": {
-      "selected": "System",
-      "available": ["System", "Dark", "Light"]
+      "selected": "Dark",
+      // "available": ["System", "Dark", "Light"]
+      "available": ["Dark"]
     },
     "language": {
       "selected": "English",

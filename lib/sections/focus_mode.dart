@@ -185,7 +185,7 @@ class _MeterState extends State<Meter> {
                 borderRadius: BorderRadius.circular(100)
               ),
               child: Button(
-                onPressed: () => showContentDialog(context),
+                onPressed: () => showSettingsDialog(context),
                 style: ButtonStyle(
                   shape: WidgetStateProperty.all(const CircleBorder()),
                   backgroundColor: WidgetStateProperty.all(FluentTheme.of(context).micaBackgroundColor),
@@ -199,28 +199,131 @@ class _MeterState extends State<Meter> {
     );
   }
 
-  void showContentDialog(BuildContext context) async {
+  void showSettingsDialog(BuildContext context) async {
+    double workDuration = 25;
+    double shortBreak = 5;
+    double longBreak = 15;
+    bool autoStart = false;
+    bool blockDistractions = false;
+    bool enableSounds = true;
+    String selectedMode = "Custom";
+
     final result = await showDialog<String>(
       context: context,
-      builder: (context) => ContentDialog(
-        title: const Text('Focus Mode Settings'),
-        actions: [
-          Button(
-            child: const Text('Reset All'),
-            onPressed: () {
-              Navigator.pop(context, 'User deleted file');
-              // Delete file here
-            },
-          ),
-          FilledButton(
-            child: const Text('Cancel'),
-            onPressed: () => Navigator.pop(context, 'User canceled dialog'),
-          ),
-        ],
+      builder: (context) => StatefulBuilder(
+        builder: (context, setDialogState) {
+          return ContentDialog(
+            title: const Text('Focus Mode Settings'),
+            content: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                // Focus Mode Selection
+                ComboBox<String>(
+                  value: selectedMode,
+                  items: ["Custom", "Deep Work (60 min)", "Quick Tasks (25 min)", "Reading (45 min)"].map((mode) {
+                    return ComboBoxItem<String>(
+                      value: mode,
+                      child: Text(mode),
+                    );
+                  }).toList(),
+                  onChanged: (value) {
+                    if (value != null) {
+                      setDialogState(() {
+                        selectedMode = value;
+                        if (value == "Deep Work (60 min)") {
+                          workDuration = 60;
+                          shortBreak = 10;
+                        } else if (value == "Quick Tasks (25 min)") {
+                          workDuration = 25;
+                          shortBreak = 5;
+                        } else if (value == "Reading (45 min)") {
+                          workDuration = 45;
+                          shortBreak = 10;
+                        }
+                      });
+                    }
+                  },
+                ),
+                const SizedBox(height: 15,),
+                // Work Duration Slider
+                Text("Work Duration: ${workDuration.toInt()} min"),
+                const SizedBox(height: 10,),
+                Slider(
+                  value: workDuration,
+                  min: 15,
+                  max: 120,
+                  divisions: 21,
+                  onChanged: (value) => setDialogState(() => workDuration = value),
+                ),
+                const SizedBox(height: 15,),
+                // Short Break Duration Slider
+                Text("Short Break: ${shortBreak.toInt()} min"),
+                const SizedBox(height: 10,),
+                Slider(
+                  value: shortBreak,
+                  min: 1,
+                  max: 15,
+                  divisions: 14,
+                  onChanged: (value) => setDialogState(() => shortBreak = value),
+                ),
+                const SizedBox(height: 15,),
+                // Long Break Duration Slider
+                Text("Long Break: ${longBreak.toInt()} min"),
+                const SizedBox(height: 10,),
+                Slider(
+                  value: longBreak,
+                  min: 5,
+                  max: 60,
+                  divisions: 11,
+                  onChanged: (value) => setDialogState(() => longBreak = value),
+                ),
+                const SizedBox(height: 20,),
+                // Toggle Options
+                Checkbox(
+                  checked: autoStart,
+                  onChanged: (value) => setDialogState(() => autoStart = value!),
+                  content: const Text("Auto-start next session"),
+                ),
+                const SizedBox(height: 10,),
+                Checkbox(
+                  checked: blockDistractions,
+                  onChanged: (value) => setDialogState(() => blockDistractions = value!),
+                  content: const Text("Block distractions during focus mode"),
+                ),
+                const SizedBox(height: 10,),
+                Checkbox(
+                  checked: enableSounds,
+                  onChanged: (value) => setDialogState(() => enableSounds = value!),
+                  content: const Text("Enable sounds & notifications"),
+                ),
+              ],
+            ),
+            actions: [
+              Button(
+                child: const Text('Reset All'),
+                onPressed: () {
+                  setDialogState(() {
+                    workDuration = 25;
+                    shortBreak = 5;
+                    longBreak = 15;
+                    autoStart = false;
+                    blockDistractions = false;
+                    enableSounds = true;
+                    selectedMode = "Custom";
+                  });
+                },
+              ),
+              FilledButton(
+                child: const Text('Save'),
+                onPressed: () => Navigator.pop(context, 'Saved'),
+              ),
+            ],
+          );
+        },
       ),
     );
-    setState(() {});
   }
+
 }
 
 class Header extends StatelessWidget {
