@@ -1,5 +1,7 @@
 import 'dart:io';
-
+import 'package:flutter/foundation.dart';
+import 'package:launch_at_startup/launch_at_startup.dart';
+import 'package:package_info_plus/package_info_plus.dart';
 import 'package:fluent_ui/fluent_ui.dart';
 import './sections/overview.dart';
 import './sections/applications.dart';
@@ -105,6 +107,10 @@ class _MyAppState extends State<MyApp> with TrayListener {
   @override
   void onTrayIconMouseDown() {
     appWindow.show();
+  }
+  @override
+  void onTrayIconRightMouseDown() {
+    trayManager.popUpContextMenu();
   }
 
   @override

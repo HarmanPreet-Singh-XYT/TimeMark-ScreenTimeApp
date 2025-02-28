@@ -1,7 +1,10 @@
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:convert';
-
+import 'dart:io';
+import 'package:flutter/foundation.dart';
+import 'package:launch_at_startup/launch_at_startup.dart';
+import 'package:package_info_plus/package_info_plus.dart';
 class SettingsManager {
   static final SettingsManager _instance = SettingsManager._internal();
 
@@ -45,8 +48,18 @@ class SettingsManager {
 
   /// Initialize SharedPreferences and load settings
   Future<void> init() async {
+    if (!kIsWeb) {
+    PackageInfo packageInfo = await PackageInfo.fromPlatform();
+    launchAtStartup.setup(
+      appName: packageInfo.appName,
+      appPath: Platform.resolvedExecutable,
+      packageName: 'dev.productive.screentime',
+    );
+  }
     _prefs = await SharedPreferences.getInstance();
     _loadSettings();
+    bool isStartupEnabled = await launchAtStartup.isEnabled();
+    settings["launchAtStartup"] = isStartupEnabled;
   }
 
   /// Load settings from SharedPreferences
@@ -63,12 +76,15 @@ class SettingsManager {
   }
 
   /// 📌 Update any setting dynamically
-  void updateSetting(String key, dynamic value) {
+  void updateSetting(String key, dynamic value) async {
     List<String> keys = key.split(".");
 
     if (keys.length == 1) {
       if (settings.containsKey(keys[0])) {
         settings[keys[0]] = value;
+        if(keys[0] == 'launchAtStartup'){
+          value ? await launchAtStartup.enable() : await launchAtStartup.disable();
+        }
       } else {
         debugPrint("❌ ERROR: Invalid setting: ${keys[0]}");
       }

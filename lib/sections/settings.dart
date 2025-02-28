@@ -1,6 +1,7 @@
 import 'package:fluent_ui/fluent_ui.dart';
 import '../variables/settings_data.dart';
-class Settings extends StatefulWidget {
+import 'package:launch_at_startup/launch_at_startup.dart';
+class Settings extends StatefulWidget { 
   const Settings({super.key});
 
   @override
@@ -12,7 +13,7 @@ class _SettingsState extends State<Settings> {
   SettingsManager settingsManager = SettingsManager();
   String theme = "";
   String language = "English";
-  bool launchAtStartup = false;
+  bool launchAtStartupVar = false;
   bool notificationsEnabled = false;
   bool notificationsFocusMode = false;
   bool notificationsScreenTime = false;
@@ -22,13 +23,13 @@ class _SettingsState extends State<Settings> {
     super.initState();
     theme = settingsManager.getSetting("theme.selected");
     language = settingsManager.getSetting("language.selected");
-    launchAtStartup = settingsManager.getSetting("launchAtStartup");
+    launchAtStartupVar = settingsManager.getSetting("launchAtStartup");
     notificationsEnabled = settingsManager.getSetting("notifications.enabled");
     notificationsFocusMode = settingsManager.getSetting("notifications.focusMode");
     notificationsScreenTime = settingsManager.getSetting("notifications.screenTime");
     notificationsAppScreenTime = settingsManager.getSetting("notifications.appScreenTime");
   }
-  void setSetting(String key, dynamic value) {
+  void setSetting(String key, dynamic value) async {
     switch (key) {
       case 'theme':
         setState(() {
@@ -43,10 +44,13 @@ class _SettingsState extends State<Settings> {
         });
         break;
       case 'launchAtStartup':
-        setState(() {
-          launchAtStartup = value;
-          settingsManager.updateSetting("launchAtStartup", value);
-        });
+        () async {
+          value ? await launchAtStartup.enable() : await launchAtStartup.disable();
+          setState(() {
+            launchAtStartupVar = value;
+            settingsManager.updateSetting("launchAtStartup", value);
+          });
+        };
         break;
       case 'notificationsEnabled':
         setState(() {
