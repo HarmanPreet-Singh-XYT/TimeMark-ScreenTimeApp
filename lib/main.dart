@@ -140,12 +140,13 @@ class _MyAppState extends State<MyApp> with TrayListener {
       light: FluentThemeData(
           brightness: Brightness.dark,
           cardColor: const Color(0xff202020),
-          scaffoldBackgroundColor: const Color.fromARGB(255, 20, 20, 20)),
+          scaffoldBackgroundColor: const Color.fromARGB(255, 20, 20, 20)
+          ),
       dark: FluentThemeData(
           brightness: Brightness.dark,
           cardColor: const Color(0xff202020),
           scaffoldBackgroundColor: const Color.fromARGB(255, 20, 20, 20)),
-      initial: AdaptiveThemeMode.dark,
+      initial: AdaptiveThemeMode.system,
       builder: (theme, darkTheme) => FluentApp(
         title: 'Fluent Adaptive Theme Demo',
         theme: theme,

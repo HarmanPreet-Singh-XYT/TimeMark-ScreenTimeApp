@@ -1,6 +1,9 @@
+import 'dart:async';
+
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:percent_indicator/percent_indicator.dart';
 import '../variables/settings_data.dart';
+import './controller/focus_mode_controller.dart';
 class FocusMode extends StatefulWidget {
   const FocusMode({super.key});
 
@@ -100,6 +103,165 @@ class _MeterState extends State<Meter> {
   bool enableSounds = true;
   String selectedMode = "Custom";
 
+  // Timer service
+  late PomodoroTimerService _timerService;
+
+  // Timer display variables
+  String _displayTime = "25:00";
+  double _percentComplete = 1.0;
+  bool _isRunning = false;
+  TimerState _currentTimerState = TimerState.idle;
+  
+  // Timer for UI updates
+  Timer? _uiUpdateTimer;
+
+
+  void _initializeTimerService() {
+    _timerService = PomodoroTimerService(
+      workDuration: workDuration.toInt(),
+      shortBreakDuration: shortBreak.toInt(),
+      longBreakDuration: longBreak.toInt(),
+      autoStart: autoStart,
+      enableNotifications: enableSounds,
+      onWorkSessionStart: _onWorkSessionStart,
+      onShortBreakStart: _onShortBreakStart,
+      onLongBreakStart: _onLongBreakStart,
+      onTimerComplete: _onTimerComplete,
+    );
+    
+    // Initialize display time
+    _updateDisplayTime();
+  }
+  
+  void _startUiUpdateTimer() {
+    _uiUpdateTimer = Timer.periodic(const Duration(seconds: 1), (_) {
+      if (mounted) {
+        setState(() {
+          _updateDisplayTime();
+        });
+      }
+    });
+  }
+  
+  void _updateDisplayTime() {
+    int minutes = _timerService.minutesRemaining;
+    int seconds = _timerService.secondsInCurrentMinute;
+    
+    // Calculate percentage based on timer state
+    double totalSeconds;
+    int elapsedSeconds;
+    
+    switch (_timerService.currentState) {
+      case TimerState.work:
+        totalSeconds = workDuration * 60;
+        break;
+      case TimerState.shortBreak:
+        totalSeconds = shortBreak * 60;
+        break;
+      case TimerState.longBreak:
+        totalSeconds = longBreak * 60;
+        break;
+      case TimerState.idle:
+        // Default to work duration when idle
+        totalSeconds = workDuration * 60;
+        break;
+    }
+    
+    elapsedSeconds = totalSeconds.toInt() - _timerService.secondsRemaining;
+    
+    // Update state variables for UI
+    _displayTime = "${minutes.toString().padLeft(2, '0')}:${seconds.toString().padLeft(2, '0')}";
+    _percentComplete = _timerService.secondsRemaining > 0 ? 
+        (_timerService.secondsRemaining / totalSeconds) : 1.0;
+    _isRunning = _timerService.isRunning;
+    _currentTimerState = _timerService.currentState;
+  }
+  
+  // Timer callbacks
+  void _onWorkSessionStart() {
+    if (enableSounds) {
+      // Play work session start sound or show notification
+      debugPrint('Work session started');
+    }
+    
+    if (blockDistractions) {
+      // Implement distraction blocking
+      debugPrint('Blocking distractions');
+    }
+  }
+  
+  void _onShortBreakStart() {
+    if (enableSounds) {
+      // Play short break start sound or show notification
+      debugPrint('Short break started');
+    }
+  }
+  
+  void _onLongBreakStart() {
+    if (enableSounds) {
+      // Play long break start sound or show notification
+      debugPrint('Long break started');
+    }
+  }
+  
+  void _onTimerComplete() {
+    if (enableSounds) {
+      // Play timer completion sound or show notification
+      debugPrint('Timer completed');
+    }
+  }
+  
+  // UI action handlers
+  void _handlePlayPausePressed() {
+    setState(() {
+      if (_isRunning) {
+        _timerService.pauseTimer();
+      } else {
+        if (_timerService.currentState == TimerState.idle) {
+          _timerService.startWorkSession();
+        } else {
+          _timerService.resumeTimer();
+        }
+      }
+    });
+  }
+  
+  void _handleReloadPressed() {
+    setState(() {
+      _timerService.resetTimer();
+      if (_timerService.currentState == TimerState.idle) {
+        _timerService.startWorkSession();
+      }
+    });
+  }
+  void resetTimerSettings(){
+    _timerService.resetTimer();
+    // _displayTime = "$workDuration";
+    // _percentComplete = 1.0;
+    // _isRunning = false;
+    // _currentTimerState = TimerState.idle;
+  }
+
+
+  Color _getTimerColor() {
+    switch (_currentTimerState) {
+      case TimerState.work:
+        return const Color(0xffFF5C50); // Red for work
+      case TimerState.shortBreak:
+      case TimerState.longBreak:
+        return const Color(0xff50C878); // Green for breaks
+      case TimerState.idle:
+        return const Color(0xffFF5C50); // Default red
+    }
+  }
+  
+  @override
+  void dispose() {
+    _timerService.dispose();
+    _uiUpdateTimer?.cancel();
+    super.dispose();
+  }
+
   @override
   void initState() {
     super.initState();
@@ -110,6 +272,12 @@ class _MeterState extends State<Meter> {
     blockDistractions = settingsManager.getSetting("focusModeSettings.blockDistractions");
     enableSounds = settingsManager.getSetting("focusModeSettings.enableSoundsNotifications");
     selectedMode = settingsManager.getSetting("focusModeSettings.selectedMode");
+
+    // Initialize timer service
+    _initializeTimerService();
+    
+    // Start UI update timer for showing seconds
+    _startUiUpdateTimer();
   }
   @override
   Widget build(BuildContext context) {
@@ -122,14 +290,15 @@ class _MeterState extends State<Meter> {
           animation: true,
           backgroundColor: FluentTheme.of(context).micaBackgroundColor,
           
-          percent: 1,
-          center:const Text(
-            "25:00",
+          percent: _percentComplete,
+          center:Text(
+            _displayTime,
             style:
                 TextStyle(fontWeight: FontWeight.bold, fontSize: 48.0),
           ),
           circularStrokeCap: CircularStrokeCap.round,
-          progressColor:const Color(0xffFF5C50),
+          // progressColor:const Color(0xffFF5C50),
+          progressColor: _getTimerColor(),
         ),
         const SizedBox(height: 25),
         Row(
@@ -144,7 +313,7 @@ class _MeterState extends State<Meter> {
                 borderRadius: BorderRadius.circular(100)
               ),
               child: Button(
-                onPressed: () => debugPrint('Reload Pressed'),
+                onPressed: () => _handleReloadPressed(),
                 style: ButtonStyle(
                   shape: WidgetStateProperty.all(const CircleBorder()),
                   backgroundColor: WidgetStateProperty.all(FluentTheme.of(context).micaBackgroundColor),
@@ -160,10 +329,10 @@ class _MeterState extends State<Meter> {
               width: 70,
               height: 70,
               child: Button(
-                onPressed: () => debugPrint('Play Pressed'),
+                onPressed: () => _handlePlayPausePressed(),
                 style: ButtonStyle(
                   shape: WidgetStateProperty.all(const CircleBorder()),
-                  backgroundColor: WidgetStateProperty.all(const Color(0xffFF5C50)),
+                  backgroundColor: WidgetStateProperty.all(_getTimerColor()),
                 ),
                 child: Container(
                   padding:const EdgeInsets.all(10),
@@ -171,7 +340,7 @@ class _MeterState extends State<Meter> {
                     color: Colors.white,
                     borderRadius: BorderRadius.circular(100)
                   ),
-                  child: const Icon(FluentIcons.play_solid, size: 24,color: Color(0xffFF5C50),)
+                  child: Icon(_isRunning ? FluentIcons.pause : FluentIcons.play_solid, size: 24,color: Color(0xffFF5C50),)
                 ),
               ),
             ),
@@ -249,6 +418,22 @@ class _MeterState extends State<Meter> {
       blockDistractions = newBlockDistractions;
       enableSounds = newEnableSounds;
       selectedMode = newSelectedMode;
+
+      // Update timer service with new settings
+      _timerService.updateConfig(
+        workDuration: newWorkDuration.toInt(),
+        shortBreakDuration: newShortBreak.toInt(),
+        longBreakDuration: newLongBreak.toInt(),
+        autoStart: newAutoStart,
+        enableNotifications: newEnableSounds
+      );
+      
+      // Reset the timer if it's not running
+      if (!_timerService.isRunning) {
+        _timerService.resetTimer();
+      }else{
+        resetTimerSettings();
+      }
     });
   }
 
