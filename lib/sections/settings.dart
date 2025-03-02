@@ -445,18 +445,27 @@ class OptionSetting extends StatelessWidget {
           ),
         );
       default:
-        return DropDownButton(
-          title: Text(optionsValue),
-          items: options.map((content)=> MenuFlyoutItem(text: Text(content), onPressed: () {
+        return ComboBox<String>(
+          value: optionsValue,
+          items: options.map((content) {
+            return ComboBoxItem<String>(
+              value: content,
+              child: Text(content),
+            );
+          }).toList(),
+          onChanged: (value) {
+            if (value != null) {
+              optionsValue = value;
               if (changeValue != null) {
-                changeValue!(settingType, content);
+                changeValue!(settingType, value);
               }
-            }),).toList(),
+            }
+          },
         );
+
     }
   }
 }
-
 
 
 

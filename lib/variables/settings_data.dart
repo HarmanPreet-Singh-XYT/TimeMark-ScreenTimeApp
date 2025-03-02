@@ -1,4 +1,3 @@
-import 'package:fluent_ui/fluent_ui.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:convert';
 import 'dart:io';
@@ -43,6 +42,15 @@ class SettingsManager {
     "applications": {
       "tracking": true,
       "isHidden": true
+    },
+    "focusModeSettings":{
+      "selectedMode":"Custom",
+      "workDuration":25.0,
+      "shortBreak":5.0,
+      "longBreak":15.0,
+      "autoStart":false,
+      "blockDistractions":false,
+      "enableSoundsNotifications":true
     }
   };
 
@@ -89,19 +97,24 @@ class SettingsManager {
         debugPrint("❌ ERROR: Invalid setting: ${keys[0]}");
       }
     } else {
-      dynamic current = settings;
+      Map<String, dynamic> current = settings;
+      
+      // Navigate to the nested object, creating it if it doesn't exist
       for (int i = 0; i < keys.length - 1; i++) {
-        if (current is Map && current.containsKey(keys[i])) {
-          current = current[keys[i]];
-        } else {
-          debugPrint("❌ ERROR: Invalid nested setting: $key");
-          return;
+        if (!current.containsKey(keys[i])) {
+          current[keys[i]] = <String, dynamic>{};
+          debugPrint("Creating missing nested setting: ${keys[i]}");
+        } else if (current[keys[i]] is! Map) {
+          current[keys[i]] = <String, dynamic>{};
+          debugPrint("Converting to map: ${keys[i]}");
         }
+        current = current[keys[i]];
       }
-      if (current is Map) {
-        current[keys.last] = value;
-      }
+      
+      // Set the final value
+      current[keys.last] = value;
     }
+    
     _saveSettings(); // Save updated settings
   }
 

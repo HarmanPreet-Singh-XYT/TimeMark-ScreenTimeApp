@@ -1,6 +1,6 @@
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:percent_indicator/percent_indicator.dart';
-
+import '../variables/settings_data.dart';
 class FocusMode extends StatefulWidget {
   const FocusMode({super.key});
 
@@ -90,6 +90,27 @@ class Meter extends StatefulWidget {
 }
 
 class _MeterState extends State<Meter> {
+  SettingsManager settingsManager = SettingsManager();
+  // Move variables to class level
+  double workDuration = 25;
+  double shortBreak = 5;
+  double longBreak = 15;
+  bool autoStart = false;
+  bool blockDistractions = false;
+  bool enableSounds = true;
+  String selectedMode = "Custom";
+
+  @override
+  void initState() {
+    super.initState();
+    workDuration = settingsManager.getSetting("focusModeSettings.workDuration");
+    shortBreak = settingsManager.getSetting("focusModeSettings.shortBreak");
+    longBreak = settingsManager.getSetting("focusModeSettings.longBreak");
+    autoStart = settingsManager.getSetting("focusModeSettings.autoStart");
+    blockDistractions = settingsManager.getSetting("focusModeSettings.blockDistractions");
+    enableSounds = settingsManager.getSetting("focusModeSettings.enableSoundsNotifications");
+    selectedMode = settingsManager.getSetting("focusModeSettings.selectedMode");
+  }
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -157,26 +178,6 @@ class _MeterState extends State<Meter> {
     
             const SizedBox(width: 50), // Space between buttons
     
-            // ⏹ Stop Button (Smaller)
-            // SizedBox(
-            //   width: 50,
-            //   height: 50,
-            //   child: Button(
-            //     onPressed: () => debugPrint('Stop Pressed'),
-            //     style: ButtonStyle(
-            //       shape: WidgetStateProperty.all(const CircleBorder()),
-            //       backgroundColor: WidgetStateProperty.all(FluentTheme.of(context).micaBackgroundColor),
-            //     ),
-            //     child: Container(
-            //       padding:const EdgeInsets.all(6),
-            //       decoration: BoxDecoration(
-            //         color: Colors.white,
-            //         borderRadius: BorderRadius.circular(100)
-            //       ),
-            //       child: Icon(FluentIcons.stop_solid, size: 15,color: FluentTheme.of(context).micaBackgroundColor)
-            //     ),
-            //   ),
-            // ),
             Container(
               width: 50,
               height: 50,
@@ -199,14 +200,67 @@ class _MeterState extends State<Meter> {
     );
   }
 
+  // Function to handle mode selection changes
+  void _updateModeSettings(String mode) {
+    setState(() {
+      selectedMode = mode;
+      if (mode == "Deep Work (60 min)") {
+        workDuration = 60;
+        shortBreak = 10;
+      } else if (mode == "Quick Tasks (25 min)") {
+        workDuration = 25;
+        shortBreak = 5;
+      } else if (mode == "Reading (45 min)") {
+        workDuration = 45;
+        shortBreak = 10;
+      }
+    });
+  }
+
+  // Function to reset all settings
+  void _resetSettings() {
+    setState(() {
+      workDuration = 25;
+      shortBreak = 5;
+      longBreak = 15;
+      autoStart = false;
+      blockDistractions = false;
+      enableSounds = true;
+      selectedMode = "Custom";
+    });
+  }
+
+  // Save settings and apply them to the main widget state
+  void _saveSettings(double newWorkDuration, double newShortBreak, double newLongBreak, 
+                    bool newAutoStart, bool newBlockDistractions, bool newEnableSounds, 
+                    String newSelectedMode) {
+    settingsManager.updateSetting("focusModeSettings.workDuration", newWorkDuration);
+    settingsManager.updateSetting("focusModeSettings.shortBreak", newShortBreak);
+    settingsManager.updateSetting("focusModeSettings.longBreak", newLongBreak);
+    settingsManager.updateSetting("focusModeSettings.autoStart", newAutoStart);
+    settingsManager.updateSetting("focusModeSettings.blockDistractions", newBlockDistractions);
+    settingsManager.updateSetting("focusModeSettings.enableSoundsNotifications", newEnableSounds);
+    settingsManager.updateSetting("focusModeSettings.selectedMode", newSelectedMode);
+    setState(() {
+      workDuration = newWorkDuration;
+      shortBreak = newShortBreak;
+      longBreak = newLongBreak;
+      autoStart = newAutoStart;
+      blockDistractions = newBlockDistractions;
+      enableSounds = newEnableSounds;
+      selectedMode = newSelectedMode;
+    });
+  }
+
   void showSettingsDialog(BuildContext context) async {
-    double workDuration = 25;
-    double shortBreak = 5;
-    double longBreak = 15;
-    bool autoStart = false;
-    bool blockDistractions = false;
-    bool enableSounds = true;
-    String selectedMode = "Custom";
+    // Create local variables that will be used in the dialog
+    double dialogWorkDuration = workDuration;
+    double dialogShortBreak = shortBreak;
+    double dialogLongBreak = longBreak;
+    bool dialogAutoStart = autoStart;
+    bool dialogBlockDistractions = blockDistractions;
+    bool dialogEnableSounds = enableSounds;
+    String dialogSelectedMode = selectedMode;
 
     final result = await showDialog<String>(
       context: context,
@@ -219,7 +273,7 @@ class _MeterState extends State<Meter> {
               children: [
                 // Focus Mode Selection
                 ComboBox<String>(
-                  value: selectedMode,
+                  value: dialogSelectedMode,
                   items: ["Custom", "Deep Work (60 min)", "Quick Tasks (25 min)", "Reading (45 min)"].map((mode) {
                     return ComboBoxItem<String>(
                       value: mode,
@@ -229,16 +283,16 @@ class _MeterState extends State<Meter> {
                   onChanged: (value) {
                     if (value != null) {
                       setDialogState(() {
-                        selectedMode = value;
+                        dialogSelectedMode = value;
                         if (value == "Deep Work (60 min)") {
-                          workDuration = 60;
-                          shortBreak = 10;
+                          dialogWorkDuration = 60;
+                          dialogShortBreak = 10;
                         } else if (value == "Quick Tasks (25 min)") {
-                          workDuration = 25;
-                          shortBreak = 5;
+                          dialogWorkDuration = 25;
+                          dialogShortBreak = 5;
                         } else if (value == "Reading (45 min)") {
-                          workDuration = 45;
-                          shortBreak = 10;
+                          dialogWorkDuration = 45;
+                          dialogShortBreak = 10;
                         }
                       });
                     }
@@ -246,54 +300,54 @@ class _MeterState extends State<Meter> {
                 ),
                 const SizedBox(height: 15,),
                 // Work Duration Slider
-                Text("Work Duration: ${workDuration.toInt()} min"),
+                Text("Work Duration: ${dialogWorkDuration.toInt()} min"),
                 const SizedBox(height: 10,),
                 Slider(
-                  value: workDuration,
+                  value: dialogWorkDuration,
                   min: 15,
                   max: 120,
                   divisions: 21,
-                  onChanged: (value) => setDialogState(() => workDuration = value),
+                  onChanged: (value) => setDialogState(() => dialogWorkDuration = value),
                 ),
                 const SizedBox(height: 15,),
                 // Short Break Duration Slider
-                Text("Short Break: ${shortBreak.toInt()} min"),
+                Text("Short Break: ${dialogShortBreak.toInt()} min"),
                 const SizedBox(height: 10,),
                 Slider(
-                  value: shortBreak,
+                  value: dialogShortBreak,
                   min: 1,
                   max: 15,
                   divisions: 14,
-                  onChanged: (value) => setDialogState(() => shortBreak = value),
+                  onChanged: (value) => setDialogState(() => dialogShortBreak = value),
                 ),
                 const SizedBox(height: 15,),
                 // Long Break Duration Slider
-                Text("Long Break: ${longBreak.toInt()} min"),
+                Text("Long Break: ${dialogLongBreak.toInt()} min"),
                 const SizedBox(height: 10,),
                 Slider(
-                  value: longBreak,
+                  value: dialogLongBreak,
                   min: 5,
                   max: 60,
                   divisions: 11,
-                  onChanged: (value) => setDialogState(() => longBreak = value),
+                  onChanged: (value) => setDialogState(() => dialogLongBreak = value),
                 ),
                 const SizedBox(height: 20,),
                 // Toggle Options
                 Checkbox(
-                  checked: autoStart,
-                  onChanged: (value) => setDialogState(() => autoStart = value!),
+                  checked: dialogAutoStart,
+                  onChanged: (value) => setDialogState(() => dialogAutoStart = value!),
                   content: const Text("Auto-start next session"),
                 ),
                 const SizedBox(height: 10,),
                 Checkbox(
-                  checked: blockDistractions,
-                  onChanged: (value) => setDialogState(() => blockDistractions = value!),
+                  checked: dialogBlockDistractions,
+                  onChanged: (value) => setDialogState(() => dialogBlockDistractions = value!),
                   content: const Text("Block distractions during focus mode"),
                 ),
                 const SizedBox(height: 10,),
                 Checkbox(
-                  checked: enableSounds,
-                  onChanged: (value) => setDialogState(() => enableSounds = value!),
+                  checked: dialogEnableSounds,
+                  onChanged: (value) => setDialogState(() => dialogEnableSounds = value!),
                   content: const Text("Enable sounds & notifications"),
                 ),
               ],
@@ -303,19 +357,31 @@ class _MeterState extends State<Meter> {
                 child: const Text('Reset All'),
                 onPressed: () {
                   setDialogState(() {
-                    workDuration = 25;
-                    shortBreak = 5;
-                    longBreak = 15;
-                    autoStart = false;
-                    blockDistractions = false;
-                    enableSounds = true;
-                    selectedMode = "Custom";
+                    dialogWorkDuration = 25;
+                    dialogShortBreak = 5;
+                    dialogLongBreak = 15;
+                    dialogAutoStart = false;
+                    dialogBlockDistractions = false;
+                    dialogEnableSounds = true;
+                    dialogSelectedMode = "Custom";
                   });
                 },
               ),
               FilledButton(
                 child: const Text('Save'),
-                onPressed: () => Navigator.pop(context, 'Saved'),
+                onPressed: () {
+                  // Save settings to the class variables
+                  _saveSettings(
+                    dialogWorkDuration,
+                    dialogShortBreak,
+                    dialogLongBreak,
+                    dialogAutoStart,
+                    dialogBlockDistractions,
+                    dialogEnableSounds,
+                    dialogSelectedMode
+                  );
+                  Navigator.pop(context, 'Saved');
+                },
               ),
             ],
           );
@@ -323,7 +389,6 @@ class _MeterState extends State<Meter> {
       ),
     );
   }
-
 }
 
 class Header extends StatelessWidget {
