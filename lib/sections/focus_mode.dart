@@ -2,7 +2,7 @@ import 'dart:async';
 
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:percent_indicator/percent_indicator.dart';
-import '../variables/settings_data.dart';
+import 'controller/settings_data_controller.dart';
 import './controller/focus_mode_controller.dart';
 class FocusMode extends StatefulWidget {
   const FocusMode({super.key});

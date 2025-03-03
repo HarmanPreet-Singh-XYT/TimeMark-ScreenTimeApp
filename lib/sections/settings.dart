@@ -1,5 +1,5 @@
 import 'package:fluent_ui/fluent_ui.dart';
-import '../variables/settings_data.dart';
+import 'controller/settings_data_controller.dart';
 import 'package:launch_at_startup/launch_at_startup.dart';
 class Settings extends StatefulWidget { 
   const Settings({super.key});

@@ -35,7 +35,7 @@ class PomodoroTimerService {
   PomodoroTimerService._internal();
   
   // Config variables
-  int _workDuration = 25; // default 25 minutes
+  int _workDuration = 25; // default 25 minute
   int _shortBreakDuration = 5; // default 5 minutes
   int _longBreakDuration = 15; // default 15 minutes
   bool _autoStart = false;

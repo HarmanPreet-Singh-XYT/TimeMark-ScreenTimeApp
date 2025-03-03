@@ -1,5 +1,5 @@
 import 'package:fluent_ui/fluent_ui.dart';
-import '../variables/settings_data.dart';
+import 'controller/settings_data_controller.dart';
 class AlertsLimits extends StatefulWidget {
   const AlertsLimits({super.key});
 
