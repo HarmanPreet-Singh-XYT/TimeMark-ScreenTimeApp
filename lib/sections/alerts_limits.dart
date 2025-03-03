@@ -1,4 +1,5 @@
 import 'package:fluent_ui/fluent_ui.dart';
+import 'package:screentime/sections/graphs/alerts_limits_chart.dart';
 import 'controller/settings_data_controller.dart';
 class AlertsLimits extends StatefulWidget {
   const AlertsLimits({super.key});
@@ -124,7 +125,7 @@ class _AlertsLimitsState extends State<AlertsLimits> {
               const ApplicationLimits(),
               const SizedBox(height: 20),
               Container(
-                height: 300,
+                
                 padding:const EdgeInsets.only(top: 15,bottom: 15,left: 20,right: 20),
                 width: MediaQuery.of(context).size.width * 1,
                 decoration: BoxDecoration(
@@ -137,7 +138,7 @@ class _AlertsLimitsState extends State<AlertsLimits> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text("Usage Trends",style: TextStyle(fontSize: 18,fontWeight: FontWeight.w600),),
-                    
+                    AlertUsageChart()
                   ]
                 ),
               ),

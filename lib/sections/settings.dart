@@ -78,6 +78,7 @@ class _SettingsState extends State<Settings> {
         break;
     }
   }
+  @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
         child: Padding(

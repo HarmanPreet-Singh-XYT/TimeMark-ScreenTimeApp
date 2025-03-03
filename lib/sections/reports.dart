@@ -1,4 +1,6 @@
 import 'package:fluent_ui/fluent_ui.dart';
+import 'package:screentime/sections/graphs/reports_line_chart.dart';
+import 'package:screentime/sections/graphs/reports_pie_chart.dart';
 class Reports extends StatefulWidget {
   const Reports({super.key});
 
@@ -25,11 +27,21 @@ class _ReportsState extends State<Reports> {
                   Expanded(
                     flex: 6,
                     child: Container(
-                      height: MediaQuery.of(context).size.height * 0.45,
+                      padding: EdgeInsets.all(20),
+                      // height: 500,
                       decoration: BoxDecoration(
                         color: FluentTheme.of(context).micaBackgroundColor,
                         borderRadius: BorderRadius.circular(10),
                         border: Border.all(color: FluentTheme.of(context).inactiveBackgroundColor,width: 1)
+                      ),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text("Daily Screen Time",style: TextStyle(fontSize: 18,fontWeight: FontWeight.w600),),
+                          SizedBox(height: 40,),
+                          Container(height:300,child: LineChartWidget(chartType: ChartType.main,))
+                        ]
                       ),
                     ),
                   ),
@@ -37,11 +49,31 @@ class _ReportsState extends State<Reports> {
                   Expanded(
                     flex: 3,
                     child: Container(
-                      height: MediaQuery.of(context).size.height * 0.45,
+                      height: 405,
+                      padding:const EdgeInsets.all(20),
                       decoration: BoxDecoration(
                         color: FluentTheme.of(context).micaBackgroundColor,
                         borderRadius: BorderRadius.circular(10),
                         border: Border.all(color: FluentTheme.of(context).inactiveBackgroundColor,width: 1)
+                      ),
+                      child:const Column(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text("Category Breakdown",style: TextStyle(fontSize: 18,fontWeight: FontWeight.w600),),
+                          ReportsPieChart(dataMap: {
+                            "Flutter": 5,
+                            "React": 3,
+                            "Xamarin": 2,
+                            "Ionic": 2,
+                          },colorList: [
+                            Color.fromRGBO(223, 250, 92, 1),
+                            Color.fromRGBO(129, 250, 112, 1),
+                            Color.fromRGBO(129, 182, 205, 1),
+                            Color.fromRGBO(91, 253, 199, 1),
+                          ],),
+                          SizedBox(height: 1,)
+                        ]
                       ),
                     ),
                   ),

@@ -2,14 +2,14 @@ import 'package:fl_chart/fl_chart.dart';
 import './resources/app_resources.dart';
 import 'package:flutter/material.dart';
 
-class LineChartSample2 extends StatefulWidget {
-  const LineChartSample2({super.key});
+class AlertUsageChart extends StatefulWidget {
+  const AlertUsageChart({super.key});
 
   @override
-  State<LineChartSample2> createState() => _LineChartSample2State();
+  State<AlertUsageChart> createState() => _AlertUsageChartState();
 }
 
-class _LineChartSample2State extends State<LineChartSample2> {
+class _AlertUsageChartState extends State<AlertUsageChart> {
   List<Color> gradientColors = [
     AppColors.contentColorCyan,
     AppColors.contentColorBlue,
@@ -22,7 +22,7 @@ class _LineChartSample2State extends State<LineChartSample2> {
     return Stack(
       children: <Widget>[
         AspectRatio(
-          aspectRatio: 1.70,
+          aspectRatio: 3,
           child: Padding(
             padding: const EdgeInsets.only(
               right: 18,
@@ -49,7 +49,7 @@ class _LineChartSample2State extends State<LineChartSample2> {
               style: TextStyle(
                 fontSize: 12,
                 color: showAvg
-                    ? Colors.white.withOpacity(0.5)
+                    ? Colors.white.withValues(alpha: 0.5)
                     : Colors.white,
               ),
             ),
@@ -186,7 +186,7 @@ class _LineChartSample2State extends State<LineChartSample2> {
             show: true,
             gradient: LinearGradient(
               colors: gradientColors
-                  .map((color) => color.withOpacity(0.3))
+                  .map((color) => color.withValues(alpha: 0.3))
                   .toList(),
             ),
           ),
@@ -280,10 +280,10 @@ class _LineChartSample2State extends State<LineChartSample2> {
               colors: [
                 ColorTween(begin: gradientColors[0], end: gradientColors[1])
                     .lerp(0.2)!
-                    .withOpacity(0.1),
+                    .withValues(alpha: 0.1),
                 ColorTween(begin: gradientColors[0], end: gradientColors[1])
                     .lerp(0.2)!
-                    .withOpacity(0.1),
+                    .withValues(alpha: 0.1),
               ],
             ),
           ),

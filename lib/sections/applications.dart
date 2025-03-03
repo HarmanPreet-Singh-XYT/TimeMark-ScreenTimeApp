@@ -17,6 +17,7 @@ class _ApplicationsState extends State<Applications> {
     isTracking = settingsManager.getSetting("applications.tracking");
     isHidden = settingsManager.getSetting("applications.isHidden");
   }
+  @override
   Widget build(BuildContext context) {
     void setSetting(String key, dynamic value) {
       switch (key) {
@@ -252,11 +253,11 @@ class Header extends StatelessWidget {
               width: 280,
               height: 40,
               margin:const EdgeInsets.only(right: 10),
-              child:const TextBox(
+              child:TextBox(
                 placeholder: 'Search Application',
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.only(topRight: Radius.circular(100),bottomRight: Radius.circular(100)),
-                ),
+                // decoration: WidgetStateProperty.all<BoxDecoration>(
+                //   border: const BorderRadius.only(topRight: Radius.circular(100),bottomRight: Radius.circular(100)),
+                // ),
                 style: TextStyle(
                   color: Color(0xFF5178BE),
                 ),

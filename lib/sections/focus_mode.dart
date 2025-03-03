@@ -2,6 +2,9 @@ import 'dart:async';
 
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:percent_indicator/percent_indicator.dart';
+import 'package:screentime/sections/graphs/focus_mode_history.dart';
+import 'package:screentime/sections/graphs/focus_mode_pie_chart.dart';
+import 'package:screentime/sections/graphs/focus_mode_trends.dart';
 import 'controller/settings_data_controller.dart';
 import './controller/focus_mode_controller.dart';
 class FocusMode extends StatefulWidget {
@@ -25,22 +28,39 @@ class _FocusModeState extends State<FocusMode> {
               const Meter(),
               const SizedBox(height: 40),
               Container(
-                height: 300,
+                // height: 300,
                 width: MediaQuery.of(context).size.width * 1,
+                padding:const EdgeInsets.all(20),
                 decoration: BoxDecoration(
                   color: FluentTheme.of(context).micaBackgroundColor,
                   borderRadius: BorderRadius.circular(10),
                   border: Border.all(color: FluentTheme.of(context).inactiveBackgroundColor,width: 1)
                 ),
+                child:const Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text("History",style: TextStyle(fontSize: 18,fontWeight: FontWeight.w600),),
+                    FocusModeHistoryChart()
+                  ]
+                ),
               ),
               const SizedBox(height: 20),
               Container(
-                height: 300,
                 width: MediaQuery.of(context).size.width * 1,
+                padding:const EdgeInsets.all(20),
                 decoration: BoxDecoration(
                   color: FluentTheme.of(context).micaBackgroundColor,
                   borderRadius: BorderRadius.circular(10),
                   border: Border.all(color: FluentTheme.of(context).inactiveBackgroundColor,width: 1)
+                ),
+                child: const Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text("Trends",style: TextStyle(fontSize: 18,fontWeight: FontWeight.w600),),
+                    FocusModeTrends()
+                  ]
                 ),
               ),
               const SizedBox(height: 20),
@@ -50,12 +70,31 @@ class _FocusModeState extends State<FocusMode> {
                   Expanded(
                     flex: 5,
                     child: Container(
-                      height: 325,
+                      // height: 325,
+                      padding: const EdgeInsets.all(20),
                       width: MediaQuery.of(context).size.width * 0.35,
                       decoration: BoxDecoration(
                         color: FluentTheme.of(context).micaBackgroundColor,
                         borderRadius: BorderRadius.circular(10),
                         border: Border.all(color: FluentTheme.of(context).inactiveBackgroundColor,width: 1)
+                      ),
+                      child: const Column(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text("Time Distribution",style: TextStyle(fontSize: 18,fontWeight: FontWeight.w600),),
+                          FocusModePieChart(dataMap: {
+                            "Flutter": 5,
+                            "React": 3,
+                            "Xamarin": 2,
+                            "Ionic": 2,
+                          },colorList: [
+                            Color.fromRGBO(223, 250, 92, 1),
+                            Color.fromRGBO(129, 250, 112, 1),
+                            Color.fromRGBO(129, 182, 205, 1),
+                            Color.fromRGBO(91, 253, 199, 1),
+                          ],)
+                        ]
                       ),
                     ),
                   ),
@@ -63,7 +102,7 @@ class _FocusModeState extends State<FocusMode> {
                   Expanded(
                     flex: 5,
                     child: Container(
-                      height: 325,
+                      height: 360,
                       width: MediaQuery.of(context).size.width * 0.35,
                       decoration: BoxDecoration(
                         color: FluentTheme.of(context).micaBackgroundColor,
@@ -75,7 +114,7 @@ class _FocusModeState extends State<FocusMode> {
                   ),
                 ],
               ),
-              const SizedBox(height: 20)
+              const SizedBox(height: 10)
             ],
           ),
         ),

@@ -7,7 +7,7 @@ import './sections/reports.dart';
 import './sections/settings.dart';
 import './sections/help.dart';
 import 'sections/controller/settings_data_controller.dart';
-import 'package:adaptive_theme_fluent_ui/adaptive_theme_fluent_ui.dart';
+import './adaptive_fluent/adaptive_theme_fluent_ui.dart';
 import 'package:adaptive_theme/adaptive_theme.dart';
 import 'package:bitsdojo_window/bitsdojo_window.dart';
 import 'package:tray_manager/tray_manager.dart';
