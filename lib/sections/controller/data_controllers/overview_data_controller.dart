@@ -1,0 +1,203 @@
+import '../app_data_controller.dart'; // Import the AppDataStore class
+
+class DailyOverviewData {
+  // Singleton instance
+  static final DailyOverviewData _instance = DailyOverviewData._internal();
+  factory DailyOverviewData() => _instance;
+  DailyOverviewData._internal();
+
+  // AppDataStore instance
+  final AppDataStore _dataStore = AppDataStore();
+
+  // Fetch today's overview data
+  Future<OverviewData> fetchTodayOverview() async {
+    // Ensure AppDataStore is initialized
+    await _dataStore.init();
+
+    // Get today's date
+    final DateTime today = DateTime.now();
+    final DateTime weekAgo = today.subtract(Duration(days: 7));
+
+    // Calculate total screen time
+    final Duration todayScreenTime = _dataStore.getTotalScreenTime(today);
+    final Duration averageWeekScreenTime = _dataStore.getAverageScreenTime(weekAgo, today);
+
+    // Calculate productive time
+    final Duration todayProductiveTime = _dataStore.getProductiveTime(today);
+    final double todayProductivityScore = _dataStore.getProductivityScore(today);
+
+    // Most used app
+    final String mostUsedApp = _dataStore.getMostUsedApp(today);
+
+    // Focus sessions
+    final int focusSessionsCount = _dataStore.getFocusSessionsCount(today);
+    final Duration totalFocusTime = _dataStore.getTotalFocusTime(today);
+
+    // Top applications
+    final List<ApplicationDetail> topApplications = _calculateTopApplications(today);
+
+    // Category breakdown
+    final List<CategoryDetail> categoryBreakdown = _calculateCategoryBreakdown(today);
+
+    // Application limits
+    final List<ApplicationLimitDetail> applicationLimits = _calculateApplicationLimits(today);
+
+    return OverviewData(
+      totalScreenTime: todayScreenTime,
+      averageScreenTime: averageWeekScreenTime,
+      screenTimePercentage: _calculatePercentage(todayScreenTime, averageWeekScreenTime),
+      productiveTime: todayProductiveTime,
+      productivityScore: todayProductivityScore,
+      mostUsedApp: mostUsedApp,
+      focusSessions: focusSessionsCount,
+      totalFocusTime: totalFocusTime,
+      topApplications: topApplications,
+      categoryBreakdown: categoryBreakdown,
+      applicationLimits: applicationLimits,
+    );
+  }
+
+  List<ApplicationDetail> _calculateTopApplications(DateTime date) {
+    final List<ApplicationDetail> applications = [];
+    final Duration totalScreenTime = _dataStore.getTotalScreenTime(date);
+
+    for (final appName in _dataStore.allAppNames) {
+      final AppUsageRecord? usageRecord = _dataStore.getAppUsage(appName, date);
+      final AppMetadata? metadata = _dataStore.getAppMetadata(appName);
+
+      if (usageRecord != null && metadata != null) {
+        final double percentageOfTotalTime = (usageRecord.timeSpent.inSeconds / totalScreenTime.inSeconds) * 100;
+
+        applications.add(ApplicationDetail(
+          name: appName,
+          category: metadata.category,
+          screenTime: usageRecord.timeSpent,
+          percentageOfTotalTime: percentageOfTotalTime,
+        ));
+      }
+    }
+
+    // Sort applications by screen time in descending order
+    applications.sort((a, b) => b.screenTime.compareTo(a.screenTime));
+
+    return applications;
+  }
+
+  List<CategoryDetail> _calculateCategoryBreakdown(DateTime date) {
+    final Map<String, Duration> categoryBreakdown = _dataStore.getCategoryBreakdown(date);
+    final Duration totalScreenTime = _dataStore.getTotalScreenTime(date);
+
+    return categoryBreakdown.entries.map((entry) {
+      return CategoryDetail(
+        name: entry.key,
+        totalScreenTime: entry.value,
+        percentageOfTotalTime: (entry.value.inSeconds / totalScreenTime.inSeconds) * 100,
+      );
+    }).toList()
+      ..sort((a, b) => b.totalScreenTime.compareTo(a.totalScreenTime));
+  }
+
+  List<ApplicationLimitDetail> _calculateApplicationLimits(DateTime date) {
+    final List<ApplicationLimitDetail> limitDetails = [];
+    final Duration totalScreenTime = _dataStore.getTotalScreenTime(date);
+
+    for (final appName in _dataStore.allAppNames) {
+      final AppMetadata? metadata = _dataStore.getAppMetadata(appName);
+      final AppUsageRecord? usageRecord = _dataStore.getAppUsage(appName, date);
+
+      if (metadata != null && usageRecord != null && metadata.dailyLimit != Duration.zero) {
+        final double percentageOfLimit = (usageRecord.timeSpent.inSeconds / metadata.dailyLimit.inSeconds) * 100;
+        final double percentageOfTotalTime = (usageRecord.timeSpent.inSeconds / totalScreenTime.inSeconds) * 100;
+
+        limitDetails.add(ApplicationLimitDetail(
+          name: appName,
+          category: metadata.category,
+          dailyLimit: metadata.dailyLimit,
+          actualUsage: usageRecord.timeSpent,
+          percentageOfLimit: percentageOfLimit,
+          percentageOfTotalTime: percentageOfTotalTime,
+        ));
+      }
+    }
+
+    return limitDetails..sort((a, b) => b.percentageOfLimit.compareTo(a.percentageOfLimit));
+  }
+
+  double _calculatePercentage(Duration current, Duration average) {
+    if (average.inSeconds == 0) return 0.0;
+    return (current.inSeconds / average.inSeconds) * 100;
+  }
+}
+
+// Data classes to hold overview information
+class OverviewData {
+  final Duration totalScreenTime;
+  final Duration averageScreenTime;
+  final double screenTimePercentage;
+  final Duration productiveTime;
+  final double productivityScore;
+  final String mostUsedApp;
+  final int focusSessions;
+  final Duration totalFocusTime;
+  final List<ApplicationDetail> topApplications;
+  final List<CategoryDetail> categoryBreakdown;
+  final List<ApplicationLimitDetail> applicationLimits;
+
+  OverviewData({
+    required this.totalScreenTime,
+    required this.averageScreenTime,
+    required this.screenTimePercentage,
+    required this.productiveTime,
+    required this.productivityScore,
+    required this.mostUsedApp,
+    required this.focusSessions,
+    required this.totalFocusTime,
+    required this.topApplications,
+    required this.categoryBreakdown,
+    required this.applicationLimits,
+  });
+}
+
+class ApplicationDetail {
+  final String name;
+  final String category;
+  final Duration screenTime;
+  final double percentageOfTotalTime;
+
+  ApplicationDetail({
+    required this.name,
+    required this.category,
+    required this.screenTime,
+    required this.percentageOfTotalTime,
+  });
+}
+
+class CategoryDetail {
+  final String name;
+  final Duration totalScreenTime;
+  final double percentageOfTotalTime;
+
+  CategoryDetail({
+    required this.name,
+    required this.totalScreenTime,
+    required this.percentageOfTotalTime,
+  });
+}
+
+class ApplicationLimitDetail {
+  final String name;
+  final String category;
+  final Duration dailyLimit;
+  final Duration actualUsage;
+  final double percentageOfLimit;
+  final double percentageOfTotalTime;
+
+  ApplicationLimitDetail({
+    required this.name,
+    required this.category,
+    required this.dailyLimit,
+    required this.actualUsage,
+    required this.percentageOfLimit,
+    required this.percentageOfTotalTime,
+  });
+}

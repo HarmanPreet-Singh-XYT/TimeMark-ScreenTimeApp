@@ -33,10 +33,6 @@ set(CMAKE_CXX_FLAGS_PROFILE "${CMAKE_CXX_FLAGS_RELEASE}")
 add_definitions(-DUNICODE -D_UNICODE)
 
 # Compilation settings that should be applied to most targets.
-#
-# Be cautious about adding new options here, as plugins use this function by
-# default. In most cases, you should add new options to specific targets instead
-# of modifying this function.
 function(APPLY_STANDARD_SETTINGS TARGET)
   target_compile_features(${TARGET} PUBLIC cxx_std_17)
   target_compile_options(${TARGET} PRIVATE /W4 /WX /wd"4100")
@@ -52,18 +48,11 @@ add_subdirectory(${FLUTTER_MANAGED_DIR})
 # Application build; see runner/CMakeLists.txt.
 add_subdirectory("runner")
 
-
-# Generated plugin build rules, which manage building the plugins and adding
-# them to the application.
+# Generated plugin build rules
 include(flutter/generated_plugins.cmake)
 
-
 # === Installation ===
-# Support files are copied into place next to the executable, so that it can
-# run in place. This is done instead of making a separate bundle (as on Linux)
-# so that building and running from within Visual Studio will work.
 set(BUILD_BUNDLE_DIR "$<TARGET_FILE_DIR:${BINARY_NAME}>")
-# Make the "install" step default, as it's required to run.
 set(CMAKE_VS_INCLUDE_INSTALL_TO_DEFAULT_BUILD 1)
 if(CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT)
   set(CMAKE_INSTALL_PREFIX "${BUILD_BUNDLE_DIR}" CACHE PATH "..." FORCE)
@@ -106,3 +95,18 @@ install(DIRECTORY "${PROJECT_BUILD_DIR}/${FLUTTER_ASSET_DIR_NAME}"
 install(FILES "${AOT_LIBRARY}" DESTINATION "${INSTALL_BUNDLE_DATA_DIR}"
   CONFIGURATIONS Profile;Release
   COMPONENT Runtime)
+
+# === Use windows native code for processes ===
+# Directly link Windows system libraries
+target_link_libraries(${BINARY_NAME} PRIVATE 
+  user32.lib
+  kernel32.lib
+  psapi.lib
+)
+
+# If you have a custom native plugin, add it here
+if(EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/foreground_window.cpp")
+  target_sources(${BINARY_NAME} PRIVATE 
+    "${CMAKE_CURRENT_SOURCE_DIR}/foreground_window.cpp"
+  )
+endif()
