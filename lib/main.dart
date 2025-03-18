@@ -11,10 +11,13 @@ import './adaptive_fluent/adaptive_theme_fluent_ui.dart';
 import 'package:adaptive_theme/adaptive_theme.dart';
 import 'package:bitsdojo_window/bitsdojo_window.dart';
 import 'package:tray_manager/tray_manager.dart';
+import './sections/controller/application_controller.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await SettingsManager().init();
+  final tracker = BackgroundAppTracker();
+  tracker.initializeTracking();
   runApp(const MyApp());
   doWhenWindowReady(() {
     final win = appWindow;

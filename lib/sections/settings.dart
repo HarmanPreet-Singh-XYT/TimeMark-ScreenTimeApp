@@ -1,4 +1,5 @@
 import 'package:fluent_ui/fluent_ui.dart';
+import 'package:screentime/sections/controller/app_data_controller.dart';
 import 'controller/settings_data_controller.dart';
 import 'package:launch_at_startup/launch_at_startup.dart';
 class Settings extends StatefulWidget { 
@@ -291,10 +292,22 @@ class _NotificationSectionState extends State<NotificationSection> {
   }
 }
 
-class DataSection extends StatelessWidget {
+class DataSection extends StatefulWidget {
   const DataSection({
     super.key,
   });
+
+  @override
+  State<DataSection> createState() => _DataSectionState();
+}
+
+class _DataSectionState extends State<DataSection> {
+  SettingsManager settingsManager = SettingsManager();
+  Future<void> _clearData() async{
+    final AppDataStore _dataStore = AppDataStore();
+    // await _dataStore.init();
+    await _clearData();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -312,16 +325,86 @@ class DataSection extends StatelessWidget {
             color: FluentTheme.of(context).micaBackgroundColor,
             border: Border.all(color: FluentTheme.of(context).inactiveBackgroundColor,width: 1)
           ),
-          child:const Column(
+          child: Column(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              OptionSetting(title: "Clear Data",description: "Clear all the history and other related data",optionType: "button",buttonType: "data",settingType: ""),
-              OptionSetting(title: "Reset Settings",description: "Reset all the settings",optionType: "button",buttonType: "settings",settingType: ""),
+              OptionSetting(
+                title: "Clear Data",
+                description: "Clear all the history and other related data",
+                optionType: "button",
+                buttonType: "data",
+                settingType: "",
+                // Pass the dialog function to the OptionSetting
+                onButtonPressed: () => showDataDialog(context),
+              ),
+              OptionSetting(
+                title: "Reset Settings",
+                description: "Reset all the settings",
+                optionType: "button",
+                buttonType: "settings",
+                settingType: "",
+                // Pass the dialog function to the OptionSetting
+                onButtonPressed: () => showSettingsDialog(context),
+              ),
             ],
           ),
         )
       ],
     );
+  }
+
+  void showDataDialog(BuildContext context) async {
+    final result = await showDialog<String>(
+      context: context,
+      builder: (context) => ContentDialog(
+        title: const Text('Clear Data?'),
+        content: const Text(
+          'This will clear all history and related data. You won\'t be able to recover it. Do you want to proceed?',
+        ),
+        actions: [
+          Button(
+            child: const Text('Clear Data'),
+            onPressed: () {
+              _clearData();
+              Navigator.pop(context, 'User cleared data');
+              // Clear data implementation here
+            },
+          ),
+          FilledButton(
+            child: const Text('Cancel'),
+            onPressed: () => Navigator.pop(context, 'User canceled dialog'),
+          ),
+        ],
+      ),
+    );
+    setState(() {});
+  }
+
+  void showSettingsDialog(BuildContext context) async {
+    final result = await showDialog<String>(
+      context: context,
+      builder: (context) => ContentDialog(
+        title: const Text('Reset Settings?'),
+        content: const Text(
+          'This will reset all settings to their default values. Do you want to proceed?',
+        ),
+        actions: [
+          Button(
+            child: const Text('Reset'),
+            onPressed: () {
+              settingsManager.resetSettings();
+              Navigator.pop(context, 'User reset settings');
+              // Reset settings implementation here
+            },
+          ),
+          FilledButton(
+            child: const Text('Cancel'),
+            onPressed: () => Navigator.pop(context, 'User canceled dialog'),
+          ),
+        ],
+      ),
+    );
+    setState(() {});
   }
 }
 class AboutSection extends StatelessWidget {
@@ -383,9 +466,11 @@ class OptionSetting extends StatelessWidget {
   final String buttonType;
   final bool isChecked;
   final String settingType;
-  final void Function(String type, dynamic value)? changeValue; // Nullable function
+  final void Function(String type, dynamic value)? changeValue;
   final String optionsValue;
   final List<dynamic> options;
+  // Add new callback for button press
+  final VoidCallback? onButtonPressed;
 
   const OptionSetting({
     super.key,
@@ -394,10 +479,12 @@ class OptionSetting extends StatelessWidget {
     this.optionType = "options",
     this.buttonType = "",
     this.isChecked = false,
-    this.changeValue, // Optional
+    this.changeValue,
     required this.settingType,
     this.optionsValue = "",
     this.options = const [],
+    // Make the new callback optional
+    this.onButtonPressed,
   });
 
   @override
@@ -412,19 +499,19 @@ class OptionSetting extends StatelessWidget {
             Text(description, style: const TextStyle(fontSize: 12, color: Color(0xff555555))),
           ],
         ),
-        _buildOptionWidget(buttonType, isChecked,optionsValue,options),
+        _buildOptionWidget(buttonType, isChecked, optionsValue, options),
       ],
     );
   }
 
-  Widget _buildOptionWidget(String buttonType, bool isChecked, String optionsValue,List<dynamic> options) {
+  Widget _buildOptionWidget(String buttonType, bool isChecked, String optionsValue, List<dynamic> options) {
     switch (optionType) {
       case "switch":
         return ToggleSwitch(
           checked: isChecked,
           onChanged: (value) {
             if (changeValue != null) {
-              changeValue!(settingType, value); // Call if not null
+              changeValue!(settingType, value);
             }
           },
         );
@@ -435,11 +522,8 @@ class OptionSetting extends StatelessWidget {
             foregroundColor: WidgetStatePropertyAll(Color.fromARGB(255, 171, 134, 142)),
             padding: WidgetStatePropertyAll(EdgeInsets.symmetric(horizontal: 20, vertical: 8)),
           ),
-          onPressed: () {
-            if (changeValue != null) {
-              changeValue!("button", true); // Example usage
-            }
-          },
+          // Use the new callback instead of the old one
+          onPressed: onButtonPressed,
           child: Text(
             buttonType == "data" ? "Clear Data" : "Reset Settings",
             style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
@@ -456,14 +540,12 @@ class OptionSetting extends StatelessWidget {
           }).toList(),
           onChanged: (value) {
             if (value != null) {
-              optionsValue = value;
               if (changeValue != null) {
                 changeValue!(settingType, value);
               }
             }
           },
         );
-
     }
   }
 }

@@ -16,7 +16,7 @@ class DailyOverviewData {
 
     // Get today's date
     final DateTime today = DateTime.now();
-    final DateTime weekAgo = today.subtract(Duration(days: 7));
+    final DateTime weekAgo = today.subtract(const Duration(days: 7));
 
     // Calculate total screen time
     final Duration todayScreenTime = _dataStore.getTotalScreenTime(today);
@@ -127,6 +127,21 @@ class DailyOverviewData {
     if (average.inSeconds == 0) return 0.0;
     return (current.inSeconds / average.inSeconds) * 100;
   }
+  
+  // Helper function to format Duration as "3h 15m"
+  static String formatDuration(Duration duration) {
+    final hours = duration.inHours;
+    final minutes = duration.inMinutes.remainder(60);
+    
+    if (hours > 0) {
+      return '${hours}h ${minutes}m';
+    } else if (minutes > 0) {
+      return '${minutes}m';
+    } else {
+      final seconds = duration.inSeconds.remainder(60);
+      return '${seconds}s';
+    }
+  }
 }
 
 // Data classes to hold overview information
@@ -143,6 +158,12 @@ class OverviewData {
   final List<CategoryDetail> categoryBreakdown;
   final List<ApplicationLimitDetail> applicationLimits;
 
+  // Formatted strings
+  final String formattedTotalScreenTime;
+  final String formattedAverageScreenTime;
+  final String formattedProductiveTime;
+  final String formattedTotalFocusTime;
+
   OverviewData({
     required this.totalScreenTime,
     required this.averageScreenTime,
@@ -155,7 +176,11 @@ class OverviewData {
     required this.topApplications,
     required this.categoryBreakdown,
     required this.applicationLimits,
-  });
+  }) : 
+    formattedTotalScreenTime = DailyOverviewData.formatDuration(totalScreenTime),
+    formattedAverageScreenTime = DailyOverviewData.formatDuration(averageScreenTime),
+    formattedProductiveTime = DailyOverviewData.formatDuration(productiveTime),
+    formattedTotalFocusTime = DailyOverviewData.formatDuration(totalFocusTime);
 }
 
 class ApplicationDetail {
@@ -163,25 +188,27 @@ class ApplicationDetail {
   final String category;
   final Duration screenTime;
   final double percentageOfTotalTime;
+  final String formattedScreenTime;
 
   ApplicationDetail({
     required this.name,
     required this.category,
     required this.screenTime,
     required this.percentageOfTotalTime,
-  });
+  }) : formattedScreenTime = DailyOverviewData.formatDuration(screenTime);
 }
 
 class CategoryDetail {
   final String name;
   final Duration totalScreenTime;
   final double percentageOfTotalTime;
+  final String formattedTotalScreenTime;
 
   CategoryDetail({
     required this.name,
     required this.totalScreenTime,
     required this.percentageOfTotalTime,
-  });
+  }) : formattedTotalScreenTime = DailyOverviewData.formatDuration(totalScreenTime);
 }
 
 class ApplicationLimitDetail {
@@ -191,6 +218,8 @@ class ApplicationLimitDetail {
   final Duration actualUsage;
   final double percentageOfLimit;
   final double percentageOfTotalTime;
+  final String formattedDailyLimit;
+  final String formattedActualUsage;
 
   ApplicationLimitDetail({
     required this.name,
@@ -199,5 +228,7 @@ class ApplicationLimitDetail {
     required this.actualUsage,
     required this.percentageOfLimit,
     required this.percentageOfTotalTime,
-  });
+  }) : 
+    formattedDailyLimit = DailyOverviewData.formatDuration(dailyLimit),
+    formattedActualUsage = DailyOverviewData.formatDuration(actualUsage);
 }

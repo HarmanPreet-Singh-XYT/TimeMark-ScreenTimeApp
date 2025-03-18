@@ -9,31 +9,139 @@ class Overview extends StatefulWidget {
 }
 
 class _OverviewState extends State<Overview> {
+  // Top
+  String totalScreenTime = "8h 45m";
+  String totalProductiveTime = "8h 45m";
+  String mostUsedApp = "8h 45m";
+  String focusSessions = "8h 45m";
+  // Middle
+  //[{"name":"VS Code","category":"Development","screenTime":"3h 15m","percentageOfTotalTime":90},{"name":"VS Code","category":"Development","screenTime":"3h 15m","percentageOfTotalTime":90}]
+  List<dynamic> topApplications = [];
+  //[{"name":"Development","totalScreenTime":"3h 15m","percentageOfTotalTime":90},{"name":"Development","totalScreenTime":"3h 15m","percentageOfTotalTime":90}]
+  List<dynamic> categoryApplications = [];
+  // Bottom
+  //[{"name":"VS Code","category":"Development","dailyLimit":"3h 15m","percentageOfLimit":50,"percentageOfTotalTime":80},{"name":"VS Code","category":"Development","dailyLimit":"3h 15m","percentageOfLimit":50,"percentageOfTotalTime":80}]
+  List<dynamic> applicationLimits = [];
+  double screenTime = 0.5;
+  double productiveScore = 0.4;
+  
+  // Add loading state
+  bool _isLoading = true;
+  
+  @override
+  void initState() {
+    super.initState();
+    _loadData();
+  }
+  
+  // Function to load data and update state
+  Future<void> _loadData() async {
+    try {
+      // Create instance of DailyOverviewData
+      final DailyOverviewData dataProvider = DailyOverviewData();
+      
+      // Fetch today's overview data
+      final OverviewData overviewData = await dataProvider.fetchTodayOverview();
+      
+      // Update state with fetched data
+      setState(() {
+        // Top section
+        totalScreenTime = overviewData.formattedTotalScreenTime;
+        totalProductiveTime = overviewData.formattedProductiveTime;
+        mostUsedApp = overviewData.mostUsedApp;
+        focusSessions = overviewData.focusSessions.toString();
+        
+        // Progress indicators
+        screenTime = overviewData.screenTimePercentage / 100;  // Convert percentage to value between 0-1
+        productiveScore = overviewData.productivityScore / 100;  // Convert percentage to value between 0-1
+        
+        // Middle section - Top Applications
+        topApplications = overviewData.topApplications.map((app) => {
+          "name": app.name,
+          "category": app.category,
+          "screenTime": app.formattedScreenTime,
+          "percentageOfTotalTime": app.percentageOfTotalTime
+        }).toList();
+        
+        // Middle section - Category Applications
+        categoryApplications = overviewData.categoryBreakdown.map((category) => {
+          "name": category.name,
+          "totalScreenTime": category.formattedTotalScreenTime,
+          "percentageOfTotalTime": category.percentageOfTotalTime
+        }).toList();
+        
+        // Bottom section - Application Limits
+        applicationLimits = overviewData.applicationLimits.map((limit) => {
+          "name": limit.name,
+          "category": limit.category,
+          "dailyLimit": limit.formattedDailyLimit,
+          "actualUsage": limit.formattedActualUsage,
+          "percentageOfLimit": limit.percentageOfLimit,
+          "percentageOfTotalTime": limit.percentageOfTotalTime
+        }).toList();
+        
+        _isLoading = false;
+      });
+    } catch (e) {
+      print('Error loading overview data: $e');
+      setState(() {
+        _isLoading = false;
+        // You could set some error state here if needed
+      });
+    }
+  }
+
+  // Function to manually refresh data
+  Future<void> refreshData() async {
+    setState(() {
+      _isLoading = true;
+    });
+    await _loadData();
+  }
+
   @override
   Widget build(BuildContext context) {
-    return const SingleChildScrollView(
-        child: Padding(
-          padding:EdgeInsets.only(left: 20,right: 20,bottom: 20,top: 10),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Header(),
-              SizedBox(height: 10,),
-              TopBoxes(),
-              SizedBox(height: 10,),
-              MidSection(),
-              SizedBox(height: 10,),
-              BottomSection()
-            ],
+    return _isLoading 
+      ? const Center(child: ProgressRing())
+      : SingleChildScrollView(
+          child: Padding(
+            padding: const EdgeInsets.only(left: 20, right: 20, bottom: 20, top: 10),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                const Header(),
+                const SizedBox(height: 10,),
+                TopBoxes(
+                  totalProductiveTime: totalProductiveTime,
+                  totalScreenTime: totalScreenTime,
+                  mostUsedApp: mostUsedApp,
+                  focusSessions: focusSessions,
+                ),
+                const SizedBox(height: 10,),
+                MidSection(
+                  topApplications: topApplications,
+                  categoryApplications: categoryApplications,
+                ),
+                const SizedBox(height: 10,),
+                BottomSection(
+                  screenTime: screenTime,
+                  productiveScore: productiveScore,
+                  applicationLimits: applicationLimits,
+                )
+              ],
+            ),
           ),
-        ),
-      );
+        );
   }
 }
 
 class MidSection extends StatelessWidget {
+  final List<dynamic> topApplications;
+  final List<dynamic> categoryApplications;
   const MidSection({
     super.key,
+    required this.topApplications,
+    required this.categoryApplications
   });
 
   @override
@@ -52,7 +160,7 @@ class MidSection extends StatelessWidget {
               borderRadius: BorderRadius.circular(10),
               border: Border.all(color: FluentTheme.of(context).inactiveBackgroundColor,width: 1)
             ),
-            child:const TopApplications(),
+            child:TopApplications(data:topApplications),
           ),
         ),
         const SizedBox(width: 15,),
@@ -67,7 +175,7 @@ class MidSection extends StatelessWidget {
               borderRadius: BorderRadius.circular(10),
               border: Border.all(color: FluentTheme.of(context).inactiveBackgroundColor,width: 1)
             ),
-            child:const CategoryBreakdown(),
+            child:CategoryBreakdown(data: categoryApplications,),
           ),
         ),
       ],
@@ -76,8 +184,10 @@ class MidSection extends StatelessWidget {
 }
 
 class TopApplications extends StatelessWidget {
+  final List<dynamic> data;
   const TopApplications({
     super.key,
+    required this.data,
   });
 
   @override
@@ -93,15 +203,18 @@ class TopApplications extends StatelessWidget {
         Expanded(
           child: SingleChildScrollView(
             child: Column(
-              children: List.generate(
-                5,
-                (index) => const Column(
-                  children: [
-                     Application(barColor: Color(0xff263A8A),),
-                     SizedBox(height: 20),
-                  ],
-                ),
-              ),
+              children: data.map((app) => Column(
+                children: [
+                  Application(
+                    name: app['name'],
+                    category: app['category'],
+                    screenTime: app['screenTime'],
+                    percentageOfTotalTime: app['percentageOfTotalTime'],
+                    barColor: const Color(0xff263A8A), // Customize color if needed
+                  ),
+                  const SizedBox(height: 20),
+                ],
+              )).toList(),
             ),
           ),
         ),
@@ -110,9 +223,12 @@ class TopApplications extends StatelessWidget {
   }
 }
 
+
 class ApplicationLimits extends StatelessWidget {
+  final List<dynamic> data;
   const ApplicationLimits({
     super.key,
+    required this.data
   });
 
   @override
@@ -128,15 +244,18 @@ class ApplicationLimits extends StatelessWidget {
         Expanded(
           child: SingleChildScrollView(
             child: Column(
-              children: List.generate(
-                5,
-                (index) => const Column(
-                  children: [
-                     Application(barColor: Color(0xffEA4435),),
-                     SizedBox(height: 10),
-                  ],
-                ),
-              ),
+              children: data.map((app) => Column(
+                children: [
+                  Application(
+                    name: app['name'],
+                    category: app['category'],
+                    screenTime: app['dailyLimit'],
+                    percentageOfTotalTime: app['percentageOfTotalTime'],
+                    barColor: const Color(0xff263A8A), // Customize color if needed
+                  ),
+                  const SizedBox(height: 20),
+                ],
+              )).toList(),
             ),
           ),
         ),
@@ -146,8 +265,10 @@ class ApplicationLimits extends StatelessWidget {
 }
 
 class CategoryBreakdown extends StatelessWidget {
+  final List<dynamic> data;
   const CategoryBreakdown({
     super.key,
+    required this.data,
   });
 
   @override
@@ -163,15 +284,17 @@ class CategoryBreakdown extends StatelessWidget {
         Expanded(
           child: SingleChildScrollView(
             child: Column(
-              children: List.generate(
-                5,
-                (index) => const Column(
-                  children: [
-                     Category(barColor: Color(0xff14532D),),
-                     SizedBox(height: 34),
-                  ],
-                ),
-              ),
+              children: data.map((category) => Column(
+                children: [
+                  Category(
+                    name: category['name'],
+                    totalScreenTime: category['totalScreenTime'],
+                    percentageOfTotalTime: category['percentageOfTotalTime'],
+                    barColor: const Color(0xff14532D), // Customize color if needed
+                  ),
+                  const SizedBox(height: 34),
+                ],
+              )).toList(),
             ),
           ),
         ),
@@ -181,10 +304,19 @@ class CategoryBreakdown extends StatelessWidget {
 }
 
 class Application extends StatelessWidget {
+  final String name;
+  final String category;
+  final String screenTime;
+  final double percentageOfTotalTime;
   final Color barColor;
+
   const Application({
     super.key,
-    required this.barColor
+    required this.name,
+    required this.category,
+    required this.screenTime,
+    required this.percentageOfTotalTime,
+    required this.barColor,
   });
 
   @override
@@ -193,35 +325,42 @@ class Application extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
-        const SizedBox(
+        SizedBox(
           width: 100,
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text("VS Code",style: TextStyle(fontWeight: FontWeight.w600),),
-              Text("Development",style: TextStyle(fontSize: 14),),
+              Text(name,style:const TextStyle(fontWeight: FontWeight.w600),),
+              Text(category,style:const TextStyle(fontSize: 14),),
             ],
           ),
         ),
         LinearPercentIndicator(
-          width: MediaQuery.of(context).size.width * 0.18,
+          width: MediaQuery.of(context).size.width * 0.2,
           animation: true,
           lineHeight: 25.0,
           animationDuration: 2000,
-          percent: 0.9,
+          percent: (percentageOfTotalTime/100),
           barRadius:const Radius.circular(100),
           progressColor: barColor,
         ),
-        const SizedBox(width:60,child: Text("3h 15m",style: TextStyle(fontWeight: FontWeight.bold),)),
+        SizedBox(width:60,child: Text(screenTime,style:const TextStyle(fontWeight: FontWeight.bold),)),
       ],
     );
   }
 }
 class Category extends StatelessWidget {
+  final String name;
+  final String totalScreenTime;
+  final double percentageOfTotalTime;
   final Color barColor;
+
   const Category({
     super.key,
-    required this.barColor
+    required this.name,
+    required this.totalScreenTime,
+    required this.percentageOfTotalTime,
+    required this.barColor,
   });
 
   @override
@@ -250,8 +389,14 @@ class Category extends StatelessWidget {
 }
 
 class BottomSection extends StatelessWidget {
+  final List<dynamic> applicationLimits;
+  final double screenTime;
+  final double productiveScore;
   const BottomSection({
     super.key,
+    required this.applicationLimits,
+    required this.screenTime,
+    required this.productiveScore
   });
 
   @override
@@ -270,7 +415,7 @@ class BottomSection extends StatelessWidget {
               borderRadius: BorderRadius.circular(10),
               border: Border.all(color: FluentTheme.of(context).inactiveBackgroundColor,width: 1)
             ),
-            child:const ApplicationLimits(),
+            child:ApplicationLimits(data: applicationLimits,),
           ),
         ),
         const SizedBox(width: 20,),
@@ -289,7 +434,7 @@ class BottomSection extends StatelessWidget {
               radius: 70.0,
               lineWidth: 22.0,
               animation: true,
-              percent: 0.7,
+              percent: 1,
               center:const Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
@@ -327,7 +472,7 @@ class BottomSection extends StatelessWidget {
               radius: 70.0,
               lineWidth: 22.0,
               animation: true,
-              percent: 0.7,
+              percent: productiveScore,
               center:const Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
@@ -355,19 +500,27 @@ class BottomSection extends StatelessWidget {
 }
 
 class TopBoxes extends StatelessWidget {
+  final String totalScreenTime;
+  final String totalProductiveTime;
+  final String mostUsedApp;
+  final String focusSessions;
   const TopBoxes({
     super.key,
+    required this.focusSessions,
+    required this.mostUsedApp,
+    required this.totalProductiveTime,
+    required this.totalScreenTime
   });
 
   @override
   Widget build(BuildContext context) {
-    return const Row(
+    return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        TopBox(boxColor: Color(0xff263A8A),textColor: Color(0xffBFDBFE),textContent: "8h 45m", textHeading: "Total Screen Time"),
-        TopBox(boxColor: Color(0xff14532D),textColor: Color(0xffBBF7D0),textContent: "8h 45m", textHeading: "Productive Time"),
-        TopBox(boxColor: Color(0xff581C87),textColor: Color(0xffE8D5FF),textContent: "8h 45m", textHeading: "Most Used App"),
-        TopBox(boxColor: Color(0xff7C2D12),textColor: Color(0xffFED7AA),textContent: "8h 45m", textHeading: "Focus Sessions"),
+        TopBox(boxColor:const Color(0xff263A8A),textColor:const Color(0xffBFDBFE),textContent: totalScreenTime, textHeading: "Total Screen Time"),
+        TopBox(boxColor:const Color(0xff14532D),textColor:const Color(0xffBBF7D0),textContent: totalProductiveTime, textHeading: "Productive Time"),
+        TopBox(boxColor:const Color(0xff581C87),textColor:const Color(0xffE8D5FF),textContent: mostUsedApp, textHeading: "Most Used App"),
+        TopBox(boxColor:const Color(0xff7C2D12),textColor:const Color(0xffFED7AA),textContent: focusSessions, textHeading: "Focus Sessions"),
       ],
     );
   }

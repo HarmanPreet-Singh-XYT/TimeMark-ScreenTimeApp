@@ -1,0 +1,145 @@
+import 'dart:async';
+import 'dart:io';
+import 'package:flutter/foundation.dart';
+import 'package:flutter/services.dart';
+import 'package:screentime/foreground_window_plugin.dart';
+import 'app_data_controller.dart';
+import 'categories_controller.dart';
+
+class BackgroundAppTracker {
+  // Singleton instance
+  static final BackgroundAppTracker _instance = BackgroundAppTracker._internal();
+  factory BackgroundAppTracker() => _instance;
+  BackgroundAppTracker._internal();
+
+  // Platform channel for native app tracking
+  static const MethodChannel _platformChannel = MethodChannel('app_tracking_channel');
+  
+  // Timer for periodic tracking
+  Timer? _trackingTimer;
+  bool _isTracking = false;
+
+  // Initialize tracking
+  Future<void> initializeTracking() async {
+    try {
+      // Request necessary permissions
+      // await _requestTrackingPermissions();
+
+      // Start periodic tracking
+      _startPeriodicTracking();
+    } catch (e) {
+      print('Tracking initialization error: $e');
+    }
+  }
+
+  // Request system permissions for tracking
+  // Future<void> _requestTrackingPermissions() async {
+  //   try {
+  //     if (Platform.isWindows || Platform.isLinux || Platform.isMacOS) {
+  //       // Use platform-specific method to request app usage tracking permissions
+  //       final bool? permissionGranted = await _platformChannel.invokeMethod('requestAppUsagePermission');
+        
+  //       if (permissionGranted != true) {
+  //         throw Exception('App usage tracking permissions not granted');
+  //       }
+  //     }
+  //   } catch (e) {
+  //     print('Permission request error: $e');
+  //   }
+  // }
+
+  // Start periodic tracking with Timer
+  void _startPeriodicTracking() {
+    if (_isTracking) return;
+    
+    _isTracking = true;
+    // Track every 15 minutes
+    _trackingTimer = Timer.periodic(
+      const Duration(minutes: 15),
+      (_) => _executeTracking(),
+    );
+    
+    // Execute tracking immediately
+    _executeTracking();
+  }
+
+  // Method to execute tracking
+  Future<void> _executeTracking() async {
+    try {
+      // Initialize AppDataStore
+      final appDataStore = AppDataStore();
+      await appDataStore.init();
+
+      // Get current active application
+      final Map<String, dynamic>? currentAppInfo = await _getCurrentActiveApp();
+      
+      if (currentAppInfo == null) return;
+
+      final String appTitle = currentAppInfo['title'] ?? 'Unknown';
+      
+      // Check if app tracking is enabled
+      AppMetadata? metadata = appDataStore.getAppMetadata(appTitle);
+      
+      // If metadata doesn't exist, create with default tracking
+      if (metadata == null) {
+        bool isProductive = true;
+        String appCategory = AppCategories.categorizeApp(appTitle);
+        if(appCategory == "Social Media" || appCategory == "Entertainment" || appCategory == "Gaming" || appCategory == "Uncategorized") isProductive = false;
+        await appDataStore.updateAppMetadata(
+          appTitle,
+          category: appCategory,
+          isProductive: isProductive,
+        );
+        
+        metadata = appDataStore.getAppMetadata(appTitle);
+      }
+
+      // Only record usage if tracking is enabled and app is visible
+      if (metadata != null && metadata.isTracking && metadata.isVisible) {
+        // Record app usage
+        await appDataStore.recordAppUsage(
+          appTitle, 
+          DateTime.now(), 
+          const Duration(minutes: 15), 
+          1, 
+          [TimeRange(
+            startTime: DateTime.now().subtract(const Duration(minutes: 15)), 
+            endTime: DateTime.now()
+          )]
+        );
+      }
+    } catch (e) {
+      print('Tracking error: $e');
+    }
+  }
+
+  // Get current active app
+  Future<Map<String, dynamic>?> _getCurrentActiveApp() async {
+    try {
+      // Use your ForegroundWindowPlugin
+      WindowInfo info = await ForegroundWindowPlugin.getForegroundWindowInfo();
+      // print(info);
+      
+      return {
+        'title': info.windowTitle ?? 'Unknown',
+        // 'processName': info.processName ?? 'Unknown',
+        // 'processID': info.processId ?? 'Unknown',
+      };
+    } catch (e) {
+      print('Error getting current app: $e');
+      return null;
+    }
+  }
+
+  // Stop tracking
+  Future<void> stopTracking() async {
+    _isTracking = false;
+    _trackingTimer?.cancel();
+    _trackingTimer = null;
+  }
+  
+  // Check if tracking is active
+  bool isTracking() {
+    return _isTracking;
+  }
+}

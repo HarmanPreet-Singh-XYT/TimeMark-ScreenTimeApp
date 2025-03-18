@@ -41,7 +41,8 @@ class SettingsManager {
     },
     "applications": {
       "tracking": true,
-      "isHidden": true
+      "isHidden": true,
+      "selectedCategory":"All"
     },
     "focusModeSettings":{
       "selectedMode":"Custom",
@@ -133,4 +134,63 @@ class SettingsManager {
     }
     return current;
   }
+
+  //reset
+  Future<void> resetSettings() async {
+  // Default settings map
+  final Map<String, dynamic> defaultSettings = {
+    "theme": {
+      "selected": "Dark",
+      "available": ["Dark"]
+    },
+    "language": {
+      "selected": "English",
+      "available": ["English"]
+    },
+    "launchAtStartup": true,
+    "notifications": {
+      "enabled": true,
+      "focusMode": true,
+      "screenTime": true,
+      "appScreenTime": true,
+    },
+    "limitsAlerts": {
+      "popup": true,
+      "frequent": true,
+      "sound": true,
+      "system": true
+    },
+    "applications": {
+      "tracking": true,
+      "isHidden": true,
+      "selectedCategory": "All"
+    },
+    "focusModeSettings": {
+      "selectedMode": "Custom",
+      "workDuration": 25.0,
+      "shortBreak": 5.0,
+      "longBreak": 15.0,
+      "autoStart": false,
+      "blockDistractions": false,
+      "enableSoundsNotifications": true
+    }
+  };
+
+  // Update the settings with default values
+  settings = Map<String, dynamic>.from(defaultSettings);
+  
+  // Update launch at startup setting in the system
+  if (!kIsWeb && Platform.isWindows || Platform.isMacOS || Platform.isLinux) {
+    if (settings["launchAtStartup"]) {
+      await launchAtStartup.enable();
+    } else {
+      await launchAtStartup.disable();
+    }
+  }
+
+  // Save the default settings to persistent storage
+  _saveSettings();
+  
+  debugPrint("✅ Settings reset to default values");
+}
 }

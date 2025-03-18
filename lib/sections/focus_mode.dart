@@ -1,5 +1,4 @@
 import 'dart:async';
-
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:percent_indicator/percent_indicator.dart';
 import 'package:screentime/sections/graphs/focus_mode_history.dart';
@@ -7,6 +6,7 @@ import 'package:screentime/sections/graphs/focus_mode_pie_chart.dart';
 import 'package:screentime/sections/graphs/focus_mode_trends.dart';
 import 'controller/settings_data_controller.dart';
 import './controller/focus_mode_controller.dart';
+import 'controller/focus_mode_controller.dart';
 class FocusMode extends StatefulWidget {
   const FocusMode({super.key});
 
@@ -15,6 +15,11 @@ class FocusMode extends StatefulWidget {
 }
 
 class _FocusModeState extends State<FocusMode> {
+  double workPercentage = 5;
+  double shortBreakPercentage = 6;
+  double longBreakPercentage = 8;
+
+
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
@@ -78,21 +83,19 @@ class _FocusModeState extends State<FocusMode> {
                         borderRadius: BorderRadius.circular(10),
                         border: Border.all(color: FluentTheme.of(context).inactiveBackgroundColor,width: 1)
                       ),
-                      child: const Column(
+                      child: Column(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text("Time Distribution",style: TextStyle(fontSize: 18,fontWeight: FontWeight.w600),),
+                          const Text("Time Distribution",style: TextStyle(fontSize: 18,fontWeight: FontWeight.w600),),
                           FocusModePieChart(dataMap: {
-                            "Flutter": 5,
-                            "React": 3,
-                            "Xamarin": 2,
-                            "Ionic": 2,
-                          },colorList: [
-                            Color.fromRGBO(223, 250, 92, 1),
-                            Color.fromRGBO(129, 250, 112, 1),
-                            Color.fromRGBO(129, 182, 205, 1),
-                            Color.fromRGBO(91, 253, 199, 1),
+                            "Work Session": workPercentage,
+                            "Short Break": shortBreakPercentage,
+                            "Long Break": longBreakPercentage,
+                          },colorList:const [
+                            Color.fromRGBO(41, 164, 72, 1),
+                            Color.fromRGBO(207, 52, 50, 1),
+                            Color.fromRGBO(71, 169, 211, 1),
                           ],)
                         ]
                       ),

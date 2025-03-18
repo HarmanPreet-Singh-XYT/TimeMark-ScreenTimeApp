@@ -1,5 +1,6 @@
 import 'package:fluent_ui/fluent_ui.dart';
 import 'controller/settings_data_controller.dart';
+import './controller/data_controllers/applications_data_controller.dart';
 class Applications extends StatefulWidget {
   const Applications({super.key});
 
@@ -11,12 +12,56 @@ class _ApplicationsState extends State<Applications> {
   SettingsManager settingsManager = SettingsManager();
   bool isTracking = false;
   bool isHidden = false;
+  // {"name":"Google Chrome","category":"Browser","screenTime":"3h 15m","isTracking":true,"isHidden":false}
+  List<dynamic> apps = [];
+
   @override
   void initState() {
     super.initState();
     isTracking = settingsManager.getSetting("applications.tracking");
     isHidden = settingsManager.getSetting("applications.isHidden");
+    _loadData();
   }
+  bool _isLoading = true;
+  
+  // Function to load data and update state
+  Future<void> _loadData() async {
+    try {
+      // Get list of all applications
+      final appDataProvider = ApplicationsDataProvider();
+      final List<ApplicationBasicDetail> allApps = await appDataProvider.fetchAllApplications();
+
+
+      // Update state with fetched data
+      setState(() {
+        // Middle section - Top Applications
+        apps = allApps.map((app) => {
+          "name": app.name,
+          "category": app.category,
+          "screenTime": app.formattedScreenTime,
+          "isTracking": app.isTracking,
+          "isHidden": app.isHidden
+        }).toList();
+        
+        _isLoading = false;
+      });
+    } catch (e) {
+      print('Error loading overview data: $e');
+      setState(() {
+        _isLoading = false;
+        // You could set some error state here if needed
+      });
+    }
+  }
+
+  // Function to manually refresh data
+  Future<void> refreshData() async {
+    setState(() {
+      _isLoading = true;
+    });
+    await _loadData();
+  }
+
   @override
   Widget build(BuildContext context) {
     void setSetting(String key, dynamic value) {
@@ -35,7 +80,7 @@ class _ApplicationsState extends State<Applications> {
           break;
       }
     }
-    return SingleChildScrollView(
+    return _isLoading ? const Center(child: ProgressRing(),) : SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.only(left: 20, right: 20, bottom: 20,top: 10),
           child: Column(
@@ -138,10 +183,9 @@ class _ApplicationsState extends State<Applications> {
                     Expanded(
                       child: SingleChildScrollView(
                         child: Column(
-                          children: List.generate(
-                            15,
-                            (index) => const Application(name: "Google Chrome",category: "Browser",screenTime: "1h 20m",tracking: true,isHidden: false),
-                          ),
+                          children: apps.where((app)=> (app["isTracking"]==isTracking || app["isHidden"]==isHidden)).map((app)=>
+                          Application(name: app["name"],category: app["category"],screenTime: app["screenTime"],tracking: app["isTracking"],isHidden: app["isHidden"]),
+                          ).toList()
                         ),
                       ),
                     ),
