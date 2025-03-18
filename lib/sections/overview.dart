@@ -369,20 +369,20 @@ class Category extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
-        const SizedBox(
+        SizedBox(
           width: 100,
-          child: Text("Development",style: TextStyle(fontWeight: FontWeight.w600),),
+          child: Text(name,style:const TextStyle(fontWeight: FontWeight.w600),),
         ),
         LinearPercentIndicator(
           width: MediaQuery.of(context).size.width * 0.18,
           animation: true,
           lineHeight: 25.0,
           animationDuration: 2000,
-          percent: 0.9,
+          percent: percentageOfTotalTime/100,
           barRadius:const Radius.circular(100),
           progressColor: barColor,
         ),
-        const SizedBox(width:60,child: Text("3h 15m",style: TextStyle(fontWeight: FontWeight.bold),)),
+        SizedBox(width:60,child: Text(totalScreenTime,style: TextStyle(fontWeight: FontWeight.bold),)),
       ],
     );
   }
@@ -434,7 +434,7 @@ class BottomSection extends StatelessWidget {
               radius: 70.0,
               lineWidth: 22.0,
               animation: true,
-              percent: 1,
+              percent: screenTime/100,
               center:const Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
@@ -561,7 +561,20 @@ class TopBox extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
-              Text(textContent,style: TextStyle(color: textColor,fontSize: 28,fontWeight: FontWeight.w700),),
+              Container(
+                width: 135,  // Set your desired width
+                child: Text(
+                  textContent,
+                  style: TextStyle(
+                    color: textColor,
+                    fontSize: textHeading != 'Most Used App' ? 28 : 18,
+                    fontWeight: FontWeight.w700
+                  ),
+                  overflow: TextOverflow.visible,  // Change from ellipsis to visible
+                  softWrap: true,  // Enable text wrapping
+                  maxLines: null,  // Allow unlimited lines
+                ),
+              ),
             ],
           ),
         ],

@@ -41,7 +41,7 @@ class SettingsManager {
     },
     "applications": {
       "tracking": true,
-      "isHidden": true,
+      "isHidden": false,
       "selectedCategory":"All"
     },
     "focusModeSettings":{
@@ -162,7 +162,7 @@ class SettingsManager {
     },
     "applications": {
       "tracking": true,
-      "isHidden": true,
+      "isHidden": false,
       "selectedCategory": "All"
     },
     "focusModeSettings": {

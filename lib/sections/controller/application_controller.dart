@@ -55,13 +55,16 @@ class BackgroundAppTracker {
     _isTracking = true;
     // Track every 15 minutes
     _trackingTimer = Timer.periodic(
-      const Duration(minutes: 15),
+      const Duration(minutes: 1),
       (_) => _executeTracking(),
     );
     
     // Execute tracking immediately
     _executeTracking();
   }
+  // Add a stream controller to broadcast updates
+  final StreamController<String> _appUpdateController = StreamController<String>.broadcast();
+  Stream<String> get appUpdates => _appUpdateController.stream;
 
   // Method to execute tracking
   Future<void> _executeTracking() async {
@@ -75,13 +78,28 @@ class BackgroundAppTracker {
       
       if (currentAppInfo == null) return;
 
-      final String appTitle = currentAppInfo['title'] ?? 'Unknown';
+      // final String appTitle = currentAppInfo['title'] ?? 'Unknown';
+
+      String extractLastPartOfTitle(Map<String, dynamic>? appInfo) {
+        if (appInfo != null && appInfo.containsKey('title')) {
+          String title = appInfo['title'];
+          if (title.contains('-')) {
+            List<String> parts = title.split('-');
+            return parts.last.trim(); // Return the last part and remove any extra whitespace
+          }
+          return title; // Return the original title if no hyphen is found
+        }
+        return 'Unknown'; // Return empty string if title doesn't exist or appInfo is null
+      }
+
+      // Usage
+      String appTitle = extractLastPartOfTitle(currentAppInfo);
       
       // Check if app tracking is enabled
       AppMetadata? metadata = appDataStore.getAppMetadata(appTitle);
       
       // If metadata doesn't exist, create with default tracking
-      if (metadata == null) {
+      if (metadata == null && appTitle!="Productive ScreenTime" && appTitle!="screentime") {
         bool isProductive = true;
         String appCategory = AppCategories.categorizeApp(appTitle);
         if(appCategory == "Social Media" || appCategory == "Entertainment" || appCategory == "Gaming" || appCategory == "Uncategorized") isProductive = false;
@@ -95,23 +113,30 @@ class BackgroundAppTracker {
       }
 
       // Only record usage if tracking is enabled and app is visible
-      if (metadata != null && metadata.isTracking && metadata.isVisible) {
+      if (metadata != null && metadata.isTracking && metadata.isVisible && appTitle!="Productive ScreenTime" && appTitle!="screentime") {
         // Record app usage
         await appDataStore.recordAppUsage(
           appTitle, 
           DateTime.now(), 
-          const Duration(minutes: 15), 
+          const Duration(minutes: 1), 
           1, 
           [TimeRange(
-            startTime: DateTime.now().subtract(const Duration(minutes: 15)), 
+            startTime: DateTime.now().subtract(const Duration(minutes: 1)), 
             endTime: DateTime.now()
           )]
         );
       }
+      // Notify listeners about the update
+      _appUpdateController.add(appTitle);
     } catch (e) {
       print('Tracking error: $e');
     }
   }
+  // close the controller when done
+  // void dispose() {
+  //   stopTracking();
+  //   _appUpdateController.close();
+  // }
 
   // Get current active app
   Future<Map<String, dynamic>?> _getCurrentActiveApp() async {

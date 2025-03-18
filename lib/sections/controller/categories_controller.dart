@@ -19,6 +19,10 @@ class AppCategory {
 class AppCategories {
   static final List<AppCategory> categories = [
     const AppCategory(
+      name: "All",
+      apps: [],
+    ),
+    const AppCategory(
       name: "Productivity",
       apps: [
         "Microsoft Word", "Excel", "PowerPoint", "Google Docs", "Notion", 
@@ -38,7 +42,7 @@ class AppCategories {
       name: "Social Media",
       apps: [
         "Facebook", "Instagram", "Twitter", "LinkedIn", "TikTok", 
-        "Snapchat", "Discord", "Reddit", "WhatsApp", "Messenger"
+        "Snapchat", "Reddit", "WhatsApp", "Messenger"
       ],
     ),
     const AppCategory(
@@ -51,7 +55,7 @@ class AppCategories {
     const AppCategory(
       name: "Gaming",
       apps: [
-        "Steam", "Epic Games Launcher", "Origin", "Uplay", "Discord", 
+        "Steam", "Epic Games Launcher", "Origin", "Uplay", 
         "Minecraft", "League of Legends", "World of Warcraft", 
         "Counter-Strike", "Valorant"
       ],
@@ -60,7 +64,7 @@ class AppCategories {
       name: "Communication",
       apps: [
         "Zoom", "Skype", "Microsoft Teams", "Google Meet", "FaceTime", 
-        "Telegram", "Signal", "Discord Voice"
+        "Telegram", "Signal", "Discord"
       ],
     ),
     const AppCategory(
