@@ -305,7 +305,7 @@ class _DataSectionState extends State<DataSection> {
   SettingsManager settingsManager = SettingsManager();
   Future<void> _clearData() async{
     final AppDataStore _dataStore = AppDataStore();
-    // await _dataStore.init();
+    await _dataStore.init();
     await _clearData();
   }
 
@@ -516,17 +516,15 @@ class OptionSetting extends StatelessWidget {
           },
         );
       case "button":
-        return FilledButton(
+        return Button(
           style: const ButtonStyle(
-            backgroundColor: WidgetStatePropertyAll(Color(0xffDC143C)),
-            foregroundColor: WidgetStatePropertyAll(Color.fromARGB(255, 171, 134, 142)),
             padding: WidgetStatePropertyAll(EdgeInsets.symmetric(horizontal: 20, vertical: 8)),
           ),
           // Use the new callback instead of the old one
           onPressed: onButtonPressed,
           child: Text(
             buttonType == "data" ? "Clear Data" : "Reset Settings",
-            style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+            style: const TextStyle(color: Colors.white, fontWeight: FontWeight.w600),
           ),
         );
       default:

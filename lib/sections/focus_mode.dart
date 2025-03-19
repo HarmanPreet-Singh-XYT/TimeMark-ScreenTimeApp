@@ -1,12 +1,15 @@
 import 'dart:async';
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:percent_indicator/percent_indicator.dart';
+import 'package:screentime/sections/controller/data_controllers/focusMode_data_controller.dart';
 import 'package:screentime/sections/graphs/focus_mode_history.dart';
 import 'package:screentime/sections/graphs/focus_mode_pie_chart.dart';
 import 'package:screentime/sections/graphs/focus_mode_trends.dart';
 import 'controller/settings_data_controller.dart';
 import './controller/focus_mode_controller.dart';
-import 'controller/focus_mode_controller.dart';
+import 'package:intl/intl.dart';
+
+
 class FocusMode extends StatefulWidget {
   const FocusMode({super.key});
 
@@ -15,9 +18,147 @@ class FocusMode extends StatefulWidget {
 }
 
 class _FocusModeState extends State<FocusMode> {
-  double workPercentage = 5;
-  double shortBreakPercentage = 6;
-  double longBreakPercentage = 8;
+  // Analytics service instance
+  final FocusAnalyticsService _analyticsService = FocusAnalyticsService();
+  
+  // State variables
+  double workPercentage = 0;
+  double shortBreakPercentage = 0;
+  double longBreakPercentage = 0;
+  
+  // Session history data
+  List<Map<String, dynamic>> sessionHistory = [];
+  
+  // Session count by day
+  Map<String, int> sessionCountByDay = {
+      'Monday': 0,
+      'Tuesday': 0,
+      'Wednesday': 0,
+      'Thursday': 0,
+      'Friday': 0,
+      'Saturday': 0,
+      'Sunday': 0,
+    };
+  
+  // Focus trends data
+  Map<String, dynamic> focusTrends = {
+    'periods': [],
+    'sessionCounts': [],
+    'avgDuration': [],
+    'totalFocusTime': [],
+    'percentageChange': 0,
+  };
+  
+  // Weekly summary
+  Map<String, dynamic> weeklySummary = {};
+  
+  // Loading state
+  bool isLoading = true;
+
+  @override
+  void initState() {
+    super.initState();
+    _loadData();
+  }
+  
+  // Load all the necessary data
+  Future<void> _loadData() async {
+    setState(() {
+      isLoading = true;
+    });
+    
+    try {
+      // Set date range for analytics
+      final DateTime now = DateTime.now();
+      final DateTime startDate = DateTime(now.year, now.month - 1, now.day); // Last month
+      final DateTime endDate = now;
+      
+      // Get time distribution data
+      final timeDistribution = _analyticsService.getTimeDistribution(
+        startDate: startDate,
+        endDate: endDate,
+      );
+      
+      // Get session history
+      final history = _analyticsService.getSessionHistory(
+        startDate: startDate,
+        endDate: endDate,
+      );
+      
+      // Get session count by day
+      final countByDay = _analyticsService.getSessionCountByDay(
+        startDate: startDate,
+        endDate: endDate,
+      );
+      
+      // Get focus trends
+      final trends = _analyticsService.getFocusTrends(months: 3);
+      
+      // Get weekly summary
+      final summary = _analyticsService.getWeeklySummary();
+      
+      // Update state with loaded data
+      setState(() {
+        workPercentage = timeDistribution['workPercentage'] ?? 0;
+        shortBreakPercentage = timeDistribution['shortBreakPercentage'] ?? 0;
+        longBreakPercentage = timeDistribution['longBreakPercentage'] ?? 0;
+        sessionHistory = history;
+        sessionCountByDay = getLatestDataByWeekday(countByDay);
+        focusTrends = trends;
+        weeklySummary = summary;
+        isLoading = false;
+      });
+    } catch (e) {
+      debugPrint("Error loading focus mode data: $e");
+      setState(() {
+        // Set default values in case of error
+        workPercentage = 5;
+        shortBreakPercentage = 6;
+        longBreakPercentage = 8;
+        isLoading = false;
+      });
+    }
+  }
+  
+  // Filter session counts by day of week
+  Map<String, int> getLatestDataByWeekday(Map<String, int> sessionCountByDay) {
+    // Initialize result map with days of the week
+    final Map<String, int> latestByWeekday = {
+      'Monday': 0,
+      'Tuesday': 0,
+      'Wednesday': 0,
+      'Thursday': 0,
+      'Friday': 0,
+      'Saturday': 0,
+      'Sunday': 0,
+    };
+    
+    // Initialize a map to track the latest date found for each day of the week
+    final Map<String, DateTime> latestDateByWeekday = {};
+    
+    // Process each entry in the session count map
+    sessionCountByDay.forEach((dateStr, count) {
+      try {
+        // Parse the date string
+        final DateTime date = DateFormat('yyyy-MM-dd').parse(dateStr);
+        
+        // Get the weekday name
+        final String weekday = DateFormat('EEEE').format(date); // Full weekday name
+        
+        // Check if this is the first occurrence or a more recent date for this weekday
+        if (!latestDateByWeekday.containsKey(weekday) || 
+            date.isAfter(latestDateByWeekday[weekday]!)) {
+          // Update the latest date and count for this weekday
+          latestDateByWeekday[weekday] = date;
+          latestByWeekday[weekday] = count;
+        }
+      } catch (e) {
+        debugPrint('Error parsing date: $dateStr - $e');
+      }
+    });
+    
+    return latestByWeekday;
+  }
 
 
   @override
@@ -41,12 +182,12 @@ class _FocusModeState extends State<FocusMode> {
                   borderRadius: BorderRadius.circular(10),
                   border: Border.all(color: FluentTheme.of(context).inactiveBackgroundColor,width: 1)
                 ),
-                child:const Column(
+                child:Column(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text("History",style: TextStyle(fontSize: 18,fontWeight: FontWeight.w600),),
-                    FocusModeHistoryChart()
+                    const Text("History",style: TextStyle(fontSize: 18,fontWeight: FontWeight.w600),),
+                    FocusModeHistoryChart(data:sessionCountByDay)
                   ]
                 ),
               ),
@@ -59,12 +200,12 @@ class _FocusModeState extends State<FocusMode> {
                   borderRadius: BorderRadius.circular(10),
                   border: Border.all(color: FluentTheme.of(context).inactiveBackgroundColor,width: 1)
                 ),
-                child: const Column(
+                child: Column(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text("Trends",style: TextStyle(fontSize: 18,fontWeight: FontWeight.w600),),
-                    FocusModeTrends()
+                    const Text("Trends",style: TextStyle(fontSize: 18,fontWeight: FontWeight.w600),),
+                    FocusModeTrends(data:focusTrends)
                   ]
                 ),
               ),
@@ -112,7 +253,7 @@ class _FocusModeState extends State<FocusMode> {
                         borderRadius: BorderRadius.circular(10),
                         border: Border.all(color: FluentTheme.of(context).inactiveBackgroundColor,width: 1)
                       ),
-                      child:const SessionHistory(),
+                      child:SessionHistory(data:sessionHistory),
                     ),
                   ),
                 ],
@@ -640,8 +781,12 @@ class Header extends StatelessWidget {
 }
 
 class SessionHistory extends StatelessWidget {
-  const SessionHistory({super.key});
-
+  final List<Map<String, dynamic>> data;
+  const SessionHistory({
+    super.key,
+    required this.data
+    });
+    
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -680,16 +825,15 @@ class SessionHistory extends StatelessWidget {
           Expanded(
             child: SingleChildScrollView(
               child: Column(
-                children: List.generate(
-                  8,
-                  (index) => const Session(
-                    date: "2023-10-01 - 23:44",
-                    duration: "25 min",
-                  ),
-                ),
+                children: data.map((session) {
+                  return Session(
+                    date: "${session["date"]}",
+                    duration: session["duration"]!,
+                  );
+                }).toList(),
               ),
             ),
-          ),
+          )
         ],
       ),
     );

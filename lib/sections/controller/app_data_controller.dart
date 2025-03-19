@@ -691,80 +691,33 @@ class AppDataStore extends ChangeNotifier {
   /// Clear all data with improved performance and error handling
   Future<bool> clearAllData({Function(double)? progressCallback}) async {
     if (!_ensureInitialized()) return false;
-    
+
     try {
-      // Use a more efficient approach that won't freeze the UI
-      int totalBoxes = 3;
-      int completedBoxes = 0;
-      
-      // Report initial progress
-      if (progressCallback != null) {
-        progressCallback(0.0);
-      }
-      
-      // Clear usage box in batches
-      if (_usageBox != null && _usageBox!.isOpen) {
-        await _clearBoxInBatches(_usageBox!);
-        completedBoxes++;
-        if (progressCallback != null) {
-          progressCallback(completedBoxes / totalBoxes);
-        }
-      }
-      
-      // Clear focus box in batches
-      if (_focusBox != null && _focusBox!.isOpen) {
-        await _clearBoxInBatches(_focusBox!);
-        completedBoxes++;
-        if (progressCallback != null) {
-          progressCallback(completedBoxes / totalBoxes);
-        }
-      }
-      
-      // Clear metadata box in batches
-      if (_metadataBox != null && _metadataBox!.isOpen) {
-        await _clearBoxInBatches(_metadataBox!);
-        completedBoxes++;
-        if (progressCallback != null) {
-          progressCallback(completedBoxes / totalBoxes);
-        }
-      }
-      
-      // Final notification
+      // Close and delete boxes from disk (Best for large datasets)
+      // await _usageBox?.close();
+      // await _focusBox?.close();
+      // await _metadataBox?.close();
+
+      // await Hive.deleteBoxFromDisk(_usageBoxName);
+      // await Hive.deleteBoxFromDisk(_focusBoxName);
+      // await Hive.deleteBoxFromDisk(_metadataBoxName);
+
+      // // Reinitialize boxes
+      // _usageBox = await _openBoxWithRetry<AppUsageRecord>(_usageBoxName);
+      // _focusBox = await _openBoxWithRetry<FocusSessionRecord>(_focusBoxName);
+      // _metadataBox = await _openBoxWithRetry<AppMetadata>(_metadataBoxName);
+      await _usageBox?.clear();
+      await _focusBox?.clear();
+      await _metadataBox?.clear();
+
       notifyListeners();
       return true;
     } catch (e) {
-      _lastError = "Error clearing all data: $e";
+      _lastError = "Error clearing data: $e";
       debugPrint(_lastError);
       return false;
     }
   }
-
-  /// Helper method to clear a box in small batches to prevent UI freezing
-  Future<void> _clearBoxInBatches<T>(Box<T> box, {int batchSize = 100}) async {
-    final int totalItems = box.length;
-    
-    if (totalItems == 0) return;
-    
-    // If the box is small, clear it directly
-    if (totalItems <= batchSize) {
-      await box.clear();
-      return;
-    }
-    
-    // For larger boxes, clear in batches
-    for (int i = 0; i < totalItems; i += batchSize) {
-      // Get keys for this batch
-      final keys = box.keys.take(batchSize).toList();
-      if (keys.isEmpty) break;
-      
-      // Delete keys in this batch
-      await box.deleteAll(keys);
-      
-      // Let the UI thread breathe
-      await Future.delayed(const Duration(milliseconds: 10));
-    }
-}
-  
   // Close boxes when app terminates
   Future<void> dispose() async {
     try {

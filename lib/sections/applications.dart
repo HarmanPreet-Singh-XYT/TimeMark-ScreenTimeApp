@@ -68,6 +68,22 @@ class _ApplicationsState extends State<Applications> {
     });
     await _loadData();
   }
+  void changeSearchValue(String value) {
+    if (_debounce?.isActive ?? false) _debounce!.cancel();
+
+    _debounce = Timer(const Duration(milliseconds: 300), () {
+      if (searchValue != value) {
+        setState(() {
+          searchValue = value;
+        });
+      }
+    });
+  }
+  @override
+  void dispose() {
+    _debounce?.cancel();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -120,17 +136,6 @@ class _ApplicationsState extends State<Applications> {
           });
           break;
       }
-    }
-    void changeSearchValue(String value) {
-      if (_debounce?.isActive ?? false) _debounce!.cancel();
-
-      _debounce = Timer(const Duration(milliseconds: 300), () {
-        if (searchValue != value) {
-          setState(() {
-            searchValue = value;
-          });
-        }
-      });
     }
     return _isLoading ? const Center(child: ProgressRing(),) : SingleChildScrollView(
         child: Padding(

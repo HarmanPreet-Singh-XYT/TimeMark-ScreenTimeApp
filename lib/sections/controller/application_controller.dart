@@ -26,7 +26,7 @@ class BackgroundAppTracker {
       // await _requestTrackingPermissions();
 
       // Start periodic tracking
-      _startPeriodicTracking();
+      // _startPeriodicTracking();
     } catch (e) {
       print('Tracking initialization error: $e');
     }

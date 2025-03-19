@@ -4,7 +4,9 @@ import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 
 class _BarChart extends StatelessWidget {
-  const _BarChart();
+  final Map<String, int> data;
+  
+  const _BarChart({required this.data});
 
   @override
   Widget build(BuildContext context) {
@@ -56,13 +58,13 @@ class _BarChart extends StatelessWidget {
         text = 'Mn';
         break;
       case 1:
-        text = 'Te';
+        text = 'Tu';
         break;
       case 2:
         text = 'Wd';
         break;
       case 3:
-        text = 'Tu';
+        text = 'Th';
         break;
       case 4:
         text = 'Fr';
@@ -117,82 +119,30 @@ class _BarChart extends StatelessWidget {
         end: Alignment.topCenter,
       );
 
-  List<BarChartGroupData> get barGroups => [
-        BarChartGroupData(
-          x: 0,
-          barRods: [
-            BarChartRodData(
-              toY: 8,
-              gradient: _barsGradient,
-            )
-          ],
-          showingTooltipIndicators: [0],
-        ),
-        BarChartGroupData(
-          x: 1,
-          barRods: [
-            BarChartRodData(
-              toY: 10,
-              gradient: _barsGradient,
-            )
-          ],
-          showingTooltipIndicators: [0],
-        ),
-        BarChartGroupData(
-          x: 2,
-          barRods: [
-            BarChartRodData(
-              toY: 14,
-              gradient: _barsGradient,
-            )
-          ],
-          showingTooltipIndicators: [0],
-        ),
-        BarChartGroupData(
-          x: 3,
-          barRods: [
-            BarChartRodData(
-              toY: 15,
-              gradient: _barsGradient,
-            )
-          ],
-          showingTooltipIndicators: [0],
-        ),
-        BarChartGroupData(
-          x: 4,
-          barRods: [
-            BarChartRodData(
-              toY: 13,
-              gradient: _barsGradient,
-            )
-          ],
-          showingTooltipIndicators: [0],
-        ),
-        BarChartGroupData(
-          x: 5,
-          barRods: [
-            BarChartRodData(
-              toY: 10,
-              gradient: _barsGradient,
-            )
-          ],
-          showingTooltipIndicators: [0],
-        ),
-        BarChartGroupData(
-          x: 6,
-          barRods: [
-            BarChartRodData(
-              toY: 16,
-              gradient: _barsGradient,
-            )
-          ],
-          showingTooltipIndicators: [0],
-        ),
-      ];
+  List<BarChartGroupData> get barGroups {
+    final List<String> days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
+    
+    return List.generate(7, (index) {
+      final dayName = days[index];
+      final value = data[dayName] ?? 0;
+      
+      return BarChartGroupData(
+        x: index,
+        barRods: [
+          BarChartRodData(
+            toY: value.toDouble(),
+            gradient: _barsGradient,
+          )
+        ],
+        showingTooltipIndicators: value > 0 ? [0] : [],
+      );
+    });
+  }
 }
 
 class FocusModeHistoryChart extends StatefulWidget {
-  const FocusModeHistoryChart({super.key});
+  final Map<String, int> data;
+  const FocusModeHistoryChart({super.key, required this.data});
 
   @override
   State<StatefulWidget> createState() => FocusModeHistoryChartState();
@@ -201,9 +151,9 @@ class FocusModeHistoryChart extends StatefulWidget {
 class FocusModeHistoryChartState extends State<FocusModeHistoryChart> {
   @override
   Widget build(BuildContext context) {
-    return const AspectRatio(
+    return AspectRatio(
       aspectRatio: 4,
-      child: _BarChart(),
+      child: _BarChart(data: widget.data),
     );
   }
 }
