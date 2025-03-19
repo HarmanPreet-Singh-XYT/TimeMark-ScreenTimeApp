@@ -1,10 +1,12 @@
 import 'dart:async';
+import './data_controllers/focusMode_data_controller.dart';
 
 enum TimerState { work, shortBreak, longBreak, idle }
 
 class PomodoroTimerService {
   // Singleton instance
   static final PomodoroTimerService _instance = PomodoroTimerService._internal();
+  final FocusAnalyticsService _analyticsService = FocusAnalyticsService();
   
   // Factory constructor
   factory PomodoroTimerService({
@@ -194,6 +196,12 @@ class PomodoroTimerService {
         _currentState = TimerState.idle;
       }
     }
+    //add into DB
+    num totalDuration = _workDuration + _shortBreakDuration + _longBreakDuration;
+    Duration duration = Duration(minutes: totalDuration.toInt());
+    DateTime now = DateTime.now();
+    DateTime startTime = DateTime(now.year, now.month, now.day, now.hour, now.minute, now.second);
+    _analyticsService.createFocusSession(startTime: startTime, duration: duration, appsBlocked: []);
     
     if (_enableNotifications && _onTimerComplete != null) {
       _onTimerComplete!();

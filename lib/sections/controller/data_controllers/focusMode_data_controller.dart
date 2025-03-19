@@ -391,7 +391,7 @@ class FocusAnalyticsService {
         startTime: startTime,
         duration: duration,
         appsBlocked: appsBlocked,
-        completed: false, // Will be marked as completed when the session ends
+        completed: true, // Will be marked as completed when the session ends
         breakCount: 0,
         totalBreakTime: Duration.zero,
       );
