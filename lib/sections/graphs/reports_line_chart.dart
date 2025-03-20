@@ -1,4 +1,5 @@
 import 'package:fl_chart/fl_chart.dart';
+import 'package:screentime/sections/controller/data_controllers/reports_controller.dart';
 import './resources/app_resources.dart';
 import 'package:flutter/material.dart';
 
@@ -6,8 +7,15 @@ enum ChartType { main, alternate }
 
 class LineChartWidget extends StatelessWidget {
   final ChartType chartType;
+  final List<DailyScreenTime>? dailyScreenTimeData;
+  final String periodType; // Add this new parameter
 
-  const LineChartWidget({super.key, required this.chartType});
+  const LineChartWidget({
+    super.key, 
+    required this.chartType,
+    this.dailyScreenTimeData,
+    this.periodType = 'Last 7 Days', // Default to 7 days
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -18,15 +26,35 @@ class LineChartWidget extends StatelessWidget {
   }
 
   LineChartData getChartData(ChartType type) {
+    // Calculate max Y value for the chart based on daily screen time data
+    double maxY = 6.0; // Default value
+    
+    if (dailyScreenTimeData != null && dailyScreenTimeData!.isNotEmpty) {
+      final maxScreenTimeHours = dailyScreenTimeData!
+          .map((data) => data.screenTime.inMinutes / 60.0)
+          .reduce((a, b) => a > b ? a : b);
+      
+      // Round up to the nearest hour and add 1 for better visualization
+      maxY = (maxScreenTimeHours.ceil() + 1).toDouble();
+    }
+
+    // Set minX to 0.5 to give some padding at the start
+    final double minX = 0.5;
+    
+    // Set maxX based on the data length with some padding at the end
+    final double maxX = dailyScreenTimeData != null && dailyScreenTimeData!.isNotEmpty
+        ? (dailyScreenTimeData!.length + 0.5).toDouble()
+        : 7.5; // Default to 7 days if no data
+
     return LineChartData(
       lineTouchData: type == ChartType.main ? lineTouchData1 : lineTouchData2,
       gridData: gridData,
       titlesData: type == ChartType.main ? titlesData1 : titlesData2,
       borderData: borderData,
       lineBarsData: type == ChartType.main ? lineBarsData1 : lineBarsData2,
-      minX: 0,
-      maxX: 14,
-      maxY: type == ChartType.main ? 4 : 6,
+      minX: minX,
+      maxX: maxX,
+      maxY: type == ChartType.main ? maxY : 6,
       minY: 0,
     );
   }
@@ -34,8 +62,31 @@ class LineChartWidget extends StatelessWidget {
   LineTouchData get lineTouchData1 => LineTouchData(
         handleBuiltInTouches: true,
         touchTooltipData: LineTouchTooltipData(
-          getTooltipColor: (touchedSpot) =>
-              Colors.blueGrey.withValues(alpha: 0.8),
+          getTooltipItems: (List<LineBarSpot> touchedSpots) {
+            return touchedSpots.map((spot) {
+              if (dailyScreenTimeData != null && 
+                  spot.x.toInt() > 0 && 
+                  spot.x.toInt() <= dailyScreenTimeData!.length) {
+                final screenTime = dailyScreenTimeData![spot.x.toInt() - 1].screenTime;
+                final hours = screenTime.inHours;
+                final minutes = screenTime.inMinutes.remainder(60);
+                
+                // Include the date in the tooltip
+                final date = dailyScreenTimeData![spot.x.toInt() - 1].date;
+                final dateStr = '${date.day}/${date.month}';
+                
+                return LineTooltipItem(
+                  '$dateStr: ${hours}h ${minutes}m',
+                  const TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+                );
+              }
+              return LineTooltipItem(
+                '${spot.y.toStringAsFixed(1)} hours',
+                const TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+              );
+            }).toList();
+          },
+          getTooltipColor: (touchedSpot) => Colors.blueGrey.withOpacity(0.8),
         ),
       );
 
@@ -50,16 +101,53 @@ class LineChartWidget extends StatelessWidget {
 
   FlTitlesData get titlesData2 => titlesData1; // Reuse titlesData1
 
-  List<LineChartBarData> get lineBarsData1 => [
+  List<LineChartBarData> get lineBarsData1 {
+    if (dailyScreenTimeData != null && dailyScreenTimeData!.isNotEmpty) {
+      return [
+        LineChartBarData(
+          isCurved: true,
+          color: AppColors.contentColorGreen,
+          barWidth: 8,
+          isStrokeCapRound: true,
+          dotData: const FlDotData(show: true),
+          belowBarData: BarAreaData(
+            show: true,
+            color: AppColors.contentColorGreen.withOpacity(0.2),
+          ),
+          spots: _getSpots(),
+        ),
+      ];
+    } else {
+      return [
         lineChartBarData1_1,
-        // lineChartBarData1_2,
         lineChartBarData1_3,
       ];
+    }
+  }
+
+  List<FlSpot> _getSpots() {
+    if (dailyScreenTimeData == null || dailyScreenTimeData!.isEmpty) {
+      return const [
+        FlSpot(1, 1),
+        FlSpot(3, 1.5),
+        FlSpot(5, 1.4),
+        FlSpot(7, 3.4),
+      ];
+    }
+
+    return dailyScreenTimeData!.asMap().entries.map((entry) {
+      // Convert index to 1-based X value and minutes to hours for Y value
+      final index = entry.key;
+      final data = entry.value;
+      final hourValue = data.screenTime.inMinutes / 60.0;
+      
+      return FlSpot((index + 1).toDouble(), hourValue);
+    }).toList();
+  }
 
   List<LineChartBarData> get lineBarsData2 => [
         lineChartBarData2_1,
         lineChartBarData2_2,
-        // lineChartBarData2_3,
       ];
 
   SideTitles leftTitles() => SideTitles(
@@ -71,63 +159,105 @@ class LineChartWidget extends StatelessWidget {
 
   Widget leftTitleWidgets(double value, TitleMeta meta) {
     const style = TextStyle(fontWeight: FontWeight.bold, fontSize: 14);
-    String? text;
-    switch (value.toInt()) {
-      case 1:
-        text = '1m';
-        break;
-      case 2:
-        text = '2m';
-        break;
-      case 3:
-        text = '3m';
-        break;
-      case 4:
-        text = '5m';
-        break;
-      case 5:
-        text = '6m';
-        break;
+    if (value == 0) return Container();
+    
+    final isInteger = value == value.roundToDouble();
+    if (isInteger) {
+      return SideTitleWidget(
+        meta: meta, 
+        child: Text('${value.toInt()}h', style: style),
+      );
     }
-
-    return text != null
-        ? SideTitleWidget(meta: meta, child: Text(text, style: style))
-        : Container();
+    
+    return Container();
   }
 
-  SideTitles get bottomTitles => SideTitles(
-        showTitles: true,
-        reservedSize: 32,
-        interval: 1,
-        getTitlesWidget: bottomTitleWidgets,
-      );
+  SideTitles get bottomTitles {
+    // Calculate an appropriate interval based on the data length
+    double interval = 1.0;  // Default for 7 days
+    
+    if (dailyScreenTimeData != null) {
+      final int dataLength = dailyScreenTimeData!.length;
+      
+      if (dataLength > 30) {  // For "Last 3 Months" or "Lifetime"
+        interval = (dataLength / 6).ceilToDouble();  // Show ~6 labels
+      } else if (dataLength > 14) {  // For "Last Month"
+        interval = 7.0;  // Weekly intervals
+      } else if (dataLength > 7) {  // For slightly more than a week
+        interval = 2.0;  // Every other day
+      }
+    }
+    
+    return SideTitles(
+      showTitles: true,
+      reservedSize: 32,
+      interval: interval,
+      getTitlesWidget: bottomTitleWidgets,
+    );
+  }
 
   Widget bottomTitleWidgets(double value, TitleMeta meta) {
-    const style = TextStyle(fontWeight: FontWeight.bold, fontSize: 16);
+    const style = TextStyle(fontWeight: FontWeight.bold, fontSize: 14);
     String? text;
-    switch (value.toInt()) {
-      case 2:
-        text = 'SEPT';
-        break;
-      case 7:
-        text = 'OCT';
-        break;
-      case 12:
-        text = 'DEC';
-        break;
+    
+    if (dailyScreenTimeData != null && 
+        value >= 1 && 
+        value <= dailyScreenTimeData!.length &&
+        value == value.roundToDouble()) {
+      
+      // Get the date for this data point
+      final date = dailyScreenTimeData![value.toInt() - 1].date;
+      
+      // Format based on the time period
+      if (periodType == 'Last 7 Days') {
+        // Use day of week for short periods
+        final List<String> dayNames = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
+        text = dayNames[date.weekday - 1];
+      } else {
+        // Use date format for longer periods
+        text = '${date.day}/${date.month}';
+      }
+    } else {
+      // Fallback for sample data
+      switch (value.toInt()) {
+        case 2:
+          text = 'Mon';
+          break;
+        case 4:
+          text = 'Wed';
+          break;
+        case 6:
+          text = 'Fri';
+          break;
+      }
     }
 
-    return text != null
-        ? SideTitleWidget(meta: meta, space: 10, child: Text(text, style: style))
-        : Container();
+    if (text == null) return Container();
+    
+    return SideTitleWidget(
+      meta: meta, 
+      angle: 0.3, // Slight angle to prevent overlap for longer text
+      space: 10, 
+      child: Text(text, style: style),
+    );
   }
 
-  FlGridData get gridData => const FlGridData(show: false);
+  FlGridData get gridData => FlGridData(
+    show: true,
+    drawVerticalLine: false,
+    horizontalInterval: 1,
+    getDrawingHorizontalLine: (value) {
+      return FlLine(
+        color: Colors.grey.withOpacity(0.2),
+        strokeWidth: 1,
+      );
+    },
+  );
 
   FlBorderData get borderData => FlBorderData(
         show: true,
         border: Border(
-          bottom: BorderSide(color: AppColors.primary.withValues(alpha: 0.2), width: 4),
+          bottom: BorderSide(color: AppColors.primary.withOpacity(0.2), width: 4),
           left: const BorderSide(color: Colors.transparent),
           right: const BorderSide(color: Colors.transparent),
           top: const BorderSide(color: Colors.transparent),
@@ -146,26 +276,6 @@ class LineChartWidget extends StatelessWidget {
           FlSpot(3, 1.5),
           FlSpot(5, 1.4),
           FlSpot(7, 3.4),
-          FlSpot(10, 2),
-          FlSpot(12, 2.2),
-          FlSpot(13, 1.8),
-        ],
-      );
-
-  LineChartBarData get lineChartBarData1_2 => LineChartBarData(
-        isCurved: true,
-        color: AppColors.contentColorPink,
-        barWidth: 8,
-        isStrokeCapRound: true,
-        dotData: const FlDotData(show: false),
-        belowBarData: BarAreaData(show: false),
-        spots: const [
-          FlSpot(1, 1),
-          FlSpot(3, 2.8),
-          FlSpot(7, 1.2),
-          FlSpot(10, 2.8),
-          FlSpot(12, 2.6),
-          FlSpot(13, 3.9),
         ],
       );
 
@@ -179,26 +289,30 @@ class LineChartWidget extends StatelessWidget {
         spots: const [
           FlSpot(1, 2.8),
           FlSpot(3, 1.9),
-          FlSpot(6, 3),
-          FlSpot(10, 1.3),
-          FlSpot(13, 2.5),
+          FlSpot(5, 3),
+          FlSpot(7, 2.5),
         ],
       );
 
   LineChartBarData get lineChartBarData2_1 => lineChartBarData1_1.copyWith(
-        color: AppColors.contentColorGreen.withValues(alpha: 0.5),
+        color: AppColors.contentColorGreen.withValues(alpha: .5),
         barWidth: 4,
       );
 
-  LineChartBarData get lineChartBarData2_2 => lineChartBarData1_2.copyWith(
-        color: AppColors.contentColorPink.withValues(alpha: 0.5),
+  LineChartBarData get lineChartBarData2_2 => LineChartBarData(
+        isCurved: true,
+        color: AppColors.contentColorPink.withValues(alpha: .5),
         barWidth: 4,
-        belowBarData: BarAreaData(show: true, color: AppColors.contentColorPink.withValues(alpha: 0.2)),
-      );
-
-  LineChartBarData get lineChartBarData2_3 => lineChartBarData1_3.copyWith(
-        color: AppColors.contentColorCyan.withValues(alpha: 0.5),
-        barWidth: 2,
-        dotData: const FlDotData(show: true),
+        dotData: const FlDotData(show: false),
+        belowBarData: BarAreaData(
+          show: true, 
+          color: AppColors.contentColorPink.withValues(alpha: .2)
+        ),
+        spots: const [
+          FlSpot(1, 1),
+          FlSpot(3, 2.8),
+          FlSpot(5, 1.2),
+          FlSpot(7, 2.8),
+        ],
       );
 }
