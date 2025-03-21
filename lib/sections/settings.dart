@@ -105,10 +105,10 @@ class _SettingsState extends State<Settings> {
       return const Text('');
     }
   }
-  @override
   String urlContact = 'https://harman.vercel.app/details/screentime';
   String urlReport = 'https://harman.vercel.app/details/screentime';
   String urlFeedback = 'https://harman.vercel.app/details/screentime';
+  @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
         child: Padding(

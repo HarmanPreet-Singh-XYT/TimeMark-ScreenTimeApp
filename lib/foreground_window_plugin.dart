@@ -1,10 +1,9 @@
 import 'dart:ffi';
-import 'dart:io';
 import 'package:ffi/ffi.dart';
 import 'package:flutter/foundation.dart';
 
 // Define constants
-const int MAX_PATH = 260; // Standard Windows MAX_PATH length
+const int maxPath = 260; // Standard Windows maxPath length
 
 // Native function signatures
 typedef GetForegroundWindowNative = Pointer<Void> Function();
@@ -93,8 +92,8 @@ class ForegroundWindowPlugin {
     _psapi.lookupFunction<GetModuleFileNameExANative, GetModuleFileNameExADart>('GetModuleFileNameExA');
 
   // Constant definitions
-  static const int PROCESS_QUERY_INFORMATION = 0x0400;
-  static const int PROCESS_VM_READ = 0x0010;
+  static const int processQueryInformation = 0x0400;
+  static const int processVMRead = 0x0010;
 
   static Future<WindowInfo> getForegroundWindowInfo() async {
     return await compute(_getForegroundWindowInfoNative, null);
@@ -121,7 +120,7 @@ class ForegroundWindowPlugin {
 
     // Open process
     final hProcess = _openProcess(
-      PROCESS_QUERY_INFORMATION | PROCESS_VM_READ, 
+      processQueryInformation | processVMRead, 
       0, 
       processId
     );
@@ -131,8 +130,8 @@ class ForegroundWindowPlugin {
     }
 
     // Get process name
-    final processNamePtr = calloc<Char>(MAX_PATH);
-    final result = _getModuleFileNameExA(hProcess, nullptr, processNamePtr, MAX_PATH);
+    final processNamePtr = calloc<Char>(maxPath);
+    final result = _getModuleFileNameExA(hProcess, nullptr, processNamePtr, maxPath);
 
     String processName;
     if (result > 0) {

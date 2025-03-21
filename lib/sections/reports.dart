@@ -2,9 +2,6 @@ import 'package:fluent_ui/fluent_ui.dart';
 import 'package:screentime/sections/graphs/reports_line_chart.dart';
 import 'package:screentime/sections/graphs/reports_pie_chart.dart';
 import './controller/data_controllers/reports_controller.dart';
-import './UI sections/Reports/error_display.dart'; // New utility widget
-import './UI sections/Reports/loading_indicator.dart'; // New utility widget
-
 class Reports extends StatefulWidget {
   const Reports({super.key});
 
@@ -125,18 +122,18 @@ Widget build(BuildContext context) {
 }
 
 Widget _buildCustomLoadingIndicator() {
-  return Center(
+  return const Center(
     child: Column(
       children: [
-        Container(
+        SizedBox(
           width: 40,
           height: 40,
-          child: const ProgressRing(
+          child: ProgressRing(
             strokeWidth: 3,
           ),
         ),
-        const SizedBox(height: 10),
-        const Text('Loading analytics data...'),
+        SizedBox(height: 10),
+        Text('Loading analytics data...'),
       ],
     ),
   );
@@ -284,11 +281,11 @@ class CardContainer extends StatelessWidget {
   final double? height;
 
   const CardContainer({
-    Key? key,
+    super.key,
     required this.title,
     required this.child,
     this.height,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -326,7 +323,7 @@ class CardContainer extends StatelessWidget {
 class TopBoxes extends StatelessWidget {
   final AnalyticsSummary analyticsSummary;
 
-  const TopBoxes({Key? key, required this.analyticsSummary}) : super(key: key);
+  const TopBoxes({super.key, required this.analyticsSummary});
 
   @override
   Widget build(BuildContext context) {
@@ -510,9 +507,9 @@ class ApplicationUsage extends StatefulWidget {
   final List<AppUsageSummary> appUsageDetails;
 
   const ApplicationUsage({
-    Key? key,
+    super.key,
     required this.appUsageDetails,
-  }) : super(key: key);
+  });
 
   @override
   State<ApplicationUsage> createState() => _ApplicationUsageState();
@@ -628,8 +625,8 @@ class _ApplicationUsageState extends State<ApplicationUsage> {
           ),
           const SizedBox(height: 10),
           // Table header
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+          const Padding(
+            padding: EdgeInsets.symmetric(horizontal: 12, vertical: 8),
             child: Row(
               children: [
                 Expanded(
@@ -658,23 +655,32 @@ class _ApplicationUsageState extends State<ApplicationUsage> {
           Container(height: 1, color: FluentTheme.of(context).inactiveBackgroundColor),
           const SizedBox(height: 10),
           // App list
-          Expanded(
-            child: _filteredAppUsageDetails.isEmpty
-                ? const Center(child: Text("No applications match your search criteria"))
-                : ListView.builder(
-                    itemCount: _filteredAppUsageDetails.length,
-                    itemBuilder: (context, index) {
-                      final app = _filteredAppUsageDetails[index];
-                      return ApplicationListItem(
-                        name: app.appName,
-                        category: app.category,
-                        productivity: app.isProductive,
-                        totalTime: _formatDuration(app.totalTime),
-                        onViewDetails: () => _showAppDetails(context, app),
-                      );
-                    },
-                  ),
-          ),
+         Expanded(
+          child: _filteredAppUsageDetails
+                  .where((app) =>  app.appName.trim().isNotEmpty)
+                  .isEmpty
+              ? const Center(child: Text("No applications match your search criteria"))
+              : ListView.builder(
+                  itemCount: _filteredAppUsageDetails
+                      .where((app) =>  app.appName.trim().isNotEmpty)
+                      .length,
+                  itemBuilder: (context, index) {
+                    final filteredApps = _filteredAppUsageDetails
+                        .where((app) =>  app.appName.trim().isNotEmpty)
+                        .toList();
+                    final app = filteredApps[index];
+
+                    return ApplicationListItem(
+                      name: app.appName,
+                      category: app.category,
+                      productivity: app.isProductive,
+                      totalTime: _formatDuration(app.totalTime),
+                      onViewDetails: () => _showAppDetails(context, app),
+                    );
+                  },
+                ),
+        )
+
         ],
       ),
     );
@@ -725,13 +731,13 @@ class ApplicationListItem extends StatelessWidget {
   final VoidCallback onViewDetails;
 
   const ApplicationListItem({
-    Key? key,
+    super.key,
     required this.name,
     required this.category,
     required this.productivity,
     required this.totalTime,
     required this.onViewDetails,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -790,7 +796,7 @@ class ApplicationListItem extends StatelessWidget {
 class LoadingIndicator extends StatelessWidget {
   final String message;
   
-  const LoadingIndicator({Key? key, required this.message}) : super(key: key);
+  const LoadingIndicator({super.key, required this.message});
   
   @override
   Widget build(BuildContext context) {
@@ -811,7 +817,7 @@ class ErrorDisplay extends StatelessWidget {
   final String errorMessage;
   final VoidCallback onRetry;
   
-  const ErrorDisplay({Key? key, required this.errorMessage, required this.onRetry}) : super(key: key);
+  const ErrorDisplay({super.key, required this.errorMessage, required this.onRetry});
   
   @override
   Widget build(BuildContext context) {

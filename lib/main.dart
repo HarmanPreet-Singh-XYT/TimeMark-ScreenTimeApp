@@ -71,7 +71,7 @@ class _MyAppState extends State<MyApp> with TrayListener {
     await trayManager.setContextMenu(
       Menu(items: [
         MenuItem(label: 'Show Window', onClick: (_) => _showApp()),
-        MenuItem(label: !focusMode ? 'Start Focus Mode' : 'Stop Focus Mode', onClick: (_) => _startFocusMode()),
+        // MenuItem(label: !focusMode ? 'Start Focus Mode' : 'Stop Focus Mode', onClick: (_) => _startFocusMode()),
         MenuItem.separator(),
         MenuItem(label: 'Reports', onClick: (_) => _openReports()),
         MenuItem(label: 'Alerts & Limits', onClick: (_) => _openAlerts()),
@@ -93,10 +93,10 @@ class _MyAppState extends State<MyApp> with TrayListener {
     appWindow.close();
   }
 
-  void _startFocusMode() {
-    // Implement focus mode activation
+  // void _startFocusMode() {
+  //   // Implement focus mode activation
     
-  }
+  // }
 
   void _openReports() {
     // Implement opening reports section
@@ -159,9 +159,11 @@ class _MyAppState extends State<MyApp> with TrayListener {
       appWindow.show();
     } else if (menuItem.label == 'Exit') {
       _exitApp();
-    } else if (menuItem.label == 'Start Focus Mode') {
-      _startFocusMode();
-    } else if (menuItem.label == 'Reports') {
+    } 
+    // else if (menuItem.label == 'Start Focus Mode') {
+    //   // _startFocusMode();
+    // } 
+    else if (menuItem.label == 'Reports') {
       _openReports();
     } else if (menuItem.label == 'Alerts & Limits') {
       _openAlerts();
@@ -305,7 +307,7 @@ Widget build(BuildContext context) {
 
 /// Custom Window Title Bar
 class TitleBar extends StatelessWidget {
-  const TitleBar({Key? key}) : super(key: key);
+  const TitleBar({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -364,7 +366,7 @@ final closeButtonColors = WindowButtonColors(
     iconMouseOver: Colors.white);
 
 class WindowButtons extends StatelessWidget {
-  const WindowButtons({Key? key}) : super(key: key);
+  const WindowButtons({super.key});
   void showExitDialog(BuildContext context) async {
   final result = await showDialog<String>(
     context: context,

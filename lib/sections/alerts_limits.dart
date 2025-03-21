@@ -127,8 +127,8 @@ class _AlertsLimitsState extends State<AlertsLimits> {
             Text(errorMessage!, style: TextStyle(color: Colors.red)),
             const SizedBox(height: 16),
             Button(
-              child: const Text('Retry'),
               onPressed: _loadData,
+              child: const Text('Retry'),
             ),
           ],
         ),
@@ -766,7 +766,7 @@ class Header extends StatelessWidget {
   }
   
   void showContentDialog(BuildContext context) async {
-    final result = await showDialog<String>(
+    await showDialog<String>(
       context: context,
       builder: (context) => ContentDialog(
         title: const Text('Reset Settings?'),

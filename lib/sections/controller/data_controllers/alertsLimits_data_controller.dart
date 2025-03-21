@@ -1,8 +1,7 @@
-import 'package:flutter/foundation.dart';
+// ignore: file_names
 import 'package:flutter/material.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'dart:async';
-import 'package:intl/intl.dart';
 import '../app_data_controller.dart';
 
 // Assuming we're using the existing AppDataStore from your code
@@ -542,10 +541,6 @@ class ScreenTimeController extends ChangeNotifier {
   }
 
   // Format date for key operations
-  String _formatDateKey(DateTime date) {
-    final DateFormat formatter = DateFormat('yyyy-MM-dd');
-    return formatter.format(date);
-  }
   void _emitConfigUpdate() {
     _configController.add({
       'approachingLimitThreshold': _approachingLimitThreshold,

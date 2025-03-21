@@ -53,7 +53,7 @@ class _ApplicationsState extends State<Applications> {
         _isLoading = false;
       });
     } catch (e) {
-      print('Error loading overview data: $e');
+      debugPrint('Error loading overview data: $e');
       setState(() {
         _isLoading = false;
         // You could set some error state here if needed

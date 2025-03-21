@@ -142,6 +142,27 @@ class FocusTimerController {
     // Start the break automatically
     startTimer();
   }
+  void startWorkSession() {
+    _timer?.cancel();
+    _timer = null;
+    _isWorking = true;
+    _isOnBreak = false;
+    _isLongBreak = false;
+    
+    // Reset work duration if needed
+    _workDuration = const Duration(minutes: 25);
+    
+    // Notify UI of the state change
+    if (onWorkStateChanged != null) {
+      onWorkStateChanged!(_isWorking);
+    }
+    if (onBreakStateChanged != null) {
+      onBreakStateChanged!(_isOnBreak);
+    }
+    
+    // Start the timer
+    startTimer();
+  }
 
   // Complete a break
   void _completeBreak() {
