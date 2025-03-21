@@ -203,21 +203,25 @@ class TopApplications extends StatelessWidget {
         Expanded(
           child: SingleChildScrollView(
             child: Column(
-              children: data.map((app) => Column(
-                children: [
-                  Application(
-                    name: app['name'],
-                    category: app['category'],
-                    screenTime: app['screenTime'],
-                    percentageOfTotalTime: app['percentageOfTotalTime'],
-                    barColor: const Color(0xff263A8A), // Customize color if needed
-                  ),
-                  const SizedBox(height: 20),
-                ],
-              )).toList(),
+              children: data
+                  .where((app) => app['name'] != null && app['name'].toString().trim().isNotEmpty) // Filter out empty or null names
+                  .map((app) => Column(
+                        children: [
+                          Application(
+                            name: app['name'],
+                            category: app['category'],
+                            screenTime: app['screenTime'],
+                            percentageOfTotalTime: app['percentageOfTotalTime'],
+                            barColor: const Color(0xff263A8A), // Customize color if needed
+                          ),
+                          const SizedBox(height: 20),
+                        ],
+                      ))
+                  .toList(),
             ),
           ),
         ),
+
       ],
     );
   }
@@ -244,21 +248,25 @@ class ApplicationLimits extends StatelessWidget {
         Expanded(
           child: SingleChildScrollView(
             child: Column(
-              children: data.map((app) => Column(
-                children: [
-                  Application(
-                    name: app['name'],
-                    category: app['category'],
-                    screenTime: app['dailyLimit'],
-                    percentageOfTotalTime: app['percentageOfTotalTime'],
-                    barColor: const Color(0xff263A8A), // Customize color if needed
-                  ),
-                  const SizedBox(height: 20),
-                ],
-              )).toList(),
+              children: data
+                  .where((app) => app['name'].isNotEmpty) // Filter out empty names
+                  .map((app) => Column(
+                        children: [
+                          Application(
+                            name: app['name'],
+                            category: app['category'],
+                            screenTime: app['dailyLimit'],
+                            percentageOfTotalTime: app['percentageOfTotalTime'],
+                            barColor: const Color(0xff263A8A), // Customize color if needed
+                          ),
+                          const SizedBox(height: 20),
+                        ],
+                      ))
+                  .toList(),
             ),
           ),
-        ),
+        )
+
       ],
     );
   }

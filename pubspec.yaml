@@ -36,6 +36,7 @@ dependencies:
   intl: ^0.19.0
   ffi: ^2.1.4
   provider: ^6.1.2
+  url_launcher_windows: ^3.1.4
 
   # Native Code Interaction for Foreground Window
   # You'll need to implement a custom plugin or package

@@ -477,15 +477,19 @@ class ApplicationUsage extends StatelessWidget {
           Expanded(
             child: SingleChildScrollView(
               child: Column(
-                children: appUsageDetails.map((app) => Application(
-                  name: app.appName,
-                  category: app.category,
-                  totalTime: _formatDuration(app.totalTime),
-                  productivity: app.isProductive,
-                )).toList(),
+                children: appUsageDetails
+                    .where((app) => app.appName.trim().isNotEmpty) // Filter out empty or null names
+                    .map((app) => Application(
+                          name: app.appName,
+                          category: app.category,
+                          totalTime: _formatDuration(app.totalTime),
+                          productivity: app.isProductive,
+                        ))
+                    .toList(),
               ),
             ),
           ),
+
         ],
       ),
     );

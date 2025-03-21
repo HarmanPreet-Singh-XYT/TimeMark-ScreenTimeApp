@@ -250,7 +250,7 @@ class _ApplicationsState extends State<Applications> {
                         child: Column(
                           children: apps.where((app) =>
                             (app["isTracking"] == isTracking && app["isHidden"] == isHidden) &&
-                            app["screenTime"] != "0s" &&
+                            app["screenTime"] != "0s" && app['name'] != '' &&
                             (selectedCategory == "All" || selectedCategory.contains(app["category"])) &&
                             (searchValue.isEmpty || app["name"].toLowerCase().contains(searchValue.toLowerCase()))
                           ).map((app) => 

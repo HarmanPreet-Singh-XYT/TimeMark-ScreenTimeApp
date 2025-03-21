@@ -2,6 +2,7 @@ import 'package:fluent_ui/fluent_ui.dart';
 import 'package:screentime/sections/controller/app_data_controller.dart';
 import 'controller/settings_data_controller.dart';
 import 'package:launch_at_startup/launch_at_startup.dart';
+import 'package:url_launcher_platform_interface/url_launcher_platform_interface.dart';
 class Settings extends StatefulWidget { 
   const Settings({super.key});
 
@@ -79,7 +80,35 @@ class _SettingsState extends State<Settings> {
         break;
     }
   }
+  Future<void>? _launched;
+
+  Future<void> _launchInBrowser(String url) async {
+    if (await UrlLauncherPlatform.instance.canLaunch(url)) {
+      await UrlLauncherPlatform.instance.launch(
+        url,
+        useSafariVC: false,
+        useWebView: false,
+        enableJavaScript: false,
+        enableDomStorage: false,
+        universalLinksOnly: false,
+        headers: <String, String>{},
+      );
+    } else {
+      throw Exception('Could not launch $url');
+    }
+  }
+
+  Widget _launchStatus(BuildContext context, AsyncSnapshot<void> snapshot) {
+    if (snapshot.hasError) {
+      return Text('Error: ${snapshot.error}');
+    } else {
+      return const Text('');
+    }
+  }
   @override
+  String urlContact = 'https://harman.vercel.app/details/screentime';
+  String urlReport = 'https://harman.vercel.app/details/screentime';
+  String urlFeedback = 'https://harman.vercel.app/details/screentime';
   Widget build(BuildContext context) {
     return SingleChildScrollView(
         child: Padding(
@@ -101,15 +130,17 @@ class _SettingsState extends State<Settings> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Button(
-                  style: ButtonStyle(padding: WidgetStateProperty.all(const EdgeInsets.only(top: 8,bottom: 8,left: 14,right: 14))),
-                  child:const Row(
-                    children: [
-                      Icon(FluentIcons.canned_chat,size: 18,),
-                      SizedBox(width: 10,),
-                      Text('Contact',style: TextStyle(fontWeight: FontWeight.w600),),
-                    ],
-                  ),
-                  onPressed: () => debugPrint('pressed button'),
+                    style: ButtonStyle(padding: WidgetStateProperty.all(const EdgeInsets.only(top: 8,bottom: 8,left: 14,right: 14))),
+                    child:const Row(
+                      children: [
+                        Icon(FluentIcons.canned_chat,size: 18,),
+                        SizedBox(width: 10,),
+                        Text('Contact',style: TextStyle(fontWeight: FontWeight.w600),),
+                      ],
+                    ),
+                    onPressed: () => setState(() {
+                    _launched = _launchInBrowser(urlContact);
+                    }),
                 ),
                   const SizedBox(width: 25,),
                   Button(
@@ -121,7 +152,23 @@ class _SettingsState extends State<Settings> {
                         Text('Report Bug',style: TextStyle(fontWeight: FontWeight.w600),),
                       ],
                     ),
-                    onPressed: () => debugPrint('pressed button'),
+                    onPressed: () => setState(() {
+                    _launched = _launchInBrowser(urlReport);
+                    }),
+                  ),
+                  const SizedBox(width: 25,),
+                  Button(
+                    style: ButtonStyle(padding: WidgetStateProperty.all(const EdgeInsets.symmetric(vertical: 8, horizontal: 12))),
+                    child: const Row(
+                      children: [
+                        Icon(FluentIcons.red_eye, size: 20),
+                        SizedBox(width: 10),
+                        Text('Submit Feedback', style: TextStyle(fontWeight: FontWeight.w600)),
+                      ],
+                    ),
+                    onPressed: () => setState(() {
+                    _launched = _launchInBrowser(urlFeedback);
+                    }),
                   ),
                 ],
               ),

@@ -344,10 +344,13 @@ class _ApplicationLimitsState extends State<ApplicationLimits> {
               ? const Center(child: Text("No applications to display"))
               : SingleChildScrollView(
                   child: Column(
-                    children: widget.appSummaries.map((app) => Application(
-                      app: app,
-                      onEdit: () => _showEditLimitDialog(context, app),
-                    )).toList(),
+                    children: widget.appSummaries
+                        .where((app) => app.appName.trim().isNotEmpty) // Filter out empty or null names
+                        .map((app) => Application(
+                              app: app,
+                              onEdit: () => _showEditLimitDialog(context, app),
+                            ))
+                        .toList(),
                   ),
                 ),
           ),
@@ -378,10 +381,13 @@ class _ApplicationLimitsState extends State<ApplicationLimits> {
                 ComboBox<String>(
                   placeholder: const Text('Select an application'),
                   isExpanded: true,
-                  items: allApps.map((app) => ComboBoxItem<String>(
-                    value: app.appName,
-                    child: Text(app.appName),
-                  )).toList(),
+                  items: allApps
+                      .where((app) => app.appName.trim().isNotEmpty) // Filter out empty or null names
+                      .map((app) => ComboBoxItem<String>(
+                            value: app.appName,
+                            child: Text(app.appName),
+                          ))
+                      .toList(),
                   value: selectedApp,
                   onChanged: (value) {
                     setState(() {
@@ -389,6 +395,7 @@ class _ApplicationLimitsState extends State<ApplicationLimits> {
                     });
                   },
                 ),
+
                 const SizedBox(height: 20),
                 Row(
                   children: [
