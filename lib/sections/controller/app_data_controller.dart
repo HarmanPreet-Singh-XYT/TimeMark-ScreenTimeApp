@@ -94,20 +94,24 @@ class AppMetadata {
   @HiveField(4)
   final Duration dailyLimit;
 
+  @HiveField(5)
+  final bool limitStatus;
+
   AppMetadata({
     required this.category,
     required this.isProductive,
     this.isTracking = true,
     this.isVisible = true,
     this.dailyLimit = Duration.zero,
+    this.limitStatus = false,
   });
 }
 
 class AppDataStore extends ChangeNotifier {
   static final AppDataStore _instance = AppDataStore._internal();
-  static const String _usageBoxName = 'app_usage_box';
-  static const String _focusBoxName = 'focus_session_box';
-  static const String _metadataBoxName = 'app_metadata_box';
+  static const String _usageBoxName = 'harman_screentime_app_usage_box.';
+  static const String _focusBoxName = 'harman_screentime_focus_session_box.';
+  static const String _metadataBoxName = 'harman_screentime_app_metadata_box.';
   
   Box<AppUsageRecord>? _usageBox;
   Box<FocusSessionRecord>? _focusBox;
@@ -228,6 +232,7 @@ class AppDataStore extends ChangeNotifier {
     bool? isTracking,
     bool? isVisible,
     Duration? dailyLimit,
+    bool? limitStatus,
   }) async {
     if (!_ensureInitialized() || _metadataBox == null) return false;
     
@@ -247,6 +252,7 @@ class AppDataStore extends ChangeNotifier {
         isTracking: isTracking ?? existing?.isTracking ?? true,
         isVisible: isVisible ?? existing?.isVisible ?? true,
         dailyLimit: dailyLimit ?? existing?.dailyLimit ?? Duration.zero,
+        limitStatus: limitStatus ?? existing?.limitStatus ?? false,
       );
       
       await _metadataBox!.put(appName, updated);
@@ -312,7 +318,8 @@ class AppDataStore extends ChangeNotifier {
         // Update existing record
         final Duration newTimeSpent = existing.timeSpent + timeSpent;
         final int newOpenCount = existing.openCount + openCount;
-        final List<TimeRange> newUsagePeriods = [...existing.usagePeriods, ...usagePeriods];
+        final List<TimeRange> newUsagePeriods = existing.usagePeriods;
+        // final List<TimeRange> newUsagePeriods = [...existing.usagePeriods, ...usagePeriods];
         
         final AppUsageRecord updated = AppUsageRecord(
           date: date,
@@ -702,13 +709,13 @@ class AppDataStore extends ChangeNotifier {
       // await Hive.deleteBoxFromDisk(_focusBoxName);
       // await Hive.deleteBoxFromDisk(_metadataBoxName);
 
-      // // Reinitialize boxes
+      // // // Reinitialize boxes
       // _usageBox = await _openBoxWithRetry<AppUsageRecord>(_usageBoxName);
       // _focusBox = await _openBoxWithRetry<FocusSessionRecord>(_focusBoxName);
       // _metadataBox = await _openBoxWithRetry<AppMetadata>(_metadataBoxName);
-      await _usageBox?.clear();
-      await _focusBox?.clear();
-      await _metadataBox?.clear();
+      // await _usageBox?.clear();
+      // await _focusBox?.clear();
+      // await _metadataBox?.clear();
 
       notifyListeners();
       return true;
@@ -870,12 +877,13 @@ class AppMetadataAdapter extends TypeAdapter<AppMetadata> {
       isTracking: fields[2] as bool,
       isVisible: fields[3] as bool,
       dailyLimit: fields[4] as Duration,
+      limitStatus: fields[5] as bool,
     );
   }
 
   @override
   void write(BinaryWriter writer, AppMetadata obj) {
-    writer.writeByte(5);
+    writer.writeByte(6);
     writer.writeByte(0);
     writer.write(obj.category);
     writer.writeByte(1);
@@ -886,5 +894,7 @@ class AppMetadataAdapter extends TypeAdapter<AppMetadata> {
     writer.write(obj.isVisible);
     writer.writeByte(4);
     writer.write(obj.dailyLimit);
+    writer.writeByte(5);
+    writer.write(obj.limitStatus);
   }
 }

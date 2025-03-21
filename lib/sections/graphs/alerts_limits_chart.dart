@@ -1,21 +1,80 @@
 import 'package:fl_chart/fl_chart.dart';
-import './resources/app_resources.dart';
 import 'package:flutter/material.dart';
+import '../controller/data_controllers/alertsLimits_data_controller.dart';
+import './resources/app_resources.dart';
 
 class AlertUsageChart extends StatefulWidget {
-  const AlertUsageChart({super.key});
+  
+  const AlertUsageChart({
+    super.key,
+  });
 
   @override
   State<AlertUsageChart> createState() => _AlertUsageChartState();
 }
 
 class _AlertUsageChartState extends State<AlertUsageChart> {
+  final controller = ScreenTimeController();
   List<Color> gradientColors = [
     AppColors.contentColorCyan,
     AppColors.contentColorBlue,
   ];
 
   bool showAvg = false;
+  List<AppAlert> alerts = [];
+  Map<String, int> _alertCountByMonth = {};
+  double _avgAlertsPerMonth = 0;
+
+  @override
+  void initState() {
+    super.initState();
+    _fetchAlertData();
+    // Set up periodic refresh instead of using stream
+    _setupPeriodicRefresh();
+  }
+
+  void _setupPeriodicRefresh() {
+    // Refresh data every 60 seconds
+    Future.delayed(const Duration(seconds: 60), () {
+      if (mounted) {
+        _fetchAlertData();
+        _setupPeriodicRefresh();
+      }
+    });
+  }
+
+  void _fetchAlertData() {
+    // Get alerts from controller
+    alerts = controller.getAlerts();
+    _processAlertData();
+    setState(() {});
+  }
+
+  void _processAlertData() {
+    // Group alerts by month and count them
+    _alertCountByMonth = {};
+    final now = DateTime.now();
+    
+    // Create entries for the last 12 months
+    for (int i = 0; i < 12; i++) {
+      final month = DateTime(now.year, now.month - i, 1);
+      final monthKey = '${month.year}-${month.month.toString().padLeft(2, '0')}';
+      _alertCountByMonth[monthKey] = 0;
+    }
+    
+    // Count alerts by month
+    for (final alert in alerts) {
+      final monthKey = '${alert.time.year}-${alert.time.month.toString().padLeft(2, '0')}';
+      if (_alertCountByMonth.containsKey(monthKey)) {
+        _alertCountByMonth[monthKey] = (_alertCountByMonth[monthKey] ?? 0) + 1;
+      }
+    }
+    
+    // Calculate average
+    if (_alertCountByMonth.isNotEmpty) {
+      _avgAlertsPerMonth = _alertCountByMonth.values.reduce((a, b) => a + b) / _alertCountByMonth.length;
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -49,7 +108,7 @@ class _AlertUsageChartState extends State<AlertUsageChart> {
               style: TextStyle(
                 fontSize: 12,
                 color: showAvg
-                    ? Colors.white.withValues(alpha: 0.5)
+                    ? Colors.white.withValues(alpha: .5)
                     : Colors.white,
               ),
             ),
@@ -65,19 +124,26 @@ class _AlertUsageChartState extends State<AlertUsageChart> {
       fontSize: 16,
     );
     Widget text;
-    switch (value.toInt()) {
-      case 2:
-        text = const Text('MAR', style: style);
-        break;
-      case 5:
-        text = const Text('JUN', style: style);
-        break;
-      case 8:
-        text = const Text('SEP', style: style);
-        break;
-      default:
+    
+    // Get the month names based on the processed data
+    final months = _alertCountByMonth.keys.toList()..sort();
+    final shortMonths = {
+      1: 'JAN', 2: 'FEB', 3: 'MAR', 4: 'APR', 5: 'MAY', 6: 'JUN',
+      7: 'JUL', 8: 'AUG', 9: 'SEP', 10: 'OCT', 11: 'NOV', 12: 'DEC'
+    };
+    
+    // Display only a few month labels to avoid crowding
+    if (value.toInt() >= 0 && value.toInt() < months.length) {
+      final monthKey = months[months.length - 1 - value.toInt()];
+      final month = int.parse(monthKey.split('-')[1]);
+      
+      if (value.toInt() % 3 == 0) {
+        text = Text(shortMonths[month] ?? '', style: style);
+      } else {
         text = const Text('', style: style);
-        break;
+      }
+    } else {
+      text = const Text('', style: style);
     }
 
     return SideTitleWidget(
@@ -91,30 +157,48 @@ class _AlertUsageChartState extends State<AlertUsageChart> {
       fontWeight: FontWeight.bold,
       fontSize: 15,
     );
-    String text;
-    switch (value.toInt()) {
-      case 1:
-        text = '10K';
-        break;
-      case 3:
-        text = '30k';
-        break;
-      case 5:
-        text = '50k';
-        break;
-      default:
-        return Container();
+    
+    // Find the maximum alert count to scale the y-axis
+    final maxAlertCount = _alertCountByMonth.values.isEmpty ? 
+      10 : _alertCountByMonth.values.reduce((a, b) => a > b ? a : b);
+    
+    // Calculate appropriate interval for the y-axis
+    final maxY = (maxAlertCount / 5).ceil() * 5;
+    
+    if (value % (maxY / 3) == 0 && value > 0) {
+      return Text(value.toInt().toString(), 
+        style: style, 
+        textAlign: TextAlign.left
+      );
     }
-
-    return Text(text, style: style, textAlign: TextAlign.left);
+    
+    return Container();
   }
 
   LineChartData mainData() {
+    // Create spots from the alert data
+    final spots = <FlSpot>[];
+    
+    final months = _alertCountByMonth.keys.toList()..sort();
+    
+    for (int i = 0; i < months.length; i++) {
+      final monthKey = months[months.length - 1 - i];
+      final count = _alertCountByMonth[monthKey] ?? 0;
+      spots.add(FlSpot(i.toDouble(), count.toDouble()));
+    }
+    
+    // Find the maximum alert count to scale the y-axis
+    final maxAlertCount = _alertCountByMonth.values.isEmpty ? 
+      10 : _alertCountByMonth.values.reduce((a, b) => a > b ? a : b);
+    
+    // Calculate appropriate max for the y-axis
+    final maxY = (maxAlertCount / 5).ceil() * 5;
+
     return LineChartData(
       gridData: FlGridData(
         show: true,
         drawVerticalLine: true,
-        horizontalInterval: 1,
+        horizontalInterval: maxY > 0 ? maxY / 6 : 1,
         verticalInterval: 1,
         getDrawingHorizontalLine: (value) {
           return const FlLine(
@@ -159,20 +243,12 @@ class _AlertUsageChartState extends State<AlertUsageChart> {
         border: Border.all(color: const Color(0xff37434d)),
       ),
       minX: 0,
-      maxX: 11,
+      maxX: months.length.toDouble() - 1,
       minY: 0,
-      maxY: 6,
+      maxY: maxY.toDouble(),
       lineBarsData: [
         LineChartBarData(
-          spots: const [
-            FlSpot(0, 3),
-            FlSpot(2.6, 2),
-            FlSpot(4.9, 5),
-            FlSpot(6.8, 3.1),
-            FlSpot(8, 4),
-            FlSpot(9.5, 3),
-            FlSpot(11, 4),
-          ],
+          spots: spots,
           isCurved: true,
           gradient: LinearGradient(
             colors: gradientColors,
@@ -186,7 +262,7 @@ class _AlertUsageChartState extends State<AlertUsageChart> {
             show: true,
             gradient: LinearGradient(
               colors: gradientColors
-                  .map((color) => color.withValues(alpha: 0.3))
+                  .map((color) => color.withValues(alpha: .3))
                   .toList(),
             ),
           ),
@@ -196,13 +272,28 @@ class _AlertUsageChartState extends State<AlertUsageChart> {
   }
 
   LineChartData avgData() {
+    // Create flat line for average
+    final spots = <FlSpot>[];
+    final months = _alertCountByMonth.keys.toList()..sort();
+    
+    for (int i = 0; i < months.length; i++) {
+      spots.add(FlSpot(i.toDouble(), _avgAlertsPerMonth));
+    }
+    
+    // Find the maximum alert count to scale the y-axis
+    final maxAlertCount = _alertCountByMonth.values.isEmpty ? 
+      10 : _alertCountByMonth.values.reduce((a, b) => a > b ? a : b);
+    
+    // Calculate appropriate max for the y-axis
+    final maxY = (maxAlertCount / 5).ceil() * 5;
+
     return LineChartData(
       lineTouchData: const LineTouchData(enabled: false),
       gridData: FlGridData(
         show: true,
         drawHorizontalLine: true,
         verticalInterval: 1,
-        horizontalInterval: 1,
+        horizontalInterval: maxY > 0 ? maxY / 6 : 1,
         getDrawingVerticalLine: (value) {
           return const FlLine(
             color: Color(0xff37434d),
@@ -246,20 +337,12 @@ class _AlertUsageChartState extends State<AlertUsageChart> {
         border: Border.all(color: const Color(0xff37434d)),
       ),
       minX: 0,
-      maxX: 11,
+      maxX: months.length.toDouble() - 1,
       minY: 0,
-      maxY: 6,
+      maxY: maxY.toDouble(),
       lineBarsData: [
         LineChartBarData(
-          spots: const [
-            FlSpot(0, 3.44),
-            FlSpot(2.6, 3.44),
-            FlSpot(4.9, 3.44),
-            FlSpot(6.8, 3.44),
-            FlSpot(8, 3.44),
-            FlSpot(9.5, 3.44),
-            FlSpot(11, 3.44),
-          ],
+          spots: spots,
           isCurved: true,
           gradient: LinearGradient(
             colors: [
@@ -280,10 +363,10 @@ class _AlertUsageChartState extends State<AlertUsageChart> {
               colors: [
                 ColorTween(begin: gradientColors[0], end: gradientColors[1])
                     .lerp(0.2)!
-                    .withValues(alpha: 0.1),
+                    .withValues(alpha: .1),
                 ColorTween(begin: gradientColors[0], end: gradientColors[1])
                     .lerp(0.2)!
-                    .withValues(alpha: 0.1),
+                    .withValues(alpha: .1),
               ],
             ),
           ),

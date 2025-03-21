@@ -1,6 +1,4 @@
 import 'dart:async';
-import 'dart:io';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 import 'package:screentime/foreground_window_plugin.dart';
 import 'app_data_controller.dart';
@@ -26,7 +24,7 @@ class BackgroundAppTracker {
       // await _requestTrackingPermissions();
 
       // Start periodic tracking
-      // _startPeriodicTracking();
+      _startPeriodicTracking();
     } catch (e) {
       print('Tracking initialization error: $e');
     }

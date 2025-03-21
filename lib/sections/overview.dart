@@ -518,8 +518,11 @@ class TopBoxes extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         TopBox(boxColor:const Color(0xff263A8A),textColor:const Color(0xffBFDBFE),textContent: totalScreenTime, textHeading: "Total Screen Time"),
+        const SizedBox(width: 10,),
         TopBox(boxColor:const Color(0xff14532D),textColor:const Color(0xffBBF7D0),textContent: totalProductiveTime, textHeading: "Productive Time"),
+        const SizedBox(width: 10,),
         TopBox(boxColor:const Color(0xff581C87),textColor:const Color(0xffE8D5FF),textContent: mostUsedApp, textHeading: "Most Used App"),
+        const SizedBox(width: 10,),
         TopBox(boxColor:const Color(0xff7C2D12),textColor:const Color(0xffFED7AA),textContent: focusSessions, textHeading: "Focus Sessions"),
       ],
     );
@@ -541,43 +544,44 @@ class TopBox extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      height: MediaQuery.of(context).size.height * 0.15,
-      width: MediaQuery.of(context).size.width * 0.14,
-      padding:const EdgeInsets.only(left: 20,right: 20, top: 18, bottom: 18),
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(10),
-        color:boxColor,
-      ),
-      child:Column(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: [
-              Text(textHeading,style:const TextStyle(color:Colors.white,fontSize: 14,fontWeight: FontWeight.w600),),
-            ],
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: [
-              Container(
-                width: 135,  // Set your desired width
-                child: Text(
-                  textContent,
-                  style: TextStyle(
-                    color: textColor,
-                    fontSize: textHeading != 'Most Used App' ? 28 : 18,
-                    fontWeight: FontWeight.w700
+    return Expanded(
+      child: Container(
+        height: MediaQuery.of(context).size.height * 0.15,
+        padding:const EdgeInsets.only(left: 20,right: 20, top: 18, bottom: 18),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(10),
+          color:boxColor,
+        ),
+        child:Column(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                Text(textHeading,style:const TextStyle(color:Colors.white,fontSize: 14,fontWeight: FontWeight.w600),),
+              ],
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                SizedBox(
+                  width: 225,  // Set your desired width
+                  child: Text(
+                    textContent,
+                    style: TextStyle(
+                      color: textColor,
+                      fontSize: textHeading != 'Most Used App' ? 28 : 18,
+                      fontWeight: FontWeight.w700
+                    ),
+                    overflow: TextOverflow.visible,  // Change from ellipsis to visible
+                    softWrap: true,  // Enable text wrapping
+                    maxLines: null,  // Allow unlimited lines
                   ),
-                  overflow: TextOverflow.visible,  // Change from ellipsis to visible
-                  softWrap: true,  // Enable text wrapping
-                  maxLines: null,  // Allow unlimited lines
                 ),
-              ),
-            ],
-          ),
-        ],
+              ],
+            ),
+          ],
+        ),
       ),
     );
   }
