@@ -20,6 +20,8 @@ class _SettingsState extends State<Settings> {
   bool notificationsFocusMode = false;
   bool notificationsScreenTime = false;
   bool notificationsAppScreenTime = false;
+  Future<void>? _launched;
+  
   @override
   void initState() {
     super.initState();
@@ -31,6 +33,7 @@ class _SettingsState extends State<Settings> {
     notificationsScreenTime = settingsManager.getSetting("notifications.screenTime");
     notificationsAppScreenTime = settingsManager.getSetting("notifications.appScreenTime");
   }
+  
   void setSetting(String key, dynamic value) async {
     switch (key) {
       case 'theme':
@@ -46,13 +49,16 @@ class _SettingsState extends State<Settings> {
         });
         break;
       case 'launchAtStartup':
-        () async {
-          value ? await launchAtStartup.enable() : await launchAtStartup.disable();
-          setState(() {
-            launchAtStartupVar = value;
-            settingsManager.updateSetting("launchAtStartup", value);
-          });
-        };
+        // Fixed: Properly execute the async function
+        if (value) {
+          await launchAtStartup.enable();
+        } else {
+          await launchAtStartup.disable();
+        }
+        setState(() {
+          launchAtStartupVar = value;
+          settingsManager.updateSetting("launchAtStartup", value);
+        });
         break;
       case 'notificationsEnabled':
         setState(() {
@@ -80,7 +86,6 @@ class _SettingsState extends State<Settings> {
         break;
     }
   }
-  Future<void>? _launched;
 
   Future<void> _launchInBrowser(String url) async {
     if (await UrlLauncherPlatform.instance.canLaunch(url)) {
@@ -105,9 +110,11 @@ class _SettingsState extends State<Settings> {
       return const Text('');
     }
   }
+  
   String urlContact = 'https://harman.vercel.app/details/screentime';
   String urlReport = 'https://harman.vercel.app/details/screentime';
   String urlFeedback = 'https://harman.vercel.app/details/screentime';
+  
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
@@ -139,9 +146,9 @@ class _SettingsState extends State<Settings> {
                       ],
                     ),
                     onPressed: () => setState(() {
-                    _launched = _launchInBrowser(urlContact);
+                      _launched = _launchInBrowser(urlContact);
                     }),
-                ),
+                  ),
                   const SizedBox(width: 25,),
                   Button(
                     style: ButtonStyle(padding: WidgetStateProperty.all(const EdgeInsets.only(top: 8,bottom: 8,left: 14,right: 14))),
@@ -153,7 +160,7 @@ class _SettingsState extends State<Settings> {
                       ],
                     ),
                     onPressed: () => setState(() {
-                    _launched = _launchInBrowser(urlReport);
+                      _launched = _launchInBrowser(urlReport);
                     }),
                   ),
                   const SizedBox(width: 25,),
@@ -167,10 +174,15 @@ class _SettingsState extends State<Settings> {
                       ],
                     ),
                     onPressed: () => setState(() {
-                    _launched = _launchInBrowser(urlFeedback);
+                      _launched = _launchInBrowser(urlFeedback);
                     }),
                   ),
                 ],
+              ),
+              // Added a FutureBuilder to properly handle the _launched future
+              FutureBuilder<void>(
+                future: _launched,
+                builder: _launchStatus,
               ),
               const SizedBox(height: 20)
             ],
@@ -194,7 +206,7 @@ class _GeneralSectionState extends State<GeneralSection> {
   SettingsManager settingsManager = SettingsManager();
   String theme = "";
   String language = "English";
-  List<dynamic> themeOptions = ["System","Dark"];
+  List<dynamic> themeOptions = ["System","Dark","Light"];
   List<dynamic> languageOptions = ["English"];
   bool launchAtStartup = false;
   @override
@@ -211,6 +223,7 @@ class _GeneralSectionState extends State<GeneralSection> {
       case 'theme':
         setState(() {
           theme = value;
+          SettingsManager().updateSetting("theme.selected", "Dark", context);
           settingsManager.updateSetting("theme.selected", value);
         });
         break;
@@ -350,10 +363,14 @@ class DataSection extends StatefulWidget {
 
 class _DataSectionState extends State<DataSection> {
   SettingsManager settingsManager = SettingsManager();
-  Future<void> _clearData() async{
-    final AppDataStore _dataStore = AppDataStore();
-    await _dataStore.init();
-    await _clearData();
+  
+  // Fixed: Corrected the clearData method to avoid recursive call
+  Future<void> clearData() async {
+    final dataStore = AppDataStore(); // Fixed: Removed underscore from local variable
+    await dataStore.init();
+    // Implement actual data clearing functionality here
+    // For example: 
+    await dataStore.clearAllData();
   }
 
   @override
@@ -375,13 +392,13 @@ class _DataSectionState extends State<DataSection> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
+              // Fixed: Added appropriate settingType values
               OptionSetting(
                 title: "Clear Data",
                 description: "Clear all the history and other related data",
                 optionType: "button",
                 buttonType: "data",
-                settingType: "",
-                // Pass the dialog function to the OptionSetting
+                settingType: "clearData", // Fixed: Added meaningful settingType
                 onButtonPressed: () => showDataDialog(context),
               ),
               OptionSetting(
@@ -389,8 +406,7 @@ class _DataSectionState extends State<DataSection> {
                 description: "Reset all the settings",
                 optionType: "button",
                 buttonType: "settings",
-                settingType: "",
-                // Pass the dialog function to the OptionSetting
+                settingType: "resetSettings", // Fixed: Added meaningful settingType
                 onButtonPressed: () => showSettingsDialog(context),
               ),
             ],
@@ -412,9 +428,9 @@ class _DataSectionState extends State<DataSection> {
           Button(
             child: const Text('Clear Data'),
             onPressed: () {
-              _clearData();
+              // Fixed: Call the correct method
+              clearData();
               Navigator.pop(context, 'User cleared data');
-              // Clear data implementation here
             },
           ),
           FilledButton(
@@ -441,7 +457,6 @@ class _DataSectionState extends State<DataSection> {
             onPressed: () {
               settingsManager.resetSettings();
               Navigator.pop(context, 'User reset settings');
-              // Reset settings implementation here
             },
           ),
           FilledButton(
@@ -516,7 +531,6 @@ class OptionSetting extends StatelessWidget {
   final void Function(String type, dynamic value)? changeValue;
   final String optionsValue;
   final List<dynamic> options;
-  // Add new callback for button press
   final VoidCallback? onButtonPressed;
 
   const OptionSetting({
@@ -530,7 +544,6 @@ class OptionSetting extends StatelessWidget {
     required this.settingType,
     this.optionsValue = "",
     this.options = const [],
-    // Make the new callback optional
     this.onButtonPressed,
   });
 
@@ -567,7 +580,6 @@ class OptionSetting extends StatelessWidget {
           style: const ButtonStyle(
             padding: WidgetStatePropertyAll(EdgeInsets.symmetric(horizontal: 20, vertical: 8)),
           ),
-          // Use the new callback instead of the old one
           onPressed: onButtonPressed,
           child: Text(
             buttonType == "data" ? "Clear Data" : "Reset Settings",
@@ -594,8 +606,6 @@ class OptionSetting extends StatelessWidget {
     }
   }
 }
-
-
 
 class Header extends StatelessWidget {
   const Header({

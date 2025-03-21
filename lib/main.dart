@@ -184,9 +184,9 @@ class _MyAppState extends State<MyApp> with TrayListener {
   Widget build(BuildContext context) {
     return FluentAdaptiveTheme(
       light: FluentThemeData(
-          brightness: Brightness.dark,
-          cardColor: const Color(0xff202020),
-          scaffoldBackgroundColor: const Color.fromARGB(255, 20, 20, 20)
+          brightness: Brightness.light,
+          // cardColor: const Color(0xff202020),
+          // scaffoldBackgroundColor: const Color.fromARGB(255, 20, 20, 20)
           ),
       dark: FluentThemeData(
           brightness: Brightness.dark,

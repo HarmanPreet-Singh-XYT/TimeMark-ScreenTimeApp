@@ -713,9 +713,9 @@ class AppDataStore extends ChangeNotifier {
       // _usageBox = await _openBoxWithRetry<AppUsageRecord>(_usageBoxName);
       // _focusBox = await _openBoxWithRetry<FocusSessionRecord>(_focusBoxName);
       // _metadataBox = await _openBoxWithRetry<AppMetadata>(_metadataBoxName);
-      // await _usageBox?.clear();
-      // await _focusBox?.clear();
-      // await _metadataBox?.clear();
+      await _usageBox?.clear();
+      await _focusBox?.clear();
+      await _metadataBox?.clear();
 
       notifyListeners();
       return true;
