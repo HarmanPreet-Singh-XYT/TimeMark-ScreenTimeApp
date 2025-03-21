@@ -104,16 +104,27 @@ class DailyOverviewData {
     for (final appName in _dataStore.allAppNames) {
       final AppMetadata? metadata = _dataStore.getAppMetadata(appName);
       final AppUsageRecord? usageRecord = _dataStore.getAppUsage(appName, date);
-
-      if (metadata != null && usageRecord != null && metadata.dailyLimit != Duration.zero) {
-        final double percentageOfLimit = (usageRecord.timeSpent.inSeconds / metadata.dailyLimit.inSeconds) * 100;
-        final double percentageOfTotalTime = (usageRecord.timeSpent.inSeconds / totalScreenTime.inSeconds) * 100;
+      
+      // Only proceed if we have metadata
+      if (metadata != null && (metadata.limitStatus)) {
+        // Handle null usageRecord by defaulting to Duration.zero
+        final Duration timeSpent = usageRecord?.timeSpent ?? Duration.zero;
+        
+        double percentageOfLimit = 0.0;
+        if (metadata.dailyLimit != Duration.zero) {
+          percentageOfLimit = (timeSpent.inSeconds / metadata.dailyLimit.inSeconds) * 100;
+        }
+        
+        double percentageOfTotalTime = 0.0;
+        if (totalScreenTime.inSeconds > 0) {
+          percentageOfTotalTime = (timeSpent.inSeconds / totalScreenTime.inSeconds) * 100;
+        }
 
         limitDetails.add(ApplicationLimitDetail(
           name: appName,
           category: metadata.category,
           dailyLimit: metadata.dailyLimit,
-          actualUsage: usageRecord.timeSpent,
+          actualUsage: timeSpent,
           percentageOfLimit: percentageOfLimit,
           percentageOfTotalTime: percentageOfTotalTime,
         ));

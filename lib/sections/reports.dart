@@ -2,7 +2,8 @@ import 'package:fluent_ui/fluent_ui.dart';
 import 'package:screentime/sections/graphs/reports_line_chart.dart';
 import 'package:screentime/sections/graphs/reports_pie_chart.dart';
 import './controller/data_controllers/reports_controller.dart';
-
+import './UI sections/Reports/error_display.dart'; // New utility widget
+import './UI sections/Reports/loading_indicator.dart'; // New utility widget
 
 class Reports extends StatefulWidget {
   const Reports({super.key});
@@ -35,7 +36,7 @@ class _ReportsState extends State<Reports> {
       final initialized = await _analyticsController.initialize();
       if (!initialized) {
         setState(() {
-          _error = _analyticsController.error ?? 'Failed to initialize analytics';
+          _error = _analyticsController.error ?? 'Failed to initialize analytics. Please restart the application.';
           _isLoading = false;
         });
         return;
@@ -44,7 +45,7 @@ class _ReportsState extends State<Reports> {
       await _loadAnalyticsData();
     } catch (e) {
       setState(() {
-        _error = 'Error: $e';
+        _error = 'An unexpected error occurred: $e. Please try again later.';
         _isLoading = false;
       });
     }
@@ -81,17 +82,28 @@ class _ReportsState extends State<Reports> {
       });
     } catch (e) {
       setState(() {
-        _error = 'Error loading analytics: $e';
+        _error = 'Error loading analytics data: $e. Please check your connection and try again.';
         _isLoading = false;
       });
     }
   }
 
   @override
-  Widget build(BuildContext context) {
-    return SingleChildScrollView(
-      child: Padding(
-        padding: const EdgeInsets.only(left: 20, right: 20, bottom: 20, top: 10),
+Widget build(BuildContext context) {
+  return NotificationListener<ScrollNotification>(
+    // Custom refresh implementation
+    onNotification: (ScrollNotification scrollInfo) {
+      if (scrollInfo is ScrollStartNotification && 
+          scrollInfo.metrics.pixels == scrollInfo.metrics.minScrollExtent) {
+        _loadAnalyticsData();
+        return true;
+      }
+      return false;
+    },
+    child: SingleChildScrollView(
+      physics: const AlwaysScrollableScrollPhysics(), // Enables scrolling
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
@@ -100,47 +112,80 @@ class _ReportsState extends State<Reports> {
             const SizedBox(height: 20),
             
             if (_isLoading)
-              const Center(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    ProgressRing(),
-                    SizedBox(height: 10),
-                    Text('Loading analytics data...'),
-                  ],
-                ),
-              )
+              _buildCustomLoadingIndicator()
             else if (_error != null)
-              Center(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Icon(FluentIcons.error, size: 40, color: Colors.red),
-                    const SizedBox(height: 10),
-                    Text(_error!, style: TextStyle(color: Colors.red)),
-                    const SizedBox(height: 20),
-                    Button(
-                      onPressed: _initializeAndLoadData,
-                      child: const Text('Retry'),
-                    ),
-                  ],
-                ),
-              )
+              _buildCustomErrorDisplay()
             else if (_analyticsSummary != null)
               ..._buildAnalyticsContent(),
           ],
         ),
       ),
-    );
-  }
+    ),
+  );
+}
+
+Widget _buildCustomLoadingIndicator() {
+  return Center(
+    child: Column(
+      children: [
+        Container(
+          width: 40,
+          height: 40,
+          child: const ProgressRing(
+            strokeWidth: 3,
+          ),
+        ),
+        const SizedBox(height: 10),
+        const Text('Loading analytics data...'),
+      ],
+    ),
+  );
+}
+
+Widget _buildCustomErrorDisplay() {
+  return Center(
+    child: Column(
+      children: [
+        Icon(
+          FluentIcons.error,
+          color: Colors.red,
+          size: 40,
+        ),
+        const SizedBox(height: 10),
+        Text(
+          _error!,
+          style: TextStyle(color: Colors.red),
+        ),
+        const SizedBox(height: 15),
+        GestureDetector(
+          onTap: _initializeAndLoadData,
+          child: Container(
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+            decoration: BoxDecoration(
+              border: Border.all(color: Colors.blue),
+              borderRadius: BorderRadius.circular(4),
+            ),
+            child: Text(
+              'Try Again',
+              style: TextStyle(color: Colors.blue),
+            ),
+          ),
+        ),
+      ],
+    ),
+  );
+}
 
   Widget _buildHeader() {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        const Text(
-          'Usage Analytics',
-          style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+        const Flexible(
+          child: Text(
+            'Usage Analytics',
+            style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+            overflow: TextOverflow.ellipsis,
+          ),
         ),
         ComboBox<String>(
           value: _selectedPeriod,
@@ -156,6 +201,7 @@ class _ReportsState extends State<Reports> {
               _loadAnalyticsData();
             }
           },
+          // accessibleLabel: 'Select time period for analytics',
         ),
       ],
     );
@@ -169,97 +215,111 @@ class _ReportsState extends State<Reports> {
       const SizedBox(height: 20),
       
       // Charts row
-      Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Expanded(
-            flex: 6,
-            child: Container(
-              padding: const EdgeInsets.all(20),
-              decoration: BoxDecoration(
-                color: FluentTheme.of(context).micaBackgroundColor,
-                borderRadius: BorderRadius.circular(10),
-                border: Border.all(
-                  color: FluentTheme.of(context).inactiveBackgroundColor,
-                  width: 1,
-                ),
-              ),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  const Text(
-                    "Daily Screen Time",
-                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
-                  ),
-                  const SizedBox(height: 40),
-                  SizedBox(
-                    height: 300,
-                    child: LineChartWidget(
-                      chartType: ChartType.main,
-                      dailyScreenTimeData: summary.dailyScreenTimeData,
-                      periodType: _selectedPeriod, // Pass the selected period to the chart
+      LayoutBuilder(
+        builder: (context, constraints) {
+          // Responsive layout based on available width
+          return constraints.maxWidth < 800
+              ? Column(
+                  children: [
+                    _buildScreenTimeChart(summary),
+                    const SizedBox(height: 20),
+                    _buildCategoryBreakdownChart(summary),
+                  ],
+                )
+              : Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Expanded(
+                      flex: 6,
+                      child: _buildScreenTimeChart(summary),
                     ),
-                  ),
-                ],
-              ),
-            ),
-          ),
-          const SizedBox(width: 20),
-          Expanded(
-            flex: 3,
-            child: Container(
-              constraints:const BoxConstraints(minHeight: 405),
-              padding: const EdgeInsets.all(20),
-              decoration: BoxDecoration(
-                color: FluentTheme.of(context).micaBackgroundColor,
-                borderRadius: BorderRadius.circular(10),
-                border: Border.all(
-                  color: FluentTheme.of(context).inactiveBackgroundColor,
-                  width: 1,
-                ),
-              ),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  const Text(
-                    "Category Breakdown",
-                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
-                  ),
-                  ReportsPieChart(
-                    dataMap: summary.categoryBreakdown,
-                    colorList: const [
-                      Color.fromRGBO(223, 250, 92, 1),
-                      Color.fromRGBO(129, 250, 112, 1),
-                      Color.fromRGBO(129, 182, 205, 1),
-                      Color.fromRGBO(91, 253, 199, 1),
-                    ],
-                  ),
-                  const SizedBox(height: 1),
-                ],
-              ),
-            ),
-          ),
-        ],
+                    const SizedBox(width: 20),
+                    Expanded(
+                      flex: 3,
+                      child: _buildCategoryBreakdownChart(summary),
+                    ),
+                  ],
+                );
+        },
       ),
       const SizedBox(height: 20),
       
       // App usage section
-      Container(
-        constraints: const BoxConstraints(minHeight: 100),
-        width: MediaQuery.of(context).size.width * 1,
-        decoration: BoxDecoration(
-          color: FluentTheme.of(context).micaBackgroundColor,
-          borderRadius: BorderRadius.circular(10),
-          border: Border.all(
-            color: FluentTheme.of(context).inactiveBackgroundColor,
-            width: 1,
-          ),
-        ),
-        child: ApplicationUsage(appUsageDetails: summary.appUsageDetails),
-      ),
+      ApplicationUsage(appUsageDetails: summary.appUsageDetails),
     ];
+  }
+
+  Widget _buildScreenTimeChart(AnalyticsSummary summary) {
+    return CardContainer(
+      title: "Daily Screen Time",
+      child: SizedBox(
+        child: LineChartWidget(
+          chartType: ChartType.main,
+          dailyScreenTimeData: summary.dailyScreenTimeData,
+          periodType: _selectedPeriod,
+        ),
+      ),
+    );
+  }
+
+  Widget _buildCategoryBreakdownChart(AnalyticsSummary summary) {
+    return CardContainer(
+      title: "Category Breakdown",
+      child: ReportsPieChart(
+        dataMap: summary.categoryBreakdown,
+        colorList: const [
+          Color.fromRGBO(223, 250, 92, 1),
+          Color.fromRGBO(129, 250, 112, 1),
+          Color.fromRGBO(129, 182, 205, 1),
+          Color.fromRGBO(91, 253, 199, 1),
+        ],
+      ),
+    );
+  }
+}
+
+class CardContainer extends StatelessWidget {
+  final String title;
+  final Widget child;
+  final double? height;
+
+  const CardContainer({
+    Key? key,
+    required this.title,
+    required this.child,
+    this.height,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      // Replace constraints with a fixed height
+      constraints: BoxConstraints(maxHeight: height ?? 405),
+      // height: height ?? 300, // Use a fixed default height instead of just min constraints
+      padding: const EdgeInsets.all(20),
+      decoration: BoxDecoration(
+        color: FluentTheme.of(context).micaBackgroundColor,
+        borderRadius: BorderRadius.circular(10),
+        border: Border.all(
+          color: FluentTheme.of(context).inactiveBackgroundColor,
+          width: 1,
+        ),
+      ),
+      child: Column(
+        // Change this to make the Column take up exactly the available space
+        mainAxisSize: MainAxisSize.max, 
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            title,
+            style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
+            semanticsLabel: '$title section',
+          ),
+          const SizedBox(height: 20),
+          Expanded(child: child),
+        ],
+      ),
+    );
   }
 }
 
@@ -270,49 +330,93 @@ class TopBoxes extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        Expanded(
-          child: _buildAnalyticsBox(
-            context: context,
-            title: "Total Screen Time",
-            value: _formatDuration(analyticsSummary.totalScreenTime),
-            percentChange: analyticsSummary.screenTimeComparisonPercent,
-            icon: FluentIcons.screen_time,
-          ),
-        ),
-        const SizedBox(width: 10),
-        Expanded(
-          child: _buildAnalyticsBox(
-            context: context,
-            title: "Productive Time",
-            value: _formatDuration(analyticsSummary.productiveTime),
-            percentChange: analyticsSummary.productiveTimeComparisonPercent,
-            icon: FluentIcons.timer,
-          ),
-        ),
-        const SizedBox(width: 10),
-        Expanded(
-          child: _buildAnalyticsBox(
-            context: context,
-            title: "Most Used App",
-            value: analyticsSummary.mostUsedApp,
-            subValue: _formatDuration(analyticsSummary.mostUsedAppTime),
-            icon: FluentIcons.account_browser,
-          ),
-        ),
-        const SizedBox(width: 10),
-        Expanded(
-          child: _buildAnalyticsBox(
-            context: context,
-            title: "Focus Sessions",
-            value: analyticsSummary.focusSessionsCount.toString(),
-            percentChange: analyticsSummary.focusSessionsComparisonPercent,
-            icon: FluentIcons.red_eye,
-          ),
-        ),
-      ],
+    // Responsive layout based on screen width
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        if (constraints.maxWidth < 800) {
+          // Stack vertically on smaller screens (2x2 grid)
+          return Column(
+            children: [
+              Row(
+                children: [
+                  Expanded(child: _buildAnalyticsBox(
+                    context: context,
+                    title: "Total Screen Time",
+                    value: _formatDuration(analyticsSummary.totalScreenTime),
+                    percentChange: analyticsSummary.screenTimeComparisonPercent,
+                    icon: FluentIcons.screen_time,
+                  )),
+                  const SizedBox(width: 10),
+                  Expanded(child: _buildAnalyticsBox(
+                    context: context,
+                    title: "Productive Time",
+                    value: _formatDuration(analyticsSummary.productiveTime),
+                    percentChange: analyticsSummary.productiveTimeComparisonPercent,
+                    icon: FluentIcons.timer,
+                  )),
+                ],
+              ),
+              const SizedBox(height: 10),
+              Row(
+                children: [
+                  Expanded(child: _buildAnalyticsBox(
+                    context: context,
+                    title: "Most Used App",
+                    value: analyticsSummary.mostUsedApp,
+                    subValue: _formatDuration(analyticsSummary.mostUsedAppTime),
+                    icon: FluentIcons.account_browser,
+                  )),
+                  const SizedBox(width: 10),
+                  Expanded(child: _buildAnalyticsBox(
+                    context: context,
+                    title: "Focus Sessions",
+                    value: analyticsSummary.focusSessionsCount.toString(),
+                    percentChange: analyticsSummary.focusSessionsComparisonPercent,
+                    icon: FluentIcons.red_eye,
+                  )),
+                ],
+              ),
+            ],
+          );
+        } else {
+          // Horizontal layout for larger screens
+          return Row(
+            children: [
+              Expanded(child: _buildAnalyticsBox(
+                context: context,
+                title: "Total Screen Time",
+                value: _formatDuration(analyticsSummary.totalScreenTime),
+                percentChange: analyticsSummary.screenTimeComparisonPercent,
+                icon: FluentIcons.screen_time,
+              )),
+              const SizedBox(width: 10),
+              Expanded(child: _buildAnalyticsBox(
+                context: context,
+                title: "Productive Time",
+                value: _formatDuration(analyticsSummary.productiveTime),
+                percentChange: analyticsSummary.productiveTimeComparisonPercent,
+                icon: FluentIcons.timer,
+              )),
+              const SizedBox(width: 10),
+              Expanded(child: _buildAnalyticsBox(
+                context: context,
+                title: "Most Used App",
+                value: analyticsSummary.mostUsedApp,
+                subValue: _formatDuration(analyticsSummary.mostUsedAppTime),
+                icon: FluentIcons.account_browser,
+              )),
+              const SizedBox(width: 10),
+              Expanded(child: _buildAnalyticsBox(
+                context: context,
+                title: "Focus Sessions",
+                value: analyticsSummary.focusSessionsCount.toString(),
+                percentChange: analyticsSummary.focusSessionsComparisonPercent,
+                icon: FluentIcons.red_eye,
+              )),
+            ],
+          );
+        }
+      },
     );
   }
 
@@ -325,7 +429,7 @@ class TopBoxes extends StatelessWidget {
     required IconData icon,
   }) {
     return Container(
-      padding: const EdgeInsets.all(20),
+      padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
         color: FluentTheme.of(context).micaBackgroundColor,
         borderRadius: BorderRadius.circular(10),
@@ -340,15 +444,19 @@ class TopBoxes extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text(
-                title,
-                style: TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.w500,
-                  color: FluentTheme.of(context).accentColor,
+              Flexible(
+                child: Text(
+                  title,
+                  style: TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.w500,
+                    color: FluentTheme.of(context).accentColor,
+                  ),
+                  overflow: TextOverflow.ellipsis,
+                  semanticsLabel: title,
                 ),
               ),
-              Icon(icon, size: 24),
+              Icon(icon, size: 24, semanticLabel: '$title icon'),
             ],
           ),
           const SizedBox(height: 15),
@@ -358,6 +466,7 @@ class TopBoxes extends StatelessWidget {
               fontSize: 24,
               fontWeight: FontWeight.bold,
             ),
+            overflow: TextOverflow.ellipsis,
           ),
           const SizedBox(height: 5),
           if (percentChange != null)
@@ -369,14 +478,16 @@ class TopBoxes extends StatelessWidget {
                 fontSize: 12,
                 color: percentChange >= 0 ? Colors.green : Colors.red,
               ),
+              overflow: TextOverflow.ellipsis,
             )
           else if (subValue != null)
             Text(
               subValue,
               style: TextStyle(
                 fontSize: 12,
-                color: FluentTheme.of(context).accentColor.withOpacity(0.8),
+                color: FluentTheme.of(context).accentColor.withValues(alpha: .8),
               ),
+              overflow: TextOverflow.ellipsis,
             ),
         ],
       ),
@@ -395,101 +506,200 @@ class TopBoxes extends StatelessWidget {
   }
 }
 
-class Header extends StatelessWidget {
-  const Header({
-    super.key,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        Text(
-          "Reports",
-          style: FluentTheme.of(context).typography.subtitle,
-        ),
-        // Row(
-        //   children: [
-        //     Button(
-        //       style: ButtonStyle(padding: WidgetStateProperty.all(const EdgeInsets.only(top: 8,bottom: 8,left: 25,right: 25))),
-        //       child: const Text('Start Focus Mode',style: TextStyle(fontWeight: FontWeight.w600),),
-        //       onPressed: () => debugPrint('pressed button'),
-        //     ),
-        //     const SizedBox(width: 25,),
-        //     Button(
-        //       style: ButtonStyle(padding: WidgetStateProperty.all(const EdgeInsets.only(top: 8,bottom: 8,left: 25,right: 25))),
-        //       child: const Text('Add Application',style: TextStyle(fontWeight: FontWeight.w600),),
-        //       onPressed: () => debugPrint('pressed button'),
-        //     ),
-        //   ],
-        // )
-      ],
-    );
-  }
-}
-
-class ApplicationUsage extends StatelessWidget {
+class ApplicationUsage extends StatefulWidget {
   final List<AppUsageSummary> appUsageDetails;
 
   const ApplicationUsage({
-    super.key,
+    Key? key,
     required this.appUsageDetails,
-  });
+  }) : super(key: key);
+
+  @override
+  State<ApplicationUsage> createState() => _ApplicationUsageState();
+}
+
+class _ApplicationUsageState extends State<ApplicationUsage> {
+  late List<AppUsageSummary> _filteredAppUsageDetails;
+  String _searchQuery = '';
+  String _sortBy = 'Usage';
+  bool _sortAscending = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _filteredAppUsageDetails = List.from(widget.appUsageDetails);
+    _sortAppList();
+  }
+
+  @override
+  void didUpdateWidget(ApplicationUsage oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (oldWidget.appUsageDetails != widget.appUsageDetails) {
+      _filteredAppUsageDetails = List.from(widget.appUsageDetails);
+      _filterAndSortAppList();
+    }
+  }
+
+  void _filterAndSortAppList() {
+    setState(() {
+      _filteredAppUsageDetails = widget.appUsageDetails
+          .where((app) => app.appName.toLowerCase().contains(_searchQuery.toLowerCase()))
+          .toList();
+      _sortAppList();
+    });
+  }
+
+  void _sortAppList() {
+    setState(() {
+      switch (_sortBy) {
+        case 'Name':
+          _filteredAppUsageDetails.sort((a, b) => 
+            _sortAscending ? a.appName.compareTo(b.appName) : b.appName.compareTo(a.appName));
+          break;
+        case 'Category':
+          _filteredAppUsageDetails.sort((a, b) => 
+            _sortAscending ? a.category.compareTo(b.category) : b.category.compareTo(a.category));
+          break;
+        case 'Usage':
+        default:
+          _filteredAppUsageDetails.sort((a, b) => 
+            _sortAscending ? a.totalTime.compareTo(b.totalTime) : b.totalTime.compareTo(a.totalTime));
+          break;
+      }
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      constraints: const BoxConstraints(
-        minHeight: 200,
-        maxHeight: 400,
-      ),
-      padding: const EdgeInsets.only(top: 15, bottom: 15, left: 20, right: 20),
-      width: MediaQuery.of(context).size.width,
-      decoration: BoxDecoration(
-        color: FluentTheme.of(context).micaBackgroundColor,
-        borderRadius: BorderRadius.circular(10),
-      ),
+    return CardContainer(
+      title: "Detailed Application Usage",
+      height: 500,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Text(
-            "Detailed Application Usage",
-            style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
+          // Search and sort controls
+          Row(
+            children: [
+              Expanded(
+                child: TextBox(
+                  placeholder: 'Search applications',
+                  onChanged: (value) {
+                    setState(() {
+                      _searchQuery = value;
+                      _filterAndSortAppList();
+                    });
+                  },
+                  prefix: const Padding(
+                    padding: EdgeInsets.only(left: 8.0),
+                    child: Icon(FluentIcons.search),
+                  ),
+                ),
+              ),
+              const SizedBox(width: 10),
+              ComboBox<String>(
+                value: _sortBy,
+                items: ['Name', 'Category', 'Usage'].map((option) => 
+                  ComboBoxItem<String>(
+                    value: option,
+                    child: Text('Sort by: $option'),
+                  )
+                ).toList(),
+                onChanged: (value) {
+                  if (value != null) {
+                    setState(() {
+                      _sortBy = value;
+                      _sortAppList();
+                    });
+                  }
+                },
+              ),
+              IconButton(
+                icon: Icon(
+                  _sortAscending ? FluentIcons.sort_up : FluentIcons.sort_down,
+                ),
+                onPressed: () {
+                  setState(() {
+                    _sortAscending = !_sortAscending;
+                    _sortAppList();
+                  });
+                },
+              ),
+            ],
           ),
           const SizedBox(height: 10),
-          const Padding(
-            padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+          // Table header
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
             child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                SizedBox(width: 100, child: Text("Name", style: TextStyle(fontWeight: FontWeight.w600))),
-                SizedBox(width: 100, child: Text("Category", style: TextStyle(fontWeight: FontWeight.w600))),
-                SizedBox(width: 100, child: Text("Total Time", style: TextStyle(fontWeight: FontWeight.w600))),
-                SizedBox(width: 100, child: Text("Productivity", style: TextStyle(fontWeight: FontWeight.w600))),
-                SizedBox(width: 100, child: Text("More Details", style: TextStyle(fontWeight: FontWeight.w600))),
+                Expanded(
+                  flex: 2,
+                  child: Text("Name", style: TextStyle(fontWeight: FontWeight.w600)),
+                ),
+                Expanded(
+                  flex: 2,
+                  child: Text("Category", style: TextStyle(fontWeight: FontWeight.w600)),
+                ),
+                Expanded(
+                  flex: 2,
+                  child: Text("Total Time", style: TextStyle(fontWeight: FontWeight.w600)),
+                ),
+                Expanded(
+                  flex: 2,
+                  child: Text("Productivity", style: TextStyle(fontWeight: FontWeight.w600)),
+                ),
+                Expanded(
+                  flex: 1,
+                  child: Text("Actions", style: TextStyle(fontWeight: FontWeight.w600)),
+                ),
               ],
             ),
           ),
           Container(height: 1, color: FluentTheme.of(context).inactiveBackgroundColor),
           const SizedBox(height: 10),
-          // Wrap List of Applications in Expanded and SingleChildScrollView
+          // App list
           Expanded(
-            child: SingleChildScrollView(
-              child: Column(
-                children: appUsageDetails
-                    .where((app) => app.appName.trim().isNotEmpty) // Filter out empty or null names
-                    .map((app) => Application(
-                          name: app.appName,
-                          category: app.category,
-                          totalTime: _formatDuration(app.totalTime),
-                          productivity: app.isProductive,
-                        ))
-                    .toList(),
-              ),
-            ),
+            child: _filteredAppUsageDetails.isEmpty
+                ? const Center(child: Text("No applications match your search criteria"))
+                : ListView.builder(
+                    itemCount: _filteredAppUsageDetails.length,
+                    itemBuilder: (context, index) {
+                      final app = _filteredAppUsageDetails[index];
+                      return ApplicationListItem(
+                        name: app.appName,
+                        category: app.category,
+                        productivity: app.isProductive,
+                        totalTime: _formatDuration(app.totalTime),
+                        onViewDetails: () => _showAppDetails(context, app),
+                      );
+                    },
+                  ),
           ),
+        ],
+      ),
+    );
+  }
 
+  void _showAppDetails(BuildContext context, AppUsageSummary app) {
+    showDialog(
+      context: context,
+      builder: (context) => ContentDialog(
+        title: Text(app.appName),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text("Category: ${app.category}"),
+            Text("Usage: ${_formatDuration(app.totalTime)}"),
+            Text("Productivity: ${app.isProductive ? 'Productive' : 'Non-Productive'}"),
+            // Add more detailed stats here
+          ],
+        ),
+        actions: [
+          Button(
+            child: const Text('Close'),
+            onPressed: () => Navigator.pop(context),
+          ),
         ],
       ),
     );
@@ -498,6 +708,7 @@ class ApplicationUsage extends StatelessWidget {
   String _formatDuration(Duration duration) {
     final hours = duration.inHours;
     final minutes = duration.inMinutes.remainder(60);
+    
     if (hours > 0) {
       return "${hours}h ${minutes}m";
     } else {
@@ -506,43 +717,63 @@ class ApplicationUsage extends StatelessWidget {
   }
 }
 
-class Application extends StatelessWidget {
+class ApplicationListItem extends StatelessWidget {
   final String name;
   final String category;
   final String totalTime;
   final bool productivity;
+  final VoidCallback onViewDetails;
 
-  const Application({
-    super.key,
+  const ApplicationListItem({
+    Key? key,
     required this.name,
     required this.category,
     required this.productivity,
     required this.totalTime,
-  });
+    required this.onViewDetails,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Column(
       children: [
         Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
           child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              SizedBox(width: 100, height: 20, child: Text(name)),
-              SizedBox(width: 100, height: 20, child: Text(category)),
-              SizedBox(width: 100, height: 20, child: Text(totalTime)),
-              SizedBox(width: 100, height: 20, child: Text(productivity ? "Productive" : "Non-Productive")),
-              SizedBox(
-                width: 100,
-                child: SmallIconButton(
-                  child: IconButton(
-                    icon: Icon(
-                      FluentIcons.view,
-                      size: 20.0,
-                      color: Colors.blue,
+              Expanded(
+                flex: 2,
+                child: Text(name, overflow: TextOverflow.ellipsis),
+              ),
+              Expanded(
+                flex: 2,
+                child: Text(category, overflow: TextOverflow.ellipsis),
+              ),
+              Expanded(
+                flex: 2,
+                child: Text(totalTime),
+              ),
+              Expanded(
+                flex: 2,
+                child: Row(
+                  children: [
+                    Icon(
+                      productivity ? FluentIcons.check_mark : FluentIcons.cancel,
+                      color: productivity ? Colors.green : Colors.red,
+                      size: 16,
                     ),
-                    onPressed: () => debugPrint('pressed button'),
+                    const SizedBox(width: 4),
+                    Text(productivity ? "Productive" : "Non-Productive"),
+                  ],
+                ),
+              ),
+              Expanded(
+                flex: 1,
+                child: Tooltip(
+                  message: "View details",
+                  child: IconButton(
+                    icon: Icon(FluentIcons.view, size: 16, color: Colors.blue),
+                    onPressed: onViewDetails,
                   ),
                 ),
               ),
@@ -551,6 +782,53 @@ class Application extends StatelessWidget {
         ),
         Container(height: 1, color: FluentTheme.of(context).inactiveBackgroundColor),
       ],
+    );
+  }
+}
+
+// Placeholder of the utility widgets that should be created in separate files
+class LoadingIndicator extends StatelessWidget {
+  final String message;
+  
+  const LoadingIndicator({Key? key, required this.message}) : super(key: key);
+  
+  @override
+  Widget build(BuildContext context) {
+    return Center(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          const ProgressRing(),
+          const SizedBox(height: 10),
+          Text(message, semanticsLabel: message),
+        ],
+      ),
+    );
+  }
+}
+
+class ErrorDisplay extends StatelessWidget {
+  final String errorMessage;
+  final VoidCallback onRetry;
+  
+  const ErrorDisplay({Key? key, required this.errorMessage, required this.onRetry}) : super(key: key);
+  
+  @override
+  Widget build(BuildContext context) {
+    return Center(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Icon(FluentIcons.error, size: 40, color: Colors.red),
+          const SizedBox(height: 10),
+          Text(errorMessage, style: TextStyle(color: Colors.red), textAlign: TextAlign.center),
+          const SizedBox(height: 20),
+          Button(
+            onPressed: onRetry,
+            child: const Text('Retry'),
+          ),
+        ],
+      ),
     );
   }
 }

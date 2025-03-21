@@ -734,6 +734,7 @@ class Header extends StatelessWidget {
         Row(
           children: [
             Button(
+              onPressed: onRefresh,
               child: const Row(
                 children: [
                   Icon(FluentIcons.refresh, size: 16),
@@ -741,7 +742,6 @@ class Header extends StatelessWidget {
                   Text('Refresh', style: TextStyle(fontWeight: FontWeight.w600)),
                 ],
               ),
-              onPressed: onRefresh,
             ),
             const SizedBox(width: 10),
             Button(

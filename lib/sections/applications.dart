@@ -386,7 +386,7 @@ class Header extends StatelessWidget {
                 onChanged: (value) => {
                   changeSearchValue(value)
                 },
-                style: TextStyle(
+                style:const TextStyle(
                   color: Color(0xFF5178BE),
                 ),
               ),

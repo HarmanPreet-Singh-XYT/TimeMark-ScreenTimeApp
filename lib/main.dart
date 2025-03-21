@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:fluent_ui/fluent_ui.dart';
 import './sections/overview.dart';
 import './sections/applications.dart';
@@ -40,6 +42,13 @@ class MyApp extends StatefulWidget {
 class _MyAppState extends State<MyApp> with TrayListener {
   bool notificationsEnabled = true;
   final String appVersion = "v1.0.0";
+  bool focusMode = false;
+  int selectedIndex = 0;
+  void changeIndex(int value){
+    setState(() {
+      selectedIndex = value;
+    });
+  }
 
   @override
   void initState() {
@@ -49,7 +58,11 @@ class _MyAppState extends State<MyApp> with TrayListener {
   }
 
   Future<void> _initTray() async {
-    await trayManager.setIcon('assets/tray_icon.png'); // Set tray icon
+    await trayManager.setIcon(
+      Platform.isWindows
+        ? 'assets/icons/tray_icon.ico'
+        : 'assets/icons/tray_icon.png',
+    );
     await trayManager.setToolTip("Productive ScreenTime");
     await _updateTrayMenu();
   }
@@ -57,43 +70,71 @@ class _MyAppState extends State<MyApp> with TrayListener {
   Future<void> _updateTrayMenu() async {
     await trayManager.setContextMenu(
       Menu(items: [
-        MenuItem(label: 'Show Window', onClick: (_) => appWindow.show()),
-        MenuItem(label: 'Start Focus Mode', onClick: (_) => _startFocusMode()),
+        MenuItem(label: 'Show Window', onClick: (_) => _showApp()),
+        MenuItem(label: !focusMode ? 'Start Focus Mode' : 'Stop Focus Mode', onClick: (_) => _startFocusMode()),
         MenuItem.separator(),
         MenuItem(label: 'Reports', onClick: (_) => _openReports()),
         MenuItem(label: 'Alerts & Limits', onClick: (_) => _openAlerts()),
         MenuItem(label: 'Applications', onClick: (_) => _openApplications()),
         MenuItem.separator(),
-        MenuItem(label: notificationsEnabled ? 'Disable Notifications' : 'Enable Notifications', onClick: (_) => _toggleNotifications()),
-        MenuItem(label: 'Version: $appVersion', checked: false),
+        // MenuItem(disabled:true,label: notificationsEnabled ? 'Disable Notifications' : 'Enable Notifications', onClick: (_) => _toggleNotifications()),
+        MenuItem(disabled:true,label: 'Version: $appVersion', checked: false),
         MenuItem.separator(),
         MenuItem(label: 'Exit', onClick: (_) => _exitApp()),
       ]),
     );
   }
 
+  void _showApp(){
+    appWindow.show();
+  }
+
   void _exitApp() {
-    appWindow.hide(); // Minimize to tray instead of exiting
+    appWindow.close();
   }
 
   void _startFocusMode() {
     // Implement focus mode activation
-    debugPrint("Focus Mode Started");
+    
   }
 
   void _openReports() {
     // Implement opening reports section
-    debugPrint("Reports Opened");
+    if(!appWindow.isVisible){
+      changeIndex(3);
+      appWindow.show();
+      setState(() {});
+    }else{
+      setState(() {
+        changeIndex(3);
+      });
+    }
   }
 
   void _openAlerts() {
     // Implement opening alerts section
-    debugPrint("Alerts Opened");
+    if(!appWindow.isVisible){
+      changeIndex(2);
+      appWindow.show();
+      setState(() {});
+    }else{
+      setState(() {
+        changeIndex(2);
+      });
+    }
   }
 
   void _openApplications() {
     // Implement opening applications section
-    debugPrint("Applications Opened");
+    if(!appWindow.isVisible){
+      changeIndex(1);
+      appWindow.show();
+      setState(() {});
+    }else{
+      setState(() {
+        changeIndex(1);
+      });
+    }
   }
 
   void _toggleNotifications() {
@@ -154,7 +195,7 @@ class _MyAppState extends State<MyApp> with TrayListener {
         title: 'Fluent Adaptive Theme Demo',
         theme: theme,
         darkTheme: darkTheme,
-        home: const HomePage(),
+        home: HomePage(selectedIndex:selectedIndex,changeIndex:changeIndex),
       ),
     );
   }
@@ -162,14 +203,19 @@ class _MyAppState extends State<MyApp> with TrayListener {
 
 
 class HomePage extends StatefulWidget {
-  const HomePage({super.key});
+  final int selectedIndex;
+  final Function(int) changeIndex;
+  const HomePage({
+    super.key,
+    required this.selectedIndex,
+    required this.changeIndex
+    });
 
   @override
   State<HomePage> createState() => _HomePageState();
 }
 
 class _HomePageState extends State<HomePage> {
-  int selectedIndex = 0;
   PaneDisplayMode displayMode = PaneDisplayMode.compact;
 
   List<NavigationPaneItem> items = [
@@ -220,8 +266,8 @@ Widget build(BuildContext context) {
           color:FluentTheme.of(context).micaBackgroundColor,
           child: NavigationView(
             pane: NavigationPane(
-              selected: selectedIndex,
-              onChanged: (index) => setState(() => selectedIndex = index),
+              selected: widget.selectedIndex,
+              onChanged: (index) => setState(() => widget.changeIndex(index)),
               displayMode: displayMode,
               items: items,
               header: _buildSidebarHeader(context),
