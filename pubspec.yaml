@@ -54,9 +54,13 @@ flutter:
   uses-material-design: true
   assets:
     - assets/icons/
-    # Add more assets as needed
+   # Add more assets as needed
+  plugin:
+    platforms:
+      windows:
+        pluginClass: ForegroundWindowPlugin
 
-# Platform-specific configuration
-platforms:
-  windows:
-    pluginClass: ForegroundWindowPlugin
+# # Platform-specific configuration
+# platforms:
+#   windows:
+#     pluginClass: ForegroundWindowPlugin

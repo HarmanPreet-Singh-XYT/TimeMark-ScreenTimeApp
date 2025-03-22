@@ -109,9 +109,9 @@ class AppMetadata {
 
 class AppDataStore extends ChangeNotifier {
   static final AppDataStore _instance = AppDataStore._internal();
-  static const String _usageBoxName = 'harman_screentime_app_usage_box.';
-  static const String _focusBoxName = 'harman_screentime_focus_session_box.';
-  static const String _metadataBoxName = 'harman_screentime_app_metadata_box.';
+  static const String _usageBoxName = 'harman_screentime_app_usage_box';
+  static const String _focusBoxName = 'harman_screentime_focus_session_box';
+  static const String _metadataBoxName = 'harman_screentime_app_metadata_box';
   
   Box<AppUsageRecord>? _usageBox;
   Box<FocusSessionRecord>? _focusBox;
