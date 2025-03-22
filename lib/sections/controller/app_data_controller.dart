@@ -245,9 +245,9 @@ class AppDataStore extends ChangeNotifier {
         debugPrint("Error fetching existing metadata for $appName: $e");
         // Continue with null existing
       }
-      
+      String defaultCategory = appName.startsWith(':') ? 'Idle' : 'Uncategorized';
       final AppMetadata updated = AppMetadata(
-        category: category ?? existing?.category ?? 'Uncategorized',
+        category: category ?? existing?.category ?? defaultCategory,
         isProductive: isProductive ?? existing?.isProductive ?? false,
         isTracking: isTracking ?? existing?.isTracking ?? true,
         isVisible: isVisible ?? existing?.isVisible ?? true,
