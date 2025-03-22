@@ -1,92 +1,126 @@
 import 'package:fluent_ui/fluent_ui.dart';
+import 'package:provider/provider.dart';
 import 'package:screentime/sections/controller/app_data_controller.dart';
 import 'controller/settings_data_controller.dart';
 import 'package:launch_at_startup/launch_at_startup.dart';
 import 'package:url_launcher_platform_interface/url_launcher_platform_interface.dart';
-class Settings extends StatefulWidget { 
-  const Settings({super.key});
 
-  @override
-  State<Settings> createState() => _SettingsState();
-}
-
-class _SettingsState extends State<Settings> {
-  final Map<String, String> version = {"version":"1.0.0","type":"Stable Build"};
-  SettingsManager settingsManager = SettingsManager();
-  String theme = "";
-  String language = "English";
-  bool launchAtStartupVar = false;
-  bool notificationsEnabled = false;
-  bool notificationsFocusMode = false;
-  bool notificationsScreenTime = false;
-  bool notificationsAppScreenTime = false;
-  Future<void>? _launched;
+// Create a SettingsProvider to centralize state management
+class SettingsProvider extends ChangeNotifier {
+  final SettingsManager _settingsManager = SettingsManager();
+  final Map<String, String> version = {"version": "1.0.0", "type": "Stable Build"};
   
-  @override
-  void initState() {
-    super.initState();
-    theme = settingsManager.getSetting("theme.selected");
-    language = settingsManager.getSetting("language.selected");
-    launchAtStartupVar = settingsManager.getSetting("launchAtStartup");
-    notificationsEnabled = settingsManager.getSetting("notifications.enabled");
-    notificationsFocusMode = settingsManager.getSetting("notifications.focusMode");
-    notificationsScreenTime = settingsManager.getSetting("notifications.screenTime");
-    notificationsAppScreenTime = settingsManager.getSetting("notifications.appScreenTime");
+  String _theme = "";
+  String _language = "English";
+  bool _launchAtStartupVar = false;
+  bool _notificationsEnabled = false;
+  bool _notificationsFocusMode = false;
+  bool _notificationsScreenTime = false;
+  bool _notificationsAppScreenTime = false;
+  
+  // Getters
+  String get theme => _theme;
+  String get language => _language;
+  bool get launchAtStartupVar => _launchAtStartupVar;
+  bool get notificationsEnabled => _notificationsEnabled;
+  bool get notificationsFocusMode => _notificationsFocusMode;
+  bool get notificationsScreenTime => _notificationsScreenTime;
+  bool get notificationsAppScreenTime => _notificationsAppScreenTime;
+  Map<String, String> get appVersion => version;
+  
+  List<dynamic> get themeOptions => _settingsManager.getSetting("theme.available");
+  List<dynamic> get languageOptions => _settingsManager.getSetting("language.available");
+  
+  SettingsProvider() {
+    _loadSettings();
   }
   
-  void setSetting(String key, dynamic value) async {
+  void _loadSettings() {
+    _theme = _settingsManager.getSetting("theme.selected");
+    _language = _settingsManager.getSetting("language.selected");
+    _launchAtStartupVar = _settingsManager.getSetting("launchAtStartup");
+    _notificationsEnabled = _settingsManager.getSetting("notifications.enabled");
+    _notificationsFocusMode = _settingsManager.getSetting("notifications.focusMode");
+    _notificationsScreenTime = _settingsManager.getSetting("notifications.screenTime");
+    _notificationsAppScreenTime = _settingsManager.getSetting("notifications.appScreenTime");
+  }
+  
+  Future<void> updateSetting(String key, dynamic value, [BuildContext? context]) async {
     switch (key) {
       case 'theme':
-        setState(() {
-          theme = value;
-          settingsManager.updateSetting("theme", value);
-        });
+        _theme = value;
+        _settingsManager.updateSetting("theme.selected", value, context);
         break;
       case 'language':
-        setState(() {
-          language = value;
-          settingsManager.updateSetting("language", value);
-        });
+        _language = value;
+        _settingsManager.updateSetting("language.selected", value);
         break;
       case 'launchAtStartup':
-        // Fixed: Properly execute the async function
+        // Handle startup setting with proper await
         if (value) {
           await launchAtStartup.enable();
         } else {
           await launchAtStartup.disable();
         }
-        setState(() {
-          launchAtStartupVar = value;
-          settingsManager.updateSetting("launchAtStartup", value);
-        });
+        _launchAtStartupVar = value;
+        _settingsManager.updateSetting("launchAtStartup", value);
         break;
       case 'notificationsEnabled':
-        setState(() {
-          notificationsEnabled = value;
-          settingsManager.updateSetting("notifications.enabled", value);
-        });
+        _notificationsEnabled = value;
+        _settingsManager.updateSetting("notifications.enabled", value);
         break;
       case 'notificationsScreenTime':
-        setState(() {
-          notificationsScreenTime = value;
-          settingsManager.updateSetting("notifications.screenTime", value);
-        });
+        _notificationsScreenTime = value;
+        _settingsManager.updateSetting("notifications.screenTime", value);
         break;
       case 'notificationsFocusMode':
-        setState(() {
-          notificationsFocusMode = value;
-          settingsManager.updateSetting("notifications.focusMode", value);
-        });
+        _notificationsFocusMode = value;
+        _settingsManager.updateSetting("notifications.focusMode", value);
         break;
       case 'notificationsAppScreenTime':
-        setState(() {
-          notificationsAppScreenTime = value;
-          settingsManager.updateSetting("notifications.appScreenTime", value);
-        });
+        _notificationsAppScreenTime = value;
+        _settingsManager.updateSetting("notifications.appScreenTime", value);
         break;
     }
+    notifyListeners();
   }
+  
+  Future<void> clearData() async {
+    final dataStore = AppDataStore();
+    await dataStore.init();
+    await dataStore.clearAllData();
+    notifyListeners();
+  }
+  
+  Future<void> resetSettings() async {
+    await _settingsManager.resetSettings();
+    _loadSettings();
+    notifyListeners();
+  }
+}
 
+class Settings extends StatelessWidget {
+  const Settings({super.key});
+  
+  @override
+  Widget build(BuildContext context) {
+    return ChangeNotifierProvider(
+      create: (_) => SettingsProvider(),
+      child: const SettingsContent(),
+    );
+  }
+}
+
+class SettingsContent extends StatefulWidget {
+  const SettingsContent({super.key});
+
+  @override
+  State<SettingsContent> createState() => _SettingsContentState();
+}
+
+class _SettingsContentState extends State<SettingsContent> {
+  Future<void>? _launched;
+  
   Future<void> _launchInBrowser(String url) async {
     if (await UrlLauncherPlatform.instance.canLaunch(url)) {
       await UrlLauncherPlatform.instance.launch(
@@ -111,303 +145,245 @@ class _SettingsState extends State<Settings> {
     }
   }
   
-  String urlContact = 'https://harman.vercel.app/details/screentime';
-  String urlReport = 'https://harman.vercel.app/details/screentime';
-  String urlFeedback = 'https://harman.vercel.app/details/screentime';
+  final String urlContact = 'https://harman.vercel.app/details/screentime';
+  final String urlReport = 'https://harman.vercel.app/details/screentime';
+  final String urlFeedback = 'https://harman.vercel.app/details/screentime';
   
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
-        child: Padding(
-          padding: const EdgeInsets.only(left: 20, right: 20, bottom: 20,top: 10),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              const Header(),
-              const SizedBox(height: 30),
-              const GeneralSection(),
-              const SizedBox(height: 30),
-              const NotificationSection(),
-              const SizedBox(height: 30),
-              const DataSection(),
-              const SizedBox(height: 30),
-              AboutSection(version: version),
-              const SizedBox(height: 20),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Button(
-                    style: ButtonStyle(padding: WidgetStateProperty.all(const EdgeInsets.only(top: 8,bottom: 8,left: 14,right: 14))),
-                    child:const Row(
-                      children: [
-                        Icon(FluentIcons.canned_chat,size: 18,),
-                        SizedBox(width: 10,),
-                        Text('Contact',style: TextStyle(fontWeight: FontWeight.w600),),
-                      ],
-                    ),
-                    onPressed: () => setState(() {
-                      _launched = _launchInBrowser(urlContact);
-                    }),
+      child: Padding(
+        padding: const EdgeInsets.only(left: 20, right: 20, bottom: 20, top: 10),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const Header(),
+            const SizedBox(height: 30),
+            const GeneralSection(),
+            const SizedBox(height: 30),
+            const NotificationSection(),
+            const SizedBox(height: 30),
+            const DataSection(),
+            const SizedBox(height: 30),
+            const AboutSection(),
+            const SizedBox(height: 20),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Button(
+                  style: ButtonStyle(padding: WidgetStateProperty.all(const EdgeInsets.only(top: 8, bottom: 8, left: 14, right: 14))),
+                  child: const Row(
+                    children: [
+                      Icon(FluentIcons.canned_chat, size: 18),
+                      SizedBox(width: 10),
+                      Text('Contact', style: TextStyle(fontWeight: FontWeight.w600)),
+                    ],
                   ),
-                  const SizedBox(width: 25,),
-                  Button(
-                    style: ButtonStyle(padding: WidgetStateProperty.all(const EdgeInsets.only(top: 8,bottom: 8,left: 14,right: 14))),
-                    child:const Row(
-                      children: [
-                        Icon(FluentIcons.bug,size: 18,),
-                        SizedBox(width: 10,),
-                        Text('Report Bug',style: TextStyle(fontWeight: FontWeight.w600),),
-                      ],
-                    ),
-                    onPressed: () => setState(() {
-                      _launched = _launchInBrowser(urlReport);
-                    }),
+                  onPressed: () => setState(() {
+                    _launched = _launchInBrowser(urlContact);
+                  }),
+                ),
+                const SizedBox(width: 25),
+                Button(
+                  style: ButtonStyle(padding: WidgetStateProperty.all(const EdgeInsets.only(top: 8, bottom: 8, left: 14, right: 14))),
+                  child: const Row(
+                    children: [
+                      Icon(FluentIcons.bug, size: 18),
+                      SizedBox(width: 10),
+                      Text('Report Bug', style: TextStyle(fontWeight: FontWeight.w600)),
+                    ],
                   ),
-                  const SizedBox(width: 25,),
-                  Button(
-                    style: ButtonStyle(padding: WidgetStateProperty.all(const EdgeInsets.symmetric(vertical: 8, horizontal: 12))),
-                    child: const Row(
-                      children: [
-                        Icon(FluentIcons.red_eye, size: 20),
-                        SizedBox(width: 10),
-                        Text('Submit Feedback', style: TextStyle(fontWeight: FontWeight.w600)),
-                      ],
-                    ),
-                    onPressed: () => setState(() {
-                      _launched = _launchInBrowser(urlFeedback);
-                    }),
+                  onPressed: () => setState(() {
+                    _launched = _launchInBrowser(urlReport);
+                  }),
+                ),
+                const SizedBox(width: 25),
+                Button(
+                  style: ButtonStyle(padding: WidgetStateProperty.all(const EdgeInsets.symmetric(vertical: 8, horizontal: 12))),
+                  child: const Row(
+                    children: [
+                      Icon(FluentIcons.red_eye, size: 20),
+                      SizedBox(width: 10),
+                      Text('Submit Feedback', style: TextStyle(fontWeight: FontWeight.w600)),
+                    ],
                   ),
-                ],
-              ),
-              // Added a FutureBuilder to properly handle the _launched future
-              FutureBuilder<void>(
-                future: _launched,
-                builder: _launchStatus,
-              ),
-              const SizedBox(height: 20)
-            ],
-          ),
+                  onPressed: () => setState(() {
+                    _launched = _launchInBrowser(urlFeedback);
+                  }),
+                ),
+              ],
+            ),
+            FutureBuilder<void>(
+              future: _launched,
+              builder: _launchStatus,
+            ),
+            const SizedBox(height: 20)
+          ],
         ),
-      );
+      ),
+    );
   }
 }
 
+class GeneralSection extends StatelessWidget {
+  const GeneralSection({super.key});
 
-class GeneralSection extends StatefulWidget {
-  const GeneralSection({
-    super.key,
-  });
-
-  @override
-  State<GeneralSection> createState() => _GeneralSectionState();
-}
-
-class _GeneralSectionState extends State<GeneralSection> {
-  SettingsManager settingsManager = SettingsManager();
-  String theme = "";
-  String language = "English";
-  List<dynamic> themeOptions = ["System","Dark","Light"];
-  List<dynamic> languageOptions = ["English"];
-  bool launchAtStartup = false;
-  @override
-  void initState() {
-    super.initState();
-    theme = settingsManager.getSetting("theme.selected");
-    language = settingsManager.getSetting("language.selected");
-    themeOptions = settingsManager.getSetting("theme.available");
-    languageOptions = settingsManager.getSetting("language.available");
-    launchAtStartup = settingsManager.getSetting("launchAtStartup");
-  }
-  void setSetting(String key, dynamic value) {
-    switch (key) {
-      case 'theme':
-        setState(() {
-          theme = value;
-          SettingsManager().updateSetting("theme.selected", "Dark", context);
-          settingsManager.updateSetting("theme.selected", value);
-        });
-        break;
-      case 'language':
-        setState(() {
-          language = value;
-          settingsManager.updateSetting("language.selected", value);
-        });
-        break;
-      case 'launchAtStartup':
-        setState(() {
-          launchAtStartup = value;
-          settingsManager.updateSetting("launchAtStartup", value);
-        });
-        break;
-    }
-  }
   @override
   Widget build(BuildContext context) {
+    final settings = context.watch<SettingsProvider>();
+    
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Text("General",style: TextStyle(fontSize: 16,fontWeight: FontWeight.w600),),
-        const SizedBox(height: 15,),
+        const Text("General", style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600)),
+        const SizedBox(height: 15),
         Container(
           height: 180,
-          padding:const EdgeInsets.all(20),
+          padding: const EdgeInsets.all(20),
           width: MediaQuery.of(context).size.width,
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(10),
             color: FluentTheme.of(context).micaBackgroundColor,
-            border: Border.all(color: FluentTheme.of(context).inactiveBackgroundColor,width: 1)
-          ),
-          child:Column(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              OptionSetting(title: "Theme",description: "Color theme of the application",settingType: "theme",changeValue: setSetting,optionsValue: theme,options: themeOptions,),
-              OptionSetting(title: "Language",description: "Language of the application",settingType: "language",changeValue: setSetting, optionsValue: language,options: languageOptions,),
-              OptionSetting(title: "Startup Behaviour",description: "Launch at OS startup",optionType: "switch",settingType: "launchAtStartup",changeValue: setSetting,isChecked: launchAtStartup,),
-            ],
-          ),
-        )
-      ],
-    );
-  }
-}
-class NotificationSection extends StatefulWidget {
-  const NotificationSection({
-    super.key,
-  });
-
-  @override
-  State<NotificationSection> createState() => _NotificationSectionState();
-}
-
-class _NotificationSectionState extends State<NotificationSection> {
-  SettingsManager settingsManager = SettingsManager();
-  bool notificationsEnabled = false;
-  bool notificationsFocusMode = false;
-  bool notificationsScreenTime = false;
-  bool notificationsAppScreenTime = false;
-  @override
-  void initState() {
-    super.initState();
-    notificationsEnabled = settingsManager.getSetting("notifications.enabled");
-    notificationsFocusMode = settingsManager.getSetting("notifications.focusMode");
-    notificationsScreenTime = settingsManager.getSetting("notifications.screenTime");
-    notificationsAppScreenTime = settingsManager.getSetting("notifications.appScreenTime");
-  }
-  void setSetting(String key, dynamic value) {
-    switch (key) {
-      case 'notificationsEnabled':
-        setState(() {
-          notificationsEnabled = value;
-          settingsManager.updateSetting("notifications.enabled", value);
-        });
-        break;
-      case 'notificationsScreenTime':
-        setState(() {
-          notificationsScreenTime = value;
-          settingsManager.updateSetting("notifications.screenTime", value);
-        });
-        break;
-      case 'notificationsFocusMode':
-        setState(() {
-          notificationsFocusMode = value;
-          settingsManager.updateSetting("notifications.focusMode", value);
-        });
-        break;
-      case 'notificationsAppScreenTime':
-        setState(() {
-          notificationsAppScreenTime = value;
-          settingsManager.updateSetting("notifications.appScreenTime", value);
-        });
-        break;
-    }
-  }
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        const Text("Notifications",style: TextStyle(fontSize: 16,fontWeight: FontWeight.w600),),
-        const SizedBox(height: 15,),
-        Container(
-          height: 240,
-          padding:const EdgeInsets.all(20),
-          width: MediaQuery.of(context).size.width,
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(10),
-            color: FluentTheme.of(context).micaBackgroundColor,
-            border: Border.all(color: FluentTheme.of(context).inactiveBackgroundColor,width: 1)
-          ),
-          child:Column(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              OptionSetting(title: "Notifications",description: "All notifications of the application",optionType: "switch",settingType: "notificationsEnabled",changeValue: setSetting,isChecked: notificationsEnabled,),
-              OptionSetting(title: "Focus Mode",description: "All Notifications for focus mode",optionType: "switch",settingType: "notificationsFocusMode",changeValue: setSetting,isChecked: notificationsFocusMode,),
-              OptionSetting(title: "Screen Time",description: "All Notifications for screen time restriction",optionType: "switch",settingType: "notificationsScreenTime",changeValue: setSetting,isChecked: notificationsScreenTime,),
-              OptionSetting(title: "Application Screen Time",description: "All Notifications for application screen time restriction",optionType: "switch",settingType: "notificationsAppScreenTime",changeValue: setSetting,isChecked: notificationsAppScreenTime,),
-            ],
-          ),
-        )
-      ],
-    );
-  }
-}
-
-class DataSection extends StatefulWidget {
-  const DataSection({
-    super.key,
-  });
-
-  @override
-  State<DataSection> createState() => _DataSectionState();
-}
-
-class _DataSectionState extends State<DataSection> {
-  SettingsManager settingsManager = SettingsManager();
-  
-  // Fixed: Corrected the clearData method to avoid recursive call
-  Future<void> clearData() async {
-    final dataStore = AppDataStore(); // Fixed: Removed underscore from local variable
-    await dataStore.init();
-    // Implement actual data clearing functionality here
-    // For example: 
-    await dataStore.clearAllData();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        const Text("Data",style: TextStyle(fontSize: 16,fontWeight: FontWeight.w600),),
-        const SizedBox(height: 15,),
-        Container(
-          height: 120,
-          padding:const EdgeInsets.all(20),
-          width: MediaQuery.of(context).size.width,
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(10),
-            color: FluentTheme.of(context).micaBackgroundColor,
-            border: Border.all(color: FluentTheme.of(context).inactiveBackgroundColor,width: 1)
+            border: Border.all(color: FluentTheme.of(context).inactiveBackgroundColor, width: 1)
           ),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              // Fixed: Added appropriate settingType values
+              OptionSetting(
+                title: "Theme",
+                description: "Color theme of the application",
+                settingType: "theme",
+                changeValue: (key, value) => settings.updateSetting(key, value, context),
+                optionsValue: settings.theme,
+                options: settings.themeOptions,
+              ),
+              OptionSetting(
+                title: "Language",
+                description: "Language of the application",
+                settingType: "language",
+                changeValue: (key, value) => settings.updateSetting(key, value),
+                optionsValue: settings.language,
+                options: settings.languageOptions,
+              ),
+              OptionSetting(
+                title: "Startup Behaviour",
+                description: "Launch at OS startup",
+                optionType: "switch",
+                settingType: "launchAtStartup",
+                changeValue: (key, value) => settings.updateSetting(key, value),
+                isChecked: settings.launchAtStartupVar,
+              ),
+            ],
+          ),
+        )
+      ],
+    );
+  }
+}
+
+class NotificationSection extends StatelessWidget {
+  const NotificationSection({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    final settings = context.watch<SettingsProvider>();
+    
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        const Text("Notifications", style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600)),
+        const SizedBox(height: 15),
+        Container(
+          height: 240,
+          padding: const EdgeInsets.all(20),
+          width: MediaQuery.of(context).size.width,
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(10),
+            color: FluentTheme.of(context).micaBackgroundColor,
+            border: Border.all(color: FluentTheme.of(context).inactiveBackgroundColor, width: 1)
+          ),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              OptionSetting(
+                title: "Notifications",
+                description: "All notifications of the application",
+                optionType: "switch",
+                settingType: "notificationsEnabled",
+                changeValue: (key, value) => settings.updateSetting(key, value),
+                isChecked: settings.notificationsEnabled,
+              ),
+              OptionSetting(
+                title: "Focus Mode",
+                description: "All Notifications for focus mode",
+                optionType: "switch",
+                settingType: "notificationsFocusMode",
+                changeValue: (key, value) => settings.updateSetting(key, value),
+                isChecked: settings.notificationsFocusMode,
+              ),
+              OptionSetting(
+                title: "Screen Time",
+                description: "All Notifications for screen time restriction",
+                optionType: "switch",
+                settingType: "notificationsScreenTime",
+                changeValue: (key, value) => settings.updateSetting(key, value),
+                isChecked: settings.notificationsScreenTime,
+              ),
+              OptionSetting(
+                title: "Application Screen Time",
+                description: "All Notifications for application screen time restriction",
+                optionType: "switch",
+                settingType: "notificationsAppScreenTime",
+                changeValue: (key, value) => settings.updateSetting(key, value),
+                isChecked: settings.notificationsAppScreenTime,
+              ),
+            ],
+          ),
+        )
+      ],
+    );
+  }
+}
+
+class DataSection extends StatelessWidget {
+  const DataSection({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    final settings = Provider.of<SettingsProvider>(context);
+    
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        const Text("Data", style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600)),
+        const SizedBox(height: 15),
+        Container(
+          height: 120,
+          padding: const EdgeInsets.all(20),
+          width: MediaQuery.of(context).size.width,
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(10),
+            color: FluentTheme.of(context).micaBackgroundColor,
+            border: Border.all(color: FluentTheme.of(context).inactiveBackgroundColor, width: 1)
+          ),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
               OptionSetting(
                 title: "Clear Data",
                 description: "Clear all the history and other related data",
                 optionType: "button",
                 buttonType: "data",
-                settingType: "clearData", // Fixed: Added meaningful settingType
-                onButtonPressed: () => showDataDialog(context),
+                settingType: "clearData",
+                onButtonPressed: () => _showDataDialog(context, settings),
               ),
               OptionSetting(
                 title: "Reset Settings",
                 description: "Reset all the settings",
                 optionType: "button",
                 buttonType: "settings",
-                settingType: "resetSettings", // Fixed: Added meaningful settingType
-                onButtonPressed: () => showSettingsDialog(context),
+                settingType: "resetSettings",
+                onButtonPressed: () => _showSettingsDialog(context, settings),
               ),
             ],
           ),
@@ -416,8 +392,8 @@ class _DataSectionState extends State<DataSection> {
     );
   }
 
-  void showDataDialog(BuildContext context) async {
-    final result = await showDialog<String>(
+  Future<void> _showDataDialog(BuildContext context, SettingsProvider settings) async {
+    await showDialog<String>(
       context: context,
       builder: (context) => ContentDialog(
         title: const Text('Clear Data?'),
@@ -428,8 +404,7 @@ class _DataSectionState extends State<DataSection> {
           Button(
             child: const Text('Clear Data'),
             onPressed: () {
-              // Fixed: Call the correct method
-              clearData();
+              settings.clearData();
               Navigator.pop(context, 'User cleared data');
             },
           ),
@@ -440,11 +415,10 @@ class _DataSectionState extends State<DataSection> {
         ],
       ),
     );
-    setState(() {});
   }
 
-  void showSettingsDialog(BuildContext context) async {
-    final result = await showDialog<String>(
+  Future<void> _showSettingsDialog(BuildContext context, SettingsProvider settings) async {
+    await showDialog<String>(
       context: context,
       builder: (context) => ContentDialog(
         title: const Text('Reset Settings?'),
@@ -455,7 +429,7 @@ class _DataSectionState extends State<DataSection> {
           Button(
             child: const Text('Reset'),
             onPressed: () {
-              settingsManager.resetSettings();
+              settings.resetSettings();
               Navigator.pop(context, 'User reset settings');
             },
           ),
@@ -466,34 +440,32 @@ class _DataSectionState extends State<DataSection> {
         ],
       ),
     );
-    setState(() {});
   }
 }
-class AboutSection extends StatelessWidget {
-  final Map<String, String> version;
-  const AboutSection({
-    super.key,
-    required this.version
 
-  });
+class AboutSection extends StatelessWidget {
+  const AboutSection({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final settings = Provider.of<SettingsProvider>(context);
+    final version = settings.appVersion;
+    
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Text("Version",style: TextStyle(fontSize: 16,fontWeight: FontWeight.w600),),
-        const SizedBox(height: 15,),
+        const Text("Version", style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600)),
+        const SizedBox(height: 15),
         Container(
           height: 77,
-          padding:const EdgeInsets.all(20),
+          padding: const EdgeInsets.all(20),
           width: MediaQuery.of(context).size.width,
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(10),
             color: FluentTheme.of(context).micaBackgroundColor,
-            border: Border.all(color: FluentTheme.of(context).inactiveBackgroundColor,width: 1)
+            border: Border.all(color: FluentTheme.of(context).inactiveBackgroundColor, width: 1)
           ),
-          child:Column(
+          child: Column(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Row(
@@ -502,13 +474,14 @@ class AboutSection extends StatelessWidget {
                   const Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                    Text("Version",style: TextStyle(fontWeight: FontWeight.bold),),
-                    Text("Current version of the app",style: TextStyle(fontSize: 12,color: Color(0xff555555)),),
-                  ]),
+                      Text("Version", style: TextStyle(fontWeight: FontWeight.bold)),
+                      Text("Current version of the app", style: TextStyle(fontSize: 12, color: Color(0xff555555))),
+                    ]
+                  ),
                   Column(
                     children: [
-                      Text("${version["version"]}",style:const TextStyle(fontWeight: FontWeight.bold),),
-                      Text("${version["type"]}",style:const TextStyle(fontSize: 12,color: Color(0xff555555)),),
+                      Text("${version["version"]}", style: const TextStyle(fontWeight: FontWeight.bold)),
+                      Text("${version["type"]}", style: const TextStyle(fontSize: 12, color: Color(0xff555555))),
                     ],
                   )
                 ],
@@ -521,6 +494,7 @@ class AboutSection extends StatelessWidget {
   }
 }
 
+// The OptionSetting widget remains largely the same
 class OptionSetting extends StatelessWidget {
   final String title;
   final String description;
@@ -591,15 +565,13 @@ class OptionSetting extends StatelessWidget {
           value: optionsValue,
           items: options.map((content) {
             return ComboBoxItem<String>(
-              value: content,
-              child: Text(content),
+              value: content.toString(),
+              child: Text(content.toString()),
             );
           }).toList(),
           onChanged: (value) {
-            if (value != null) {
-              if (changeValue != null) {
-                changeValue!(settingType, value);
-              }
+            if (value != null && changeValue != null) {
+              changeValue!(settingType, value);
             }
           },
         );
@@ -608,16 +580,14 @@ class OptionSetting extends StatelessWidget {
 }
 
 class Header extends StatelessWidget {
-  const Header({
-    super.key,
-  });
+  const Header({super.key});
 
   @override
   Widget build(BuildContext context) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        Text("Settings",style: FluentTheme.of(context).typography.subtitle,),
+        Text("Settings", style: FluentTheme.of(context).typography.subtitle),
       ],
     );
   }

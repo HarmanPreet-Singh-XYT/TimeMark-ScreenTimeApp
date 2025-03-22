@@ -240,6 +240,11 @@ class ScreenTimeDataController extends ChangeNotifier {
       'appSummaries': appSummaries.map((summary) => summary.toJson()).toList(),
       'usageByCategory': usageByCategory.map((key, value) => MapEntry(key, value.inMinutes)),
       'mostUsedApps': mostUsedApps.map((app) => app.toJson()).toList(),
+      'overallLimit':{
+        'enabled': _overallLimitEnabled,
+        'limit': _overallLimit.inMinutes,
+        'currentUsage': _calculateTotalScreenTime().inMinutes,
+      }
     };
   }
 
@@ -253,5 +258,72 @@ class ScreenTimeDataController extends ChangeNotifier {
     } else {
       return '$minutes min';
     }
+  }
+
+    Duration _overallLimit = Duration.zero;
+  bool _overallLimitEnabled = false;
+  
+  // Update overall screen time limit
+  void updateOverallLimit(Duration limit, bool enabled) {
+    _overallLimit = limit;
+    _overallLimitEnabled = enabled;
+    
+    // Save to storage or database as needed
+    _saveOverallLimitToStorage();
+    
+    // Check if any notifications need to be sent based on overall limits
+    _checkOverallLimitNotifications();
+  }
+  
+  // Check if the user is approaching or has exceeded their overall limit
+  void _checkOverallLimitNotifications() {
+    if (!_overallLimitEnabled || _overallLimit == Duration.zero) return;
+    
+    // Calculate total screen time for today
+    Duration totalScreenTime = _calculateTotalScreenTime();
+    
+    // If over limit, show notification
+    if (totalScreenTime >= _overallLimit) {
+      _showOverallLimitExceededNotification();
+    } 
+    // If approaching limit (90%), show warning
+    else if (totalScreenTime.inMinutes >= _overallLimit.inMinutes * 0.9) {
+      _showApproachingOverallLimitNotification();
+    }
+  }
+  
+  // Calculate total screen time across all apps
+  Duration _calculateTotalScreenTime() {
+    final apps = getAllAppsSummary();
+    return Duration(minutes: apps.fold(0, (sum, app) => sum + app.currentUsage.inMinutes));
+  }
+  
+  // Save overall limit settings to storage
+  void _saveOverallLimitToStorage() {
+    // Implementation depends on your storage mechanism
+    // Here we'll just log it
+    debugPrint('Saving overall limit: $_overallLimitEnabled, $_overallLimit');
+  }
+  
+  // Show notification when overall limit is exceeded
+  void _showOverallLimitExceededNotification() {
+    // Implementation depends on your notification system
+    debugPrint('NOTIFICATION: Overall screen time limit exceeded');
+  }
+  
+  // Show notification when approaching overall limit
+  void _showApproachingOverallLimitNotification() {
+    // Implementation depends on your notification system
+    debugPrint('NOTIFICATION: Approaching overall screen time limit');
+  }
+  
+  // Get current overall limit
+  Duration getOverallLimit() {
+    return _overallLimit;
+  }
+  
+  // Get overall limit status
+  bool isOverallLimitEnabled() {
+    return _overallLimitEnabled;
   }
 }

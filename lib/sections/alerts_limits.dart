@@ -2,10 +2,11 @@ import 'package:fluent_ui/fluent_ui.dart';
 import 'package:screentime/sections/graphs/alerts_limits_chart.dart';
 import 'package:screentime/sections/controller/data_controllers/alerts_limits_data_controller.dart';
 import 'package:screentime/sections/controller/settings_data_controller.dart';
+import 'package:screentime/sections/overview.dart';
 
 class AlertsLimits extends StatefulWidget {
-  final ScreenTimeDataController? controller; // Allow injection for testing
-  final SettingsManager? settingsManager; // Allow injection for testing
+  final ScreenTimeDataController? controller;
+  final SettingsManager? settingsManager;
   
   const AlertsLimits({
     super.key, 
@@ -24,11 +25,19 @@ class _AlertsLimitsState extends State<AlertsLimits> {
   bool frequentAlerts = false;
   bool soundAlerts = false;
   bool systemAlerts = false;
+  
+  // Add variables for overall limit
+  bool overallLimitEnabled = false;
+  double overallLimitHours = 2.0;
+  double overallLimitMinutes = 0.0;
 
   // This will store app summaries for UI updates
   List<AppUsageSummary> appSummaries = [];
   bool isLoading = true;
   String? errorMessage;
+  
+  // Add variable to track total daily screen time
+  Duration totalScreenTime = Duration.zero;
 
   @override
   void initState() {
@@ -41,6 +50,11 @@ class _AlertsLimitsState extends State<AlertsLimits> {
     frequentAlerts = settingsManager.getSetting("limitsAlerts.frequent");
     soundAlerts = settingsManager.getSetting("limitsAlerts.sound");
     systemAlerts = settingsManager.getSetting("limitsAlerts.system");
+    
+    // Load overall limit settings
+    overallLimitEnabled = settingsManager.getSetting("limitsAlerts.overallLimit.enabled") ?? false;
+    overallLimitHours = settingsManager.getSetting("limitsAlerts.overallLimit.hours")?.toDouble() ?? 2.0;
+    overallLimitMinutes = settingsManager.getSetting("limitsAlerts.overallLimit.minutes")?.toDouble() ?? 0.0;
     
     _loadData();
   }
@@ -62,6 +76,11 @@ class _AlertsLimitsState extends State<AlertsLimits> {
           appSummaries = (allData['appSummaries'] as List<dynamic>)
               .map((json) => AppUsageSummary.fromJson(json as Map<String, dynamic>))
               .toList();
+          
+          // Calculate total screen time by summing all app usages
+          totalScreenTime = Duration(minutes: appSummaries.fold(0, 
+              (sum, app) => sum + app.currentUsage.inMinutes));
+              
           isLoading = false;
         });
       }
@@ -77,10 +96,6 @@ class _AlertsLimitsState extends State<AlertsLimits> {
 
   @override
   void dispose() {
-    // Clean up controller if we created it internally
-    // if (widget.controller == null) {
-    //   controller.dispose();
-    // }
     super.dispose();
   }
 
@@ -110,7 +125,38 @@ class _AlertsLimitsState extends State<AlertsLimits> {
           settingsManager.updateSetting("limitsAlerts.system", value);
         });
         break;
+      case 'overallLimitEnabled':
+        setState(() {
+          overallLimitEnabled = value;
+          settingsManager.updateSetting("limitsAlerts.overallLimit.enabled", value);
+          
+          // Update controller with overall limit
+          if (value) {
+            final duration = Duration(
+              hours: overallLimitHours.round(),
+              minutes: (overallLimitMinutes.round() ~/ 5 * 5),
+            );
+            controller.updateOverallLimit(duration, true);
+          } else {
+            controller.updateOverallLimit(Duration.zero, false);
+          }
+        });
+        break;
     }
+  }
+
+  void _updateOverallLimit() {
+    final duration = Duration(
+      hours: overallLimitHours.round(),
+      minutes: (overallLimitMinutes.round() ~/ 5 * 5),
+    );
+    
+    // Update settings
+    settingsManager.updateSetting("limitsAlerts.overallLimit.hours", overallLimitHours.round());
+    settingsManager.updateSetting("limitsAlerts.overallLimit.minutes", overallLimitMinutes.round() ~/ 5 * 5);
+    
+    // Update controller
+    controller.updateOverallLimit(duration, overallLimitEnabled);
   }
 
   @override
@@ -145,7 +191,9 @@ class _AlertsLimitsState extends State<AlertsLimits> {
               onReset: _resetAllLimits,
               onRefresh: _loadData,
             ),
+            
             const SizedBox(height: 20),
+            
             // Notification settings widget - Made responsive
             LayoutBuilder(
               builder: (context, constraints) {
@@ -166,8 +214,8 @@ class _AlertsLimitsState extends State<AlertsLimits> {
                           style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
                         ),
                         const SizedBox(height: 15),
-                        // _buildToggleRow('Pop-up Alerts', popupAlerts, (v) => setSetting('popup', v)),
-                        // const SizedBox(height: 10),
+                        _buildToggleRow('Pop-up Alerts', popupAlerts, (v) => setSetting('popup', v)),
+                        const SizedBox(height: 10),
                         _buildToggleRow('Frequent Alerts', frequentAlerts, (v) => setSetting('frequent', v)),
                         const SizedBox(height: 10),
                         _buildToggleRow('Sound Alerts', soundAlerts, (v) => setSetting('sound', v)),
@@ -210,32 +258,147 @@ class _AlertsLimitsState extends State<AlertsLimits> {
               },
             ),
             const SizedBox(height: 20),
+            // Overall Screen Time Limit section
+            LayoutBuilder(
+              builder: (context, constraints) {
+                return Container(
+                  padding: const EdgeInsets.all(20),
+                  decoration: BoxDecoration(
+                    color: FluentTheme.of(context).micaBackgroundColor,
+                    borderRadius: BorderRadius.circular(10),
+                    border: Border.all(color: FluentTheme.of(context).inactiveBackgroundColor, width: 1),
+                  ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          const Text(
+                            "Overall Screen Time Limit",
+                            style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
+                          ),
+                          ToggleSwitch(
+                            checked: overallLimitEnabled,
+                            onChanged: (v) => setSetting('overallLimitEnabled', v),
+                          ),
+                        ],
+                      ),
+                      
+                      // Toggle moved to the right side with Spacer
+                      
+                      
+                      if(overallLimitEnabled) const SizedBox(height: 15),
+                      
+                      if (overallLimitEnabled) Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Row(
+                            children: [
+                              const Text('Daily Total Limit: ', 
+                                style: TextStyle(fontSize: 14, fontWeight: FontWeight.w500)),
+                              Text(
+                                '${overallLimitHours.round()}h ${(overallLimitMinutes.round() ~/ 5 * 5)}m',
+                                style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w600),
+                              ),
+                            ],
+                          ),
+                          
+                          const SizedBox(height: 10),
+                          
+                          // Make sliders stretch to full width
+                          Row(
+                            children: [
+                              const Text('Hours: '),
+                              Expanded(
+                                child: Slider(
+                                  value: overallLimitHours,
+                                  min: 0,
+                                  max: 12,
+                                  divisions: 12,
+                                  label: overallLimitHours.round().toString(),
+                                  onChanged: (value) {
+                                    setState(() {
+                                      overallLimitHours = value;
+                                      _updateOverallLimit();
+                                    });
+                                  },
+                                ),
+                              ),
+                              SizedBox(
+                                width: 30,
+                                child: Text(overallLimitHours.round().toString()),
+                              ),
+                            ],
+                          ),
+                          
+                          Row(
+                            children: [
+                              const Text('Minutes: '),
+                              Expanded(
+                                child: Slider(
+                                  value: overallLimitMinutes,
+                                  min: 0,
+                                  max: 55,
+                                  divisions: 12,
+                                  label: (overallLimitMinutes.round() ~/ 5 * 5).toString(),
+                                  onChanged: (value) {
+                                    setState(() {
+                                      overallLimitMinutes = (value ~/ 5 * 5).toDouble();
+                                      _updateOverallLimit();
+                                    });
+                                  },
+                                ),
+                              ),
+                              SizedBox(
+                                width: 30,
+                                child: Text((overallLimitMinutes.round() ~/ 5 * 5).toString()),
+                              ),
+                            ],
+                          ),
+                          
+                          const SizedBox(height: 10),
+                          
+                          // Make progress bar stretch to full width
+                          Row(
+                            children: [
+                              const Text('Current Usage: ', 
+                                style: TextStyle(fontSize: 14, fontWeight: FontWeight.w500)),
+                              Text(
+                                _formatDuration(totalScreenTime),
+                                style: TextStyle(
+                                  fontSize: 14, 
+                                  fontWeight: FontWeight.w600,
+                                  color: _getOverallStatusColor(),
+                                ),
+                              ),
+                              
+                              const SizedBox(width: 10),
+                              
+                              if (overallLimitEnabled && _getOverallLimitProgress() > 0)
+                                Expanded(
+                                  child: ProgressBar(
+                                    value: _getOverallLimitProgress(),
+                                    backgroundColor: FluentTheme.of(context).inactiveBackgroundColor,
+                                    activeColor: _getOverallStatusColor(),
+                                  ),
+                                ),
+                            ],
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                );
+              },
+            ),
+            const SizedBox(height: 20),
             // Application Limits section
             ApplicationLimits(
               appSummaries: appSummaries,
               controller: controller,
               onDataChanged: _loadData,
             ),
-            // const SizedBox(height: 20),
-            // // Usage Trends section
-            // Container(
-            //   padding: const EdgeInsets.only(top: 15, bottom: 15, left: 20, right: 20),
-            //   width: MediaQuery.of(context).size.width * 1,
-            //   decoration: BoxDecoration(
-            //     color: FluentTheme.of(context).micaBackgroundColor,
-            //     borderRadius: BorderRadius.circular(10),
-            //     border: Border.all(color: FluentTheme.of(context).inactiveBackgroundColor, width: 1),
-            //   ),
-            //   child:const Column(
-            //     mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            //     crossAxisAlignment: CrossAxisAlignment.start,
-            //     children: [
-            //       Text("Usage Trends", style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600)),
-            //       // Alert usage chart with direct data
-            //       AlertUsageChart(),
-            //     ],
-            //   ),
-            // ),
           ],
         ),
       ),
@@ -255,15 +418,87 @@ class _AlertsLimitsState extends State<AlertsLimits> {
     );
   }
 
+  double _getOverallLimitProgress() {
+    if (!overallLimitEnabled) return 0;
+    
+    final limitDuration = Duration(
+      hours: overallLimitHours.round(),
+      minutes: (overallLimitMinutes.round() ~/ 5 * 5),
+    );
+    
+    if (limitDuration.inMinutes == 0) return 0;
+    
+    double progress = totalScreenTime.inMinutes / limitDuration.inMinutes;
+    return progress > 1 ? 1 : progress;
+  }
+
+  Color _getOverallStatusColor() {
+    if (!overallLimitEnabled) {
+      return Colors.grey;
+    }
+    
+    final limitDuration = Duration(
+      hours: overallLimitHours.round(),
+      minutes: (overallLimitMinutes.round() ~/ 5 * 5),
+    );
+    
+    if (limitDuration == Duration.zero) {
+      return Colors.white;
+    }
+
+    if (totalScreenTime >= limitDuration) {
+      return Colors.red;
+    }
+
+    double percentage = totalScreenTime.inMinutes / limitDuration.inMinutes;
+    
+    if (percentage > 0.9) {
+      return Colors.orange;
+    }
+
+    if (percentage > 0.75) {
+      return Colors.yellow;
+    }
+
+    return Colors.green;
+  }
+
+  String _formatDuration(Duration duration) {
+    if (duration == Duration.zero) {
+      return "None";
+    }
+
+    final hours = duration.inHours;
+    final minutes = duration.inMinutes % 60;
+
+    if (hours > 0 && minutes > 0) {
+      return "${hours}h ${minutes}m";
+    } else if (hours > 0) {
+      return "${hours}h";
+    } else {
+      return "${minutes}m";
+    }
+  }
+
   void _resetAllLimits() {
     try {
-      // Get all app summaries from the controller
+      // Reset app-specific limits
       final apps = controller.getAllAppsSummary();
-      
-      // Update each app's limit to zero and disable it
       for (final app in apps) {
         controller.updateAppLimit(app.appName, Duration.zero, false);
       }
+      
+      // Reset overall limit
+      setState(() {
+        overallLimitEnabled = false;
+        overallLimitHours = 2.0;
+        overallLimitMinutes = 0.0;
+        settingsManager.updateSetting("limitsAlerts.overallLimit.enabled", false);
+        settingsManager.updateSetting("limitsAlerts.overallLimit.hours", 2);
+        settingsManager.updateSetting("limitsAlerts.overallLimit.minutes", 0);
+      });
+      
+      controller.updateOverallLimit(Duration.zero, false);
       
       // Reload data to update UI
       _loadData();
@@ -274,7 +509,6 @@ class _AlertsLimitsState extends State<AlertsLimits> {
     }
   }
 }
-
 class ApplicationLimits extends StatefulWidget {
   final List<AppUsageSummary> appSummaries;
   final ScreenTimeDataController controller;
@@ -297,7 +531,7 @@ class _ApplicationLimitsState extends State<ApplicationLimits> {
     return Container(
       constraints: const BoxConstraints(
         minHeight: 200,
-        maxHeight: 500,
+        maxHeight: 475,
       ),
       padding: const EdgeInsets.only(top: 15, bottom: 15, left: 20, right: 20),
       width: MediaQuery.of(context).size.width,
