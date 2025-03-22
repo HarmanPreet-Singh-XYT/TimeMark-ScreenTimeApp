@@ -44,6 +44,9 @@ class ApplicationBasicDetail {
   final String formattedScreenTime; // New formatted time property
   final bool isTracking;
   final bool isHidden;
+  final bool isProductive;
+  final Duration dailyLimit;
+  final bool limitStatus;
 
   ApplicationBasicDetail({
     required this.name,
@@ -51,6 +54,9 @@ class ApplicationBasicDetail {
     required this.screenTime,
     required this.isTracking,
     required this.isHidden,
+    required this.isProductive,
+    required this.dailyLimit,
+    required this.limitStatus
   }) : formattedScreenTime = screenTime.toHourMinuteFormat();
 }
 
@@ -201,6 +207,9 @@ class ApplicationsDataProvider {
           screenTime: usageRecord?.timeSpent ?? Duration.zero,
           isTracking: metadata.isTracking,
           isHidden: !metadata.isVisible,
+          isProductive: metadata.isProductive,
+          dailyLimit: metadata.dailyLimit,
+          limitStatus: metadata.limitStatus
         ));
       }
     }

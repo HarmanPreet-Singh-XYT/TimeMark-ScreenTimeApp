@@ -21,9 +21,9 @@ class SettingsManager {
   /// Settings Map
   Map<String, dynamic> settings = {
     "theme": {
-      "selected": "System",
-      "available": ["System", "Dark", "Light"]
-      // "available": ["Dark"]
+      "selected": "Dark",
+      // "available": ["System", "Dark", "Light"]
+      "available": ["Dark"]
     },
     "language": {
       "selected": "English",
@@ -124,9 +124,9 @@ class SettingsManager {
       current[keys.last] = value;
       
       // Apply theme changes if theme setting is updated
-      if (keys.length >= 2 && keys[0] == "theme" && keys[1] == "selected" && context != null) {
-        applyTheme(value, context);
-      }
+      // if (keys.length >= 2 && keys[0] == "theme" && keys[1] == "selected" && context != null) {
+      //   applyTheme(value, context);
+      // }
     }
     
     _saveSettings(); // Save updated settings
@@ -177,8 +177,9 @@ class SettingsManager {
     // Default settings map
     final Map<String, dynamic> defaultSettings = {
       "theme": {
-        "selected": "System",
-        "available": ["System","Dark","Light"]
+        "selected": "Dark",
+        // "available": ["System","Dark","Light"]
+        "available": ["Dark"]
       },
       "language": {
         "selected": "English",
@@ -226,9 +227,9 @@ class SettingsManager {
     }
 
     // Apply default theme if context is provided
-    if (context != null) {
-      applyTheme(settings["theme"]["selected"], context);
-    }
+    // if (context != null) {
+    //   applyTheme(settings["theme"]["selected"], context);
+    // }
 
     // Save the default settings to persistent storage
     _saveSettings();

@@ -17,9 +17,26 @@ import './sections/controller/application_controller.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await SettingsManager().init();
+  // Get the saved theme preference
+  final String savedTheme = SettingsManager().getSetting("theme.selected") ?? "Dark";
+  final AdaptiveThemeMode initialTheme;
+  
+  // Convert string theme setting to AdaptiveThemeMode
+  switch (savedTheme) {
+    case "Dark":
+      initialTheme = AdaptiveThemeMode.dark;
+      break;
+    case "Light":
+      initialTheme = AdaptiveThemeMode.light;
+      break;
+    case "System":
+    default:
+      initialTheme = AdaptiveThemeMode.system;
+      break;
+  }
   final tracker = BackgroundAppTracker();
   tracker.initializeTracking();
-  runApp(const MyApp());
+  runApp(MyApp(initialTheme: initialTheme));
   doWhenWindowReady(() {
     final win = appWindow;
     const initialSize = Size(1280, 800);
@@ -32,7 +49,9 @@ void main() async {
 }
 
 class MyApp extends StatefulWidget {
-  const MyApp({super.key});
+  final AdaptiveThemeMode initialTheme;
+  
+  const MyApp({super.key, this.initialTheme = AdaptiveThemeMode.system});
 
   @override
   State<MyApp> createState() => _MyAppState();
@@ -182,21 +201,18 @@ class _MyAppState extends State<MyApp> with TrayListener {
   @override
   Widget build(BuildContext context) {
     return FluentAdaptiveTheme(
-      light: FluentThemeData(
-          brightness: Brightness.light,
-          // cardColor: const Color(0xff202020),
-          // scaffoldBackgroundColor: const Color.fromARGB(255, 20, 20, 20)
-          ),
+      light: FluentThemeData.light(),
       dark: FluentThemeData(
           brightness: Brightness.dark,
           cardColor: const Color(0xff202020),
-          scaffoldBackgroundColor: const Color.fromARGB(255, 20, 20, 20)),
-      initial: AdaptiveThemeMode.system,
+          scaffoldBackgroundColor: const Color.fromARGB(255, 20, 20, 20)
+      ),
+      initial: widget.initialTheme, // Use the initial theme from settings
       builder: (theme, darkTheme) => FluentApp(
         title: 'Fluent Adaptive Theme Demo',
         theme: theme,
         darkTheme: darkTheme,
-        home: HomePage(selectedIndex:selectedIndex,changeIndex:changeIndex),
+        home: HomePage(selectedIndex: selectedIndex, changeIndex: changeIndex),
       ),
     );
   }
