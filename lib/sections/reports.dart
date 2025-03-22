@@ -260,10 +260,21 @@ Widget _buildCustomErrorDisplay() {
   }
 
   Widget _buildCategoryBreakdownChart(AnalyticsSummary summary) {
+    final dataMap = summary.categoryBreakdown ?? {};
+
+    if (dataMap.isEmpty) {
+      return const CardContainer(
+        title: "Category Breakdown",
+        child: Center(
+          child: Text("No data available"),
+        ),
+      );
+    }
+
     return CardContainer(
       title: "Category Breakdown",
       child: ReportsPieChart(
-        dataMap: summary.categoryBreakdown,
+        dataMap: dataMap,
         colorList: const [
           Color.fromRGBO(223, 250, 92, 1),
           Color.fromRGBO(129, 250, 112, 1),
@@ -273,6 +284,8 @@ Widget _buildCustomErrorDisplay() {
       ),
     );
   }
+
+
 }
 
 class CardContainer extends StatelessWidget {

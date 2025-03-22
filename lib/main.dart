@@ -1,5 +1,4 @@
 import 'dart:io';
-
 import 'package:fluent_ui/fluent_ui.dart';
 import './sections/overview.dart';
 import './sections/applications.dart';

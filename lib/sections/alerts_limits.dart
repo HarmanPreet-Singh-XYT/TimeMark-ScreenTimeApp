@@ -216,26 +216,26 @@ class _AlertsLimitsState extends State<AlertsLimits> {
               controller: controller,
               onDataChanged: _loadData,
             ),
-            const SizedBox(height: 20),
-            // Usage Trends section
-            Container(
-              padding: const EdgeInsets.only(top: 15, bottom: 15, left: 20, right: 20),
-              width: MediaQuery.of(context).size.width * 1,
-              decoration: BoxDecoration(
-                color: FluentTheme.of(context).micaBackgroundColor,
-                borderRadius: BorderRadius.circular(10),
-                border: Border.all(color: FluentTheme.of(context).inactiveBackgroundColor, width: 1),
-              ),
-              child: const Column(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text("Usage Trends", style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600)),
-                  // Alert usage chart with direct data
-                  AlertUsageChart(),
-                ],
-              ),
-            ),
+            // const SizedBox(height: 20),
+            // // Usage Trends section
+            // Container(
+            //   padding: const EdgeInsets.only(top: 15, bottom: 15, left: 20, right: 20),
+            //   width: MediaQuery.of(context).size.width * 1,
+            //   decoration: BoxDecoration(
+            //     color: FluentTheme.of(context).micaBackgroundColor,
+            //     borderRadius: BorderRadius.circular(10),
+            //     border: Border.all(color: FluentTheme.of(context).inactiveBackgroundColor, width: 1),
+            //   ),
+            //   child:const Column(
+            //     mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            //     crossAxisAlignment: CrossAxisAlignment.start,
+            //     children: [
+            //       Text("Usage Trends", style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600)),
+            //       // Alert usage chart with direct data
+            //       AlertUsageChart(),
+            //     ],
+            //   ),
+            // ),
           ],
         ),
       ),
@@ -297,7 +297,7 @@ class _ApplicationLimitsState extends State<ApplicationLimits> {
     return Container(
       constraints: const BoxConstraints(
         minHeight: 200,
-        maxHeight: 400,
+        maxHeight: 500,
       ),
       padding: const EdgeInsets.only(top: 15, bottom: 15, left: 20, right: 20),
       width: MediaQuery.of(context).size.width,
