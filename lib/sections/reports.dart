@@ -4,6 +4,7 @@ import 'package:screentime/sections/graphs/reports_line_chart.dart';
 import 'package:screentime/sections/graphs/reports_pie_chart.dart';
 import './controller/data_controllers/reports_controller.dart';
 import './controller/data_controllers/alerts_limits_data_controller.dart' as appSummaryData;
+import './controller/data_controllers/applications_data_controller.dart';
 class Reports extends StatefulWidget {
   const Reports({super.key});
 
@@ -701,8 +702,8 @@ class _ApplicationUsageState extends State<ApplicationUsage> {
     );
   }
 
-  void _showAppDetails(BuildContext context, AppUsageSummary app) {
-  // Get the controller instance
+  void _showAppDetails(BuildContext context, AppUsageSummary app) async {
+    // Get the controller instance
   final appSummaryData.ScreenTimeDataController controller = appSummaryData.ScreenTimeDataController();
   
   // Fetch the app summary using the controller
@@ -712,34 +713,38 @@ class _ApplicationUsageState extends State<ApplicationUsage> {
   if (appSummary == null) {
     return;
   }
+  final appDataProvider = ApplicationsDataProvider();
+  // Fetch detailed application data for the selected timeframe
+  final ApplicationBasicDetail appBasicDetails = await appDataProvider.fetchApplicationByName(app.appName);
+  final ApplicationDetailedData appDetails = await appDataProvider.fetchApplicationDetails(
+    app.appName, 
+    TimeRange.week // Default to weekly view, can be made dynamic
+  );
   
-  // Get usage history data for the past week
-  final List<Map<String, dynamic>> weeklyData = _getWeeklyUsageData(app.appName);
+  // Parse data for weekly usage chart
+  final List<FlSpot> dailyUsageSpots = [];
+  final Map<String, Duration> weeklyData = appDetails.usageTrends.weekly;
   
-  // Parse data for charts
-  final List<FlSpot> dailyUsageSpots = weeklyData
-      .asMap()
-      .entries
-      .map((entry) => FlSpot(entry.key.toDouble(), 
-          entry.value['minutes'].toDouble()))
-      .toList();
+  // Sort dates to ensure they appear in chronological order
+  final List<String> sortedDates = weeklyData.keys.toList()..sort();
+  
+  // Convert data to chart points
+  for (int i = 0; i < sortedDates.length; i++) {
+    final String date = sortedDates[i];
+    final Duration duration = weeklyData[date] ?? Duration.zero;
+    dailyUsageSpots.add(FlSpot(i.toDouble(), duration.inMinutes.toDouble()));
+  }
   
   // Calculate statistics
-  final double avgDailyUsage = weeklyData.isEmpty 
-      ? 0 
-      : weeklyData.map((day) => day['minutes'] as num).reduce((a, b) => a + b) / weeklyData.length;
+  final double avgDailyUsage = appDetails.usageInsights.averageDailyUsage.inMinutes.toDouble();
   
-  final double maxUsage = weeklyData.isEmpty 
+  final double maxUsage = sortedDates.isEmpty 
       ? 0 
-      : weeklyData.map((day) => day['minutes'] as num).reduce((a, b) => a > b ? a : b).toDouble();
+      : sortedDates.map((date) => weeklyData[date]?.inMinutes ?? 0)
+            .reduce((a, b) => a > b ? a : b).toDouble();
   
-  // Generate time of day usage data
-  final Map<String, double> timeOfDayUsage = {
-    'Morning (6-12)': 35,
-    'Afternoon (12-5)': 45,
-    'Evening (5-9)': 15,
-    'Night (9-6)': 5,
-  };
+  // Generate time of day usage data from hourly breakdown
+  final Map<String, double> timeOfDayUsage = _generateTimeOfDayData(appDetails.hourlyBreakdown);
   
   showDialog(
     context: context,
@@ -749,51 +754,51 @@ class _ApplicationUsageState extends State<ApplicationUsage> {
           Icon(
             FluentIcons.app_icon_default,
             color: app.isProductive ? Colors.green : Colors.red,
-            size: 24, // Increased icon size
+            size: 24,
           ),
-          const SizedBox(width: 12), // Increased spacing
+          const SizedBox(width: 12),
           Expanded(
             child: Text(
               app.appName,
               style: const TextStyle(
                 fontWeight: FontWeight.bold,
-                fontSize: 20, // Increased font size
-                letterSpacing: 0.3, // Added letter spacing for better readability
+                fontSize: 20,
+                letterSpacing: 0.3,
               ),
             ),
           ),
         ],
       ),
-      constraints: const BoxConstraints(maxWidth: 800, maxHeight: 700), // Increased dialog size
+      constraints: const BoxConstraints(maxWidth: 800, maxHeight: 700),
       content: SingleChildScrollView(
         child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 8.0), // Added horizontal padding
+          padding: const EdgeInsets.symmetric(horizontal: 8.0),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               // Usage Summary Card
               Card(
-                padding: const EdgeInsets.all(20), // Increased padding
-                borderRadius: BorderRadius.circular(12), // Rounded corners
+                padding: const EdgeInsets.all(20),
+                borderRadius: BorderRadius.circular(12),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     const Text("Usage Summary", 
                       style: TextStyle(
                         fontWeight: FontWeight.bold, 
-                        fontSize: 18, // Increased font size
+                        fontSize: 18,
                         letterSpacing: 0.4,
                       )),
-                    const SizedBox(height: 20), // Increased spacing
+                    const SizedBox(height: 20),
                     Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceAround, // Better distribution
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
                       children: [
                         _buildSummaryItem(
                           context, 
                           "Today", 
-                          _formatDuration(appSummary.currentUsage),
+                          appBasicDetails.formattedScreenTime,
                           icon: FluentIcons.calendar_day,
-                          iconSize: 20, // Specified icon size
+                          iconSize: 20,
                         ),
                         _buildSummaryItem(
                           context, 
@@ -807,9 +812,9 @@ class _ApplicationUsageState extends State<ApplicationUsage> {
                         _buildSummaryItem(
                           context, 
                           "Usage Trend", 
-                          _formatTrend(appSummary.trend),
-                          icon: _getTrendIcon(appSummary.trend),
-                          color: _getTrendColor(appSummary.trend),
+                          _determineTrend(appDetails.comparisons),
+                          icon: _getTrendIcon(appDetails.comparisons),
+                          color: _getTrendColor(appDetails.comparisons),
                           iconSize: 20,
                         ),
                         _buildSummaryItem(
@@ -830,12 +835,12 @@ class _ApplicationUsageState extends State<ApplicationUsage> {
                 ),
               ),
               
-              const SizedBox(height: 24), // Increased spacing between cards
+              const SizedBox(height: 24),
               
               // Usage Over Time Chart
               Card(
-                padding: const EdgeInsets.all(20), // Increased padding
-                borderRadius: BorderRadius.circular(12), // Rounded corners
+                padding: const EdgeInsets.all(20),
+                borderRadius: BorderRadius.circular(12),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -845,17 +850,17 @@ class _ApplicationUsageState extends State<ApplicationUsage> {
                         fontSize: 18,
                         letterSpacing: 0.4,
                       )),
-                    const SizedBox(height: 24), // Increased spacing
+                    const SizedBox(height: 24),
                     Container(
-                      height: 220, // Increased height for the chart
-                      padding: const EdgeInsets.only(right: 16, bottom: 16), // Added padding around chart
-                      child: weeklyData.isEmpty 
+                      height: 220,
+                      padding: const EdgeInsets.only(right: 16, bottom: 16),
+                      child: dailyUsageSpots.isEmpty 
                         ? Center(
                             child: Text(
                               "No historical data available",
                               style: TextStyle(
                                 fontSize: 16,
-                                color: FluentTheme.of(context).accentColor.withValues(alpha: .8),
+                                color: FluentTheme.of(context).accentColor.withAlpha(128),
                               ),
                             ))
                         : LineChart(
@@ -865,13 +870,13 @@ class _ApplicationUsageState extends State<ApplicationUsage> {
                                 drawVerticalLine: true,
                                 getDrawingHorizontalLine: (value) {
                                   return FlLine(
-                                    color: FluentTheme.of(context).accentColor.withValues(alpha: .8).withValues(alpha: .2),
+                                    color: FluentTheme.of(context).accentColor.withAlpha(40),
                                     strokeWidth: 1,
                                   );
                                 },
                                 getDrawingVerticalLine: (value) {
                                   return FlLine(
-                                    color: FluentTheme.of(context).accentColor.withValues(alpha: .8).withValues(alpha: .2),
+                                    color: FluentTheme.of(context).accentColor.withAlpha(40),
                                     strokeWidth: 1,
                                   );
                                 },
@@ -881,22 +886,25 @@ class _ApplicationUsageState extends State<ApplicationUsage> {
                                   sideTitles: SideTitles(
                                     showTitles: true,
                                     getTitlesWidget: (value, meta) {
-                                      // Get day name for x-axis
-                                      final List<String> days = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
+                                      // Get date label for x-axis (could be shortened date format)
                                       final int index = value.toInt();
-                                      return index >= 0 && index < days.length 
-                                        ? Padding(
-                                            padding: const EdgeInsets.only(top: 8.0),
-                                            child: Text(
-                                              days[index],
-                                              style: TextStyle(
-                                                fontSize: 12,
-                                                fontWeight: FontWeight.w500,
-                                                color: FluentTheme.of(context).accentColor.withValues(alpha: .8),
-                                              ),
+                                      if (index >= 0 && index < sortedDates.length) {
+                                        // Format date string for display (assumes date format like '2025-03-15')
+                                        final String date = sortedDates[index];
+                                        final String displayDate = _formatDateForAxis(date);
+                                        return Padding(
+                                          padding: const EdgeInsets.only(top: 8.0),
+                                          child: Text(
+                                            displayDate,
+                                            style: TextStyle(
+                                              fontSize: 12,
+                                              fontWeight: FontWeight.w500,
+                                              color: FluentTheme.of(context).accentColor.withAlpha(128),
                                             ),
-                                          ) 
-                                        : const Text('');
+                                          ),
+                                        );
+                                      }
+                                      return const Text('');
                                     },
                                     reservedSize: 30,
                                   ),
@@ -913,7 +921,7 @@ class _ApplicationUsageState extends State<ApplicationUsage> {
                                           style: TextStyle(
                                             fontSize: 12,
                                             fontWeight: FontWeight.w500,
-                                            color: FluentTheme.of(context).accentColor.withValues(alpha: .8),
+                                            color: FluentTheme.of(context).accentColor.withAlpha(128),
                                           ),
                                         ),
                                       );
@@ -929,24 +937,24 @@ class _ApplicationUsageState extends State<ApplicationUsage> {
                               ),
                               borderData: FlBorderData(
                                 show: true,
-                                border: Border.all(color: FluentTheme.of(context).accentColor.withValues(alpha: .8).withValues(alpha: .2)),
+                                border: Border.all(color: FluentTheme.of(context).accentColor.withAlpha(40)),
                               ),
                               minX: 0,
-                              maxX: 6,
+                              maxX: sortedDates.length - 1.0,
                               minY: 0,
-                              maxY: maxUsage + 20, // Added more padding at the top
+                              maxY: maxUsage + 20,
                               lineBarsData: [
                                 LineChartBarData(
                                   spots: dailyUsageSpots,
                                   isCurved: true,
                                   color: Colors.blue,
-                                  barWidth: 4, // Thicker line
+                                  barWidth: 4,
                                   isStrokeCapRound: true,
                                   dotData: FlDotData(
                                     show: true,
                                     getDotPainter: (spot, percent, barData, index) {
                                       return FlDotCirclePainter(
-                                        radius: 5, // Larger dots
+                                        radius: 5,
                                         color: Colors.blue,
                                         strokeWidth: 2,
                                         strokeColor: Colors.white,
@@ -955,14 +963,11 @@ class _ApplicationUsageState extends State<ApplicationUsage> {
                                   ),
                                   belowBarData: BarAreaData(
                                     show: true,
-                                    color: Colors.blue.withValues(alpha: .15), // Lighter gradient
-                                    // gradientFrom: const Offset(0, 0),
-                                    // gradientTo: const Offset(0, 1),
-                                    // gradientColorStops: const [0.0, 1.0],
+                                    color: Colors.blue.withAlpha(38),
                                     spotsLine: BarAreaSpotsLine(
                                       show: true,
                                       flLineStyle: FlLine(
-                                        color: Colors.blue.withValues(alpha: .5),
+                                        color: Colors.blue.withAlpha(128),
                                         strokeWidth: 1,
                                       ),
                                     ),
@@ -971,10 +976,10 @@ class _ApplicationUsageState extends State<ApplicationUsage> {
                                 // Add a line for the daily limit if set
                                 if (appSummary.limitStatus && appSummary.dailyLimit > Duration.zero)
                                   LineChartBarData(
-                                    spots: List.generate(7, (index) => 
+                                    spots: List.generate(sortedDates.length, (index) => 
                                       FlSpot(index.toDouble(), appSummary.dailyLimit.inMinutes.toDouble())),
                                     isCurved: false,
-                                    color: Colors.red.withValues(alpha: .7),
+                                    color: Colors.red.withAlpha(179),
                                     barWidth: 2,
                                     isStrokeCapRound: true,
                                     dotData: FlDotData(show: false),
@@ -984,28 +989,29 @@ class _ApplicationUsageState extends State<ApplicationUsage> {
                             ),
                           ),
                     ),
-                    const SizedBox(height: 20), // Increased spacing
+                    const SizedBox(height: 20),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceAround,
                       children: [
                         _buildStatCard(
+                          context,
                           "Avg. Daily Usage",
-                          "${avgDailyUsage.toStringAsFixed(1)}m",
-                          FluentIcons.chart_series,
-                          cardSize: 100, // Specified card size
-                        ),
-                        _buildStatCard(
-                          "Peak Day",
-                          maxUsage > 0 
-                            ? "${maxUsage.toInt()}m" 
-                            : "No data",
+                          appDetails.usageInsights.formattedAverageDailyUsage,
                           FluentIcons.chart_series,
                           cardSize: 100,
                         ),
                         _buildStatCard(
+                          context,
+                          "Longest Session",
+                          appDetails.sessionBreakdown.formattedLongestSessionDuration,
+                          FluentIcons.timeline_progress,
+                          cardSize: 100,
+                        ),
+                        _buildStatCard(
+                          context,
                           "Weekly Total",
-                          _formatDuration(Duration(minutes: weeklyData
-                              .map((day) => day['minutes'] as int)
+                          _formatDuration(Duration(minutes: weeklyData.values
+                              .map((duration) => duration.inMinutes)
                               .fold(0, (a, b) => a + b))),
                           FluentIcons.calendar_week,
                           cardSize: 100,
@@ -1016,12 +1022,12 @@ class _ApplicationUsageState extends State<ApplicationUsage> {
                 ),
               ),
               
-              const SizedBox(height: 24), // Increased spacing between cards
+              const SizedBox(height: 24),
               
               // Time of Day Distribution
               Card(
-                padding: const EdgeInsets.all(20), // Increased padding
-                borderRadius: BorderRadius.circular(12), // Rounded corners
+                padding: const EdgeInsets.all(20),
+                borderRadius: BorderRadius.circular(12),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -1031,9 +1037,9 @@ class _ApplicationUsageState extends State<ApplicationUsage> {
                         fontSize: 18,
                         letterSpacing: 0.4,
                       )),
-                    const SizedBox(height: 24), // Increased spacing
+                    const SizedBox(height: 24),
                     SizedBox(
-                      height: 300, // Increased height
+                      height: 300,
                       child: Row(
                         children: [
                           Expanded(
@@ -1046,9 +1052,9 @@ class _ApplicationUsageState extends State<ApplicationUsage> {
                                     color: color,
                                     value: entry.value,
                                     title: '${entry.value.toInt()}%',
-                                    radius: 90, // Increased radius
+                                    radius: 90,
                                     titleStyle: const TextStyle(
-                                      fontSize: 16, // Larger text
+                                      fontSize: 16,
                                       fontWeight: FontWeight.bold,
                                       color: Colors.white,
                                       shadows: [
@@ -1067,29 +1073,25 @@ class _ApplicationUsageState extends State<ApplicationUsage> {
                                   );
                                 }).toList(),
                                 centerSpaceRadius: 40,
-                                sectionsSpace: 3, // Increased space between sections
-                                pieTouchData: PieTouchData(
-                                  touchCallback: (event, response) {
-                                    // Optional touch interactions
-                                  },
-                                ),
+                                sectionsSpace: 3,
+                                pieTouchData: PieTouchData(),
                               ),
                             ),
                           ),
                           Expanded(
                             flex: 2,
                             child: Padding(
-                              padding: const EdgeInsets.only(left: 16.0), // Added padding for legend
+                              padding: const EdgeInsets.only(left: 16.0),
                               child: Column(
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: timeOfDayUsage.entries.map((entry) {
                                   return Padding(
-                                    padding: const EdgeInsets.symmetric(vertical: 8), // Increased spacing
+                                    padding: const EdgeInsets.symmetric(vertical: 8),
                                     child: Row(
                                       children: [
                                         Container(
-                                          width: 14, // Larger color indicator
+                                          width: 14,
                                           height: 14,
                                           decoration: BoxDecoration(
                                             color: _getTimeOfDayColor(entry.key),
@@ -1097,18 +1099,18 @@ class _ApplicationUsageState extends State<ApplicationUsage> {
                                             borderRadius: BorderRadius.circular(3),
                                             boxShadow: [
                                               BoxShadow(
-                                                color: Colors.black.withValues(alpha: .1),
+                                                color: Colors.black.withAlpha(26),
                                                 blurRadius: 1,
                                                 offset: const Offset(0, 1),
                                               ),
                                             ],
                                           ),
                                         ),
-                                        const SizedBox(width: 12), // Increased spacing
+                                        const SizedBox(width: 12),
                                         Text(
                                           entry.key,
                                           style: const TextStyle(
-                                            fontSize: 14, // Larger text
+                                            fontSize: 14,
                                             fontWeight: FontWeight.w500,
                                           ),
                                         ),
@@ -1126,12 +1128,12 @@ class _ApplicationUsageState extends State<ApplicationUsage> {
                 ),
               ),
               
-              const SizedBox(height: 24), // Increased spacing between cards
+              const SizedBox(height: 24),
               
               // Usage Pattern Analysis
               Card(
-                padding: const EdgeInsets.all(20), // Increased padding
-                borderRadius: BorderRadius.circular(12), // Rounded corners
+                padding: const EdgeInsets.all(20),
+                borderRadius: BorderRadius.circular(12),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -1141,63 +1143,63 @@ class _ApplicationUsageState extends State<ApplicationUsage> {
                         fontSize: 18,
                         letterSpacing: 0.4,
                       )),
-                    const SizedBox(height: 20), // Increased spacing
+                    const SizedBox(height: 20),
                     ListTile(
                       leading: Container(
-                        padding: const EdgeInsets.all(8), // Added padding around icon
+                        padding: const EdgeInsets.all(8),
                         decoration: BoxDecoration(
-                          color: Colors.errorPrimaryColor.withValues(alpha: .1), // Added background color
-                          borderRadius: BorderRadius.circular(8), // Rounded corners
+                          color: Colors.blue.withAlpha(26),
+                          borderRadius: BorderRadius.circular(8),
                         ),
                         child: Icon(
                           FluentIcons.lightbulb, 
-                          color: Colors.errorPrimaryColor,
-                          size: 24, // Increased icon size
+                          color: Colors.blue,
+                          size: 24,
                         ),
                       ),
                       title: const Text("Usage Insights", 
                         style: TextStyle(
                           fontWeight: FontWeight.w600,
-                          fontSize: 16, // Increased font size
+                          fontSize: 16,
                         )),
                       subtitle: Padding(
-                        padding: const EdgeInsets.only(top: 8.0, left: 4.0), // Added padding
+                        padding: const EdgeInsets.only(top: 8.0, left: 4.0),
                         child: Text(
-                          _generateUsageInsights(appSummary, avgDailyUsage, timeOfDayUsage),
+                          _generateUsageInsights(appBasicDetails, appDetails, timeOfDayUsage),
                           style: const TextStyle(
-                            fontSize: 14, // Increased font size
-                            height: 1.4, // Added line height for better readability
+                            fontSize: 14,
+                            height: 1.4,
                           ),
                         ),
                       ),
                     ),
-                    const SizedBox(height: 12), // Added spacing between list tiles
+                    const SizedBox(height: 12),
                     if (appSummary.limitStatus)
                       ListTile(
                         leading: Container(
-                          padding: const EdgeInsets.all(8), // Added padding around icon
+                          padding: const EdgeInsets.all(8),
                           decoration: BoxDecoration(
-                            color: _getLimitStatusColor(appSummary).withValues(alpha: .1), // Added background color
-                            borderRadius: BorderRadius.circular(8), // Rounded corners
+                            color: _getLimitStatusColor(appBasicDetails).withAlpha(26),
+                            borderRadius: BorderRadius.circular(8),
                           ),
                           child: Icon(
                             FluentIcons.timer, 
-                            color: _getLimitStatusColor(appSummary),
-                            size: 24, // Increased icon size
+                            color: _getLimitStatusColor(appBasicDetails),
+                            size: 24,
                           ),
                         ),
                         title: const Text("Limit Status", 
                           style: TextStyle(
                             fontWeight: FontWeight.w600,
-                            fontSize: 16, // Increased font size
+                            fontSize: 16,
                           )),
                         subtitle: Padding(
-                          padding: const EdgeInsets.only(top: 8.0, left: 4.0), // Added padding
+                          padding: const EdgeInsets.only(top: 8.0, left: 4.0),
                           child: Text(
-                            _generateLimitStatusInsight(appSummary),
+                            _generateLimitStatusInsight(appBasicDetails),
                             style: const TextStyle(
-                              fontSize: 14, // Increased font size
-                              height: 1.4, // Added line height for better readability
+                              fontSize: 14,
+                              height: 1.4,
                             ),
                           ),
                         ),
@@ -1206,38 +1208,21 @@ class _ApplicationUsageState extends State<ApplicationUsage> {
                 ),
               ),
               
-              const SizedBox(height: 16), // Added bottom spacing
+              const SizedBox(height: 16),
             ],
           ),
         ),
       ),
       actions: [
-        // Button(
-        //   onPressed: () {
-        //     // Open settings for this app
-        //     _openAppSettings(context, app);
-        //   },
-        //   style: ButtonStyle(
-        //     padding: ButtonState.all(const EdgeInsets.symmetric(horizontal: 20, vertical: 12)), // Increased button padding
-        //   ),
-        //   child: const Text(
-        //     'App Settings',
-        //     style: TextStyle(
-        //       fontSize: 14, // Increased font size
-        //       fontWeight: FontWeight.w500,
-        //     ),
-        //   ),
-        // ),
-        const SizedBox(width: 12), // Added spacing between buttons
         FilledButton(
           style: ButtonStyle(
-            padding: ButtonState.all(const EdgeInsets.symmetric(horizontal: 20, vertical: 12)), // Increased button padding
+            padding: ButtonState.all(const EdgeInsets.symmetric(horizontal: 20, vertical: 12)),
           ),
           onPressed: () => Navigator.pop(context),
           child: const Text(
             'Close',
             style: TextStyle(
-              fontSize: 14, // Increased font size
+              fontSize: 14,
               fontWeight: FontWeight.w500,
             ),
           ),
@@ -1247,11 +1232,211 @@ class _ApplicationUsageState extends State<ApplicationUsage> {
   );
 }
 
+// Helper functions for data manipulation
+Map<String, double> _generateTimeOfDayData(Map<int, Duration> hourlyBreakdown) {
+  // Create buckets for each time of day
+  final Map<String, Duration> timeOfDayDurations = {
+    'Morning (6-12)': Duration.zero,
+    'Afternoon (12-5)': Duration.zero,
+    'Evening (5-9)': Duration.zero,
+    'Night (9-6)': Duration.zero,
+  };
+  
+  // Sum up durations for each time bracket
+  hourlyBreakdown.forEach((hour, duration) {
+    if (hour >= 6 && hour < 12) {
+      timeOfDayDurations['Morning (6-12)'] = 
+          timeOfDayDurations['Morning (6-12)']! + duration;
+    } else if (hour >= 12 && hour < 17) {
+      timeOfDayDurations['Afternoon (12-5)'] = 
+          timeOfDayDurations['Afternoon (12-5)']! + duration;
+    } else if (hour >= 17 && hour < 21) {
+      timeOfDayDurations['Evening (5-9)'] = 
+          timeOfDayDurations['Evening (5-9)']! + duration;
+    } else {
+      timeOfDayDurations['Night (9-6)'] = 
+          timeOfDayDurations['Night (9-6)']! + duration;
+    }
+  });
+  
+  // Calculate total duration
+  final Duration totalDuration = timeOfDayDurations.values.fold(
+    Duration.zero, (prev, curr) => prev + curr);
+  
+  // Convert to percentages for chart
+  final Map<String, double> percentages = {};
+  if (totalDuration.inSeconds > 0) {
+    timeOfDayDurations.forEach((timeOfDay, duration) {
+      percentages[timeOfDay] = (duration.inSeconds / totalDuration.inSeconds) * 100;
+    });
+  } else {
+    // Equal distribution if no data
+    timeOfDayDurations.keys.forEach((timeOfDay) {
+      percentages[timeOfDay] = 25.0;
+    });
+  }
+  
+  return percentages;
+}
+
+String _formatDateForAxis(String dateString) {
+  try {
+    // Parse the date string (format might need to be adjusted based on your data)
+    final DateTime date = DateTime.parse(dateString);
+    // Return just the day and month
+    return '${date.day}/${date.month}';
+  } catch (e) {
+    // If unable to parse, return original string or abbreviated version
+    return dateString.length > 3 ? dateString.substring(0, 3) : dateString;
+  }
+}
+
+String _determineTrend(UsageComparisons comparisons) {
+  final double percentage = comparisons.growthPercentage;
+  
+  if (percentage > 5) {
+    return "Increasing";
+  } else if (percentage < -5) {
+    return "Decreasing";
+  } else {
+    return "Stable";
+  }
+}
+
+IconData _getTrendIcon(UsageComparisons comparisons) {
+  final double percentage = comparisons.growthPercentage;
+  
+  if (percentage > 5) {
+    return FluentIcons.up;
+  } else if (percentage < -5) {
+    return FluentIcons.down;
+  } else {
+    return FluentIcons.horizontal_tab_key;
+  }
+}
+
+Color _getTrendColor(UsageComparisons comparisons) {
+  final double percentage = comparisons.growthPercentage;
+  
+  if (percentage > 5) {
+    return Colors.red;
+  } else if (percentage < -5) {
+    return Colors.green;
+  } else {
+    return Colors.blue;
+  }
+}
+
+Color _getTimeOfDayColor(String timeOfDay) {
+  final Map<String, Color> timeColors = {
+    'Morning (6-12)': Colors.orange,
+    'Afternoon (12-5)': Colors.yellow,
+    'Evening (5-9)': Colors.purple,
+    'Night (9-6)': Colors.blue,
+  };
+  
+  return timeColors[timeOfDay] ?? Colors.grey;
+}
+
+Color _getLimitStatusColor(ApplicationBasicDetail app) {
+  if (!app.limitStatus) return Colors.grey;
+  
+  // Calculate percentage used
+  final double percentUsed = app.screenTime.inSeconds / 
+      (app.dailyLimit.inSeconds > 0 ? app.dailyLimit.inSeconds : 1);
+  
+  if (percentUsed >= 1.0) return Colors.red;
+  if (percentUsed >= 0.75) return Colors.orange;
+  return Colors.green;
+}
+
+String _generateUsageInsights(
+    ApplicationBasicDetail app, 
+    ApplicationDetailedData details,
+    Map<String, double> timeOfDay) {
+  final List<String> insights = [];
+  
+  // Determine primary usage time
+  final String primaryTimeOfDay = timeOfDay.entries
+      .reduce((a, b) => a.value > b.value ? a : b)
+      .key;
+  
+  insights.add("You primarily use ${app.name} during $primaryTimeOfDay.");
+  
+  // Add trend insight based on growth percentage
+  final double growthPercentage = details.comparisons.growthPercentage;
+  if (growthPercentage > 10) {
+    insights.add("Your usage has increased significantly (${growthPercentage.toStringAsFixed(1)}%) compared to the previous period.");
+  } else if (growthPercentage > 5) {
+    insights.add("Your usage is trending upward compared to the previous period.");
+  } else if (growthPercentage < -10) {
+    insights.add("Your usage has decreased significantly (${growthPercentage.abs().toStringAsFixed(1)}%) compared to the previous period.");
+  } else if (growthPercentage < -5) {
+    insights.add("Your usage is trending downward compared to the previous period.");
+  } else {
+    insights.add("Your usage has been consistent compared to the previous period.");
+  }
+  
+  // Add productivity insight
+  if (app.isProductive) {
+    insights.add("This is marked as a productive app in your settings.");
+  } else {
+    insights.add("This is marked as a non-productive app in your settings.");
+  }
+  
+  // Add most active hour insight if available
+  if (details.usageInsights.mostActiveHours.isNotEmpty) {
+    final int mostActiveHour = details.usageInsights.mostActiveHours.first;
+    insights.add("Your most active time is around ${_formatHourOfDay(mostActiveHour)}.");
+  }
+  
+  return insights.join(" ");
+}
+
+String _formatHourOfDay(int hour) {
+  final String period = hour >= 12 ? 'PM' : 'AM';
+  final int displayHour = hour > 12 ? hour - 12 : (hour == 0 ? 12 : hour);
+  return '$displayHour $period';
+}
+
+String _generateLimitStatusInsight(ApplicationBasicDetail app) {
+  if (!app.limitStatus) {
+    return "No usage limit has been set for this application.";
+  }
+  
+  // Calculate percentage used
+  final double percentUsed = app.screenTime.inSeconds / 
+      (app.dailyLimit.inSeconds > 0 ? app.dailyLimit.inSeconds : 1);
+  
+  final String remainingTime = _formatDuration(app.dailyLimit - app.screenTime);
+  
+  if (percentUsed >= 1.0) {
+    return "You've reached your daily limit for this application.";
+  } else if (percentUsed >= 0.9) {
+    return "You're about to reach your daily limit with only $remainingTime remaining.";
+  } else if (percentUsed >= 0.75) {
+    return "You've used ${(percentUsed * 100).toInt()}% of your daily limit with $remainingTime remaining.";
+  } else {
+    return "You have $remainingTime remaining out of your daily limit.";
+  }
+}
+
+String _formatDuration(Duration duration) {
+  final hours = duration.inHours;
+  final minutes = duration.inMinutes.remainder(60);
+  
+  if (hours > 0) {
+    return "${hours}h ${minutes}m";
+  } else {
+    return "${minutes}m";
+  }
+}
+
 // Helper widgets
 Widget _buildSummaryItem(BuildContext context, String title, String value, 
     {IconData? icon, Color? color, double iconSize = 16}) {
   return Padding(
-    padding: const EdgeInsets.all(8.0), // Added padding around items
+    padding: const EdgeInsets.all(8.0),
     child: Column(
       children: [
         Row(
@@ -1259,23 +1444,23 @@ Widget _buildSummaryItem(BuildContext context, String title, String value,
           children: [
             if (icon != null) ...[
               Icon(icon, size: iconSize, color: color ?? FluentTheme.of(context).accentColor),
-              const SizedBox(width: 8), // Increased spacing
+              const SizedBox(width: 8),
             ],
             Text(title, style: TextStyle(
-              fontSize: 13, // Increased font size
+              fontSize: 13,
               fontWeight: FontWeight.normal,
-              color: FluentTheme.of(context).accentColor.withValues(alpha: .8), // Added color for better hierarchy
+              color: FluentTheme.of(context).accentColor.withAlpha(204),
             )),
           ],
         ),
-        const SizedBox(height: 8), // Increased spacing
+        const SizedBox(height: 8),
         Text(
           value,
           style: TextStyle(
-            fontSize: 18, // Increased font size
+            fontSize: 18,
             fontWeight: FontWeight.bold,
             color: color,
-            letterSpacing: 0.4, // Added letter spacing
+            letterSpacing: 0.4,
           ),
         ),
       ],
@@ -1283,32 +1468,32 @@ Widget _buildSummaryItem(BuildContext context, String title, String value,
   );
 }
 
-Widget _buildStatCard(String title, String value, IconData icon, {double cardSize = 80}) {
+Widget _buildStatCard(BuildContext context, String title, String value, IconData icon, {double cardSize = 80}) {
   return Card(
-    padding: const EdgeInsets.all(16), // Increased padding
-    borderRadius: BorderRadius.circular(8), // Rounded corners
+    padding: const EdgeInsets.all(16),
+    borderRadius: BorderRadius.circular(8),
     child: SizedBox(
       width: cardSize,
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Icon(icon, size: 24), // Increased icon size
-          const SizedBox(height: 10), // Increased spacing
+          Icon(icon, size: 24),
+          const SizedBox(height: 10),
           Text(
             title,
             style: TextStyle(
-              fontSize: 13, // Increased font size
-              color: FluentTheme.of(context).accentColor.withValues(alpha: .8), // Added color for better hierarchy
+              fontSize: 13,
+              color: FluentTheme.of(context).accentColor.withAlpha(204),
             ),
             textAlign: TextAlign.center,
           ),
-          const SizedBox(height: 8), // Increased spacing
+          const SizedBox(height: 8),
           Text(
             value,
             style: const TextStyle(
-              fontSize: 18, // Increased font size
+              fontSize: 18,
               fontWeight: FontWeight.bold,
-              letterSpacing: 0.4, // Added letter spacing
+              letterSpacing: 0.4,
             ),
           ),
         ],
@@ -1316,168 +1501,6 @@ Widget _buildStatCard(String title, String value, IconData icon, {double cardSiz
     ),
   );
 }
-
-// Keep the other helper functions as they are
-
-  // Helper functions for data and colors
-  List<Map<String, dynamic>> _getWeeklyUsageData(String appName) {
-    // This would be retrieved from your data store
-    // Mock data for demonstration:
-    return [
-      {'day': 'Mon', 'minutes': 45},
-      {'day': 'Tue', 'minutes': 30},
-      {'day': 'Wed', 'minutes': 60},
-      {'day': 'Thu', 'minutes': 25},
-      {'day': 'Fri', 'minutes': 50},
-      {'day': 'Sat', 'minutes': 70},
-      {'day': 'Sun', 'minutes': 40},
-    ];
-  }
-
-  String _formatTrend(appSummaryData.UsageTrend trend) {
-    switch (trend) {
-      case appSummaryData.UsageTrend.increasing:
-        return "Increasing";
-      case appSummaryData.UsageTrend.decreasing:
-        return "Decreasing";
-      case appSummaryData.UsageTrend.stable:
-        return "Stable";
-      case appSummaryData.UsageTrend.noData:
-        return "No Data";
-    }
-  }
-
-  IconData _getTrendIcon(appSummaryData.UsageTrend trend) {
-    switch (trend) {
-      case appSummaryData.UsageTrend.increasing:
-        return FluentIcons.up;
-      case appSummaryData.UsageTrend.decreasing:
-        return FluentIcons.down;
-      case appSummaryData.UsageTrend.stable:
-        return FluentIcons.horizontal_tab_key;
-      case appSummaryData.UsageTrend.noData:
-      default:
-        return FluentIcons.unknown;
-    }
-  }
-
-  Color _getTrendColor(appSummaryData.UsageTrend trend) {
-    switch (trend) {
-      case appSummaryData.UsageTrend.increasing:
-        return Colors.red;
-      case appSummaryData.UsageTrend.decreasing:
-        return Colors.green;
-      case appSummaryData.UsageTrend.stable:
-        return Colors.blue;
-      case appSummaryData.UsageTrend.noData:
-      default:
-        return FluentTheme.of(context).accentColor.withValues(alpha: .8);
-    }
-  }
-
-  Color _getCategoryColor(String category) {
-    // Map categories to colors
-    final Map<String, Color> categoryColors = {
-      'Social': Colors.purple,
-      'Productivity': Colors.green,
-      'Entertainment': Colors.orange,
-      'Games': Colors.red,
-      'Education': Colors.blue,
-      'Utility': Colors.teal,
-    };
-    
-    return categoryColors[category] ?? FluentTheme.of(context).accentColor.withValues(alpha: .8);
-  }
-
-  Color _getTimeOfDayColor(String timeOfDay) {
-    final Map<String, Color> timeColors = {
-      'Morning (6-12)': Colors.orange,
-      'Afternoon (12-5)': Colors.yellow,
-      'Evening (5-9)': Colors.purple,
-      'Night (9-6)': Colors.teal,
-    };
-    
-    return timeColors[timeOfDay] ?? FluentTheme.of(context).accentColor.withValues(alpha: .8);
-  }
-
-  Color _getLimitStatusColor(appSummaryData.AppUsageSummary app) {
-    if (!app.limitStatus) return FluentTheme.of(context).accentColor.withValues(alpha: .8);
-    if (app.isAboutToReachLimit) return Colors.orange;
-    if (app.percentageOfLimitUsed >= 1.0) return Colors.red;
-    if (app.percentageOfLimitUsed >= 0.75) return Colors.warningPrimaryColor;
-    return Colors.green;
-  }
-
-  String _generateUsageInsights(appSummaryData.AppUsageSummary app, double avgDailyUsage, Map<String, double> timeOfDay) {
-    final List<String> insights = [];
-    
-    // Determine primary usage time
-    final String primaryTimeOfDay = timeOfDay.entries
-        .reduce((a, b) => a.value > b.value ? a : b)
-        .key;
-    
-    insights.add("You primarily use ${app.appName} during $primaryTimeOfDay.");
-    
-    // Add trend insight
-    switch (app.trend) {
-      case appSummaryData.UsageTrend.increasing:
-        insights.add("Your usage is trending upward compared to last week.");
-        break;
-      case appSummaryData.UsageTrend.decreasing:
-        insights.add("Your usage is trending downward compared to last week.");
-        break;
-      case appSummaryData.UsageTrend.stable:
-        insights.add("Your usage has been consistent over the past week.");
-        break;
-      default:
-        break;
-    }
-    
-    // Add productivity insight
-    if (app.isProductive) {
-      insights.add("This is marked as a productive app in your settings.");
-    } else {
-      insights.add("This is marked as a non-productive app in your settings.");
-    }
-    
-    return insights.join(" ");
-  }
-
-  String _generateLimitStatusInsight(appSummaryData.AppUsageSummary app) {
-    if (!app.limitStatus) {
-      return "No usage limit has been set for this application.";
-    }
-    
-    final double percentUsed = app.percentageOfLimitUsed;
-    final String remainingTime = _formatDuration(app.dailyLimit - app.currentUsage);
-    
-    if (percentUsed >= 1.0) {
-      return "You've reached your daily limit for this application.";
-    } else if (app.isAboutToReachLimit) {
-      return "You're about to reach your daily limit with only $remainingTime remaining.";
-    } else if (percentUsed >= 0.75) {
-      return "You've used ${(percentUsed * 100).toInt()}% of your daily limit with $remainingTime remaining.";
-    } else {
-      return "You have $remainingTime remaining out of your daily limit.";
-    }
-  }
-
-  void _openAppSettings(BuildContext context, AppUsageSummary app) {
-    // Implementation for opening app settings
-    Navigator.pop(context); // Close the current dialog
-    // Navigate to app settings page or show a settings dialog
-  }
-
-  String _formatDuration(Duration duration) {
-    final hours = duration.inHours;
-    final minutes = duration.inMinutes.remainder(60);
-    
-    if (hours > 0) {
-      return "${hours}h ${minutes}m";
-    } else {
-      return "${minutes}m";
-    }
-  }
 }
 
 class ApplicationListItem extends StatelessWidget {

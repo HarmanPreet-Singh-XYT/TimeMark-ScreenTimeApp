@@ -219,6 +219,32 @@ class ApplicationsDataProvider {
     
     return applications;
   }
+  Future<ApplicationBasicDetail> fetchApplicationByName(String appName) async {
+    // Ensure AppDataStore is initialized
+    await _dataStore.init();
+    
+    // Get app metadata
+    final AppMetadata? metadata = _dataStore.getAppMetadata(appName);
+    if (metadata == null) {
+      throw Exception('App metadata not found for: $appName');
+    }
+    
+    // Get today's usage record
+    final DateTime today = DateTime.now();
+    final AppUsageRecord? usageRecord = _dataStore.getAppUsage(appName, today);
+    
+    // Create and return the application detail
+    return ApplicationBasicDetail(
+      name: appName,
+      category: metadata.category,
+      screenTime: usageRecord?.timeSpent ?? Duration.zero,
+      isTracking: metadata.isTracking,
+      isHidden: !metadata.isVisible,
+      isProductive: metadata.isProductive,
+      dailyLimit: metadata.dailyLimit,
+      limitStatus: metadata.limitStatus
+    );
+  }
   
   // Fetch detailed application data for graphs and charts
   Future<ApplicationDetailedData> fetchApplicationDetails(String appName, TimeRange timeRange) async {
