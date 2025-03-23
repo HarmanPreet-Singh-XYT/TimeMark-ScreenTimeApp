@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'package:fluent_ui/fluent_ui.dart';
+import 'package:screentime/sections/controller/notification_controller.dart';
 import './sections/overview.dart';
 import './sections/applications.dart';
 import './sections/alerts_limits.dart';
@@ -17,6 +18,7 @@ import './sections/controller/application_controller.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await SettingsManager().init();
+  await NotificationController().initialize();
   // Get the saved theme preference
   final String savedTheme = SettingsManager().getSetting("theme.selected") ?? "System";
   final AdaptiveThemeMode initialTheme;

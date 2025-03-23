@@ -1,8 +1,6 @@
 import 'package:fluent_ui/fluent_ui.dart';
-import 'package:screentime/sections/graphs/alerts_limits_chart.dart';
 import 'package:screentime/sections/controller/data_controllers/alerts_limits_data_controller.dart';
 import 'package:screentime/sections/controller/settings_data_controller.dart';
-import 'package:screentime/sections/overview.dart';
 
 class AlertsLimits extends StatefulWidget {
   final ScreenTimeDataController? controller;

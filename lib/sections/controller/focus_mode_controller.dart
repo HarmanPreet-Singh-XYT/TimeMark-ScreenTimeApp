@@ -1,5 +1,6 @@
 import 'dart:async';
 import './data_controllers/focusMode_data_controller.dart';
+import './notification_controller.dart'; // Import the notification controller
 
 enum TimerState { work, shortBreak, longBreak, idle }
 
@@ -7,6 +8,7 @@ class PomodoroTimerService {
   // Singleton instance
   static final PomodoroTimerService _instance = PomodoroTimerService._internal();
   final FocusAnalyticsService _analyticsService = FocusAnalyticsService();
+  final NotificationController _notificationController = NotificationController(); // Instance of notification controller
   
   // Factory constructor
   factory PomodoroTimerService({
@@ -67,6 +69,12 @@ class PomodoroTimerService {
   int get completedSessions => _completedSessions;
   int get totalSessions => _totalSessions;
   
+  // Initialize the timer service
+  Future<void> initialize() async {
+    // Ensure notification controller is initialized
+    await _notificationController.initialize();
+  }
+  
   // Update configuration
   void updateConfig({
     int? workDuration,
@@ -95,8 +103,13 @@ class PomodoroTimerService {
     _currentState = TimerState.work;
     _secondsRemaining = _workDuration * 60;
     _startTimer();
-    if (_enableNotifications && _onWorkSessionStart != null) {
-      _onWorkSessionStart!();
+    
+    // Send notification for work session start
+    if (_enableNotifications) {
+      _notificationController.sendFocusNotification('Pomodoro Work', false);
+      if (_onWorkSessionStart != null) {
+        _onWorkSessionStart!();
+      }
     }
   }
   
@@ -105,8 +118,13 @@ class PomodoroTimerService {
     _currentState = TimerState.shortBreak;
     _secondsRemaining = _shortBreakDuration * 60;
     _startTimer();
-    if (_enableNotifications && _onShortBreakStart != null) {
-      _onShortBreakStart!();
+    
+    // Send notification for short break start
+    if (_enableNotifications) {
+      _notificationController.sendFocusNotification('Short Break', false);
+      if (_onShortBreakStart != null) {
+        _onShortBreakStart!();
+      }
     }
   }
   
@@ -115,8 +133,13 @@ class PomodoroTimerService {
     _currentState = TimerState.longBreak;
     _secondsRemaining = _longBreakDuration * 60;
     _startTimer();
-    if (_enableNotifications && _onLongBreakStart != null) {
-      _onLongBreakStart!();
+    
+    // Send notification for long break start
+    if (_enableNotifications) {
+      _notificationController.sendFocusNotification('Long Break', false);
+      if (_onLongBreakStart != null) {
+        _onLongBreakStart!();
+      }
     }
   }
   
@@ -130,12 +153,42 @@ class PomodoroTimerService {
   void pauseTimer() {
     _timer?.cancel();
     _timer = null;
+    
+    // Optional: Send a notification for paused timer
+    if (_enableNotifications && _currentState != TimerState.idle) {
+      _notificationController.showPopupAlert(
+        'Pomodoro Paused', 
+        'Your ${_getSessionTypeName()} session has been paused.'
+      );
+    }
+  }
+  
+  // Get the name of the current session type for notifications
+  String _getSessionTypeName() {
+    switch (_currentState) {
+      case TimerState.work:
+        return 'Pomodoro Work';
+      case TimerState.shortBreak:
+        return 'Short Break';
+      case TimerState.longBreak:
+        return 'Long Break';
+      case TimerState.idle:
+        return 'Pomodoro';
+    }
   }
   
   // Resume the timer
   void resumeTimer() {
     if (!isRunning && _secondsRemaining > 0) {
       _startTimer();
+      
+      // Optional: Send a notification for resumed timer
+      if (_enableNotifications && _currentState != TimerState.idle) {
+        _notificationController.showPopupAlert(
+          'Pomodoro Resumed', 
+          'Your ${_getSessionTypeName()} session has been resumed.'
+        );
+      }
     }
   }
   
@@ -155,12 +208,28 @@ class PomodoroTimerService {
       case TimerState.idle:
         break;
     }
+    
+    // Optional: Send a notification for reset timer
+    if (_enableNotifications && _currentState != TimerState.idle) {
+      _notificationController.showPopupAlert(
+        'Pomodoro Reset', 
+        'Your ${_getSessionTypeName()} session has been reset.'
+      );
+    }
   }
   
   // Timer callback function
   void _timerCallback(Timer timer) {
     if (_secondsRemaining > 0) {
       _secondsRemaining--;
+      
+      // Optional: Send a notification when time is almost up (e.g., 1 minute remaining)
+      if (_enableNotifications && _secondsRemaining == 60) {
+        _notificationController.showPopupAlert(
+          '1 Minute Remaining', 
+          'Your ${_getSessionTypeName()} session will end in 1 minute.'
+        );
+      }
     } else {
       timer.cancel();
       _timer = null;
@@ -170,9 +239,16 @@ class PomodoroTimerService {
   
   // Handle timer completion
   void _handleTimerComplete() {
+    String completedSessionType = _getSessionTypeName();
+    
     if (_currentState == TimerState.work) {
       _completedSessions++;
       _totalSessions++;
+      
+      // Send completion notification
+      if (_enableNotifications) {
+        _notificationController.sendFocusNotification('Pomodoro Work', true);
+      }
       
       // Determine which break to start next
       if (_completedSessions % 4 == 0) {
@@ -180,23 +256,54 @@ class PomodoroTimerService {
           startLongBreak();
         } else {
           _currentState = TimerState.idle;
+          
+          // Send notification suggesting a long break
+          if (_enableNotifications) {
+            _notificationController.showPopupAlert(
+              'Time for a Long Break', 
+              'You have completed 4 work sessions. Time for a long break!'
+            );
+          }
         }
       } else {
         if (_autoStart) {
           startShortBreak();
         } else {
           _currentState = TimerState.idle;
+          
+          // Send notification suggesting a short break
+          if (_enableNotifications) {
+            _notificationController.showPopupAlert(
+              'Time for a Short Break', 
+              'Work session completed. Time for a short break!'
+            );
+          }
         }
       }
     } else {
-      // Break is complete, start a new work session if autoStart is enabled
+      // Break is complete
+      // Send completion notification
+      if (_enableNotifications) {
+        _notificationController.sendFocusNotification(completedSessionType, true);
+      }
+      
+      // Start a new work session if autoStart is enabled
       if (_autoStart) {
         startWorkSession();
       } else {
         _currentState = TimerState.idle;
+        
+        // Send notification suggesting to start work
+        if (_enableNotifications) {
+          _notificationController.showPopupAlert(
+            'Break Completed', 
+            'Your break is over. Ready to start working again?'
+          );
+        }
       }
     }
-    //add into DB
+    
+    // Add into DB
     num totalDuration = _workDuration + _shortBreakDuration + _longBreakDuration;
     Duration duration = Duration(minutes: totalDuration.toInt());
     DateTime now = DateTime.now();
@@ -210,12 +317,29 @@ class PomodoroTimerService {
   
   // Skip to the next phase
   void skipToNext() {
+    String skippedSessionType = _getSessionTypeName();
+    
     switch (_currentState) {
       case TimerState.work:
+        // Notify about skipping work session
+        if (_enableNotifications) {
+          _notificationController.showPopupAlert(
+            'Work Session Skipped', 
+            'You skipped the current work session.'
+          );
+        }
         _handleTimerComplete();
         break;
       case TimerState.shortBreak:
       case TimerState.longBreak:
+        // Notify about skipping break
+        if (_enableNotifications) {
+          _notificationController.showPopupAlert(
+            'Break Skipped', 
+            'You skipped your ${_currentState == TimerState.shortBreak ? 'short' : 'long'} break.'
+          );
+        }
+        
         if (_autoStart) {
           startWorkSession();
         } else {
@@ -232,6 +356,14 @@ class PomodoroTimerService {
   void resetStats() {
     _completedSessions = 0;
     _totalSessions = 0;
+    
+    // Notify about stats reset
+    if (_enableNotifications) {
+      _notificationController.showPopupAlert(
+        'Stats Reset', 
+        'Your Pomodoro statistics have been reset.'
+      );
+    }
   }
   
   // Dispose of resources

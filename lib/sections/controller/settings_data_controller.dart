@@ -87,6 +87,10 @@ class SettingsManager {
       "autoStart": false,
       "blockDistractions": false,
       "enableSoundsNotifications": true
+    },
+    // Add the new notificationController section with default values
+    "notificationController": {
+      "reminderFrequency": 60, // seconds
     }
   };
 
@@ -110,7 +114,10 @@ class SettingsManager {
   void _loadSettings() {
     String? storedSettings = _prefs.getString("screenTime_settings");
     if (storedSettings != null) {
-      settings = jsonDecode(storedSettings);
+      Map<String, dynamic> loadedSettings = jsonDecode(storedSettings);
+      
+      // Merge loaded settings with default settings to ensure all required fields exist
+      _mergeSettings(settings, loadedSettings);
       
       // Validate theme - ensure it's one of the available options
       if (!ThemeOptions.available.contains(settings["theme"]["selected"])) {
@@ -136,6 +143,17 @@ class SettingsManager {
         settings["applications"]["selectedCategory"] = CategoryOptions.defaultCategory;
       }
     }
+  }
+  
+  // Recursively merge loaded settings into default settings
+  void _mergeSettings(Map<String, dynamic> target, Map<String, dynamic> source) {
+    source.forEach((key, value) {
+      if (value is Map<String, dynamic> && target.containsKey(key) && target[key] is Map) {
+        _mergeSettings(target[key], value);
+      } else {
+        target[key] = value;
+      }
+    });
   }
 
   /// Save settings to SharedPreferences
@@ -173,14 +191,14 @@ class SettingsManager {
       
       // Set the final value
       current[keys.last] = value;
-      
-      // Apply theme changes if theme setting is updated
-      // if (keys.length >= 2 && keys[0] == "theme" && keys[1] == "selected" && context != null) {
-      //   applyTheme(value, context);
-      // }
     }
     
     _saveSettings(); // Save updated settings
+    
+    // Debug print for notification controller settings
+    if (keys.length > 0 && keys[0] == "notificationController") {
+      debugPrint("🔔 Updated notification setting: $key = $value");
+    }
   }
 
   /// Apply the theme based on the selected theme value
@@ -277,7 +295,7 @@ class SettingsManager {
         "isHidden": false,
         "selectedCategory": CategoryOptions.defaultCategory
       },
-      "focusModeSettings": {
+      "focusModeSettings":{
         "selectedMode": FocusModeOptions.defaultMode,
         "workDuration": 25.0,
         "shortBreak": 5.0,
@@ -285,6 +303,10 @@ class SettingsManager {
         "autoStart": false,
         "blockDistractions": false,
         "enableSoundsNotifications": true
+      },
+      // Add the new notificationController section with default values
+      "notificationController": {
+        "reminderFrequency": 60, // seconds
       }
     };
 
@@ -299,11 +321,6 @@ class SettingsManager {
         await launchAtStartup.disable();
       }
     }
-
-    // Apply default theme if context is provided
-    // if (context != null) {
-    //   applyTheme(settings["theme"]["selected"], context);
-    // }
 
     // Save the default settings to persistent storage
     _saveSettings();
