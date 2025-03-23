@@ -318,8 +318,8 @@ class AppDataStore extends ChangeNotifier {
         // Update existing record
         final Duration newTimeSpent = existing.timeSpent + timeSpent;
         final int newOpenCount = existing.openCount + openCount;
-        final List<TimeRange> newUsagePeriods = existing.usagePeriods;
-        // final List<TimeRange> newUsagePeriods = [...existing.usagePeriods, ...usagePeriods];
+        // final List<TimeRange> newUsagePeriods = existing.usagePeriods;
+        final List<TimeRange> newUsagePeriods = [...existing.usagePeriods, ...usagePeriods];
         
         final AppUsageRecord updated = AppUsageRecord(
           date: date,

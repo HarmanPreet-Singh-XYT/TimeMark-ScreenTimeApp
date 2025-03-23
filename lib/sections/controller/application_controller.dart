@@ -99,7 +99,12 @@ class BackgroundAppTracker {
       // If metadata doesn't exist, create with default tracking
       if (metadata == null && appTitle!="Productive ScreenTime" && appTitle!="screentime") {
         bool isProductive = true;
-        String appCategory = AppCategories.categorizeApp(appTitle);
+        String appCategory = 'Uncategorized';
+        if(appTitle == '') {
+          appCategory = 'Idle';
+        }else{
+          appCategory = AppCategories.categorizeApp(appTitle);
+        }
         if(appCategory == "Social Media" || appCategory == "Entertainment" || appCategory == "Gaming" || appCategory == "Uncategorized") isProductive = false;
         await appDataStore.updateAppMetadata(
           appTitle,

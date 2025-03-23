@@ -265,7 +265,12 @@ class SettingsManager {
         "popup": true,
         "frequent": true,
         "sound": true,
-        "system": true
+        "system": true,
+        "overallLimit": {
+          "enabled": false,
+          "hours": 2,
+          "minutes": 0
+        }
       },
       "applications": {
         "tracking": true,
