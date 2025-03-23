@@ -7,6 +7,36 @@ import 'package:launch_at_startup/launch_at_startup.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:adaptive_theme/adaptive_theme.dart';
 
+// Theme constants
+class ThemeOptions {
+  static const String system = "System";
+  static const String dark = "Dark";
+  static const String light = "Light";
+  static const List<String> available = [system, dark, light];
+  static const String defaultTheme = system;
+}
+
+// Language constants
+class LanguageOptions {
+  static const String english = "English";
+  static const List<String> available = [english];
+  static const String defaultLanguage = english;
+}
+
+// Focus mode constants
+class FocusModeOptions {
+  static const String custom = "Custom";
+  static const List<String> available = [custom]; // Add more as needed
+  static const String defaultMode = custom;
+}
+
+// App category constants
+class CategoryOptions {
+  static const String all = "All";
+  static const List<String> available = [all]; // Add more as needed
+  static const String defaultCategory = all;
+}
+
 class SettingsManager {
   static final SettingsManager _instance = SettingsManager._internal();
 
@@ -21,13 +51,10 @@ class SettingsManager {
   /// Settings Map
   Map<String, dynamic> settings = {
     "theme": {
-      "selected": "Dark",
-      // "available": ["System", "Dark", "Light"]
-      "available": ["Dark"]
+      "selected": ThemeOptions.defaultTheme,
     },
     "language": {
-      "selected": "English",
-      "available": ["English"]
+      "selected": LanguageOptions.defaultLanguage,
     },
     "launchAtStartup": true,
     "notifications": {
@@ -50,16 +77,16 @@ class SettingsManager {
     "applications": {
       "tracking": true,
       "isHidden": false,
-      "selectedCategory":"All"
+      "selectedCategory": CategoryOptions.defaultCategory
     },
     "focusModeSettings":{
-      "selectedMode":"Custom",
-      "workDuration":25.0,
-      "shortBreak":5.0,
-      "longBreak":15.0,
-      "autoStart":false,
-      "blockDistractions":false,
-      "enableSoundsNotifications":true
+      "selectedMode": FocusModeOptions.defaultMode,
+      "workDuration": 25.0,
+      "shortBreak": 5.0,
+      "longBreak": 15.0,
+      "autoStart": false,
+      "blockDistractions": false,
+      "enableSoundsNotifications": true
     }
   };
 
@@ -84,6 +111,30 @@ class SettingsManager {
     String? storedSettings = _prefs.getString("screenTime_settings");
     if (storedSettings != null) {
       settings = jsonDecode(storedSettings);
+      
+      // Validate theme - ensure it's one of the available options
+      if (!ThemeOptions.available.contains(settings["theme"]["selected"])) {
+        settings["theme"]["selected"] = ThemeOptions.defaultTheme;
+      }
+      
+      // Validate language
+      if (!LanguageOptions.available.contains(settings["language"]["selected"])) {
+        settings["language"]["selected"] = LanguageOptions.defaultLanguage;
+      }
+      
+      // Validate focus mode
+      if (settings.containsKey("focusModeSettings") && 
+          settings["focusModeSettings"].containsKey("selectedMode") &&
+          !FocusModeOptions.available.contains(settings["focusModeSettings"]["selectedMode"])) {
+        settings["focusModeSettings"]["selectedMode"] = FocusModeOptions.defaultMode;
+      }
+      
+      // Validate category
+      if (settings.containsKey("applications") && 
+          settings["applications"].containsKey("selectedCategory") &&
+          !CategoryOptions.available.contains(settings["applications"]["selectedCategory"])) {
+        settings["applications"]["selectedCategory"] = CategoryOptions.defaultCategory;
+      }
     }
   }
 
@@ -135,15 +186,15 @@ class SettingsManager {
   /// Apply the theme based on the selected theme value
   void applyTheme(String themeName, BuildContext context) {
     switch (themeName) {
-      case "Dark":
+      case ThemeOptions.dark:
         AdaptiveTheme.of(context).setDark();
         debugPrint("🎨 Theme set to Dark mode");
         break;
-      case "Light":
+      case ThemeOptions.light:
         AdaptiveTheme.of(context).setLight();
         debugPrint("🎨 Theme set to Light mode");
         break;
-      case "System":
+      case ThemeOptions.system:
       default:
         AdaptiveTheme.of(context).setSystem();
         debugPrint("🎨 Theme set to System default mode");
@@ -153,9 +204,10 @@ class SettingsManager {
 
   /// Apply current theme setting to the given context
   void applyCurrentTheme(BuildContext context) {
-    String currentTheme = getSetting("theme.selected") ?? "System";
+    String currentTheme = getSetting("theme.selected") ?? ThemeOptions.defaultTheme;
     applyTheme(currentTheme, context);
   }
+  
   /// 📌 Get any setting dynamically
   dynamic getSetting(String key) {
     List<String> keys = key.split(".");
@@ -172,18 +224,35 @@ class SettingsManager {
     return current;
   }
 
+  // Get available theme options
+  List<String> getAvailableThemes() {
+    return ThemeOptions.available;
+  }
+  
+  // Get available language options
+  List<String> getAvailableLanguages() {
+    return LanguageOptions.available;
+  }
+  
+  // Get available focus mode options
+  List<String> getAvailableFocusModes() {
+    return FocusModeOptions.available;
+  }
+  
+  // Get available category options
+  List<String> getAvailableCategories() {
+    return CategoryOptions.available;
+  }
+
   //reset
   Future<void> resetSettings([BuildContext? context]) async {
     // Default settings map
     final Map<String, dynamic> defaultSettings = {
       "theme": {
-        "selected": "Dark",
-        // "available": ["System","Dark","Light"]
-        "available": ["Dark"]
+        "selected": ThemeOptions.defaultTheme,
       },
       "language": {
-        "selected": "English",
-        "available": ["English"]
+        "selected": LanguageOptions.defaultLanguage,
       },
       "launchAtStartup": true,
       "notifications": {
@@ -201,10 +270,10 @@ class SettingsManager {
       "applications": {
         "tracking": true,
         "isHidden": false,
-        "selectedCategory": "All"
+        "selectedCategory": CategoryOptions.defaultCategory
       },
       "focusModeSettings": {
-        "selectedMode": "Custom",
+        "selectedMode": FocusModeOptions.defaultMode,
         "workDuration": 25.0,
         "shortBreak": 5.0,
         "longBreak": 15.0,

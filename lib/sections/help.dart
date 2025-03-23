@@ -73,33 +73,33 @@ class Header extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         Text("Help", style: FluentTheme.of(context).typography.subtitle),
-        Row(
-          children: [
-            Button(
-              style: ButtonStyle(padding: WidgetStateProperty.all(const EdgeInsets.symmetric(vertical: 8, horizontal: 12))),
-              child: const Row(
-                children: [
-                  Icon(FluentIcons.red_eye, size: 20),
-                  SizedBox(width: 10),
-                  Text('Submit Feedback', style: TextStyle(fontWeight: FontWeight.w600)),
-                ],
-              ),
-              onPressed: () => debugPrint('pressed button'),
-            ),
-            const SizedBox(width: 25),
-            Button(
-              style: ButtonStyle(padding: WidgetStateProperty.all(const EdgeInsets.symmetric(vertical: 8, horizontal: 14))),
-              child: const Row(
-                children: [
-                  Icon(FluentIcons.app_icon_default_list, size: 18),
-                  SizedBox(width: 10),
-                  Text('Report Bug', style: TextStyle(fontWeight: FontWeight.w600)),
-                ],
-              ),
-              onPressed: () => debugPrint('pressed button'),
-            ),
-          ],
-        )
+        // Row(
+        //   children: [
+        //     Button(
+        //       style: ButtonStyle(padding: WidgetStateProperty.all(const EdgeInsets.symmetric(vertical: 8, horizontal: 12))),
+        //       child: const Row(
+        //         children: [
+        //           Icon(FluentIcons.red_eye, size: 20),
+        //           SizedBox(width: 10),
+        //           Text('Submit Feedback', style: TextStyle(fontWeight: FontWeight.w600)),
+        //         ],
+        //       ),
+        //       onPressed: () => debugPrint('pressed button'),
+        //     ),
+        //     const SizedBox(width: 25),
+        //     Button(
+        //       style: ButtonStyle(padding: WidgetStateProperty.all(const EdgeInsets.symmetric(vertical: 8, horizontal: 14))),
+        //       child: const Row(
+        //         children: [
+        //           Icon(FluentIcons.app_icon_default_list, size: 18),
+        //           SizedBox(width: 10),
+        //           Text('Report Bug', style: TextStyle(fontWeight: FontWeight.w600)),
+        //         ],
+        //       ),
+        //       onPressed: () => debugPrint('pressed button'),
+        //     ),
+        //   ],
+        // )
       ],
     );
   }

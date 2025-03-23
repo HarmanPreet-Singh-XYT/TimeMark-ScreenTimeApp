@@ -18,7 +18,7 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await SettingsManager().init();
   // Get the saved theme preference
-  final String savedTheme = SettingsManager().getSetting("theme.selected") ?? "Dark";
+  final String savedTheme = SettingsManager().getSetting("theme.selected") ?? "System";
   final AdaptiveThemeMode initialTheme;
   
   // Convert string theme setting to AdaptiveThemeMode

@@ -28,8 +28,10 @@ class SettingsProvider extends ChangeNotifier {
   bool get notificationsAppScreenTime => _notificationsAppScreenTime;
   Map<String, String> get appVersion => version;
   
-  List<dynamic> get themeOptions => _settingsManager.getSetting("theme.available");
-  List<dynamic> get languageOptions => _settingsManager.getSetting("language.available");
+  // List<dynamic> themeOptions = ["System","Dark","Light"];
+  // List<dynamic> languageOptions = [ 'English'];
+  List<dynamic> get themeOptions => _settingsManager.getAvailableThemes();
+  List<dynamic> get languageOptions => _settingsManager.getAvailableLanguages();
   
   SettingsProvider() {
     _loadSettings();
@@ -251,7 +253,7 @@ class GeneralSection extends StatelessWidget {
             children: [
               OptionSetting(
                 title: "Theme",
-                description: "Color theme of the application",
+                description: "Color theme of the application (Change Requires Restart)",
                 settingType: "theme",
                 changeValue: (key, value) => settings.updateSetting(key, value, context),
                 optionsValue: settings.theme,

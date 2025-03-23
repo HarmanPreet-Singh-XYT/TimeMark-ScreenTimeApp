@@ -101,7 +101,7 @@ class _FluentAdaptiveThemeState extends State<FluentAdaptiveTheme>
     initialize(
       light: widget.light,
       dark: widget.dark,
-      initial: widget.initial, overrideMode:AdaptiveThemeMode.system,
+      initial: widget.initial, overrideMode:widget.initial,
     );
     WidgetsBinding.instance.addObserver(this);
   }
