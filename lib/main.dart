@@ -15,8 +15,11 @@ import 'package:bitsdojo_window/bitsdojo_window.dart';
 import 'package:tray_manager/tray_manager.dart';
 import './sections/controller/application_controller.dart';
 
-void main() async {
+void main(List<String> args) async {
   WidgetsFlutterBinding.ensureInitialized();
+  // Create an instance of the controller
+  final bool wasSystemLaunched = args.contains('--auto-launched');
+  // Check the launch type
   await SettingsManager().init();
   await NotificationController().initialize();
   // Get the saved theme preference
@@ -38,22 +41,33 @@ void main() async {
   }
   final tracker = BackgroundAppTracker();
   tracker.initializeTracking();
-  runApp(MyApp(initialTheme: initialTheme));
+  runApp(MyApp(initialTheme: initialTheme,systemLaunch:wasSystemLaunched));
   doWhenWindowReady(() {
     final win = appWindow;
-    const initialSize = Size(1280, 800);
-    win.minSize = initialSize;
-    win.size = initialSize;
-    win.alignment = Alignment.center;
-    win.title = "Productive ScreenTime";
-    win.show();
+    const String appName = 'Productive ScreenTime';
+    if(wasSystemLaunched){
+      win.hide();
+      const initialSize = Size(1280, 800);
+      win.minSize = initialSize;
+      win.size = initialSize;
+      win.alignment = Alignment.center;
+      win.title = appName;
+    }else{
+      const initialSize = Size(1280, 800);
+      win.minSize = initialSize;
+      win.size = initialSize;
+      win.alignment = Alignment.center;
+      win.title = appName;
+      win.show();
+    }
   });
 }
 
 class MyApp extends StatefulWidget {
   final AdaptiveThemeMode initialTheme;
+  final bool systemLaunch;
   
-  const MyApp({super.key, this.initialTheme = AdaptiveThemeMode.system});
+  const MyApp({super.key, this.initialTheme = AdaptiveThemeMode.system, this.systemLaunch = false});
 
   @override
   State<MyApp> createState() => _MyAppState();

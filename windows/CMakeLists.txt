@@ -61,6 +61,12 @@ add_library(${PLUGIN_NAME} SHARED
 
 # Apply standard settings to the plugin 
 APPLY_STANDARD_SETTINGS(${PLUGIN_NAME})
+set_target_properties(${PLUGIN_NAME} PROPERTIES
+  CXX_VISIBILITY_PRESET hidden)
+target_compile_definitions(${PLUGIN_NAME} PRIVATE FLUTTER_PLUGIN_IMPL)
+target_compile_definitions(${PLUGIN_NAME} PRIVATE _SILENCE_CXX17_CODECVT_HEADER_DEPRECATION_WARNING)
+target_include_directories(${PLUGIN_NAME} INTERFACE
+  "${CMAKE_CURRENT_SOURCE_DIR}/include")
 
 # Link Flutter wrapper and system libraries to the plugin
 target_link_libraries(${PLUGIN_NAME} PRIVATE
@@ -69,6 +75,8 @@ target_link_libraries(${PLUGIN_NAME} PRIVATE
   user32
   kernel32
   psapi
+  shell32
+  advapi32
 )
 
 # Important: Set output directories to match what the linker expects
