@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'package:flutter/services.dart';
 import 'package:screentime/foreground_window_plugin.dart';
 import 'app_data_controller.dart';
 import 'categories_controller.dart';
@@ -11,7 +10,6 @@ class BackgroundAppTracker {
   BackgroundAppTracker._internal();
 
   // Platform channel for native app tracking
-  static const MethodChannel _platformChannel = MethodChannel('app_tracking_channel');
   
   // Timer for periodic tracking
   Timer? _trackingTimer;

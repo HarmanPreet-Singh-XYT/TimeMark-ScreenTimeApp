@@ -41,7 +41,7 @@ void main(List<String> args) async {
   }
   final tracker = BackgroundAppTracker();
   tracker.initializeTracking();
-  runApp(MyApp(initialTheme: initialTheme,systemLaunch:wasSystemLaunched));
+  runApp(MyApp(initialTheme: initialTheme));
   doWhenWindowReady(() {
     final win = appWindow;
     const String appName = 'Productive ScreenTime';
@@ -65,9 +65,8 @@ void main(List<String> args) async {
 
 class MyApp extends StatefulWidget {
   final AdaptiveThemeMode initialTheme;
-  final bool systemLaunch;
   
-  const MyApp({super.key, this.initialTheme = AdaptiveThemeMode.system, this.systemLaunch = false});
+  const MyApp({super.key, this.initialTheme = AdaptiveThemeMode.system});
 
   @override
   State<MyApp> createState() => _MyAppState();

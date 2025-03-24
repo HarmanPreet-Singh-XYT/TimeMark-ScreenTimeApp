@@ -195,10 +195,11 @@ class ApplicationsDataProvider {
     
     final List<ApplicationBasicDetail> applications = [];
     final DateTime today = DateTime.now();
+    final DateTime startOfDay = DateTime(today.year, today.month, today.day);
     
     for (final appName in _dataStore.allAppNames) {
       final AppMetadata? metadata = _dataStore.getAppMetadata(appName);
-      final AppUsageRecord? usageRecord = _dataStore.getAppUsage(appName, today);
+      final AppUsageRecord? usageRecord = _dataStore.getAppUsage(appName, startOfDay);
       
       if (metadata != null) {
         applications.add(ApplicationBasicDetail(
@@ -219,6 +220,7 @@ class ApplicationsDataProvider {
     
     return applications;
   }
+
   Future<ApplicationBasicDetail> fetchApplicationByName(String appName) async {
     // Ensure AppDataStore is initialized
     await _dataStore.init();
@@ -303,85 +305,83 @@ class ApplicationsDataProvider {
   
   // Fetch usage trends data (daily/weekly/monthly)
   Future<UsageTrendsData> _fetchUsageTrendsData(String appName, DateRange dateRange) async {
-    final Map<String, Duration> dailyUsage = {};
+  final Map<String, Duration> dailyUsage = {};
+  final Map<String, Duration> weeklyUsage = {};
+  final Map<String, Duration> monthlyUsage = {};
+  
+  // Calculate daily usage first
+  DateTime currentDate = dateRange.startDate;
+  while (currentDate.isBefore(dateRange.endDate) || currentDate.isAtSameMomentAs(dateRange.endDate)) {
+    final AppUsageRecord? record = _dataStore.getAppUsage(appName, currentDate);
+    final String dateKey = DateFormat('MM/dd').format(currentDate);
     
-    // Loop through each day in the date range
-    DateTime currentDate = dateRange.startDate;
-    while (currentDate.isBefore(dateRange.endDate) || currentDate.isAtSameMomentAs(dateRange.endDate)) {
-      final AppUsageRecord? record = _dataStore.getAppUsage(appName, currentDate);
-      final String dateKey = DateFormat('MM/dd').format(currentDate);
+    dailyUsage[dateKey] = record?.timeSpent ?? Duration.zero;
+    
+    currentDate = currentDate.add(Duration(days: 1));
+  }
+  
+  // Calculate weekly usage with more robust aggregation
+  if (dateRange.endDate.difference(dateRange.startDate).inDays >= 7) {
+    // Group by complete weeks
+    final int totalWeeks = (dateRange.endDate.difference(dateRange.startDate).inDays ~/ 7) + 1;
+    
+    for (int weekIndex = 0; weekIndex < totalWeeks; weekIndex++) {
+      Duration weekTotal = Duration.zero;
       
-      dailyUsage[dateKey] = record?.timeSpent ?? Duration.zero;
+      // Calculate the start and end of each week
+      DateTime weekStart = dateRange.startDate.add(Duration(days: weekIndex * 7));
+      DateTime weekEnd = weekStart.add(Duration(days: 6));
+      
+      // Ensure week end doesn't exceed the overall date range
+      if (weekEnd.isAfter(dateRange.endDate)) {
+        weekEnd = dateRange.endDate;
+      }
+      
+      // Aggregate usage for this week
+      DateTime currentWeekDate = weekStart;
+      while (currentWeekDate.isBefore(weekEnd) || currentWeekDate.isAtSameMomentAs(weekEnd)) {
+        final AppUsageRecord? record = _dataStore.getAppUsage(appName, currentWeekDate);
+        weekTotal += record?.timeSpent ?? Duration.zero;
+        
+        currentWeekDate = currentWeekDate.add(Duration(days: 1));
+      }
+      
+      // Only add if there's some usage
+      if (weekTotal > Duration.zero) {
+        weeklyUsage['Week ${weekIndex + 1}'] = weekTotal;
+      }
+    }
+  }
+  
+  // Calculate monthly usage
+  if (dateRange.endDate.difference(dateRange.startDate).inDays >= 28) {
+    final Map<String, Duration> monthMap = {};
+    
+    currentDate = dateRange.startDate;
+    while (currentDate.isBefore(dateRange.endDate) || currentDate.isAtSameMomentAs(dateRange.endDate)) {
+      final String monthKey = DateFormat('MMM').format(currentDate);
+      final AppUsageRecord? record = _dataStore.getAppUsage(appName, currentDate);
+      
+      monthMap[monthKey] = (monthMap[monthKey] ?? Duration.zero) + (record?.timeSpent ?? Duration.zero);
+      
       currentDate = currentDate.add(Duration(days: 1));
     }
     
-    // Calculate weekly data by grouping days
-    final Map<String, Duration> weeklyUsage = {};
-    if (dateRange.endDate.difference(dateRange.startDate).inDays >= 14) {
-      currentDate = dateRange.startDate;
-      int weekNum = 1;
-      
-      while (currentDate.isBefore(dateRange.endDate)) {
-        final DateTime weekEnd = currentDate.add(Duration(days: 6));
-        final DateTime actualEnd = weekEnd.isAfter(dateRange.endDate) ? dateRange.endDate : weekEnd;
-        
-        Duration weeklyTotal = Duration.zero;
-        DateTime weekDay = currentDate;
-        
-        while (weekDay.isBefore(actualEnd) || weekDay.isAtSameMomentAs(actualEnd)) {
-          final AppUsageRecord? record = _dataStore.getAppUsage(appName, weekDay);
-          weeklyTotal += record?.timeSpent ?? Duration.zero;
-          weekDay = weekDay.add(Duration(days: 1));
-        }
-        
-        weeklyUsage['Week $weekNum'] = weeklyTotal;
-        weekNum++;
-        currentDate = currentDate.add(Duration(days: 7));
-      }
-    }
-    
-    // Calculate monthly data if range spans multiple months
-    final Map<String, Duration> monthlyUsage = {};
-    if (dateRange.endDate.difference(dateRange.startDate).inDays >= 28) {
-      // Group by month
-      final Map<String, List<Duration>> monthMap = {};
-      
-      currentDate = dateRange.startDate;
-      while (currentDate.isBefore(dateRange.endDate) || currentDate.isAtSameMomentAs(dateRange.endDate)) {
-        final String monthKey = DateFormat('MMM').format(currentDate);
-        final AppUsageRecord? record = _dataStore.getAppUsage(appName, currentDate);
-        
-        if (!monthMap.containsKey(monthKey)) {
-          monthMap[monthKey] = [];
-        }
-        
-        monthMap[monthKey]!.add(record?.timeSpent ?? Duration.zero);
-        currentDate = currentDate.add(Duration(days: 1));
-      }
-      
-      // Sum durations for each month
-      monthMap.forEach((month, durations) {
-        Duration total = Duration.zero;
-        for (var duration in durations) {
-          total += duration;
-        }
-        monthlyUsage[month] = total;
-      });
-    }
-    
-    return UsageTrendsData(
-      daily: dailyUsage,
-      weekly: weeklyUsage,
-      monthly: monthlyUsage,
-    );
+    monthlyUsage.addAll(monthMap);
   }
+  
+  return UsageTrendsData(
+    daily: dailyUsage,
+    weekly: weeklyUsage,
+    monthly: monthlyUsage,
+  );
+}
   
   // Remaining methods remain the same, as we've updated the model classes
   // to automatically format durations when they're created
   
   // Fetch hourly breakdown data
   Future<Map<int, Duration>> _fetchHourlyBreakdownData(String appName, DateRange dateRange) async {
-    // Implementation remains the same
     final Map<int, Duration> hourlyUsage = {};
     
     // Initialize all hours with zero duration
@@ -397,37 +397,34 @@ class ApplicationsDataProvider {
       if (record != null && record.usagePeriods.isNotEmpty) {
         // Analyze each usage period and distribute time to hourly buckets
         for (final period in record.usagePeriods) {
-          final DateTime startTime = period.startTime;
-          final DateTime endTime = period.endTime;
+          final int startHour = period.startTime.hour;
+          final int endHour = period.endTime.hour;
           
-          // If the period spans across multiple hours, split it
-          DateTime currentHour = DateTime(
-            startTime.year, 
-            startTime.month, 
-            startTime.day, 
-            startTime.hour,
-            0 // Reset minutes to start of hour
-          );
-          
-          DateTime nextHour = currentHour.add(Duration(hours: 1));
-          DateTime remaining = startTime;
-          
-          while (remaining.isBefore(endTime)) {
-            final Duration timeInThisHour;
-            
-            if (endTime.isBefore(nextHour)) {
-              // Session ends within this hour
-              timeInThisHour = endTime.difference(remaining);
-              remaining = endTime;
-            } else {
-              // Session continues to next hour
-              timeInThisHour = nextHour.difference(remaining);
-              remaining = nextHour;
-              currentHour = nextHour;
-              nextHour = currentHour.add(Duration(hours: 1));
+          if (startHour == endHour) {
+            // Simple case: usage within same hour
+            hourlyUsage[startHour] = hourlyUsage[startHour]! + period.duration;
+          } else {
+            // Distribute time across multiple hours
+            for (int hour = startHour; hour <= endHour; hour++) {
+              DateTime hourStart = DateTime(
+                period.startTime.year, 
+                period.startTime.month, 
+                period.startTime.day, 
+                hour
+              );
+              DateTime hourEnd = hourStart.add(Duration(hours: 1));
+              
+              // Calculate duration in this specific hour
+              DateTime effectiveStart = hour == startHour 
+                  ? period.startTime 
+                  : hourStart;
+              DateTime effectiveEnd = hour == endHour 
+                  ? period.endTime 
+                  : hourEnd;
+              
+              Duration hourDuration = effectiveEnd.difference(effectiveStart);
+              hourlyUsage[hour] = hourlyUsage[hour]! + hourDuration;
             }
-            
-            hourlyUsage[currentHour.hour] = hourlyUsage[currentHour.hour]! + timeInThisHour;
           }
         }
       }

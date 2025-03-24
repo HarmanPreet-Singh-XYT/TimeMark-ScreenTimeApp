@@ -315,22 +315,22 @@ class AppDataStore extends ChangeNotifier {
       }
       
       if (existing != null) {
-        // Update existing record
-        final Duration newTimeSpent = existing.timeSpent + timeSpent;
-        final int newOpenCount = existing.openCount + openCount;
-        // final List<TimeRange> newUsagePeriods = existing.usagePeriods;
-        final List<TimeRange> newUsagePeriods = [...existing.usagePeriods, ...usagePeriods];
+        // Optimize storage by limiting the number of usage periods
+        final List<TimeRange> optimizedUsagePeriods = _optimizeUsagePeriods(
+          [...existing.usagePeriods, ...usagePeriods]
+        );
         
+        // Update existing record with optimized periods
         final AppUsageRecord updated = AppUsageRecord(
           date: date,
-          timeSpent: newTimeSpent,
-          openCount: newOpenCount,
-          usagePeriods: newUsagePeriods,
+          timeSpent: existing.timeSpent + timeSpent,
+          openCount: existing.openCount + openCount,
+          usagePeriods: optimizedUsagePeriods,
         );
         
         await _usageBox!.put(key, updated);
       } else {
-        // Create new record
+        // Create new record with initial usage periods
         final AppUsageRecord record = AppUsageRecord(
           date: date,
           timeSpent: timeSpent,
@@ -348,6 +348,44 @@ class AppDataStore extends ChangeNotifier {
       debugPrint(_lastError);
       return false;
     }
+  }
+
+  // Helper method to optimize usage periods
+  List<TimeRange> _optimizeUsagePeriods(List<TimeRange> periods) {
+    if (periods.length <= 10) return periods;
+    
+    // Sort periods by start time
+    periods.sort((a, b) => a.startTime.compareTo(b.startTime));
+    
+    // Group and merge very close periods (within 5 seconds)
+    List<TimeRange> optimizedPeriods = [];
+    TimeRange current = periods.first;
+    
+    for (int i = 1; i < periods.length; i++) {
+      TimeRange next = periods[i];
+      
+      // If periods are very close, merge them
+      if (next.startTime.difference(current.endTime).inSeconds <= 5) {
+        current = TimeRange(
+          startTime: current.startTime,
+          endTime: next.endTime
+        );
+      } else {
+        // Add current period and move to next
+        optimizedPeriods.add(current);
+        current = next;
+      }
+    }
+    
+    // Add the last period
+    optimizedPeriods.add(current);
+    
+    // If still too many periods, keep only the most recent ones
+    if (optimizedPeriods.length > 10) {
+      return optimizedPeriods.sublist(optimizedPeriods.length - 10);
+    }
+    
+    return optimizedPeriods;
   }
   
   // Get app usage for a specific day with error handling
