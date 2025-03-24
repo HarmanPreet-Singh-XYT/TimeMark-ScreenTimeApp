@@ -3,7 +3,6 @@
 #
 
 list(APPEND FLUTTER_PLUGIN_LIST
-  audioplayers_windows
   bitsdojo_window_windows
   local_notifier
   tray_manager

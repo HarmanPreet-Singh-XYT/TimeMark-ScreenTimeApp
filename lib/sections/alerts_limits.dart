@@ -241,11 +241,11 @@ class _AlertsLimitsState extends State<AlertsLimits> {
                         ),
                         const SizedBox(height: 15),
                         Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                           children: [
-                            _buildToggleRow('Pop-up Alerts', popupAlerts, (v) => setSetting('popup', v)),
+                            // _buildToggleRow('Pop-up Alerts', popupAlerts, (v) => setSetting('popup', v)),
                             _buildToggleRow('Frequent Alerts', frequentAlerts, (v) => setSetting('frequent', v)),
-                            _buildToggleRow('Sound Alerts', soundAlerts, (v) => setSetting('sound', v)),
+                            // _buildToggleRow('Sound Alerts', soundAlerts, (v) => setSetting('sound', v)),
                             _buildToggleRow('System Alerts', systemAlerts, (v) => setSetting('system', v)),
                           ],
                         ),

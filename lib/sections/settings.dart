@@ -32,6 +32,8 @@ class SettingsProvider extends ChangeNotifier {
   // List<dynamic> languageOptions = [ 'English'];
   List<dynamic> get themeOptions => _settingsManager.getAvailableThemes();
   List<dynamic> get languageOptions => _settingsManager.getAvailableLanguages();
+  int _reminderFrequency = 60;
+  int get reminderFrequency => _reminderFrequency;
   
   SettingsProvider() {
     _loadSettings();
@@ -45,6 +47,7 @@ class SettingsProvider extends ChangeNotifier {
     _notificationsFocusMode = _settingsManager.getSetting("notifications.focusMode");
     _notificationsScreenTime = _settingsManager.getSetting("notifications.screenTime");
     _notificationsAppScreenTime = _settingsManager.getSetting("notifications.appScreenTime");
+    _reminderFrequency = _settingsManager.getSetting("notificationController.reminderFrequency");
   }
   
   Future<void> updateSetting(String key, dynamic value, [BuildContext? context]) async {
@@ -83,8 +86,15 @@ class SettingsProvider extends ChangeNotifier {
         _notificationsAppScreenTime = value;
         _settingsManager.updateSetting("notifications.appScreenTime", value);
         break;
+      case 'reminderFrequency':
+        _reminderFrequency = value*60;
+        _settingsManager.updateSetting("notificationController.reminderFrequency", value);
+        break;
     }
     notifyListeners();
+  }
+  int getReminderFrequency() {
+    return _settingsManager.getSetting("notificationController.reminderFrequency") ?? 60;
   }
   
   Future<void> clearData() async {
@@ -296,7 +306,7 @@ class NotificationSection extends StatelessWidget {
         const Text("Notifications", style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600)),
         const SizedBox(height: 15),
         Container(
-          height: 240,
+          height: 300, // Increased height to accommodate more detailed setting
           padding: const EdgeInsets.all(20),
           width: MediaQuery.of(context).size.width,
           decoration: BoxDecoration(
@@ -338,6 +348,15 @@ class NotificationSection extends StatelessWidget {
                 settingType: "notificationsAppScreenTime",
                 changeValue: (key, value) => settings.updateSetting(key, value),
                 isChecked: settings.notificationsAppScreenTime,
+              ),
+              OptionSetting(
+                title: "Frequent Alerts Interval",
+                description: "Set interval for frequent notifications (minutes)",
+                optionType: "options",
+                settingType: "reminderFrequency",
+                changeValue: (key, value) => settings.updateSetting(key, int.parse(value)),
+                optionsValue: settings.getReminderFrequency().toString(),
+                options:const [1,5,15,30, 60],
               ),
             ],
           ),

@@ -37,7 +37,7 @@ dependencies:
   ffi: ^2.1.4
   provider: ^6.1.2
   url_launcher_windows: ^3.1.4
-  audioplayers: ^6.4.0
+  # audioplayers: ^6.4.0
   local_notifier: ^0.1.6
   win32_registry: ^2.1.0
 

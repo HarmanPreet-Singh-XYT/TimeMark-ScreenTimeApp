@@ -1,5 +1,8 @@
+import 'dart:math';
+
 import 'package:fl_chart/fl_chart.dart';
 import 'package:fluent_ui/fluent_ui.dart';
+import 'package:intl/intl.dart';
 import 'package:screentime/sections/graphs/reports_line_chart.dart';
 import 'package:screentime/sections/graphs/reports_pie_chart.dart';
 import './controller/data_controllers/reports_controller.dart';
@@ -721,27 +724,49 @@ class _ApplicationUsageState extends State<ApplicationUsage> {
     TimeRange.week // Default to weekly view, can be made dynamic
   );
   
-  // Parse data for weekly usage chart
+    // Modify the daily usage spots generation
   final List<FlSpot> dailyUsageSpots = [];
-  final Map<String, Duration> weeklyData = appDetails.usageTrends.weekly;
-  
-  // Sort dates to ensure they appear in chronological order
-  final List<String> sortedDates = weeklyData.keys.toList()..sort();
-  
-  // Convert data to chart points
-  for (int i = 0; i < sortedDates.length; i++) {
-    final String date = sortedDates[i];
-    final Duration duration = weeklyData[date] ?? Duration.zero;
-    dailyUsageSpots.add(FlSpot(i.toDouble(), duration.inMinutes.toDouble()));
+  final Map<String, Duration> weeklyData = appDetails.usageTrends.daily;
+
+  // Use a mapping to ensure unique x-coordinates
+  final Map<String, double> dateToXCoordinate = {};
+  double currentXCoordinate = 0;
+
+  // Sort dates to ensure chronological order
+  final List<String> sortedDates = weeklyData.keys.toList()..sort((a, b) {
+    final DateFormat formatter = DateFormat('MM/dd');
+    return formatter.parse(a).compareTo(formatter.parse(b));
+  });
+
+  // Calculate max usage for Y-axis scaling
+  double maxUsage = 0;
+
+  // Convert data to chart points with unique x-coordinates
+  for (final String dateKey in sortedDates) {
+    final Duration duration = weeklyData[dateKey] ?? Duration.zero;
+    final double usageMinutes = duration.inMinutes.toDouble();
+    
+    // Update max usage
+    maxUsage = max(maxUsage, usageMinutes);
+    
+    // Map each unique date to a unique x-coordinate
+    if (!dateToXCoordinate.containsKey(dateKey)) {
+      dateToXCoordinate[dateKey] = currentXCoordinate;
+      currentXCoordinate += 1;
+    }
+    
+    dailyUsageSpots.add(FlSpot(
+      dateToXCoordinate[dateKey]!, 
+      usageMinutes
+    ));
   }
-  
   // Calculate statistics
   final double avgDailyUsage = appDetails.usageInsights.averageDailyUsage.inMinutes.toDouble();
   
-  final double maxUsage = sortedDates.isEmpty 
-      ? 0 
-      : sortedDates.map((date) => weeklyData[date]?.inMinutes ?? 0)
-            .reduce((a, b) => a > b ? a : b).toDouble();
+  // final double maxUsage = sortedDates.isEmpty 
+  //     ? 0 
+  //     : sortedDates.map((date) => weeklyData[date]?.inMinutes ?? 0)
+  //           .reduce((a, b) => a > b ? a : b).toDouble();
   
   // Generate time of day usage data from hourly breakdown
   final Map<String, double> timeOfDayUsage = _generateTimeOfDayData(appDetails.hourlyBreakdown);
@@ -886,11 +911,12 @@ class _ApplicationUsageState extends State<ApplicationUsage> {
                                   sideTitles: SideTitles(
                                     showTitles: true,
                                     getTitlesWidget: (value, meta) {
-                                      // Get date label for x-axis (could be shortened date format)
-                                      final int index = value.toInt();
-                                      if (index >= 0 && index < sortedDates.length) {
-                                        // Format date string for display (assumes date format like '2025-03-15')
-                                        final String date = sortedDates[index];
+                                      // Find the date corresponding to this x-coordinate
+                                      final matchingEntries = dateToXCoordinate.entries
+                                        .where((entry) => entry.value == value);
+                                      
+                                      if (matchingEntries.isNotEmpty) {
+                                        final String date = matchingEntries.first.key;
                                         final String displayDate = _formatDateForAxis(date);
                                         return Padding(
                                           padding: const EdgeInsets.only(top: 8.0),
@@ -1232,275 +1258,284 @@ class _ApplicationUsageState extends State<ApplicationUsage> {
   );
 }
 
-// Helper functions for data manipulation
-Map<String, double> _generateTimeOfDayData(Map<int, Duration> hourlyBreakdown) {
-  // Create buckets for each time of day
-  final Map<String, Duration> timeOfDayDurations = {
-    'Morning (6-12)': Duration.zero,
-    'Afternoon (12-5)': Duration.zero,
-    'Evening (5-9)': Duration.zero,
-    'Night (9-6)': Duration.zero,
-  };
-  
-  // Sum up durations for each time bracket
-  hourlyBreakdown.forEach((hour, duration) {
-    if (hour >= 6 && hour < 12) {
-      timeOfDayDurations['Morning (6-12)'] = 
-          timeOfDayDurations['Morning (6-12)']! + duration;
-    } else if (hour >= 12 && hour < 17) {
-      timeOfDayDurations['Afternoon (12-5)'] = 
-          timeOfDayDurations['Afternoon (12-5)']! + duration;
-    } else if (hour >= 17 && hour < 21) {
-      timeOfDayDurations['Evening (5-9)'] = 
-          timeOfDayDurations['Evening (5-9)']! + duration;
+  // Helper functions for data manipulation
+  Map<String, double> _generateTimeOfDayData(Map<int, Duration> hourlyBreakdown) {
+    // Create buckets for each time of day
+    final Map<String, Duration> timeOfDayDurations = {
+      'Morning (6-12)': Duration.zero,
+      'Afternoon (12-5)': Duration.zero,
+      'Evening (5-9)': Duration.zero,
+      'Night (9-6)': Duration.zero,
+    };
+    
+    // Sum up durations for each time bracket
+    hourlyBreakdown.forEach((hour, duration) {
+      if (hour >= 6 && hour < 12) {
+        timeOfDayDurations['Morning (6-12)'] = 
+            timeOfDayDurations['Morning (6-12)']! + duration;
+      } else if (hour >= 12 && hour < 17) {
+        timeOfDayDurations['Afternoon (12-5)'] = 
+            timeOfDayDurations['Afternoon (12-5)']! + duration;
+      } else if (hour >= 17 && hour < 21) {
+        timeOfDayDurations['Evening (5-9)'] = 
+            timeOfDayDurations['Evening (5-9)']! + duration;
+      } else {
+        timeOfDayDurations['Night (9-6)'] = 
+            timeOfDayDurations['Night (9-6)']! + duration;
+      }
+    });
+    
+    // Calculate total duration
+    final Duration totalDuration = timeOfDayDurations.values.fold(
+      Duration.zero, (prev, curr) => prev + curr);
+    
+    // Convert to percentages for chart
+    final Map<String, double> percentages = {};
+    if (totalDuration.inSeconds > 0) {
+      timeOfDayDurations.forEach((timeOfDay, duration) {
+        percentages[timeOfDay] = (duration.inSeconds / totalDuration.inSeconds) * 100;
+      });
     } else {
-      timeOfDayDurations['Night (9-6)'] = 
-          timeOfDayDurations['Night (9-6)']! + duration;
+      // Equal distribution if no data
+      timeOfDayDurations.keys.forEach((timeOfDay) {
+        percentages[timeOfDay] = 25.0;
+      });
     }
-  });
-  
-  // Calculate total duration
-  final Duration totalDuration = timeOfDayDurations.values.fold(
-    Duration.zero, (prev, curr) => prev + curr);
-  
-  // Convert to percentages for chart
-  final Map<String, double> percentages = {};
-  if (totalDuration.inSeconds > 0) {
-    timeOfDayDurations.forEach((timeOfDay, duration) {
-      percentages[timeOfDay] = (duration.inSeconds / totalDuration.inSeconds) * 100;
-    });
-  } else {
-    // Equal distribution if no data
-    timeOfDayDurations.keys.forEach((timeOfDay) {
-      percentages[timeOfDay] = 25.0;
-    });
+    
+    return percentages;
   }
-  
-  return percentages;
-}
 
-String _formatDateForAxis(String dateString) {
-  try {
-    // Parse the date string (format might need to be adjusted based on your data)
-    final DateTime date = DateTime.parse(dateString);
-    // Return just the day and month
-    return '${date.day}/${date.month}';
-  } catch (e) {
-    // If unable to parse, return original string or abbreviated version
-    return dateString.length > 3 ? dateString.substring(0, 3) : dateString;
+  String _formatDateForAxis(String dateString) {
+    try {
+      // Assuming dateString is in 'MM/dd' format
+      final DateFormat inputFormatter = DateFormat('MM/dd');
+      final DateTime date = inputFormatter.parse(dateString);
+      
+      // Check if the date is today
+      final DateTime today = DateTime.now();
+      if (date.year == today.year && 
+          date.month == today.month && 
+          date.day == today.day) {
+        return 'Today';
+      }
+      
+      // Return day of week for other dates
+      return DateFormat('EEE').format(date);
+    } catch (e) {
+      return dateString; // Fallback to original if parsing fails
+    }
   }
-}
 
-String _determineTrend(UsageComparisons comparisons) {
-  final double percentage = comparisons.growthPercentage;
-  
-  if (percentage > 5) {
-    return "Increasing";
-  } else if (percentage < -5) {
-    return "Decreasing";
-  } else {
-    return "Stable";
+  String _determineTrend(UsageComparisons comparisons) {
+    final double percentage = comparisons.growthPercentage;
+    
+    if (percentage > 5) {
+      return "Increasing";
+    } else if (percentage < -5) {
+      return "Decreasing";
+    } else {
+      return "Stable";
+    }
   }
-}
 
-IconData _getTrendIcon(UsageComparisons comparisons) {
-  final double percentage = comparisons.growthPercentage;
-  
-  if (percentage > 5) {
-    return FluentIcons.up;
-  } else if (percentage < -5) {
-    return FluentIcons.down;
-  } else {
-    return FluentIcons.horizontal_tab_key;
+  IconData _getTrendIcon(UsageComparisons comparisons) {
+    final double percentage = comparisons.growthPercentage;
+    
+    if (percentage > 5) {
+      return FluentIcons.up;
+    } else if (percentage < -5) {
+      return FluentIcons.down;
+    } else {
+      return FluentIcons.horizontal_tab_key;
+    }
   }
-}
 
-Color _getTrendColor(UsageComparisons comparisons) {
-  final double percentage = comparisons.growthPercentage;
-  
-  if (percentage > 5) {
-    return Colors.red;
-  } else if (percentage < -5) {
+  Color _getTrendColor(UsageComparisons comparisons) {
+    final double percentage = comparisons.growthPercentage;
+    
+    if (percentage > 5) {
+      return Colors.red;
+    } else if (percentage < -5) {
+      return Colors.green;
+    } else {
+      return Colors.blue;
+    }
+  }
+
+  Color _getTimeOfDayColor(String timeOfDay) {
+    final Map<String, Color> timeColors = {
+      'Morning (6-12)': Colors.orange,
+      'Afternoon (12-5)': Colors.yellow,
+      'Evening (5-9)': Colors.purple,
+      'Night (9-6)': Colors.blue,
+    };
+    
+    return timeColors[timeOfDay] ?? Colors.grey;
+  }
+
+  Color _getLimitStatusColor(ApplicationBasicDetail app) {
+    if (!app.limitStatus) return Colors.grey;
+    
+    // Calculate percentage used
+    final double percentUsed = app.screenTime.inSeconds / 
+        (app.dailyLimit.inSeconds > 0 ? app.dailyLimit.inSeconds : 1);
+    
+    if (percentUsed >= 1.0) return Colors.red;
+    if (percentUsed >= 0.75) return Colors.orange;
     return Colors.green;
-  } else {
-    return Colors.blue;
   }
-}
 
-Color _getTimeOfDayColor(String timeOfDay) {
-  final Map<String, Color> timeColors = {
-    'Morning (6-12)': Colors.orange,
-    'Afternoon (12-5)': Colors.yellow,
-    'Evening (5-9)': Colors.purple,
-    'Night (9-6)': Colors.blue,
-  };
-  
-  return timeColors[timeOfDay] ?? Colors.grey;
-}
-
-Color _getLimitStatusColor(ApplicationBasicDetail app) {
-  if (!app.limitStatus) return Colors.grey;
-  
-  // Calculate percentage used
-  final double percentUsed = app.screenTime.inSeconds / 
-      (app.dailyLimit.inSeconds > 0 ? app.dailyLimit.inSeconds : 1);
-  
-  if (percentUsed >= 1.0) return Colors.red;
-  if (percentUsed >= 0.75) return Colors.orange;
-  return Colors.green;
-}
-
-String _generateUsageInsights(
-    ApplicationBasicDetail app, 
-    ApplicationDetailedData details,
-    Map<String, double> timeOfDay) {
-  final List<String> insights = [];
-  
-  // Determine primary usage time
-  final String primaryTimeOfDay = timeOfDay.entries
-      .reduce((a, b) => a.value > b.value ? a : b)
-      .key;
-  
-  insights.add("You primarily use ${app.name} during $primaryTimeOfDay.");
-  
-  // Add trend insight based on growth percentage
-  final double growthPercentage = details.comparisons.growthPercentage;
-  if (growthPercentage > 10) {
-    insights.add("Your usage has increased significantly (${growthPercentage.toStringAsFixed(1)}%) compared to the previous period.");
-  } else if (growthPercentage > 5) {
-    insights.add("Your usage is trending upward compared to the previous period.");
-  } else if (growthPercentage < -10) {
-    insights.add("Your usage has decreased significantly (${growthPercentage.abs().toStringAsFixed(1)}%) compared to the previous period.");
-  } else if (growthPercentage < -5) {
-    insights.add("Your usage is trending downward compared to the previous period.");
-  } else {
-    insights.add("Your usage has been consistent compared to the previous period.");
+  String _generateUsageInsights(
+      ApplicationBasicDetail app, 
+      ApplicationDetailedData details,
+      Map<String, double> timeOfDay) {
+    final List<String> insights = [];
+    
+    // Determine primary usage time
+    final String primaryTimeOfDay = timeOfDay.entries
+        .reduce((a, b) => a.value > b.value ? a : b)
+        .key;
+    
+    insights.add("You primarily use ${app.name} during $primaryTimeOfDay.");
+    
+    // Add trend insight based on growth percentage
+    final double growthPercentage = details.comparisons.growthPercentage;
+    if (growthPercentage > 10) {
+      insights.add("Your usage has increased significantly (${growthPercentage.toStringAsFixed(1)}%) compared to the previous period.");
+    } else if (growthPercentage > 5) {
+      insights.add("Your usage is trending upward compared to the previous period.");
+    } else if (growthPercentage < -10) {
+      insights.add("Your usage has decreased significantly (${growthPercentage.abs().toStringAsFixed(1)}%) compared to the previous period.");
+    } else if (growthPercentage < -5) {
+      insights.add("Your usage is trending downward compared to the previous period.");
+    } else {
+      insights.add("Your usage has been consistent compared to the previous period.");
+    }
+    
+    // Add productivity insight
+    if (app.isProductive) {
+      insights.add("This is marked as a productive app in your settings.");
+    } else {
+      insights.add("This is marked as a non-productive app in your settings.");
+    }
+    
+    // Add most active hour insight if available
+    if (details.usageInsights.mostActiveHours.isNotEmpty) {
+      final int mostActiveHour = details.usageInsights.mostActiveHours.first;
+      insights.add("Your most active time is around ${_formatHourOfDay(mostActiveHour)}.");
+    }
+    
+    return insights.join(" ");
   }
-  
-  // Add productivity insight
-  if (app.isProductive) {
-    insights.add("This is marked as a productive app in your settings.");
-  } else {
-    insights.add("This is marked as a non-productive app in your settings.");
-  }
-  
-  // Add most active hour insight if available
-  if (details.usageInsights.mostActiveHours.isNotEmpty) {
-    final int mostActiveHour = details.usageInsights.mostActiveHours.first;
-    insights.add("Your most active time is around ${_formatHourOfDay(mostActiveHour)}.");
-  }
-  
-  return insights.join(" ");
-}
 
-String _formatHourOfDay(int hour) {
-  final String period = hour >= 12 ? 'PM' : 'AM';
-  final int displayHour = hour > 12 ? hour - 12 : (hour == 0 ? 12 : hour);
-  return '$displayHour $period';
-}
-
-String _generateLimitStatusInsight(ApplicationBasicDetail app) {
-  if (!app.limitStatus) {
-    return "No usage limit has been set for this application.";
+  String _formatHourOfDay(int hour) {
+    final String period = hour >= 12 ? 'PM' : 'AM';
+    final int displayHour = hour > 12 ? hour - 12 : (hour == 0 ? 12 : hour);
+    return '$displayHour $period';
   }
-  
-  // Calculate percentage used
-  final double percentUsed = app.screenTime.inSeconds / 
-      (app.dailyLimit.inSeconds > 0 ? app.dailyLimit.inSeconds : 1);
-  
-  final String remainingTime = _formatDuration(app.dailyLimit - app.screenTime);
-  
-  if (percentUsed >= 1.0) {
-    return "You've reached your daily limit for this application.";
-  } else if (percentUsed >= 0.9) {
-    return "You're about to reach your daily limit with only $remainingTime remaining.";
-  } else if (percentUsed >= 0.75) {
-    return "You've used ${(percentUsed * 100).toInt()}% of your daily limit with $remainingTime remaining.";
-  } else {
-    return "You have $remainingTime remaining out of your daily limit.";
+
+  String _generateLimitStatusInsight(ApplicationBasicDetail app) {
+    if (!app.limitStatus) {
+      return "No usage limit has been set for this application.";
+    }
+    
+    // Calculate percentage used
+    final double percentUsed = app.screenTime.inSeconds / 
+        (app.dailyLimit.inSeconds > 0 ? app.dailyLimit.inSeconds : 1);
+    
+    final String remainingTime = _formatDuration(app.dailyLimit - app.screenTime);
+    
+    if (percentUsed >= 1.0) {
+      return "You've reached your daily limit for this application.";
+    } else if (percentUsed >= 0.9) {
+      return "You're about to reach your daily limit with only $remainingTime remaining.";
+    } else if (percentUsed >= 0.75) {
+      return "You've used ${(percentUsed * 100).toInt()}% of your daily limit with $remainingTime remaining.";
+    } else {
+      return "You have $remainingTime remaining out of your daily limit.";
+    }
   }
-}
 
-String _formatDuration(Duration duration) {
-  final hours = duration.inHours;
-  final minutes = duration.inMinutes.remainder(60);
-  
-  if (hours > 0) {
-    return "${hours}h ${minutes}m";
-  } else {
-    return "${minutes}m";
+  String _formatDuration(Duration duration) {
+    final hours = duration.inHours;
+    final minutes = duration.inMinutes.remainder(60);
+    
+    if (hours > 0) {
+      return "${hours}h ${minutes}m";
+    } else {
+      return "${minutes}m";
+    }
   }
-}
 
-// Helper widgets
-Widget _buildSummaryItem(BuildContext context, String title, String value, 
-    {IconData? icon, Color? color, double iconSize = 16}) {
-  return Padding(
-    padding: const EdgeInsets.all(8.0),
-    child: Column(
-      children: [
-        Row(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            if (icon != null) ...[
-              Icon(icon, size: iconSize, color: color ?? FluentTheme.of(context).accentColor),
-              const SizedBox(width: 8),
-            ],
-            Text(title, style: TextStyle(
-              fontSize: 13,
-              fontWeight: FontWeight.normal,
-              color: FluentTheme.of(context).accentColor.withAlpha(204),
-            )),
-          ],
-        ),
-        const SizedBox(height: 8),
-        Text(
-          value,
-          style: TextStyle(
-            fontSize: 18,
-            fontWeight: FontWeight.bold,
-            color: color,
-            letterSpacing: 0.4,
-          ),
-        ),
-      ],
-    ),
-  );
-}
-
-Widget _buildStatCard(BuildContext context, String title, String value, IconData icon, {double cardSize = 80}) {
-  return Card(
-    padding: const EdgeInsets.all(16),
-    borderRadius: BorderRadius.circular(8),
-    child: SizedBox(
-      width: cardSize,
+  // Helper widgets
+  Widget _buildSummaryItem(BuildContext context, String title, String value, 
+      {IconData? icon, Color? color, double iconSize = 16}) {
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
       child: Column(
-        mainAxisSize: MainAxisSize.min,
         children: [
-          Icon(icon, size: 24),
-          const SizedBox(height: 10),
-          Text(
-            title,
-            style: TextStyle(
-              fontSize: 13,
-              color: FluentTheme.of(context).accentColor.withAlpha(204),
-            ),
-            textAlign: TextAlign.center,
+          Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              if (icon != null) ...[
+                Icon(icon, size: iconSize, color: color ?? FluentTheme.of(context).accentColor),
+                const SizedBox(width: 8),
+              ],
+              Text(title, style: TextStyle(
+                fontSize: 13,
+                fontWeight: FontWeight.normal,
+                color: FluentTheme.of(context).accentColor.withAlpha(204),
+              )),
+            ],
           ),
           const SizedBox(height: 8),
           Text(
             value,
-            style: const TextStyle(
+            style: TextStyle(
               fontSize: 18,
               fontWeight: FontWeight.bold,
+              color: color,
               letterSpacing: 0.4,
             ),
           ),
         ],
       ),
-    ),
-  );
-}
+    );
+  }
+
+  Widget _buildStatCard(BuildContext context, String title, String value, IconData icon, {double cardSize = 80}) {
+    return Card(
+      padding: const EdgeInsets.all(16),
+      borderRadius: BorderRadius.circular(8),
+      child: SizedBox(
+        width: cardSize,
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Icon(icon, size: 24),
+            const SizedBox(height: 10),
+            Text(
+              title,
+              style: TextStyle(
+                fontSize: 13,
+                color: FluentTheme.of(context).accentColor.withAlpha(204),
+              ),
+              textAlign: TextAlign.center,
+            ),
+            const SizedBox(height: 8),
+            Text(
+              value,
+              style: const TextStyle(
+                fontSize: 18,
+                fontWeight: FontWeight.bold,
+                letterSpacing: 0.4,
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
 }
 
 class ApplicationListItem extends StatelessWidget {
