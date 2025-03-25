@@ -1,6 +1,6 @@
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:provider/provider.dart';
-import 'package:screentime/sections/controller/app_data_controller.dart';
+import 'package:ProductiveScreenTime/sections/controller/app_data_controller.dart';
 import 'controller/settings_data_controller.dart';
 import '../../auto_launch/launch_at_startup.dart';
 import 'package:url_launcher_platform_interface/url_launcher_platform_interface.dart';

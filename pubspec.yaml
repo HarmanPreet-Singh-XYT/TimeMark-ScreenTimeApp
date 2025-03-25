@@ -1,7 +1,7 @@
-name: screentime
+name: ProductiveScreenTime
 description: "Screen Time Tracking and Management Application"
 publish_to: 'none'
-version: 0.1.0
+version: 1.0.0
 
 environment:
   sdk: '>=3.5.4 <4.0.0'
@@ -40,6 +40,7 @@ dependencies:
   # audioplayers: ^6.4.0
   local_notifier: ^0.1.6
   win32_registry: ^2.1.0
+  msix: ^3.16.8
 
   # Native Code Interaction for Foreground Window
   # You'll need to implement a custom plugin or package

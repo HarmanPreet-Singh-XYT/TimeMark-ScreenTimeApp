@@ -1,10 +1,10 @@
 import 'dart:async';
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:percent_indicator/percent_indicator.dart';
-import 'package:screentime/sections/controller/data_controllers/focusMode_data_controller.dart';
-import 'package:screentime/sections/graphs/focus_mode_history.dart';
-import 'package:screentime/sections/graphs/focus_mode_pie_chart.dart';
-import 'package:screentime/sections/graphs/focus_mode_trends.dart';
+import 'package:ProductiveScreenTime/sections/controller/data_controllers/focusMode_data_controller.dart';
+import 'package:ProductiveScreenTime/sections/graphs/focus_mode_history.dart';
+import 'package:ProductiveScreenTime/sections/graphs/focus_mode_pie_chart.dart';
+import 'package:ProductiveScreenTime/sections/graphs/focus_mode_trends.dart';
 import 'controller/settings_data_controller.dart';
 import './controller/focus_mode_controller.dart';
 import 'package:intl/intl.dart';

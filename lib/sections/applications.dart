@@ -1,5 +1,5 @@
 import 'package:fluent_ui/fluent_ui.dart';
-import 'package:screentime/sections/controller/app_data_controller.dart';
+import 'package:ProductiveScreenTime/sections/controller/app_data_controller.dart';
 import 'controller/settings_data_controller.dart';
 import './controller/data_controllers/applications_data_controller.dart';
 import './controller/categories_controller.dart';

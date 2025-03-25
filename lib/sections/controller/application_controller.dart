@@ -1,6 +1,6 @@
 import 'dart:async';
-import 'package:screentime/foreground_window_plugin.dart';
-import 'package:screentime/sections/controller/notification_controller.dart';
+import 'package:ProductiveScreenTime/foreground_window_plugin.dart';
+import 'package:ProductiveScreenTime/sections/controller/notification_controller.dart';
 import 'app_data_controller.dart';
 import 'categories_controller.dart';
 

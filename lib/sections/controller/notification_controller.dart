@@ -1,7 +1,7 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:local_notifier/local_notifier.dart';
-import 'package:screentime/sections/controller/settings_data_controller.dart';
+import 'package:ProductiveScreenTime/sections/controller/settings_data_controller.dart';
 
 import 'data_controllers/alerts_limits_data_controller.dart';
 
@@ -39,7 +39,7 @@ class NotificationController with ChangeNotifier {
   Future<void> initialize() async {
     // Initialize local_notifier
     await localNotifier.setup(
-      appName: 'ScreenTime',
+      appName: 'Productive ScreenTime',
       shortcutPolicy: ShortcutPolicy.requireCreate,
     );
     

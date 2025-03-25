@@ -1,5 +1,5 @@
 import 'package:fl_chart/fl_chart.dart';
-import 'package:screentime/sections/controller/data_controllers/reports_controller.dart';
+import 'package:ProductiveScreenTime/sections/controller/data_controllers/reports_controller.dart';
 import './resources/app_resources.dart';
 import 'package:flutter/material.dart';
 
