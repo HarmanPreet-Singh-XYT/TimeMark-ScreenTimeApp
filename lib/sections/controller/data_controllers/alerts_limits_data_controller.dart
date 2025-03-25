@@ -1,6 +1,5 @@
 import 'package:flutter/foundation.dart';
-import '../app_data_controller.dart'; // Import your AppDataStore
-import 'package:screentime/sections/controller/notification_controller.dart'; // Add import for NotificationController
+import '../app_data_controller.dart';
 
 class AppUsageSummary {
   final String appName;
@@ -73,62 +72,68 @@ class ScreenTimeDataController extends ChangeNotifier {
   ScreenTimeDataController._internal();
 
   final AppDataStore _dataStore = AppDataStore();
-  final NotificationController _notificationController = NotificationController(); // Add reference to NotificationController
   
-  // Keep track of notifications sent to avoid duplicates
-  final Map<String, bool> _appLimitNotificationsSent = {};
-  bool _overallLimitNotificationSent = false;
-  bool _approachingOverallLimitNotificationSent = false;
-
   // Initialize the controller
   Future<bool> initialize() async {
-    // Reset notification trackers
-    _appLimitNotificationsSent.clear();
-    _overallLimitNotificationSent = false;
-    _approachingOverallLimitNotificationSent = false;
-    
     return await _dataStore.init();
   }
 
   // Get a list of all apps with their current data
   List<AppUsageSummary> getAllAppsSummary() {
     final List<AppUsageSummary> result = _getAppSummariesWithoutNotificationChecks();
-    
-    // Check individual app notifications
-    for (final summary in result) {
-      final AppMetadata? metadata = _dataStore.getAppMetadata(summary.appName);
-      if (metadata != null && metadata.limitStatus) {
-        _checkAppLimitNotifications(summary.appName, metadata, summary.currentUsage, summary.percentageOfLimitUsed);
-      }
-    }
-    
-    // Check overall limits using the results we already have
-    _checkOverallLimitNotifications(existingApps: result);
-
     return result;
   }
-
-  // New method to check and send app limit notifications
-  void _checkAppLimitNotifications(String appName, AppMetadata metadata, Duration currentUsage, double percentOfLimit) {
-    // Skip if notifications already sent for this app today
-    if (_appLimitNotificationsSent[appName] == true) return;
+  Duration _overallLimit = Duration.zero;
+  bool _overallLimitEnabled = false;
+  
+  // Update overall screen time limit
+  void updateOverallLimit(Duration limit, bool enabled) {
+    _overallLimit = limit;
+    _overallLimitEnabled = enabled;
     
-    // Send notification when the app reaches its limit
-    if (metadata.limitStatus && metadata.dailyLimit > Duration.zero) {
-      if (currentUsage >= metadata.dailyLimit) {
-        _notificationController.sendAppLimitNotification(appName, metadata.dailyLimit.inMinutes);
-        _appLimitNotificationsSent[appName] = true;
-      } 
-      // Or when approaching limit (90%)
-      else if (percentOfLimit >= 0.9 && !_appLimitNotificationsSent.containsKey(appName)) {
-        // You could add a function for approaching limits in NotificationController
-        _notificationController.showPopupAlert(
-          "Approaching App Limit", 
-          "You're about to reach your daily limit for $appName"
-        );
-        _appLimitNotificationsSent[appName] = false; // Mark as warned but not fully notified
-      }
-    }
+    // Save to storage or database as needed
+    _saveOverallLimitToStorage();
+    
+    notifyListeners();
+  }
+  
+  // Calculate total screen time across all apps
+  Duration _calculateTotalScreenTime() {
+    final List<AppUsageSummary> apps = _getAppSummariesWithoutNotificationChecks();
+    return Duration(minutes: apps.fold(0, (sum, app) => sum + app.currentUsage.inMinutes));
+  }
+  
+  // Save overall limit settings to storage
+  void _saveOverallLimitToStorage() {
+    // Implementation depends on your storage mechanism
+    // Here we'll just log it
+    debugPrint('Saving overall limit: $_overallLimitEnabled, $_overallLimit');
+  }
+  
+  // Get current overall limit
+  Duration getOverallLimit() {
+    return _overallLimit;
+  }
+  
+  // Get overall limit status
+  bool isOverallLimitEnabled() {
+    return _overallLimitEnabled;
+  }
+
+  // Check if overall limit is reached
+  bool isOverallLimitReached() {
+    if (!_overallLimitEnabled || _overallLimit == Duration.zero) return false;
+    
+    Duration totalScreenTime = _calculateTotalScreenTime();
+    return totalScreenTime >= _overallLimit;
+  }
+
+  // Get percentage of overall limit used
+  double getOverallLimitPercentage() {
+    if (!_overallLimitEnabled || _overallLimit == Duration.zero) return 0.0;
+    
+    Duration totalScreenTime = _calculateTotalScreenTime();
+    return (totalScreenTime.inMinutes / _overallLimit.inMinutes).clamp(0.0, 1.0);
   }
 
   // Get a single app's summary
@@ -152,9 +157,6 @@ class ScreenTimeDataController extends ChangeNotifier {
       final Duration remainingTime = metadata.dailyLimit - currentUsage;
       isApproachingLimit = remainingTime > Duration.zero &&
                           remainingTime <= const Duration(minutes: 5); // Default threshold
-                          
-      // Check and send notifications for this app
-      _checkAppLimitNotifications(appName, metadata, currentUsage, percentOfLimit);
     }
 
     return AppUsageSummary(
@@ -205,9 +207,6 @@ class ScreenTimeDataController extends ChangeNotifier {
 
   // Update app limit
   Future<bool> updateAppLimit(String appName, Duration limit, bool enableLimit) async {
-    // Reset notification status for this app when limit is changed
-    _appLimitNotificationsSent.remove(appName);
-    
     return await _dataStore.updateAppMetadata(
       appName,
       dailyLimit: limit,
@@ -256,84 +255,10 @@ class ScreenTimeDataController extends ChangeNotifier {
       'appSummaries': appSummaries.map((summary) => summary.toJson()).toList(),
       'usageByCategory': usageByCategory.map((key, value) => MapEntry(key, value.inMinutes)),
       'mostUsedApps': mostUsedApps.map((app) => app.toJson()).toList(),
-      'overallLimit':{
-        'enabled': _overallLimitEnabled,
-        'limit': _overallLimit.inMinutes,
-        'currentUsage': _calculateTotalScreenTime().inMinutes,
-      }
     };
   }
 
-  // Helper method to format duration
-  String _formatDuration(Duration duration) {
-    final int hours = duration.inHours;
-    final int minutes = duration.inMinutes.remainder(60);
-
-    if (hours > 0) {
-      return '$hours h $minutes min';
-    } else {
-      return '$minutes min';
-    }
-  }
-
-  Duration _overallLimit = Duration.zero;
-  bool _overallLimitEnabled = false;
-  
-  // Update overall screen time limit
-  void updateOverallLimit(Duration limit, bool enabled) {
-    _overallLimit = limit;
-    _overallLimitEnabled = enabled;
-    
-    // Reset notification status when limit is changed
-    _overallLimitNotificationSent = false;
-    _approachingOverallLimitNotificationSent = false;
-    
-    // Save to storage or database as needed
-    _saveOverallLimitToStorage();
-    
-    // Check if any notifications need to be sent based on overall limits
-    _checkOverallLimitNotifications();
-    
-    notifyListeners();
-  }
-  
-  // Check if the user is approaching or has exceeded their overall limit
-  void _checkOverallLimitNotifications({List<AppUsageSummary>? existingApps}) {
-    if (!_overallLimitEnabled || _overallLimit == Duration.zero) return;
-  
-  // Calculate total screen time for today using existing apps if provided
-    Duration totalScreenTime = _calculateTotalScreenTime(existingApps: existingApps);
-    
-    // // Calculate total screen time for today
-    // Duration totalScreenTime = _calculateTotalScreenTime();
-    
-    // If over limit, show notification
-    if (totalScreenTime >= _overallLimit && !_overallLimitNotificationSent) {
-      _notificationController.sendScreenTimeNotification(_overallLimit.inMinutes);
-      _overallLimitNotificationSent = true;
-      _approachingOverallLimitNotificationSent = true; // Prevent approaching notification
-    } 
-    // If approaching limit (90%), show warning
-    else if (totalScreenTime.inMinutes >= _overallLimit.inMinutes * 0.9 && 
-            !_approachingOverallLimitNotificationSent && 
-            !_overallLimitNotificationSent) {
-      _notificationController.showPopupAlert(
-        "Approaching Screen Time Limit", 
-        "You're about to reach your daily screen time limit of ${_overallLimit.inMinutes} minutes"
-      );
-      _approachingOverallLimitNotificationSent = true;
-    }
-  }
-  
-  // Calculate total screen time across all apps
-  // Modify _calculateTotalScreenTime() to accept an optional parameter
-  Duration _calculateTotalScreenTime({List<AppUsageSummary>? existingApps}) {
-    // Use provided list or fetch new one (but not recursively)
-    final apps = existingApps ?? _getAppSummariesWithoutNotificationChecks();
-    return Duration(minutes: apps.fold(0, (sum, app) => sum + app.currentUsage.inMinutes));
-  }
-
-  // Add this new method that gets app summaries without triggering notification checks
+  // Add this method that gets app summaries
   List<AppUsageSummary> _getAppSummariesWithoutNotificationChecks() {
     final List<String> appNames = _dataStore.allAppNames;
     final List<AppUsageSummary> result = [];
@@ -374,39 +299,5 @@ class ScreenTimeDataController extends ChangeNotifier {
     }
 
     return result;
-  }
-  
-  // Save overall limit settings to storage
-  void _saveOverallLimitToStorage() {
-    // Implementation depends on your storage mechanism
-    // Here we'll just log it
-    debugPrint('Saving overall limit: $_overallLimitEnabled, $_overallLimit');
-  }
-  
-  // Method to refresh and check all notifications
-  // Call this periodically, e.g., every minute or when app usage updates
-  void refreshAndCheckNotifications() {
-    final apps = getAllAppsSummary();
-    _checkOverallLimitNotifications();
-    
-    // May trigger additional notifications for individual apps if necessary
-    notifyListeners();
-  }
-  
-  // Reset notification status (e.g., at the start of a new day)
-  void resetNotificationStatus() {
-    _appLimitNotificationsSent.clear();
-    _overallLimitNotificationSent = false;
-    _approachingOverallLimitNotificationSent = false;
-  }
-  
-  // Get current overall limit
-  Duration getOverallLimit() {
-    return _overallLimit;
-  }
-  
-  // Get overall limit status
-  bool isOverallLimitEnabled() {
-    return _overallLimitEnabled;
   }
 }

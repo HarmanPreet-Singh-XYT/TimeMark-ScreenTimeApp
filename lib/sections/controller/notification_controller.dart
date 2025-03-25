@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:local_notifier/local_notifier.dart';
 import 'package:screentime/sections/controller/settings_data_controller.dart';
 
+import 'data_controllers/alerts_limits_data_controller.dart';
+
 class NotificationController with ChangeNotifier {
   // Singleton instance
   static final NotificationController _instance = NotificationController._internal();
@@ -17,6 +19,7 @@ class NotificationController with ChangeNotifier {
   
   // Reference to settings manager
   final _settingsManager = SettingsManager();
+  final ScreenTimeDataController _screenTimeController = ScreenTimeDataController();
   
   // Reminder timer
   Timer? _reminderTimer;
@@ -24,6 +27,7 @@ class NotificationController with ChangeNotifier {
   // Settings
   bool _soundEnabled = true;
   int _reminderFrequency = 60; // seconds between reminders if not acknowledged
+  static const int AUTO_DISMISS_SECONDS = 5;
   
   // Pending alerts tracking
   Map<int, DateTime> _pendingAlerts = {}; // alertId -> time it was created
@@ -146,14 +150,15 @@ class NotificationController with ChangeNotifier {
       body = 'Your $mode session has started.';
     }
     
-    _sendNotification(title, body, 'focus');
+    _sendPomodoroNotification(title, body, isCompleted);
+    
   }
   
   // Screen Time Notification
   void sendScreenTimeNotification(int limitInMinutes) {
     // Check if screen time notifications are enabled in the general settings
     if (!(_settingsManager.getSetting('notifications.enabled') ?? true) || 
-        !(_settingsManager.getSetting('notifications.overallLimit.enabled') ?? true)) {
+        !(_settingsManager.getSetting('limitsAlerts.overallLimit.enabled') ?? true)) {
       return;
     }
     
@@ -186,6 +191,9 @@ class NotificationController with ChangeNotifier {
     final id = DateTime.now().millisecondsSinceEpoch % 10000;
     _pendingAlerts[id] = DateTime.now();
     
+    // Cancel any existing reminder timer to prevent spam
+    _reminderTimer?.cancel();
+    
     // Send Windows notification if system notifications are enabled
     if (useSystemNotifications) {
       final notification = LocalNotification(
@@ -198,6 +206,13 @@ class NotificationController with ChangeNotifier {
           ] 
         : null,
       );
+      
+      // Auto-dismiss timer
+      Timer(Duration(seconds: AUTO_DISMISS_SECONDS), () {
+        if (_pendingAlerts.containsKey(id)) {
+          _handleNotificationAction(id, 'close', type, extraData);
+        }
+      });
       
       // Play sound if enabled
       if (_soundEnabled) {
@@ -223,15 +238,23 @@ class NotificationController with ChangeNotifier {
         onClose: () => _handleNotificationAction(id, 'close', type, extraData),
         onRemind: () => _handleNotificationAction(id, 'remind', type, extraData),
       );
+      
+      // Auto-dismiss timer for popup alerts
+      Timer(Duration(seconds: AUTO_DISMISS_SECONDS), () {
+        if (_pendingAlerts.containsKey(id)) {
+          _handleNotificationAction(id, 'close', type, extraData);
+        }
+      });
     }
     
+    // Modify reminder scheduling to be less aggressive
     _scheduleReminderIfNeeded(id, type, extraData);
   }
   
   // Schedule reminder for unacknowledged alerts
   void _scheduleReminderIfNeeded(int id, String type, [String? extraData]) {
     _reminderTimer?.cancel();
-    _reminderTimer = Timer.periodic(Duration(seconds: _reminderFrequency), (timer) {
+    _reminderTimer = Timer.periodic(Duration(minutes: _reminderFrequency), (timer) {
       if (!_pendingAlerts.containsKey(id)) {
         timer.cancel();
         return;
@@ -331,5 +354,96 @@ class NotificationController with ChangeNotifier {
   // Method to reload settings when they change externally
   void refreshSettings() {
     _loadSettings();
+  }
+  void _sendPomodoroNotification(String title, String body, bool isCompleted) {
+    // Use our own dedicated settings
+    bool useSystemNotifications = getUseSystemNotifications();
+    bool usePopupAlerts = getUsePopupAlerts();
+    
+    final id = DateTime.now().millisecondsSinceEpoch % 10000;
+    _pendingAlerts[id] = DateTime.now();
+    
+    // Cancel any existing reminder timer to prevent spam
+    _reminderTimer?.cancel();
+    
+    // Send Windows notification if system notifications are enabled
+    if (useSystemNotifications) {
+      final notification = LocalNotification(
+        title: title,
+        body: body,
+        actions: _soundEnabled 
+        ? [
+            LocalNotificationAction(text: 'Close', type: 'close'),
+          ] 
+        : null,
+      );
+      
+      // Auto-dismiss timer
+      Timer(Duration(seconds: AUTO_DISMISS_SECONDS), () {
+        if (_pendingAlerts.containsKey(id)) {
+          _handleNotificationAction(id, 'close', 'focus');
+        }
+      });
+      
+      // Play sound if enabled
+      if (_soundEnabled) {
+        // You would implement sound playing here using a package like audioplayers
+        // For example: _audioPlayer.play('assets/notification_sound.wav');
+      }
+      
+      // Show notification
+      notification.onClickAction = (actionIndex) {
+        // Only close action for Pomodoro
+        _handleNotificationAction(id, 'close', 'focus');
+      };
+      
+      notification.show();
+    }
+    
+    // Also show in-app alert if callback is registered and popup alerts are enabled
+    if (_showAlertCallback != null && usePopupAlerts) {
+      _showAlertCallback!(title, body,
+        onClose: () => _handleNotificationAction(id, 'close', 'focus'),
+        // No onRemind callback for Pomodoro
+        onRemind: null,
+      );
+      
+      // Auto-dismiss timer for popup alerts
+      Timer(Duration(seconds: AUTO_DISMISS_SECONDS), () {
+        if (_pendingAlerts.containsKey(id)) {
+          _handleNotificationAction(id, 'close', 'focus');
+        }
+      });
+    }
+    
+    // No reminder scheduling for Pomodoro notifications
+  }
+  // screenTime
+  void checkAndSendNotifications() {
+    // Get all apps usage summary
+    List<AppUsageSummary> appSummaries = _screenTimeController.getAllAppsSummary();
+
+    // Check app-specific limits
+    for (final app in appSummaries) {
+      if (app.limitStatus) {
+        if (app.currentUsage >= app.dailyLimit) {
+          sendAppLimitNotification(app.appName, app.dailyLimit.inMinutes);
+        } else if (app.percentageOfLimitUsed >= 0.9) {
+          showPopupAlert("Approaching App Limit", "You're about to reach your daily limit for ${app.appName}");
+        }
+      }
+    }
+
+    // Check overall screen time limits
+    if (_screenTimeController.isOverallLimitEnabled()) {
+      Duration overallLimit = _screenTimeController.getOverallLimit();
+      Duration currentUsage = _screenTimeController.getOverallLimit();
+
+      if (currentUsage >= overallLimit) {
+        sendScreenTimeNotification(overallLimit.inMinutes);
+      } else if (currentUsage.inMinutes >= overallLimit.inMinutes * 0.9) {
+        showPopupAlert("Approaching Screen Time Limit", "You're about to reach your daily screen time limit of ${overallLimit.inMinutes} minutes");
+      }
+    }
   }
 }

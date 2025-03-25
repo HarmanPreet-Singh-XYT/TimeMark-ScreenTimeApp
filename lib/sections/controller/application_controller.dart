@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:screentime/foreground_window_plugin.dart';
+import 'package:screentime/sections/controller/notification_controller.dart';
 import 'app_data_controller.dart';
 import 'categories_controller.dart';
 
@@ -8,7 +9,7 @@ class BackgroundAppTracker {
   static final BackgroundAppTracker _instance = BackgroundAppTracker._internal();
   factory BackgroundAppTracker() => _instance;
   BackgroundAppTracker._internal();
-
+  final NotificationController _notificationController = NotificationController();
   // Platform channel for native app tracking
   
   // Timer for periodic tracking
@@ -127,6 +128,7 @@ class BackgroundAppTracker {
           )]
         );
       }
+      _notificationController.checkAndSendNotifications();
       // Notify listeners about the update
       _appUpdateController.add(appTitle);
     } catch (e) {
