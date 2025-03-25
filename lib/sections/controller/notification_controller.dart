@@ -39,7 +39,7 @@ class NotificationController with ChangeNotifier {
   Future<void> initialize() async {
     // Initialize local_notifier
     await localNotifier.setup(
-      appName: 'Productive ScreenTime',
+      appName: 'TimeMark',
       shortcutPolicy: ShortcutPolicy.requireCreate,
     );
     

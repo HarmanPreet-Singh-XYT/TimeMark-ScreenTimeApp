@@ -44,7 +44,7 @@ void main(List<String> args) async {
   runApp(MyApp(initialTheme: initialTheme));
   doWhenWindowReady(() {
     final win = appWindow;
-    const String appName = 'Productive ScreenTime';
+    const String appName = 'TimeMark';
     if(wasSystemLaunched){
       win.hide();
       const initialSize = Size(1280, 800);
@@ -96,7 +96,7 @@ class _MyAppState extends State<MyApp> with TrayListener {
         ? 'assets/icons/tray_icon.ico'
         : 'assets/icons/tray_icon.png',
     );
-    await trayManager.setToolTip("Productive ScreenTime");
+    await trayManager.setToolTip("TimeMark");
     await _updateTrayMenu();
   }
 
