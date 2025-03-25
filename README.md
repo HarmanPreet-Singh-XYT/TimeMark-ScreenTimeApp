@@ -110,7 +110,7 @@ Distributed under the GNU LESSER GENERAL PUBLIC License. See `LICENSE` for more 
 ## 📞 Contact
 
 - Project Link: [https://github.com/HarmanPreet-Singh-XYT/ProductiveScreenTime](https://github.com/HarmanPreet-Singh-XYT/ProductiveScreenTime)
-- Support: [harmanpreetsingh@programmer.net]
+- Support: harmanpreetsingh@programmer.net
 - Site Display: [https://harman.vercel.app/details/screentime](https://harman.vercel.app/details/screentime)
 - Discord: @harmanpreet_singh
 
