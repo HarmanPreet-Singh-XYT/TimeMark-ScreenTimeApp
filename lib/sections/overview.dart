@@ -329,8 +329,11 @@ class TopApplications extends StatelessWidget {
           Expanded(
             child: SingleChildScrollView(
               child: Column(
-                children: data
-                    .where((app) => app['name'] != null && app['name'].toString().trim().isNotEmpty)
+                children: (data
+                        .where((app) => app['name'] != null && app['name'].toString().trim().isNotEmpty)
+                        .toList() // Convert to list before sorting
+                      ..sort((a, b) => (b['percentageOfTotalTime'] ?? 0).compareTo(a['percentageOfTotalTime'] ?? 0))) // Sort in descending order
+                    .take(10) // Take the top 10
                     .map((app) => Column(
                           children: [
                             Application(
@@ -347,6 +350,7 @@ class TopApplications extends StatelessWidget {
               ),
             ),
           ),
+
       ],
     );
   }

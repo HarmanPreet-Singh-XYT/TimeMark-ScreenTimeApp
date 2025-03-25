@@ -114,6 +114,10 @@ class ScreenTimeDataController extends ChangeNotifier {
   Duration getOverallLimit() {
     return _overallLimit;
   }
+  Duration getOverallUsage(){
+    Duration totalScreenTime = _calculateTotalScreenTime();
+    return totalScreenTime;
+  }
   
   // Get overall limit status
   bool isOverallLimitEnabled() {

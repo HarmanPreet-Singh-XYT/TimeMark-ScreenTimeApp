@@ -160,6 +160,7 @@ class _SettingsContentState extends State<SettingsContent> {
   final String urlContact = 'https://harman.vercel.app/details/screentime';
   final String urlReport = 'https://harman.vercel.app/details/screentime';
   final String urlFeedback = 'https://harman.vercel.app/details/screentime';
+  final String github = 'https://github.com/HarmanPreet-Singh-XYT/ProductiveScreenTime';
   
   @override
   Widget build(BuildContext context) {
@@ -221,6 +222,14 @@ class _SettingsContentState extends State<SettingsContent> {
                   ),
                   onPressed: () => setState(() {
                     _launched = _launchInBrowser(urlFeedback);
+                  }),
+                ),
+                const SizedBox(width: 25),
+                Button(
+                  style: ButtonStyle(padding: WidgetStateProperty.all(const EdgeInsets.symmetric(vertical: 8, horizontal: 12))),
+                  child:const Text('Submit Feedback', style: TextStyle(fontWeight: FontWeight.w600)),
+                  onPressed: () => setState(() {
+                    _launched = _launchInBrowser(github);
                   }),
                 ),
               ],

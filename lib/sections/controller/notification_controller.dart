@@ -419,17 +419,29 @@ class NotificationController with ChangeNotifier {
     // No reminder scheduling for Pomodoro notifications
   }
   // screenTime
+  // Keep track of sent notifications to avoid spamming
+  final Set<String> _notifiedApproachingApps = {};
+  final Set<String> _notifiedExceededApps = {};
+  bool _notifiedOverallApproaching = false;
+  bool _notifiedOverallExceeded = false;
+
   void checkAndSendNotifications() {
-    // Get all apps usage summary
     List<AppUsageSummary> appSummaries = _screenTimeController.getAllAppsSummary();
 
-    // Check app-specific limits
     for (final app in appSummaries) {
       if (app.limitStatus) {
         if (app.currentUsage >= app.dailyLimit) {
-          sendAppLimitNotification(app.appName, app.dailyLimit.inMinutes);
+          // Only send if we haven't already sent an "exceeded" notification
+          if (!_notifiedExceededApps.contains(app.appName)) {
+            sendAppLimitNotification(app.appName, app.dailyLimit.inMinutes);
+            _notifiedExceededApps.add(app.appName);  // Mark as notified
+          }
         } else if (app.percentageOfLimitUsed >= 0.9) {
-          showPopupAlert("Approaching App Limit", "You're about to reach your daily limit for ${app.appName}");
+          // Send warning only once per day per app
+          if (!_notifiedApproachingApps.contains(app.appName)) {
+            showPopupAlert("Approaching App Limit", "You're about to reach your daily limit for ${app.appName}");
+            _notifiedApproachingApps.add(app.appName);
+          }
         }
       }
     }
@@ -437,13 +449,27 @@ class NotificationController with ChangeNotifier {
     // Check overall screen time limits
     if (_screenTimeController.isOverallLimitEnabled()) {
       Duration overallLimit = _screenTimeController.getOverallLimit();
-      Duration currentUsage = _screenTimeController.getOverallLimit();
+      Duration currentUsage = _screenTimeController.getOverallUsage();
 
       if (currentUsage >= overallLimit) {
-        sendScreenTimeNotification(overallLimit.inMinutes);
+        if (!_notifiedOverallExceeded) {
+          sendScreenTimeNotification(overallLimit.inMinutes);
+          _notifiedOverallExceeded = true;
+        }
       } else if (currentUsage.inMinutes >= overallLimit.inMinutes * 0.9) {
-        showPopupAlert("Approaching Screen Time Limit", "You're about to reach your daily screen time limit of ${overallLimit.inMinutes} minutes");
+        if (!_notifiedOverallApproaching) {
+          showPopupAlert("Approaching Screen Time Limit", "You're about to reach your daily screen time limit of ${overallLimit.inMinutes} minutes");
+          _notifiedOverallApproaching = true;
+        }
       }
     }
+  }
+
+  // Reset notifications at midnight or when needed
+  void resetNotifications() {
+    _notifiedApproachingApps.clear();
+    _notifiedExceededApps.clear();
+    _notifiedOverallApproaching = false;
+    _notifiedOverallExceeded = false;
   }
 }
