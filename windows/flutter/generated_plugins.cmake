@@ -7,7 +7,6 @@ list(APPEND FLUTTER_PLUGIN_LIST
   local_notifier
   tray_manager
   url_launcher_windows
-  windows_notification
 )
 
 list(APPEND FLUTTER_FFI_PLUGIN_LIST

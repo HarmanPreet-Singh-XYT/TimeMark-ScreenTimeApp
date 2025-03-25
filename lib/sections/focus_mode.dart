@@ -707,16 +707,16 @@ class _MeterState extends State<Meter> {
                   content: const Text("Auto-start next session"),
                 ),
                 const SizedBox(height: 10,),
-                Checkbox(
-                  checked: dialogBlockDistractions,
-                  onChanged: (value) => setDialogState(() => dialogBlockDistractions = value!),
-                  content: const Text("Block distractions during focus mode"),
-                ),
-                const SizedBox(height: 10,),
+                // Checkbox(
+                //   checked: dialogBlockDistractions,
+                //   onChanged: (value) => setDialogState(() => dialogBlockDistractions = value!),
+                //   content: const Text("Block distractions during focus mode"),
+                // ),
+                // const SizedBox(height: 10,),
                 Checkbox(
                   checked: dialogEnableSounds,
                   onChanged: (value) => setDialogState(() => dialogEnableSounds = value!),
-                  content: const Text("Enable sounds & notifications"),
+                  content: const Text("Enable notifications"),
                 ),
               ],
             ),
