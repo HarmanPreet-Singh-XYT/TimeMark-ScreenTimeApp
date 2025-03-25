@@ -893,23 +893,23 @@ class Header extends StatelessWidget {
                 "Today's Overview",
                 style: FluentTheme.of(context).typography.subtitle,
               ),
-              const SizedBox(height: 10),
-              Button(
-                style: ButtonStyle(
-                  padding: WidgetStateProperty.all(
-                    const EdgeInsets.symmetric(vertical: 8, horizontal: 12)
-                  )
-                ),
-                child: const Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Icon(FluentIcons.red_eye, size: 20),
-                    SizedBox(width: 10),
-                    Text('Start Focus Mode', style: TextStyle(fontWeight: FontWeight.w600)),
-                  ],
-                ),
-                onPressed: () => debugPrint('pressed focus mode button'),
-              ),
+              // const SizedBox(height: 10),
+              // Button(
+              //   style: ButtonStyle(
+              //     padding: WidgetStateProperty.all(
+              //       const EdgeInsets.symmetric(vertical: 8, horizontal: 12)
+              //     )
+              //   ),
+              //   child: const Row(
+              //     mainAxisSize: MainAxisSize.min,
+              //     children: [
+              //       Icon(FluentIcons.red_eye, size: 20),
+              //       SizedBox(width: 10),
+              //       Text('Start Focus Mode', style: TextStyle(fontWeight: FontWeight.w600)),
+              //     ],
+              //   ),
+              //   onPressed: () => debugPrint('pressed focus mode button'),
+              // ),
             ],
           );
         }
@@ -939,22 +939,22 @@ class Header extends StatelessWidget {
                   ),
                   onPressed: () => refresh(),
                 ),
-                const SizedBox(width: 20),
-                Button(
-                  style: ButtonStyle(
-                    padding: WidgetStateProperty.all(
-                      const EdgeInsets.symmetric(vertical: 8, horizontal: 12)
-                    )
-                  ),
-                  child: const Row(
-                    children: [
-                      Icon(FluentIcons.red_eye, size: 20),
-                      SizedBox(width: 10),
-                      Text('Start Focus Mode', style: TextStyle(fontWeight: FontWeight.w600)),
-                    ],
-                  ),
-                  onPressed: () => debugPrint('pressed focus mode button'),
-                ),
+                // const SizedBox(width: 20),
+                // Button(
+                //   style: ButtonStyle(
+                //     padding: WidgetStateProperty.all(
+                //       const EdgeInsets.symmetric(vertical: 8, horizontal: 12)
+                //     )
+                //   ),
+                //   child: const Row(
+                //     children: [
+                //       Icon(FluentIcons.red_eye, size: 20),
+                //       SizedBox(width: 10),
+                //       Text('Start Focus Mode', style: TextStyle(fontWeight: FontWeight.w600)),
+                //     ],
+                //   ),
+                //   onPressed: () => debugPrint('pressed focus mode button'),
+                // ),
 
               ],
             )
