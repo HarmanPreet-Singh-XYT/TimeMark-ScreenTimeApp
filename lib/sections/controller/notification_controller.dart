@@ -1,7 +1,7 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:local_notifier/local_notifier.dart';
-import 'package:ProductiveScreenTime/sections/controller/settings_data_controller.dart';
+import 'package:productive_screentime/sections/controller/settings_data_controller.dart';
 
 import 'data_controllers/alerts_limits_data_controller.dart';
 
@@ -27,10 +27,10 @@ class NotificationController with ChangeNotifier {
   // Settings
   bool _soundEnabled = true;
   int _reminderFrequency = 60; // seconds between reminders if not acknowledged
-  static const int AUTO_DISMISS_SECONDS = 5;
+  static const int autoDismissSeconds = 5;
   
   // Pending alerts tracking
-  Map<int, DateTime> _pendingAlerts = {}; // alertId -> time it was created
+  final Map<int, DateTime> _pendingAlerts = {}; // alertId -> time it was created
   
   // Callback for showing custom alerts
   Function(String title, String message, {Function? onClose, Function? onRemind})? _showAlertCallback;
@@ -208,7 +208,7 @@ class NotificationController with ChangeNotifier {
       );
       
       // Auto-dismiss timer
-      Timer(Duration(seconds: AUTO_DISMISS_SECONDS), () {
+      Timer(const Duration(seconds: autoDismissSeconds), () {
         if (_pendingAlerts.containsKey(id)) {
           _handleNotificationAction(id, 'close', type, extraData);
         }
@@ -240,7 +240,7 @@ class NotificationController with ChangeNotifier {
       );
       
       // Auto-dismiss timer for popup alerts
-      Timer(Duration(seconds: AUTO_DISMISS_SECONDS), () {
+      Timer(const Duration(seconds: autoDismissSeconds), () {
         if (_pendingAlerts.containsKey(id)) {
           _handleNotificationAction(id, 'close', type, extraData);
         }
@@ -379,7 +379,7 @@ class NotificationController with ChangeNotifier {
       );
       
       // Auto-dismiss timer
-      Timer(Duration(seconds: AUTO_DISMISS_SECONDS), () {
+      Timer(const Duration(seconds: autoDismissSeconds), () {
         if (_pendingAlerts.containsKey(id)) {
           _handleNotificationAction(id, 'close', 'focus');
         }
@@ -409,7 +409,7 @@ class NotificationController with ChangeNotifier {
       );
       
       // Auto-dismiss timer for popup alerts
-      Timer(Duration(seconds: AUTO_DISMISS_SECONDS), () {
+      Timer(const Duration(seconds: autoDismissSeconds), () {
         if (_pendingAlerts.containsKey(id)) {
           _handleNotificationAction(id, 'close', 'focus');
         }

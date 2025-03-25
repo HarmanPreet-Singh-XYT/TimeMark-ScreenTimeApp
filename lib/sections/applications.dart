@@ -1,5 +1,5 @@
 import 'package:fluent_ui/fluent_ui.dart';
-import 'package:ProductiveScreenTime/sections/controller/app_data_controller.dart';
+import 'package:productive_screentime/sections/controller/app_data_controller.dart';
 import 'controller/settings_data_controller.dart';
 import './controller/data_controllers/applications_data_controller.dart';
 import './controller/categories_controller.dart';
@@ -305,18 +305,6 @@ class Application extends StatelessWidget {
     required this.refreshData,
   });
 
-  String _formatDuration(Duration duration) {
-    if (duration == Duration.zero) return "None";
-    
-    final hours = duration.inHours;
-    final minutes = duration.inMinutes.remainder(60);
-    
-    if (hours > 0) {
-      return "${hours}h ${minutes}m";
-    } else {
-      return "${minutes}m";
-    }
-  }
 
   void _showEditDialog(BuildContext context) {
     String selectedCategory = category;
@@ -365,7 +353,7 @@ class Application extends StatelessWidget {
                                           value: category.name,
                                           child: Text(category.name),
                                         ))
-                                    .toList(),
+                                    ,
                                 const ComboBoxItem<String>(
                                   value: 'Custom',
                                   child: Text('Custom'),
@@ -656,7 +644,7 @@ class Application extends StatelessWidget {
           const SizedBox(height: 4),
           Container(
             decoration: BoxDecoration(
-              border: Border.all(color: const Color(0xFF0078D7).withOpacity(0.3)),
+              border: Border.all(color: const Color(0xFF0078D7).withValues(alpha: .3)),
               borderRadius: BorderRadius.circular(4),
             ),
             child: NumberBox(

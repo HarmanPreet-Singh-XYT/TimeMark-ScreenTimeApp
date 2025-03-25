@@ -1,6 +1,6 @@
 import 'dart:io';
 import 'package:fluent_ui/fluent_ui.dart';
-import 'package:ProductiveScreenTime/sections/controller/notification_controller.dart';
+import 'package:productive_screentime/sections/controller/notification_controller.dart';
 import './sections/overview.dart';
 import './sections/applications.dart';
 import './sections/alerts_limits.dart';

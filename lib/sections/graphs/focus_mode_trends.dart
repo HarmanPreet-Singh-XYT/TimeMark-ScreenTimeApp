@@ -51,7 +51,7 @@ class _FocusModeTrendsState extends State<FocusModeTrends> {
   }
 
   Widget bottomTitleWidgets(double value, TitleMeta meta, double chartWidth) {
-    final style = TextStyle(
+    const style = TextStyle(
       fontWeight: FontWeight.bold,
       color: AppColors.contentColorPink,
       fontFamily: 'Digital',
@@ -86,9 +86,9 @@ class _FocusModeTrendsState extends State<FocusModeTrends> {
           show: true,
           gradient: LinearGradient(
             colors: [
-              widget.gradientColor1.withOpacity(0.4),
-              widget.gradientColor2.withOpacity(0.4),
-              widget.gradientColor3.withOpacity(0.4),
+              widget.gradientColor1.withValues(alpha: .4),
+              widget.gradientColor2.withValues(alpha: .4),
+              widget.gradientColor3.withValues(alpha: .4),
             ],
           ),
         ),
@@ -290,7 +290,7 @@ class _FocusModeTrendsState extends State<FocusModeTrends> {
                         reservedSize: 0,
                       ),
                     ),
-                    topTitles: AxisTitles(
+                    topTitles: const AxisTitles(
                       axisNameWidget: Text(
                         'Focus Trends',
                         textAlign: TextAlign.left,

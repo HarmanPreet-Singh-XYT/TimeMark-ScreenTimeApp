@@ -1,6 +1,7 @@
 import 'dart:async';
-import 'package:ProductiveScreenTime/foreground_window_plugin.dart';
-import 'package:ProductiveScreenTime/sections/controller/notification_controller.dart';
+import 'package:productive_screentime/foreground_window_plugin.dart';
+import 'package:productive_screentime/sections/controller/notification_controller.dart';
+import 'package:fluent_ui/fluent_ui.dart';
 import 'app_data_controller.dart';
 import 'categories_controller.dart';
 
@@ -25,7 +26,7 @@ class BackgroundAppTracker {
       // Start periodic tracking
       _startPeriodicTracking();
     } catch (e) {
-      print('Tracking initialization error: $e');
+      debugPrint('Tracking initialization error: $e');
     }
   }
 
@@ -132,7 +133,7 @@ class BackgroundAppTracker {
       // Notify listeners about the update
       _appUpdateController.add(appTitle);
     } catch (e) {
-      print('Tracking error: $e');
+      debugPrint('Tracking error: $e');
     }
   }
   // close the controller when done
@@ -149,12 +150,12 @@ class BackgroundAppTracker {
       // print(info);
       
       return {
-        'title': info.windowTitle ?? 'Unknown',
+        'title': info.windowTitle,
         // 'processName': info.processName ?? 'Unknown',
         // 'processID': info.processId ?? 'Unknown',
       };
     } catch (e) {
-      print('Error getting current app: $e');
+      debugPrint('Error getting current app: $e');
       return null;
     }
   }

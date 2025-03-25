@@ -3,10 +3,10 @@ import 'dart:math';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:intl/intl.dart';
-import 'package:ProductiveScreenTime/sections/graphs/reports_line_chart.dart';
-import 'package:ProductiveScreenTime/sections/graphs/reports_pie_chart.dart';
+import 'package:productive_screentime/sections/graphs/reports_line_chart.dart';
+import 'package:productive_screentime/sections/graphs/reports_pie_chart.dart';
 import './controller/data_controllers/reports_controller.dart';
-import './controller/data_controllers/alerts_limits_data_controller.dart' as appSummaryData;
+import './controller/data_controllers/alerts_limits_data_controller.dart' as app_summary_data;
 import './controller/data_controllers/applications_data_controller.dart';
 class Reports extends StatefulWidget {
   const Reports({super.key});
@@ -266,7 +266,7 @@ Widget _buildCustomErrorDisplay() {
   }
 
   Widget _buildCategoryBreakdownChart(AnalyticsSummary summary) {
-    final dataMap = summary.categoryBreakdown ?? {};
+    final dataMap = summary.categoryBreakdown;
 
     if (dataMap.isEmpty) {
       return const CardContainer(
@@ -707,10 +707,10 @@ class _ApplicationUsageState extends State<ApplicationUsage> {
 
   void _showAppDetails(BuildContext context, AppUsageSummary app) async {
     // Get the controller instance
-  final appSummaryData.ScreenTimeDataController controller = appSummaryData.ScreenTimeDataController();
+  final app_summary_data.ScreenTimeDataController controller = app_summary_data.ScreenTimeDataController();
   
   // Fetch the app summary using the controller
-  final appSummaryData.AppUsageSummary? appSummary = controller.getAppSummary(app.appName);
+  final app_summary_data.AppUsageSummary? appSummary = controller.getAppSummary(app.appName);
   
   // If app summary is null, return
   if (appSummary == null) {
@@ -761,7 +761,6 @@ class _ApplicationUsageState extends State<ApplicationUsage> {
     ));
   }
   // Calculate statistics
-  final double avgDailyUsage = appDetails.usageInsights.averageDailyUsage.inMinutes.toDouble();
   
   // final double maxUsage = sortedDates.isEmpty 
   //     ? 0 
@@ -770,7 +769,7 @@ class _ApplicationUsageState extends State<ApplicationUsage> {
   
   // Generate time of day usage data from hourly breakdown
   final Map<String, double> timeOfDayUsage = _generateTimeOfDayData(appDetails.hourlyBreakdown);
-  
+  if (!context.mounted) return; // Ensure the context is still valid
   showDialog(
     context: context,
     builder: (context) => ContentDialog(
@@ -954,10 +953,10 @@ class _ApplicationUsageState extends State<ApplicationUsage> {
                                     },
                                   ),
                                 ),
-                                topTitles: AxisTitles(
+                                topTitles: const AxisTitles(
                                   sideTitles: SideTitles(showTitles: false),
                                 ),
-                                rightTitles: AxisTitles(
+                                rightTitles: const AxisTitles(
                                   sideTitles: SideTitles(showTitles: false),
                                 ),
                               ),
@@ -1008,7 +1007,7 @@ class _ApplicationUsageState extends State<ApplicationUsage> {
                                     color: Colors.red.withAlpha(179),
                                     barWidth: 2,
                                     isStrokeCapRound: true,
-                                    dotData: FlDotData(show: false),
+                                    dotData: const FlDotData(show: false),
                                     dashArray: [5, 5],
                                   ),
                               ],
@@ -1242,7 +1241,7 @@ class _ApplicationUsageState extends State<ApplicationUsage> {
       actions: [
         FilledButton(
           style: ButtonStyle(
-            padding: ButtonState.all(const EdgeInsets.symmetric(horizontal: 20, vertical: 12)),
+            padding: WidgetStateProperty.all(const EdgeInsets.only(top: 12, bottom: 12, left: 20, right: 20)),
           ),
           onPressed: () => Navigator.pop(context),
           child: const Text(
@@ -1297,9 +1296,9 @@ class _ApplicationUsageState extends State<ApplicationUsage> {
       });
     } else {
       // Equal distribution if no data
-      timeOfDayDurations.keys.forEach((timeOfDay) {
+      for (var timeOfDay in timeOfDayDurations.keys) {
         percentages[timeOfDay] = 25.0;
-      });
+      }
     }
     
     return percentages;

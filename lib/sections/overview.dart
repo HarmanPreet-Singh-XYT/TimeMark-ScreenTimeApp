@@ -98,7 +98,7 @@ class _OverviewState extends State<Overview> {
           int.parse(focusSessions) > 0;
       });
     } catch (e) {
-      print('Error loading overview data: $e');
+      debugPrint('Error loading overview data: $e');
       setState(() {
         _isLoading = false;
         _hasError = true;
@@ -137,8 +137,8 @@ class _OverviewState extends State<Overview> {
             Text(_errorMessage),
             const SizedBox(height: 16),
             Button(
-              child: const Text('Try Again'),
               onPressed: refreshData,
+              child: const Text('Try Again'),
             ),
           ],
         ),
@@ -166,8 +166,8 @@ class _OverviewState extends State<Overview> {
               ),
               const SizedBox(height: 16),
               Button(
-                child: const Text('Refresh Data'),
                 onPressed: refreshData,
+                child: const Text('Refresh Data'),
               ),
             ],
           ),

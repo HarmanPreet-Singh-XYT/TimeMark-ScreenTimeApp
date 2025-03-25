@@ -183,7 +183,7 @@ class FAQItem extends StatelessWidget {
   final String question;
   final String answer;
 
-  const FAQItem({Key? key, required this.question, required this.answer}) : super(key: key);
+  const FAQItem({super.key, required this.question, required this.answer});
 
   @override
   Widget build(BuildContext context) {

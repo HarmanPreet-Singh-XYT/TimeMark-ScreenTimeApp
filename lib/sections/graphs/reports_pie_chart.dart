@@ -12,14 +12,14 @@ class ReportsPieChart extends StatelessWidget {
   final Widget? centerWidget;
 
   const ReportsPieChart({
-    Key? key,
+    super.key,
     required this.dataMap,
     required this.colorList,
     this.chartType = ChartType.ring,
     this.ringStrokeWidth = 32,
     this.showCenterText = true,
     this.centerWidget,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

@@ -140,7 +140,7 @@ class AppCategories {
 class AppCategoryWidget extends StatelessWidget {
   final String appName;
 
-  const AppCategoryWidget({Key? key, required this.appName}) : super(key: key);
+  const AppCategoryWidget({super.key, required this.appName});
 
   @override
   Widget build(BuildContext context) {

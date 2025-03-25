@@ -1,4 +1,4 @@
-name: ProductiveScreenTime
+name: productive_screentime
 description: "Screen Time Tracking and Management Application"
 publish_to: 'none'
 version: 1.0.0
@@ -41,6 +41,7 @@ dependencies:
   local_notifier: ^0.1.6
   win32_registry: ^2.1.0
   msix: ^3.16.8
+  url_launcher_platform_interface: ^2.3.2
 
   # Native Code Interaction for Foreground Window
   # You'll need to implement a custom plugin or package

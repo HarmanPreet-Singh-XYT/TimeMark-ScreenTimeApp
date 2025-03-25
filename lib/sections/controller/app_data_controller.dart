@@ -764,6 +764,7 @@ class AppDataStore extends ChangeNotifier {
     }
   }
   // Close boxes when app terminates
+  @override
   Future<void> dispose() async {
     try {
       if (_usageBox != null && _usageBox!.isOpen) await _usageBox!.close();

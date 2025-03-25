@@ -1,10 +1,10 @@
 import 'dart:async';
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:percent_indicator/percent_indicator.dart';
-import 'package:ProductiveScreenTime/sections/controller/data_controllers/focusMode_data_controller.dart';
-import 'package:ProductiveScreenTime/sections/graphs/focus_mode_history.dart';
-import 'package:ProductiveScreenTime/sections/graphs/focus_mode_pie_chart.dart';
-import 'package:ProductiveScreenTime/sections/graphs/focus_mode_trends.dart';
+import 'package:productive_screentime/sections/controller/data_controllers/focus_mode_data_controller.dart';
+import 'package:productive_screentime/sections/graphs/focus_mode_history.dart';
+import 'package:productive_screentime/sections/graphs/focus_mode_pie_chart.dart';
+import 'package:productive_screentime/sections/graphs/focus_mode_trends.dart';
 import 'controller/settings_data_controller.dart';
 import './controller/focus_mode_controller.dart';
 import 'package:intl/intl.dart';
@@ -332,7 +332,6 @@ class _MeterState extends State<Meter> {
     
     // Calculate percentage based on timer state
     double totalSeconds;
-    int elapsedSeconds;
     
     switch (_timerService.currentState) {
       case TimerState.work:
@@ -350,7 +349,6 @@ class _MeterState extends State<Meter> {
         break;
     }
     
-    elapsedSeconds = totalSeconds.toInt() - _timerService.secondsRemaining;
     
     // Update state variables for UI
     _displayTime = "${minutes.toString().padLeft(2, '0')}:${seconds.toString().padLeft(2, '0')}";
@@ -477,7 +475,7 @@ class _MeterState extends State<Meter> {
           center:Text(
             _displayTime,
             style:
-                TextStyle(fontWeight: FontWeight.bold, fontSize: 48.0),
+                const TextStyle(fontWeight: FontWeight.bold, fontSize: 48.0),
           ),
           circularStrokeCap: CircularStrokeCap.round,
           // progressColor:const Color(0xffFF5C50),
@@ -523,7 +521,7 @@ class _MeterState extends State<Meter> {
                     color: Colors.white,
                     borderRadius: BorderRadius.circular(100)
                   ),
-                  child: Icon(_isRunning ? FluentIcons.pause : FluentIcons.play_solid, size: 24,color: Color(0xffFF5C50),)
+                  child: Icon(_isRunning ? FluentIcons.pause : FluentIcons.play_solid, size: 24,color: const Color(0xffFF5C50),)
                 ),
               ),
             ),
@@ -553,34 +551,8 @@ class _MeterState extends State<Meter> {
   }
 
   // Function to handle mode selection changes
-  void _updateModeSettings(String mode) {
-    setState(() {
-      selectedMode = mode;
-      if (mode == "Deep Work (60 min)") {
-        workDuration = 60;
-        shortBreak = 10;
-      } else if (mode == "Quick Tasks (25 min)") {
-        workDuration = 25;
-        shortBreak = 5;
-      } else if (mode == "Reading (45 min)") {
-        workDuration = 45;
-        shortBreak = 10;
-      }
-    });
-  }
 
   // Function to reset all settings
-  void _resetSettings() {
-    setState(() {
-      workDuration = 25;
-      shortBreak = 5;
-      longBreak = 15;
-      autoStart = false;
-      blockDistractions = false;
-      enableSounds = true;
-      selectedMode = "Custom";
-    });
-  }
 
   // Save settings and apply them to the main widget state
   void _saveSettings(double newWorkDuration, double newShortBreak, double newLongBreak, 
@@ -630,7 +602,7 @@ class _MeterState extends State<Meter> {
     bool dialogEnableSounds = enableSounds;
     String dialogSelectedMode = selectedMode;
 
-    final result = await showDialog<String>(
+    await showDialog<String>(
       context: context,
       builder: (context) => StatefulBuilder(
         builder: (context, setDialogState) {

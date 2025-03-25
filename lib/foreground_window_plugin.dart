@@ -590,25 +590,26 @@ class ForegroundWindowPlugin {
   
   static List<String> _getCommandLineArgs() {
     final List<String> args = [];
-    
+
     final cmdLine = _getCommandLineW();
     final argcPtr = calloc<Int32>();
-    
+
     final argv = _commandLineToArgvW(cmdLine, argcPtr);
     if (argv != nullptr) {
       final argc = argcPtr.value;
-      
+
       for (int i = 0; i < argc; i++) {
-        final arg = argv.elementAt(i).value;
-        args.add(arg.toDartString());
+        final Pointer<Utf16> argPtr = argv[i]; // Use indexing instead of elementAt(i).value
+        args.add(argPtr.toDartString()); // Convert Utf16 pointer to Dart string
       }
-      
+
       _localFree(argv.cast());
     }
-    
+
     calloc.free(argcPtr);
     return args;
   }
+
 
   static Future<AppLaunchInfo> getAppLaunchInfo() async {
     return await compute(_getAppLaunchInfoNative, null);

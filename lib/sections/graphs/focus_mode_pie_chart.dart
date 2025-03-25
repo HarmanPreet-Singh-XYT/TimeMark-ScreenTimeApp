@@ -12,14 +12,14 @@ class FocusModePieChart extends StatelessWidget {
   final Widget? centerWidget;
 
   const FocusModePieChart({
-    Key? key,
+    super.key,
     required this.dataMap,
     required this.colorList,
     this.chartType = ChartType.disc,
     this.ringStrokeWidth = 32,
     this.showCenterText = true,
     this.centerWidget,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

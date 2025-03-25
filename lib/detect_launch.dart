@@ -1,3 +1,5 @@
+import 'package:fluent_ui/fluent_ui.dart';
+
 import 'foreground_window_plugin.dart';
 
 class LaunchDetectionController {
@@ -26,10 +28,10 @@ class LaunchDetectionController {
       // Take different actions based on launch type
       if (wasSystemLaunched) {
         // App was launched by system, perhaps minimize to tray or show different UI
-        print("System launched - perhaps show minimal UI");
+        debugPrint("System launched - perhaps show minimal UI");
       } else {
         // App was launched by user, show full UI
-        print("User launched - showing full UI");
+        debugPrint("User launched - showing full UI");
       }
       
     } catch (e) {

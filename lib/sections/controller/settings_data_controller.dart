@@ -196,7 +196,7 @@ class SettingsManager {
     _saveSettings(); // Save updated settings
     
     // Debug print for notification controller settings
-    if (keys.length > 0 && keys[0] == "notificationController") {
+    if (keys.isNotEmpty && keys[0] == "notificationController") {
       debugPrint("🔔 Updated notification setting: $key = $value");
     }
   }

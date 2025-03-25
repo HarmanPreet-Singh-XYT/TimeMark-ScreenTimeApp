@@ -1,6 +1,6 @@
 import 'package:fluent_ui/fluent_ui.dart';
-import 'package:ProductiveScreenTime/sections/controller/data_controllers/alerts_limits_data_controller.dart';
-import 'package:ProductiveScreenTime/sections/controller/settings_data_controller.dart';
+import 'package:productive_screentime/sections/controller/data_controllers/alerts_limits_data_controller.dart';
+import 'package:productive_screentime/sections/controller/settings_data_controller.dart';
 
 class AlertsLimits extends StatefulWidget {
   final ScreenTimeDataController? controller;

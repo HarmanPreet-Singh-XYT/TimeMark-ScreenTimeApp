@@ -12,14 +12,14 @@ class AnalyticsProxyWidget extends StatelessWidget {
   final VoidCallback onRetry; // Function to retry loading data
 
   const AnalyticsProxyWidget({
-    Key? key,
+    super.key,
     required this.onRefresh,
     required this.header,
     required this.isLoading,
     this.error,
     required this.analyticsContent,
     required this.onRetry,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

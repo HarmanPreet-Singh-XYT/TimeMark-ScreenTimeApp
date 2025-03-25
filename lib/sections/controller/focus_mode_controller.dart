@@ -1,5 +1,5 @@
 import 'dart:async';
-import './data_controllers/focusMode_data_controller.dart';
+import 'data_controllers/focus_mode_data_controller.dart';
 import './notification_controller.dart'; // Import the notification controller
 
 enum TimerState { work, shortBreak, longBreak, idle }
@@ -317,7 +317,7 @@ class PomodoroTimerService {
   
   // Skip to the next phase
   void skipToNext() {
-    String skippedSessionType = _getSessionTypeName();
+    // String skippedSessionType = _getSessionTypeName();
     
     switch (_currentState) {
       case TimerState.work:

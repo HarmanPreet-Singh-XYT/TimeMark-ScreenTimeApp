@@ -5,8 +5,8 @@ import '../app_data_controller.dart'; // Import the AppDataStore class
 // Extension for formatting Duration objects
 extension DurationFormatter on Duration {
   String toHourMinuteFormat() {
-    final int hours = this.inHours;
-    final int minutes = this.inMinutes % 60;
+    final int hours = inHours;
+    final int minutes = inMinutes % 60;
     
     if (hours > 0) {
       if (minutes > 0) {
@@ -17,7 +17,7 @@ extension DurationFormatter on Duration {
     } else if (minutes > 0) {
       return "${minutes}m";
     } else {
-      final int seconds = this.inSeconds % 60;
+      final int seconds = inSeconds % 60;
       return "${seconds}s";
     }
   }
@@ -292,12 +292,12 @@ class ApplicationsDataProvider {
         );
       case TimeRange.week:
         return DateRange(
-          startDate: today.subtract(Duration(days: 6)),
+          startDate: today.subtract(const Duration(days: 6)),
           endDate: today,
         );
       case TimeRange.month:
         return DateRange(
-          startDate: today.subtract(Duration(days: 29)),
+          startDate: today.subtract(const Duration(days: 29)),
           endDate: today,
         );
     }
@@ -317,7 +317,7 @@ class ApplicationsDataProvider {
     
     dailyUsage[dateKey] = record?.timeSpent ?? Duration.zero;
     
-    currentDate = currentDate.add(Duration(days: 1));
+    currentDate = currentDate.add(const Duration(days: 1));
   }
   
   // Calculate weekly usage with more robust aggregation
@@ -330,7 +330,7 @@ class ApplicationsDataProvider {
       
       // Calculate the start and end of each week
       DateTime weekStart = dateRange.startDate.add(Duration(days: weekIndex * 7));
-      DateTime weekEnd = weekStart.add(Duration(days: 6));
+      DateTime weekEnd = weekStart.add(const Duration(days: 6));
       
       // Ensure week end doesn't exceed the overall date range
       if (weekEnd.isAfter(dateRange.endDate)) {
@@ -343,7 +343,7 @@ class ApplicationsDataProvider {
         final AppUsageRecord? record = _dataStore.getAppUsage(appName, currentWeekDate);
         weekTotal += record?.timeSpent ?? Duration.zero;
         
-        currentWeekDate = currentWeekDate.add(Duration(days: 1));
+        currentWeekDate = currentWeekDate.add(const Duration(days: 1));
       }
       
       // Only add if there's some usage
@@ -364,7 +364,7 @@ class ApplicationsDataProvider {
       
       monthMap[monthKey] = (monthMap[monthKey] ?? Duration.zero) + (record?.timeSpent ?? Duration.zero);
       
-      currentDate = currentDate.add(Duration(days: 1));
+      currentDate = currentDate.add(const Duration(days: 1));
     }
     
     monthlyUsage.addAll(monthMap);
@@ -412,7 +412,7 @@ class ApplicationsDataProvider {
                 period.startTime.day, 
                 hour
               );
-              DateTime hourEnd = hourStart.add(Duration(hours: 1));
+              DateTime hourEnd = hourStart.add(const Duration(hours: 1));
               
               // Calculate duration in this specific hour
               DateTime effectiveStart = hour == startHour 
@@ -429,7 +429,7 @@ class ApplicationsDataProvider {
         }
       }
       
-      currentDate = currentDate.add(Duration(days: 1));
+      currentDate = currentDate.add(const Duration(days: 1));
     }
     
     return hourlyUsage;
@@ -452,7 +452,7 @@ class ApplicationsDataProvider {
         while (currentDate.isBefore(dateRange.endDate) || currentDate.isAtSameMomentAs(dateRange.endDate)) {
           final AppUsageRecord? record = _dataStore.getAppUsage(name, currentDate);
           totalUsage += record?.timeSpent ?? Duration.zero;
-          currentDate = currentDate.add(Duration(days: 1));
+          currentDate = currentDate.add(const Duration(days: 1));
         }
         
         if (totalUsage > Duration.zero) {
@@ -496,7 +496,7 @@ class ApplicationsDataProvider {
         }
       }
       
-      currentDate = currentDate.add(Duration(days: 1));
+      currentDate = currentDate.add(const Duration(days: 1));
     }
     
     // Calculate average daily usage
@@ -512,7 +512,7 @@ class ApplicationsDataProvider {
         daysWithUsage++;
       }
       
-      currentDate = currentDate.add(Duration(days: 1));
+      currentDate = currentDate.add(const Duration(days: 1));
     }
     
     final Duration averageDailyUsage = daysWithUsage > 0 
@@ -535,13 +535,13 @@ class ApplicationsDataProvider {
     while (currentDate.isBefore(dateRange.endDate) || currentDate.isAtSameMomentAs(dateRange.endDate)) {
       final AppUsageRecord? record = _dataStore.getAppUsage(appName, currentDate);
       currentPeriodUsage += record?.timeSpent ?? Duration.zero;
-      currentDate = currentDate.add(Duration(days: 1));
+      currentDate = currentDate.add(const Duration(days: 1));
     }
     
     // Get previous period data (same length as current period)
     final int periodLengthDays = dateRange.endDate.difference(dateRange.startDate).inDays + 1;
     final DateTime previousPeriodStart = dateRange.startDate.subtract(Duration(days: periodLengthDays));
-    final DateTime previousPeriodEnd = dateRange.startDate.subtract(Duration(days: 1));
+    final DateTime previousPeriodEnd = dateRange.startDate.subtract(const Duration(days: 1));
     
     Duration previousPeriodUsage = Duration.zero;
     
@@ -549,7 +549,7 @@ class ApplicationsDataProvider {
     while (currentDate.isBefore(previousPeriodEnd) || currentDate.isAtSameMomentAs(previousPeriodEnd)) {
       final AppUsageRecord? record = _dataStore.getAppUsage(appName, currentDate);
       previousPeriodUsage += record?.timeSpent ?? Duration.zero;
-      currentDate = currentDate.add(Duration(days: 1));
+      currentDate = currentDate.add(const Duration(days: 1));
     }
     
     // Calculate growth percentage
@@ -574,7 +574,7 @@ class ApplicationsDataProvider {
           while (currentDate.isBefore(dateRange.endDate) || currentDate.isAtSameMomentAs(dateRange.endDate)) {
             final AppUsageRecord? record = _dataStore.getAppUsage(name, currentDate);
             appTotalUsage += record?.timeSpent ?? Duration.zero;
-            currentDate = currentDate.add(Duration(days: 1));
+            currentDate = currentDate.add(const Duration(days: 1));
           }
           
           if (appTotalUsage > Duration.zero) {
@@ -633,7 +633,7 @@ class ApplicationsDataProvider {
         dailyLaunches[currentDate] = record.openCount;
       }
       
-      currentDate = currentDate.add(Duration(days: 1));
+      currentDate = currentDate.add(const Duration(days: 1));
     }
     
     // Calculate average session duration

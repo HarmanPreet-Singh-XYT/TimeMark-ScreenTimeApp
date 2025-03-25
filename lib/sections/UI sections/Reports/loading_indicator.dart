@@ -6,11 +6,11 @@ class LoadingIndicator extends StatelessWidget {
   final TextStyle? textStyle;
   
   const LoadingIndicator({
-    Key? key, 
+    super.key, 
     required this.message,
     this.progressRingSize = 24.0,
     this.textStyle,
-  }) : super(key: key);
+  });
   
   @override
   Widget build(BuildContext context) {
@@ -38,23 +38,19 @@ class LoadingIndicator extends StatelessWidget {
 
 // For specific loading states, you might want to use these factory constructors:
 class AppLoadingIndicator extends LoadingIndicator {
-  AppLoadingIndicator({
-    Key? key,
-    String message = 'Loading application...',
+  const AppLoadingIndicator({
+    super.key,
+    super.message = 'Loading application...',
   }) : super(
-    key: key,
-    message: message,
     progressRingSize: 32.0,
   );
 }
 
 class DataLoadingIndicator extends LoadingIndicator {
-  DataLoadingIndicator({
-    Key? key,
-    String message = 'Loading data...',
+  const DataLoadingIndicator({
+    super.key,
+    super.message = 'Loading data...',
   }) : super(
-    key: key,
-    message: message,
     progressRingSize: 20.0,
   );
 }

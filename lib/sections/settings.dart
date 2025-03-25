@@ -1,6 +1,6 @@
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:provider/provider.dart';
-import 'package:ProductiveScreenTime/sections/controller/app_data_controller.dart';
+import 'package:productive_screentime/sections/controller/app_data_controller.dart';
 import 'controller/settings_data_controller.dart';
 import '../../auto_launch/launch_at_startup.dart';
 import 'package:url_launcher_platform_interface/url_launcher_platform_interface.dart';
@@ -160,7 +160,7 @@ class _SettingsContentState extends State<SettingsContent> {
   final String urlContact = 'https://harman.vercel.app/details/screentime';
   final String urlReport = 'https://harman.vercel.app/details/screentime';
   final String urlFeedback = 'https://harman.vercel.app/details/screentime';
-  final String github = 'https://github.com/HarmanPreet-Singh-XYT/ProductiveScreenTime';
+  final String github = 'https://github.com/HarmanPreet-Singh-XYT/productive_screentime';
   
   @override
   Widget build(BuildContext context) {
