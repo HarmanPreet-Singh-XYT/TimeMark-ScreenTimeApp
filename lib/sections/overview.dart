@@ -333,7 +333,7 @@ class TopApplications extends StatelessWidget {
                         .where((app) => app['name'] != null && app['name'].toString().trim().isNotEmpty)
                         .toList() // Convert to list before sorting
                       ..sort((a, b) => (b['percentageOfTotalTime'] ?? 0).compareTo(a['percentageOfTotalTime'] ?? 0))) // Sort in descending order
-                    .take(10) // Take the top 10
+                    .take(25) // Take the top 20
                     .map((app) => Column(
                           children: [
                             Application(
