@@ -5,8 +5,10 @@
 list(APPEND FLUTTER_PLUGIN_LIST
   bitsdojo_window_windows
   local_notifier
+  screen_retriever_windows
   tray_manager
   url_launcher_windows
+  window_manager
 )
 
 list(APPEND FLUTTER_FFI_PLUGIN_LIST

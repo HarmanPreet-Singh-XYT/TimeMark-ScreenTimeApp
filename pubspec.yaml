@@ -39,8 +39,9 @@ dependencies:
   url_launcher_windows: ^3.1.4
   # audioplayers: ^6.4.0
   local_notifier: ^0.1.6
-  win32_registry: ^2.1.0
+  # win32_registry: ^2.1.0
   url_launcher_platform_interface: ^2.3.2
+  window_manager: ^0.4.3
   # launch_at_startup: ^0.4.0
 
   # Native Code Interaction for Foreground Window
@@ -71,9 +72,9 @@ flutter:
 #     pluginClass: ForegroundWindowPlugin
 msix_config:
   display_name: TimeMark - Track Screen Time & App Usage
-  # startup_task:
-  #   enabled: true
-  #   parameters: --auto-launched
+  startup_task:
+    enabled: true
+    parameters: --auto-launched
   publisher_display_name: Harmanita
   identity_name: Harmanita.TimeMark-TrackScreenTimeAppUsage
   msix_version: 1.0.1.0
