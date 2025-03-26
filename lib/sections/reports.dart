@@ -3,8 +3,8 @@ import 'dart:math';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:intl/intl.dart';
-import 'package:productive_screentime/sections/graphs/reports_line_chart.dart';
-import 'package:productive_screentime/sections/graphs/reports_pie_chart.dart';
+import 'package:screentime/sections/graphs/reports_line_chart.dart';
+import 'package:screentime/sections/graphs/reports_pie_chart.dart';
 import './controller/data_controllers/reports_controller.dart';
 import './controller/data_controllers/alerts_limits_data_controller.dart' as app_summary_data;
 import './controller/data_controllers/applications_data_controller.dart';
@@ -674,31 +674,31 @@ class _ApplicationUsageState extends State<ApplicationUsage> {
           Container(height: 1, color: FluentTheme.of(context).inactiveBackgroundColor),
           const SizedBox(height: 10),
           // App list
-         Expanded(
-          child: _filteredAppUsageDetails
-                  .where((app) =>  app.appName.trim().isNotEmpty)
-                  .isEmpty
-              ? const Center(child: Text("No applications match your search criteria"))
-              : ListView.builder(
-                  itemCount: _filteredAppUsageDetails
-                      .where((app) =>  app.appName.trim().isNotEmpty)
-                      .length,
-                  itemBuilder: (context, index) {
-                    final filteredApps = _filteredAppUsageDetails
+          Expanded(
+            child: _filteredAppUsageDetails
+                    .where((app) =>  app.appName.trim().isNotEmpty)
+                    .isEmpty
+                ? const Center(child: Text("No applications match your search criteria"))
+                : ListView.builder(
+                    itemCount: _filteredAppUsageDetails
                         .where((app) =>  app.appName.trim().isNotEmpty)
-                        .toList();
-                    final app = filteredApps[index];
+                        .length,
+                    itemBuilder: (context, index) {
+                      final filteredApps = _filteredAppUsageDetails
+                          .where((app) =>  app.appName.trim().isNotEmpty)
+                          .toList();
+                      final app = filteredApps[index];
 
-                    return ApplicationListItem(
-                      name: app.appName,
-                      category: app.category,
-                      productivity: app.isProductive,
-                      totalTime: _formatDuration(app.totalTime),
-                      onViewDetails: () => _showAppDetails(context, app),
-                    );
-                  },
-                ),
-        )
+                      return ApplicationListItem(
+                        name: app.appName,
+                        category: app.category,
+                        productivity: app.isProductive,
+                        totalTime: _formatDuration(app.totalTime),
+                        onViewDetails: () => _showAppDetails(context, app),
+                      );
+                    },
+                  ),
+          )
 
         ],
       ),

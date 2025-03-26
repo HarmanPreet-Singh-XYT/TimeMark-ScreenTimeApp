@@ -68,7 +68,8 @@ class _OverviewState extends State<Overview> {
           "name": app.name,
           "category": app.category,
           "screenTime": app.formattedScreenTime,
-          "percentageOfTotalTime": app.percentageOfTotalTime
+          "percentageOfTotalTime": app.percentageOfTotalTime,
+          "isVisible":app.isVisible
         }).toList();
         
         // Middle section - Category Applications
@@ -330,7 +331,7 @@ class TopApplications extends StatelessWidget {
             child: SingleChildScrollView(
               child: Column(
                 children: (data
-                        .where((app) => app['name'] != null && app['name'].toString().trim().isNotEmpty)
+                        .where((app) => app['name'] != null && app['name'].toString().trim().isNotEmpty && app['isVisible'])
                         .toList() // Convert to list before sorting
                       ..sort((a, b) => (b['percentageOfTotalTime'] ?? 0).compareTo(a['percentageOfTotalTime'] ?? 0))) // Sort in descending order
                     .take(25) // Take the top 20

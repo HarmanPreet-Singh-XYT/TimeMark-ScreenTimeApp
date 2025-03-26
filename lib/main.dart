@@ -1,6 +1,6 @@
 import 'dart:io';
 import 'package:fluent_ui/fluent_ui.dart';
-import 'package:productive_screentime/sections/controller/notification_controller.dart';
+import 'package:screentime/sections/controller/notification_controller.dart';
 import './sections/overview.dart';
 import './sections/applications.dart';
 import './sections/alerts_limits.dart';
@@ -21,6 +21,7 @@ void main(List<String> args) async {
   final bool wasSystemLaunched = args.contains('--auto-launched');
   // Check the launch type
   await SettingsManager().init();
+  final bool isMinimizeAtLaunch = SettingsManager().getSetting("launchAsMinimized") ?? false;
   await NotificationController().initialize();
   // Get the saved theme preference
   final String savedTheme = SettingsManager().getSetting("theme.selected") ?? "System";
@@ -44,8 +45,8 @@ void main(List<String> args) async {
   runApp(MyApp(initialTheme: initialTheme));
   doWhenWindowReady(() {
     final win = appWindow;
-    const String appName = 'TimeMark';
-    if(wasSystemLaunched){
+    const String appName = 'TimeMark - Track Screen Time & App Usage';
+    if(wasSystemLaunched || isMinimizeAtLaunch){
       win.hide();
       const initialSize = Size(1280, 800);
       win.minSize = initialSize;

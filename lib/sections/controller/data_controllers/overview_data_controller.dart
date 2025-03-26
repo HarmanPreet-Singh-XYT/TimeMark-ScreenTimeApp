@@ -73,6 +73,7 @@ class DailyOverviewData {
           category: metadata.category,
           screenTime: usageRecord.timeSpent,
           percentageOfTotalTime: percentageOfTotalTime,
+          isVisible: metadata.isVisible,
         ));
       }
     }
@@ -200,12 +201,14 @@ class ApplicationDetail {
   final Duration screenTime;
   final double percentageOfTotalTime;
   final String formattedScreenTime;
+  final bool isVisible;
 
   ApplicationDetail({
     required this.name,
     required this.category,
     required this.screenTime,
     required this.percentageOfTotalTime,
+    required this.isVisible
   }) : formattedScreenTime = DailyOverviewData.formatDuration(screenTime);
 }
 

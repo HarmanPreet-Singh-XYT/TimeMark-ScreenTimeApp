@@ -1,7 +1,7 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:local_notifier/local_notifier.dart';
-import 'package:productive_screentime/sections/controller/settings_data_controller.dart';
+import 'package:screentime/sections/controller/settings_data_controller.dart';
 
 import 'data_controllers/alerts_limits_data_controller.dart';
 

@@ -1,4 +1,4 @@
-import 'package:productive_screentime/sections/controller/app_data_controller.dart';
+import 'package:screentime/sections/controller/app_data_controller.dart';
 import 'package:flutter/foundation.dart';
 import 'package:intl/intl.dart';
 import 'focus_mode_data_controller.dart';
@@ -49,12 +49,14 @@ class AppUsageSummary {
   final String category;
   final Duration totalTime;
   final bool isProductive;
+  final bool isVisible;
   
   AppUsageSummary({
     required this.appName,
     required this.category,
     required this.totalTime,
     required this.isProductive,
+    required this.isVisible
   });
 }
 class UsageAnalyticsController extends ChangeNotifier {
@@ -534,6 +536,7 @@ class UsageAnalyticsController extends ChangeNotifier {
           category: metadata?.category ?? 'Uncategorized',
           totalTime: appUsageTotals[appName]!,
           isProductive: metadata?.isProductive ?? false,
+          isVisible:metadata?.isVisible ?? false
         ));
       }
       

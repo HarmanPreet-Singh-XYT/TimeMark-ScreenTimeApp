@@ -1,5 +1,5 @@
 import 'package:fluent_ui/fluent_ui.dart';
-import 'package:productive_screentime/sections/controller/app_data_controller.dart';
+import 'package:screentime/sections/controller/app_data_controller.dart';
 import 'controller/settings_data_controller.dart';
 import './controller/data_controllers/applications_data_controller.dart';
 import './controller/categories_controller.dart';
@@ -113,15 +113,15 @@ class _ApplicationsState extends State<Applications> {
       });
     }
     
-    void changeIndividualParam(String type, bool value, String name){
+    void changeIndividualParam(String type, bool value, String name)async {
       switch (type) {
         case 'isTracking':
           apps = apps.map((app) => app['name'] == name 
             ? {...app, "isTracking": value}
             : app
           ).toList();
+          await  AppDataStore().updateAppMetadata(name, isTracking: value);
           setState(() {
-            AppDataStore().updateAppMetadata(name, isTracking: value);
           });
           break;
         case 'isHidden':
@@ -129,8 +129,8 @@ class _ApplicationsState extends State<Applications> {
             ? {...app, "isHidden": value}
             : app
           ).toList();
+            await AppDataStore().updateAppMetadata(name, isVisible: !value); 
           setState(() {
-            AppDataStore().updateAppMetadata(name, isVisible: value); 
           });
           break;
       }
@@ -232,7 +232,7 @@ class _ApplicationsState extends State<Applications> {
                           const Expanded(
                             flex: 1,
                             child: Center(
-                              child: Text("Hidden/Visible", style: TextStyle(fontSize: 14, fontWeight: FontWeight.w600))
+                              child: Text("Hidden", style: TextStyle(fontSize: 14, fontWeight: FontWeight.w600))
                           )),
                           Container(width: 2, color: FluentTheme.of(context).inactiveBackgroundColor),
                           const Expanded(
