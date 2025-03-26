@@ -21,7 +21,7 @@ void main(List<String> args) async {
   final bool wasSystemLaunched = args.contains('--auto-launched');
   // Check the launch type
   await SettingsManager().init();
-  final bool isMinimizeAtLaunch = SettingsManager().getSetting("launchAsMinimized") ?? false;
+  final bool isMinimizeAtLaunch = await SettingsManager().getSetting("launchAsMinimized") ?? false;
   await NotificationController().initialize();
   // Get the saved theme preference
   final String savedTheme = SettingsManager().getSetting("theme.selected") ?? "System";
@@ -46,19 +46,14 @@ void main(List<String> args) async {
   doWhenWindowReady(() {
     final win = appWindow;
     const String appName = 'TimeMark - Track Screen Time & App Usage';
+    const initialSize = Size(1280, 800);
+    win.minSize = initialSize;
+    win.size = initialSize;
+    win.alignment = Alignment.center;
+    win.title = appName;
     if(wasSystemLaunched || isMinimizeAtLaunch){
       win.hide();
-      const initialSize = Size(1280, 800);
-      win.minSize = initialSize;
-      win.size = initialSize;
-      win.alignment = Alignment.center;
-      win.title = appName;
     }else{
-      const initialSize = Size(1280, 800);
-      win.minSize = initialSize;
-      win.size = initialSize;
-      win.alignment = Alignment.center;
-      win.title = appName;
       win.show();
     }
   });
@@ -75,7 +70,7 @@ class MyApp extends StatefulWidget {
 
 class _MyAppState extends State<MyApp> with TrayListener {
   bool notificationsEnabled = true;
-  final String appVersion = "v1.0.0";
+  final String appVersion = "v1.0.1";
   bool focusMode = false;
   int selectedIndex = 0;
   void changeIndex(int value){
@@ -398,33 +393,33 @@ final closeButtonColors = WindowButtonColors(
 
 class WindowButtons extends StatelessWidget {
   const WindowButtons({super.key});
-  void showExitDialog(BuildContext context) async {
-  final result = await showDialog<String>(
-    context: context,
-    barrierDismissible: false,
-    builder: (context) => ContentDialog(
-        title: const Text('Exit Program?'),
-        content: const Text(
-          'The window will be hidden. To fully exit the program, use the system menu.',
-        ),
-        actions: [
-          Button(
-            child: const Text('Cancel'),
-            onPressed: () => Navigator.pop(context, 'User canceled'),
-          ),
-          FilledButton(
-            child: const Text('Exit'),
-            onPressed: () {
-              Navigator.pop(context, 'User confirmed exit');
-              appWindow.hide(); // Hides the window instead of closing
-            },
-          ),
-        ],
-      ),
-    );
+  // void showExitDialog(BuildContext context) async {
+  // final result = await showDialog<String>(
+  //   context: context,
+  //   barrierDismissible: false,
+  //   builder: (context) => ContentDialog(
+  //       title: const Text('Exit Program?'),
+  //       content: const Text(
+  //         'The window will be hidden. To fully exit the program, use the system menu.',
+  //       ),
+  //       actions: [
+  //         Button(
+  //           child: const Text('Cancel'),
+  //           onPressed: () => Navigator.pop(context, 'User canceled'),
+  //         ),
+  //         FilledButton(
+  //           child: const Text('Exit'),
+  //           onPressed: () {
+  //             Navigator.pop(context, 'User confirmed exit');
+  //             appWindow.hide(); // Hides the window instead of closing
+  //           },
+  //         ),
+  //       ],
+  //     ),
+  //   );
 
-    debugPrint('Dialog result: $result'); // Optional: Check result in debug console
-  }
+  //   debugPrint('Dialog result: $result'); // Optional: Check result in debug console
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -434,7 +429,7 @@ class WindowButtons extends StatelessWidget {
         MaximizeWindowButton(colors: buttonColors),
         CloseWindowButton(
           colors: closeButtonColors,
-          onPressed: () => showExitDialog(context),
+          onPressed: () => {appWindow.hide()},
         ),
       ],
     );

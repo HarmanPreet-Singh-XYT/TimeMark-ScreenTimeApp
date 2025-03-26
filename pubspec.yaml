@@ -32,7 +32,7 @@ dependencies:
   pie_chart: ^5.4.0
   
   # Utility Packages
-  package_info_plus: ^8.0.0
+  # package_info_plus: ^8.0.0
   intl: ^0.19.0
   ffi: ^2.1.4
   provider: ^6.1.2
@@ -41,7 +41,7 @@ dependencies:
   local_notifier: ^0.1.6
   win32_registry: ^2.1.0
   url_launcher_platform_interface: ^2.3.2
-  launch_at_startup: ^0.4.0
+  # launch_at_startup: ^0.4.0
 
   # Native Code Interaction for Foreground Window
   # You'll need to implement a custom plugin or package
@@ -71,12 +71,15 @@ flutter:
 #     pluginClass: ForegroundWindowPlugin
 msix_config:
   display_name: TimeMark - Track Screen Time & App Usage
+  # startup_task:
+  #   enabled: true
+  #   parameters: --auto-launched
   publisher_display_name: Harmanita
   identity_name: Harmanita.TimeMark-TrackScreenTimeAppUsage
-  msix_version: 1.0.0.0
+  msix_version: 1.0.1.0
   logo_path: C:\Projects\screentime\assets\icons\tray_icon.png
   publisher: CN=5EB16640-AA72-4826-B8B0-95B5C4F31CF0
-  store: true
+  store: false
   app_installer: #<-- app installer configuration
     publish_folder_path: C:\Projects\TimeMark
     hours_between_update_checks: 0

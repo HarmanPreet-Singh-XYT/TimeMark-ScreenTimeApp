@@ -7,7 +7,7 @@ import 'package:url_launcher_platform_interface/url_launcher_platform_interface.
 // Create a SettingsProvider to centralize state management
 class SettingsProvider extends ChangeNotifier {
   final SettingsManager _settingsManager = SettingsManager();
-  final Map<String, String> version = {"version": "1.0.0", "type": "Stable Build"};
+  final Map<String, String> version = {"version": "1.0.1", "type": "Stable Build"};
   
   String _theme = "";
   String _language = "English";
@@ -64,11 +64,30 @@ class SettingsProvider extends ChangeNotifier {
         _launchAtStartupVar = value;
         _settingsManager.updateSetting("launchAtStartup", value);
         break;
-      case 'launchAsMinimized': // New case for launch as minimized
+      case 'launchAsMinimized':
         _launchAsMinimized = value;
         _settingsManager.updateSetting("launchAsMinimized", value);
         break;
-      // ... rest of the existing code remains the same
+      case 'notificationsEnabled':
+        _notificationsEnabled = value;
+        _settingsManager.updateSetting("notifications.enabled", value);
+        break;
+      case 'notificationsFocusMode':
+        _notificationsFocusMode = value;
+        _settingsManager.updateSetting("notifications.focusMode", value);
+        break;
+      case 'notificationsScreenTime':
+        _notificationsScreenTime = value;
+        _settingsManager.updateSetting("notifications.screenTime", value);
+        break;
+      case 'notificationsAppScreenTime':
+        _notificationsAppScreenTime = value;
+        _settingsManager.updateSetting("notifications.appScreenTime", value);
+        break;
+      case 'reminderFrequency':
+        _reminderFrequency = value;
+        _settingsManager.updateSetting("notificationController.reminderFrequency", value);
+        break;
     }
     notifyListeners();
   }
@@ -139,7 +158,7 @@ class _SettingsContentState extends State<SettingsContent> {
   final String urlContact = 'https://harman.vercel.app/details/screentime';
   final String urlReport = 'https://harman.vercel.app/details/screentime';
   final String urlFeedback = 'https://harman.vercel.app/details/screentime';
-  final String github = 'https://github.com/HarmanPreet-Singh-XYT/ProductiveScreenTime';
+  final String github = 'https://github.com/HarmanPreet-Singh-XYT/TimeMark-ScreenTimeApp';
   
   @override
   Widget build(BuildContext context) {
@@ -238,7 +257,7 @@ class GeneralSection extends StatelessWidget {
         const Text("General", style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600)),
         const SizedBox(height: 15),
         Container(
-          height: 240, // Increased height to accommodate new option
+          height: 180, // Increased height to accommodate new option
           padding: const EdgeInsets.all(20),
           width: MediaQuery.of(context).size.width,
           decoration: BoxDecoration(
@@ -265,17 +284,17 @@ class GeneralSection extends StatelessWidget {
                 optionsValue: settings.language,
                 options: settings.languageOptions,
               ),
-              OptionSetting(
-                title: "Startup Behaviour",
-                description: "Launch at OS startup",
-                optionType: "switch",
-                settingType: "launchAtStartup",
-                changeValue: (key, value) => settings.updateSetting(key, value),
-                isChecked: settings.launchAtStartupVar,
-              ),
+              // OptionSetting(
+              //   title: "Startup Behaviour",
+              //   description: "Launch at OS startup",
+              //   optionType: "switch",
+              //   settingType: "launchAtStartup",
+              //   changeValue: (key, value) => settings.updateSetting(key, value),
+              //   isChecked: settings.launchAtStartupVar,
+              // ),
               OptionSetting(
                 title: "Launch as Minimized",
-                description: "Start the application in minimized window",
+                description: "Start the application in System Tray",
                 optionType: "switch",
                 settingType: "launchAsMinimized",
                 changeValue: (key, value) => settings.updateSetting(key, value),

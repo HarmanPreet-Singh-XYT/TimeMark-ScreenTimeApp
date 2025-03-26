@@ -1,10 +1,10 @@
 import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:convert';
-import 'dart:io';
+// import 'dart:io';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:launch_at_startup/launch_at_startup.dart';
-import 'package:package_info_plus/package_info_plus.dart';
+// import 'package:launch_at_startup/launch_at_startup.dart';
+// import 'package:package_info_plus/package_info_plus.dart';
 import 'package:adaptive_theme/adaptive_theme.dart';
 
 // Theme constants
@@ -91,25 +91,25 @@ class SettingsManager {
     },
     // Add the new notificationController section with default values
     "notificationController": {
-      "reminderFrequency": 60, // seconds
+      "reminderFrequency": 1, // minutes
     }
   };
 
   /// Initialize SharedPreferences and load settings
   Future<void> init() async {
-    if (!kIsWeb) {
-      PackageInfo packageInfo = await PackageInfo.fromPlatform();
-      launchAtStartup.setup(
-        appName: packageInfo.appName,
-        appPath: Platform.resolvedExecutable,
-        packageName: "Harmanita.TimeMark-TrackScreenTimeAppUsage",
-        args: ['--auto-launched'],
-      );
-    }
+    // if (!kIsWeb) {
+    //   PackageInfo packageInfo = await PackageInfo.fromPlatform();
+    //   launchAtStartup.setup(
+    //     appName: packageInfo.appName,
+    //     appPath: Platform.resolvedExecutable,
+    //     packageName: "Harmanita.TimeMark-TrackScreenTimeAppUsage",
+    //     args: ['--auto-launched'],
+    //   );
+    // }
     _prefs = await SharedPreferences.getInstance();
     _loadSettings();
-    bool isStartupEnabled = await launchAtStartup.isEnabled();
-    settings["launchAtStartup"] = isStartupEnabled;
+    // bool isStartupEnabled = await launchAtStartup.isEnabled();
+    // settings["launchAtStartup"] = isStartupEnabled;
   }
 
   /// Load settings from SharedPreferences
@@ -170,9 +170,9 @@ class SettingsManager {
     if (keys.length == 1) {
       if (settings.containsKey(keys[0])) {
         settings[keys[0]] = value;
-        if(keys[0] == 'launchAtStartup'){
-          value ? await launchAtStartup.enable() : await launchAtStartup.disable();
-        }
+        // if(keys[0] == 'launchAtStartup'){
+        //   value ? await launchAtStartup.enable() : await launchAtStartup.disable();
+        // }
       } else {
         debugPrint("❌ ERROR: Invalid setting: ${keys[0]}");
       }
@@ -309,7 +309,7 @@ class SettingsManager {
       },
       // Add the new notificationController section with default values
       "notificationController": {
-        "reminderFrequency": 60, // seconds
+        "reminderFrequency": 1, // minute
       }
     };
 
@@ -317,13 +317,13 @@ class SettingsManager {
     settings = Map<String, dynamic>.from(defaultSettings);
     
     // Update launch at startup setting in the system
-    if (!kIsWeb && (Platform.isWindows || Platform.isMacOS || Platform.isLinux)) {
-      if (settings["launchAtStartup"]) {
-        await launchAtStartup.enable();
-      } else {
-        await launchAtStartup.disable();
-      }
-    }
+    // if (!kIsWeb && (Platform.isWindows || Platform.isMacOS || Platform.isLinux)) {
+    //   if (settings["launchAtStartup"]) {
+    //     await launchAtStartup.enable();
+    //   } else {
+    //     await launchAtStartup.disable();
+    //   }
+    // }
 
     // Save the default settings to persistent storage
     _saveSettings();
