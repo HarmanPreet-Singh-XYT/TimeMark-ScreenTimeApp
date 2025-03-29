@@ -1,4 +1,13 @@
+[![Microsoft Store](demo/ms-logo.svg)](https://apps.microsoft.com/detail/9PHBZXNPVHSQ?mode=full)
 # Desktop Screen Time Tracker
+
+![app showcase](demo/1.png)
+![app showcase](demo/2.png)
+![app showcase](demo/3.png)
+![app showcase](demo/4.png)
+![app showcase](demo/5.png)
+![app showcase](demo/6.png)
+![app showcase](demo/screentime.png)
 
 ## 📱 Overview
 
@@ -109,7 +118,7 @@ Distributed under the GNU LESSER GENERAL PUBLIC License. See `LICENSE` for more 
 
 ## 📞 Contact
 
-- Project Link: [https://github.com/HarmanPreet-Singh-XYT/ProductiveScreenTime](https://github.com/HarmanPreet-Singh-XYT/ProductiveScreenTime)
+- Project Link: [TimeMark - Track Screen Time & App Usage](https://github.com/HarmanPreet-Singh-XYT/TimeMark-ScreenTimeApp)
 - Support: harmanpreetsingh@programmer.net
 - Site Display: [https://harman.vercel.app/details/screentime](https://harman.vercel.app/details/screentime)
 - Discord: @harmanpreet_singh
