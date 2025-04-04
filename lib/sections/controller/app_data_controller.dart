@@ -763,6 +763,9 @@ class AppDataStore extends ChangeNotifier {
       return false;
     }
   }
+  Future<void> closeHive() async {
+    await Hive.close();
+  }
   // Close boxes when app terminates
   @override
   Future<void> dispose() async {

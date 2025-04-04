@@ -137,10 +137,10 @@ class BackgroundAppTracker {
     }
   }
   // close the controller when done
-  // void dispose() {
-  //   stopTracking();
-  //   _appUpdateController.close();
-  // }
+  void dispose() {
+    stopTracking();
+    _appUpdateController.close();
+  }
 
   // Get current active app
   Future<Map<String, dynamic>?> _getCurrentActiveApp() async {

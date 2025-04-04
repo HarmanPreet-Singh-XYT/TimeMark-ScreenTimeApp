@@ -1,5 +1,7 @@
 import 'dart:io';
 import 'package:fluent_ui/fluent_ui.dart';
+import 'package:hive_flutter/adapters.dart';
+import 'package:screentime/sections/controller/app_data_controller.dart';
 import 'package:screentime/sections/controller/notification_controller.dart';
 import './sections/overview.dart';
 import './sections/applications.dart';
@@ -205,6 +207,10 @@ class _MyAppState extends State<MyApp> with TrayListener {
 
   @override
   void dispose() {
+    BackgroundAppTracker().dispose();
+    AppDataStore().dispose().then((_) {
+      Hive.close();
+    });
     trayManager.removeListener(this);
     super.dispose();
   }
