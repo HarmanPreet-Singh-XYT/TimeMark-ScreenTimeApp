@@ -70,11 +70,12 @@ class MyApp extends StatefulWidget {
   State<MyApp> createState() => _MyAppState();
 }
 
-class _MyAppState extends State<MyApp> with TrayListener {
+class _MyAppState extends State<MyApp> with TrayListener,WidgetsBindingObserver {
   bool notificationsEnabled = true;
   final String appVersion = "v1.0.1";
   bool focusMode = false;
   int selectedIndex = 0;
+  final AppDataStore _dataStore = AppDataStore();
   void changeIndex(int value){
     setState(() {
       selectedIndex = value;
@@ -84,10 +85,14 @@ class _MyAppState extends State<MyApp> with TrayListener {
   @override
   void initState() {
     super.initState();
+    WidgetsBinding.instance.addObserver(this);
+    _initDataStore();
     _initTray();
     trayManager.addListener(this);
   }
-
+  Future<void> _initDataStore() async {
+    await _dataStore.init();
+  }
   Future<void> _initTray() async {
     await trayManager.setIcon(
       Platform.isWindows
@@ -207,14 +212,18 @@ class _MyAppState extends State<MyApp> with TrayListener {
 
   @override
   void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
     BackgroundAppTracker().dispose();
-    AppDataStore().dispose().then((_) {
+    _dataStore.dispose().then((_) {
       Hive.close();
     });
     trayManager.removeListener(this);
     super.dispose();
   }
-
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    _dataStore.handleAppLifecycleState(state);
+  }
   @override
   Widget build(BuildContext context) {
     return FluentAdaptiveTheme(

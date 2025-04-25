@@ -1,7 +1,9 @@
+import 'dart:ui';
+
 import 'package:flutter/foundation.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'dart:async';
-
+import 'package:synchronized/synchronized.dart'; 
 // TypeAdapters for complex types
 @HiveType(typeId: 1)
 class AppUsageRecord {
@@ -119,6 +121,13 @@ class AppDataStore extends ChangeNotifier {
   
   bool _isInitialized = false;
   String? _lastError;
+  DateTime? _lastMaintenanceDate;
+
+  // Add locks for box operations
+  final Lock _initLock = Lock();
+  final Lock _usageBoxLock = Lock();
+  final Lock _focusBoxLock = Lock();
+  final Lock _metadataBoxLock = Lock();
 
   // Factory constructor to return the singleton instance
   factory AppDataStore() {
@@ -133,37 +142,43 @@ class AppDataStore extends ChangeNotifier {
 
   // Initialize Hive with proper error handling
   Future<bool> init() async {
-    if (_isInitialized) return true;
-    
-    try {
-      // Initialize Hive
-      await Hive.initFlutter();
+    return await _initLock.synchronized(() async {
+      if (_isInitialized) return true;
       
-      // Register adapters
-      if (!Hive.isAdapterRegistered(1)) Hive.registerAdapter(AppUsageRecordAdapter());
-      if (!Hive.isAdapterRegistered(2)) Hive.registerAdapter(TimeRangeAdapter());
-      if (!Hive.isAdapterRegistered(3)) Hive.registerAdapter(FocusSessionRecordAdapter());
-      if (!Hive.isAdapterRegistered(4)) Hive.registerAdapter(AppMetadataAdapter());
-      if (!Hive.isAdapterRegistered(5)) Hive.registerAdapter(DurationAdapter());
-      
-      // Open boxes with retry logic
-      _usageBox = await _openBoxWithRetry<AppUsageRecord>(_usageBoxName);
-      _focusBox = await _openBoxWithRetry<FocusSessionRecord>(_focusBoxName);
-      _metadataBox = await _openBoxWithRetry<AppMetadata>(_metadataBoxName);
-      
-      if (_usageBox == null || _focusBox == null || _metadataBox == null) {
-        _lastError = "Failed to open one or more Hive boxes after multiple attempts";
+      try {
+        // Initialize Hive
+        await Hive.initFlutter();
+        
+        // Register adapters
+        if (!Hive.isAdapterRegistered(1)) Hive.registerAdapter(AppUsageRecordAdapter());
+        if (!Hive.isAdapterRegistered(2)) Hive.registerAdapter(TimeRangeAdapter());
+        if (!Hive.isAdapterRegistered(3)) Hive.registerAdapter(FocusSessionRecordAdapter());
+        if (!Hive.isAdapterRegistered(4)) Hive.registerAdapter(AppMetadataAdapter());
+        if (!Hive.isAdapterRegistered(5)) Hive.registerAdapter(DurationAdapter());
+        
+        // Open boxes with retry logic
+        _usageBox = await _openBoxWithRetry<AppUsageRecord>(_usageBoxName);
+        _focusBox = await _openBoxWithRetry<FocusSessionRecord>(_focusBoxName);
+        _metadataBox = await _openBoxWithRetry<AppMetadata>(_metadataBoxName);
+        
+        if (_usageBox == null || _focusBox == null || _metadataBox == null) {
+          _lastError = "Failed to open one or more Hive boxes after multiple attempts";
+          return false;
+        }
+        
+        _isInitialized = true;
+        
+        // Schedule periodic maintenance
+        _schedulePeriodicMaintenance();
+        
+        notifyListeners();
+        return true;
+      } catch (e) {
+        _lastError = "Error initializing AppDataStore: $e";
+        debugPrint(_lastError);
         return false;
       }
-      
-      _isInitialized = true;
-      notifyListeners();
-      return true;
-    } catch (e) {
-      _lastError = "Error initializing AppDataStore: $e";
-      debugPrint(_lastError);
-      return false;
-    }
+    });
   }
 
   // Helper method to open a box with retry logic
@@ -172,9 +187,18 @@ class AppDataStore extends ChangeNotifier {
     
     while (attempts < maxRetries) {
       try {
-        return await Hive.openBox<T>(boxName);
+        // Add additional parameters for better robustness
+        return await Hive.openBox<T>(
+          boxName,
+          compactionStrategy: (entries, deletedEntries) {
+            // Compact when deletions exceed 15% of total entries
+            return deletedEntries > 15 && deletedEntries / entries > 0.15;
+          },
+        );
       } catch (e) {
         attempts++;
+        
+        debugPrint("Box opening attempt $attempts failed: $e");
         
         if (attempts >= maxRetries) {
           _lastError = "Failed to open box $boxName after $maxRetries attempts: $e";
@@ -182,9 +206,23 @@ class AppDataStore extends ChangeNotifier {
           return null;
         }
         
-        // If the box is corrupted, try to delete it and recreate
-        if (e.toString().contains('corrupted') || e.toString().contains('not found')) {
+        // Check if box is corrupted or lock file is missing
+        if (e.toString().contains('corrupted') || 
+            e.toString().contains('not found') || 
+            e.toString().contains('lock') ||
+            e.toString().contains('permission')) {
           try {
+            debugPrint("Attempting to delete and recreate box: $boxName");
+            
+            // Force close any open instances
+            try {
+              final box = await Hive.box(boxName);
+              if (box.isOpen) await box.close();
+            } catch (_) {
+              // Ignore errors during force close
+            }
+            
+            // Delete the box completely from disk
             await Hive.deleteBoxFromDisk(boxName);
             debugPrint("Deleted corrupted box: $boxName, retrying...");
           } catch (deleteError) {
@@ -192,12 +230,110 @@ class AppDataStore extends ChangeNotifier {
           }
         }
         
-        // Wait before retry
-        await Future.delayed(Duration(milliseconds: 200 * attempts));
+        // Exponential backoff before retry
+        await Future.delayed(Duration(milliseconds: 200 * (1 << attempts)));
       }
     }
     
     return null;
+  }
+
+  // New method to periodically check and repair boxes
+  Future<void> checkAndRepairBoxes() async {
+    debugPrint("Running database maintenance check...");
+    
+    await _initLock.synchronized(() async {
+      for (final boxInfo in [
+        {'name': _usageBoxName, 'box': _usageBox, 'lock': _usageBoxLock},
+        {'name': _focusBoxName, 'box': _focusBox, 'lock': _focusBoxLock},
+        {'name': _metadataBoxName, 'box': _metadataBox, 'lock': _metadataBoxLock},
+      ]) {
+        final String boxName = boxInfo['name'] as String;
+        final Box? box = boxInfo['box'] as Box?;
+        final Lock lock = boxInfo['lock'] as Lock;
+        
+        await lock.synchronized(() async {
+          try {
+            // Check if box is open and valid
+            if (box != null && box.isOpen) {
+              try {
+                // Test read operation to verify box integrity
+                box.keys.take(1).toList();
+                debugPrint("Box $boxName is healthy");
+              } catch (e) {
+                debugPrint("Box $boxName is corrupted, repairing: $e");
+                
+                // Close and reopen
+                try {
+                  await box.close();
+                } catch (_) {
+                  // Ignore close errors
+                }
+                
+                try {
+                  await Hive.deleteBoxFromDisk(boxName);
+                } catch (deleteError) {
+                  debugPrint("Error deleting box: $deleteError");
+                }
+                
+                // Reopen using type-specific locks
+                if (boxName == _usageBoxName) {
+                  _usageBox = await _openBoxWithRetry<AppUsageRecord>(boxName);
+                } else if (boxName == _focusBoxName) {
+                  _focusBox = await _openBoxWithRetry<FocusSessionRecord>(boxName);
+                } else if (boxName == _metadataBoxName) {
+                  _metadataBox = await _openBoxWithRetry<AppMetadata>(boxName);
+                }
+              }
+            } else {
+              debugPrint("Box $boxName is not open, attempting to open");
+              // Reopen using type-specific locks
+              if (boxName == _usageBoxName) {
+                _usageBox = await _openBoxWithRetry<AppUsageRecord>(boxName);
+              } else if (boxName == _focusBoxName) {
+                _focusBox = await _openBoxWithRetry<FocusSessionRecord>(boxName);
+              } else if (boxName == _metadataBoxName) {
+                _metadataBox = await _openBoxWithRetry<AppMetadata>(boxName);
+              }
+            }
+          } catch (e) {
+            debugPrint("Error checking box $boxName: $e");
+          }
+        });
+      }
+      
+      _lastMaintenanceDate = DateTime.now();
+    });
+  }
+
+  // Schedule daily maintenance
+  void _schedulePeriodicMaintenance() {
+    // Check if maintenance is needed (daily)
+    final now = DateTime.now();
+    if (_lastMaintenanceDate == null || 
+        now.difference(_lastMaintenanceDate!).inHours > 24) {
+      checkAndRepairBoxes();
+    }
+  }
+
+  // Generic method to perform operations with a box safely
+  Future<T> _withBox<T, B>(
+    B? box, 
+    Lock lock,
+    Future<T> Function(B box) operation, 
+    T defaultValue
+  ) async {
+    if (!(await _ensureInitialized()) || box == null) return defaultValue;
+    
+    return await lock.synchronized(() async {
+      try {
+        return await operation(box);
+      } catch (e) {
+        _lastError = "Error performing box operation: $e";
+        debugPrint(_lastError);
+        return defaultValue;
+      }
+    });
   }
 
   // Ensure boxes are initialized
@@ -301,53 +437,48 @@ class AppDataStore extends ChangeNotifier {
   
   // Record app usage with error handling
   Future<bool> recordAppUsage(String appName, DateTime date, Duration timeSpent, int openCount, List<TimeRange> usagePeriods) async {
-    if (!_ensureInitialized() || _usageBox == null) return false;
-    
-    try {
-      final String key = '$appName:${_formatDateKey(date)}';
-      AppUsageRecord? existing;
-      
-      try {
-        existing = _usageBox!.get(key);
-      } catch (e) {
-        debugPrint("Error fetching existing usage record for $key: $e");
-        // Continue with null existing
-      }
-      
-      if (existing != null) {
-        // Optimize storage by limiting the number of usage periods
-        final List<TimeRange> optimizedUsagePeriods = _optimizeUsagePeriods(
-          [...existing.usagePeriods, ...usagePeriods]
-        );
+    return await _withBox<bool, Box<AppUsageRecord>>(
+      _usageBox, 
+      _usageBoxLock,
+      (box) async {
+        final String key = '$appName:${_formatDateKey(date)}';
+        AppUsageRecord? existing;
         
-        // Update existing record with optimized periods
-        final AppUsageRecord updated = AppUsageRecord(
-          date: date,
-          timeSpent: existing.timeSpent + timeSpent,
-          openCount: existing.openCount + openCount,
-          usagePeriods: optimizedUsagePeriods,
-        );
+        try {
+          existing = box.get(key);
+        } catch (e) {
+          debugPrint("Error fetching existing usage record for $key: $e");
+        }
         
-        await _usageBox!.put(key, updated);
-      } else {
-        // Create new record with initial usage periods
-        final AppUsageRecord record = AppUsageRecord(
-          date: date,
-          timeSpent: timeSpent,
-          openCount: openCount,
-          usagePeriods: usagePeriods,
-        );
+        if (existing != null) {
+          final List<TimeRange> optimizedUsagePeriods = _optimizeUsagePeriods(
+            [...existing.usagePeriods, ...usagePeriods]
+          );
+          
+          final AppUsageRecord updated = AppUsageRecord(
+            date: date,
+            timeSpent: existing.timeSpent + timeSpent,
+            openCount: existing.openCount + openCount,
+            usagePeriods: optimizedUsagePeriods,
+          );
+          
+          await box.put(key, updated);
+        } else {
+          final AppUsageRecord record = AppUsageRecord(
+            date: date,
+            timeSpent: timeSpent,
+            openCount: openCount,
+            usagePeriods: usagePeriods,
+          );
+          
+          await box.put(key, record);
+        }
         
-        await _usageBox!.put(key, record);
-      }
-      
-      notifyListeners();
-      return true;
-    } catch (e) {
-      _lastError = "Error recording app usage for $appName: $e";
-      debugPrint(_lastError);
-      return false;
-    }
+        notifyListeners();
+        return true;
+      },
+      false
+    );
   }
 
   // Helper method to optimize usage periods
@@ -735,48 +866,101 @@ class AppDataStore extends ChangeNotifier {
   
   /// Clear all data with improved performance and error handling
   Future<bool> clearAllData({Function(double)? progressCallback}) async {
-    if (!_ensureInitialized()) return false;
+    return await _initLock.synchronized(() async {
+      if (!(await _ensureInitialized())) return false;
 
-    try {
-      // Close and delete boxes from disk (Best for large datasets)
-      // await _usageBox?.close();
-      // await _focusBox?.close();
-      // await _metadataBox?.close();
-
-      // await Hive.deleteBoxFromDisk(_usageBoxName);
-      // await Hive.deleteBoxFromDisk(_focusBoxName);
-      // await Hive.deleteBoxFromDisk(_metadataBoxName);
-
-      // // // Reinitialize boxes
-      // _usageBox = await _openBoxWithRetry<AppUsageRecord>(_usageBoxName);
-      // _focusBox = await _openBoxWithRetry<FocusSessionRecord>(_focusBoxName);
-      // _metadataBox = await _openBoxWithRetry<AppMetadata>(_metadataBoxName);
-      await _usageBox?.clear();
-      await _focusBox?.clear();
-      await _metadataBox?.clear();
-
-      notifyListeners();
-      return true;
-    } catch (e) {
-      _lastError = "Error clearing data: $e";
-      debugPrint(_lastError);
-      return false;
-    }
+      try {
+        if (progressCallback != null) progressCallback(0.1);
+        
+        // Close all boxes first
+        if (_usageBox != null && _usageBox!.isOpen) await _usageBox!.close();
+        if (_focusBox != null && _focusBox!.isOpen) await _focusBox!.close();
+        if (_metadataBox != null && _metadataBox!.isOpen) await _metadataBox!.close();
+        
+        if (progressCallback != null) progressCallback(0.3);
+        
+        // Delete boxes from disk
+        await Hive.deleteBoxFromDisk(_usageBoxName);
+        if (progressCallback != null) progressCallback(0.5);
+        
+        await Hive.deleteBoxFromDisk(_focusBoxName);
+        if (progressCallback != null) progressCallback(0.7);
+        
+        await Hive.deleteBoxFromDisk(_metadataBoxName);
+        if (progressCallback != null) progressCallback(0.9);
+        
+        // Reinitialize boxes
+        _usageBox = await _openBoxWithRetry<AppUsageRecord>(_usageBoxName);
+        _focusBox = await _openBoxWithRetry<FocusSessionRecord>(_focusBoxName);
+        _metadataBox = await _openBoxWithRetry<AppMetadata>(_metadataBoxName);
+        
+        if (progressCallback != null) progressCallback(1.0);
+        
+        notifyListeners();
+        return true;
+      } catch (e) {
+        _lastError = "Error clearing data: $e";
+        debugPrint(_lastError);
+        return false;
+      }
+    });
   }
+
   Future<void> closeHive() async {
-    await Hive.close();
+    return await _initLock.synchronized(() async {
+      try {
+        if (_usageBox != null && _usageBox!.isOpen) await _usageBox!.close();
+        if (_focusBox != null && _focusBox!.isOpen) await _focusBox!.close();
+        if (_metadataBox != null && _metadataBox!.isOpen) await _metadataBox!.close();
+        
+        await Hive.close();
+        _isInitialized = false;
+      } catch (e) {
+        _lastError = "Error closing Hive: $e";
+        debugPrint(_lastError);
+      }
+    });
   }
   // Close boxes when app terminates
   @override
   Future<void> dispose() async {
-    try {
-      if (_usageBox != null && _usageBox!.isOpen) await _usageBox!.close();
-      if (_focusBox != null && _focusBox!.isOpen) await _focusBox!.close();
-      if (_metadataBox != null && _metadataBox!.isOpen) await _metadataBox!.close();
-    } catch (e) {
-      debugPrint("Error closing Hive boxes: $e");
-    }
+    await _initLock.synchronized(() async {
+      try {
+        if (_usageBox != null && _usageBox!.isOpen) await _usageBox!.close();
+        if (_focusBox != null && _focusBox!.isOpen) await _focusBox!.close();
+        if (_metadataBox != null && _metadataBox!.isOpen) await _metadataBox!.close();
+        
+        _isInitialized = false;
+      } catch (e) {
+        debugPrint("Error closing Hive boxes: $e");
+      }
+    });
+    
     super.dispose();
+  }
+  // Helper method to implement app lifecycle events
+  void handleAppLifecycleState(AppLifecycleState state) {
+    if (state == AppLifecycleState.paused || 
+        state == AppLifecycleState.detached) {
+      debugPrint("App going to background, ensuring data is flushed");
+      _flushBoxes();
+    } else if (state == AppLifecycleState.resumed) {
+      debugPrint("App resumed, checking database health");
+      checkAndRepairBoxes();
+    }
+  }
+  
+  // Flush boxes to ensure data is written to disk
+  Future<void> _flushBoxes() async {
+    await _initLock.synchronized(() async {
+      try {
+        if (_usageBox != null && _usageBox!.isOpen) await _usageBox!.flush();
+        if (_focusBox != null && _focusBox!.isOpen) await _focusBox!.flush();
+        if (_metadataBox != null && _metadataBox!.isOpen) await _metadataBox!.flush();
+      } catch (e) {
+        debugPrint("Error flushing Hive boxes: $e");
+      }
+    });
   }
 }
 

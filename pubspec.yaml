@@ -42,6 +42,7 @@ dependencies:
   # win32_registry: ^2.1.0
   url_launcher_platform_interface: ^2.3.2
   window_manager: ^0.4.3
+  synchronized: ^3.3.1
   # launch_at_startup: ^0.4.0
 
   # Native Code Interaction for Foreground Window
@@ -77,7 +78,7 @@ msix_config:
     parameters: --auto-launched
   publisher_display_name: Harmanita
   identity_name: Harmanita.TimeMark-TrackScreenTimeAppUsage
-  msix_version: 1.0.1.0
+  msix_version: 1.0.2.0
   logo_path: C:\Projects\screentime\assets\icons\tray_icon.png
   publisher: CN=5EB16640-AA72-4826-B8B0-95B5C4F31CF0
   store: true
