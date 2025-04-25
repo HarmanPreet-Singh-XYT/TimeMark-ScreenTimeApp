@@ -131,6 +131,15 @@ class Help extends StatelessWidget {
           "answer": "Clearing data will reset all your usage statistics, focus session history, and custom settings. This is useful for starting fresh or troubleshooting."
         }
       ]
+    },
+    {
+      "category": "Troubleshooting",
+      "faqs": [
+        {
+          "question": "Data is not showing, hive is not opening error",
+          "answer": "The issue is known, the temporary fix is to clear data through settings and if it doesn't work then go to Documents and delete the following files if they exist - harman_screentime_app_usage_box.hive and harman_screentime_app_usage.lock, you are also suggested to update the app to the latest version."
+        },
+      ]
     }
   ];
 

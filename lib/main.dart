@@ -235,7 +235,7 @@ class _MyAppState extends State<MyApp> with TrayListener,WidgetsBindingObserver 
       ),
       initial: widget.initialTheme, // Use the initial theme from settings
       builder: (theme, darkTheme) => FluentApp(
-        title: 'Fluent Adaptive Theme Demo',
+        title: 'Productive ScreenTime',
         theme: theme,
         darkTheme: darkTheme,
         home: HomePage(selectedIndex: selectedIndex, changeIndex: changeIndex),
