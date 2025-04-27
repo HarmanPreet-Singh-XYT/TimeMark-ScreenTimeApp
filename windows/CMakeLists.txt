@@ -77,6 +77,7 @@ target_link_libraries(${PLUGIN_NAME} PRIVATE
   psapi
   shell32
   advapi32
+  Version.lib
 )
 
 # Important: Set output directories to match what the linker expects

@@ -78,21 +78,22 @@ class BackgroundAppTracker {
 
       // final String appTitle = currentAppInfo['title'] ?? 'Unknown';
 
-      String extractLastPartOfTitle(Map<String, dynamic>? appInfo) {
-        if (appInfo != null && appInfo.containsKey('title')) {
-          String title = appInfo['title'];
-          if (title.contains('-')) {
-            List<String> parts = title.split('-');
-            return parts.last.trim(); // Return the last part and remove any extra whitespace
-          }
-          return title; // Return the original title if no hyphen is found
-        }
-        return 'Unknown'; // Return empty string if title doesn't exist or appInfo is null
-      }
+      // String extractLastPartOfTitle(Map<String, dynamic>? appInfo) {
+      //   if (appInfo != null && appInfo.containsKey('title')) {
+      //     String title = appInfo['title'];
+      //     if (title.contains('-')) {
+      //       List<String> parts = title.split('-');
+      //       return parts.last.trim(); // Return the last part and remove any extra whitespace
+      //     }
+      //     return title; // Return the original title if no hyphen is found
+      //   }
+      //   return 'Unknown'; // Return empty string if title doesn't exist or appInfo is null
+      // }
 
       // Usage
-      String appTitle = extractLastPartOfTitle(currentAppInfo);
-      
+      String appTitle = currentAppInfo['title'] ?? '';
+      if(appTitle.contains("Windows Explorer")) appTitle = "";
+      debugPrint(appTitle);
       // Check if app tracking is enabled
       AppMetadata? metadata = appDataStore.getAppMetadata(appTitle);
       
@@ -150,7 +151,7 @@ class BackgroundAppTracker {
       // print(info);
       
       return {
-        'title': info.windowTitle,
+        'title': info.programName,
         // 'processName': info.processName ?? 'Unknown',
         // 'processID': info.processId ?? 'Unknown',
       };

@@ -191,6 +191,42 @@ typedef CommandLineToArgvWDart = Pointer<Pointer<Utf16>> Function(
 typedef LocalFreeNative = IntPtr Function(Pointer<Void> hMem);
 typedef LocalFreeDart = int Function(Pointer<Void> hMem);
 
+// Version Info related function signatures
+typedef GetFileVersionInfoSizeANative = Uint32 Function(
+  Pointer<Char> lptstrFilename,
+  Pointer<Uint32> lpdwHandle
+);
+typedef GetFileVersionInfoSizeADart = int Function(
+  Pointer<Char> lptstrFilename,
+  Pointer<Uint32> lpdwHandle
+);
+
+typedef GetFileVersionInfoANative = Int32 Function(
+  Pointer<Char> lptstrFilename,
+  Uint32 dwHandle,
+  Uint32 dwLen,
+  Pointer<Void> lpData
+);
+typedef GetFileVersionInfoADart = int Function(
+  Pointer<Char> lptstrFilename,
+  int dwHandle,
+  int dwLen,
+  Pointer<Void> lpData
+);
+
+typedef VerQueryValueANative = Int32 Function(
+  Pointer<Void> pBlock,
+  Pointer<Char> lpSubBlock,
+  Pointer<Pointer<Void>> lplpBuffer,
+  Pointer<Uint32> puLen
+);
+typedef VerQueryValueADart = int Function(
+  Pointer<Void> pBlock,
+  Pointer<Char> lpSubBlock,
+  Pointer<Pointer<Void>> lplpBuffer,
+  Pointer<Uint32> puLen
+);
+
 // File time structure
 base class FILETIME extends Struct {
   @Uint32()
@@ -202,6 +238,8 @@ base class FILETIME extends Struct {
 class WindowInfo {
   final String windowTitle;
   final String processName;
+  final String executableName;
+  final String programName;
   final int processId;
   final int parentProcessId;
   final String parentProcessName;
@@ -209,6 +247,8 @@ class WindowInfo {
   WindowInfo({
     required this.windowTitle, 
     required this.processName, 
+    required this.executableName,
+    required this.programName,
     required this.processId,
     required this.parentProcessId,
     required this.parentProcessName,
@@ -216,7 +256,7 @@ class WindowInfo {
 
   @override
   String toString() {
-    return 'WindowInfo(title: $windowTitle, process: $processName, pid: $processId, parent: $parentProcessName, parentPid: $parentProcessId)';
+    return 'WindowInfo(title: $windowTitle, process: $processName, executable: $executableName, program: $programName, pid: $processId, parent: $parentProcessName, parentPid: $parentProcessId)';
   }
 }
 
@@ -248,11 +288,30 @@ class AppLaunchInfo {
 }
 
 class ForegroundWindowPlugin {
+  static String _safeDartString(Pointer<Char> ptr, {int? length}) {
+    try {
+      return ptr.cast<Utf8>().toDartString(length: length);
+    } catch (e) {
+      // Handle invalid UTF-8 encoding
+      if (length != null) {
+        // Try to manually convert bytes to string with replacement character
+        final bytes = <int>[];
+        for (int i = 0; i < length; i++) {
+          final charCode = ptr[i];
+          // Filter out invalid bytes or replace with Unicode replacement character
+          bytes.add(charCode < 0 ? 0xFFFD : charCode);
+        }
+        return String.fromCharCodes(bytes);
+      }
+      return "Unknown";
+    }
+  }
   static final DynamicLibrary _user32 = DynamicLibrary.open('user32.dll');
   static final DynamicLibrary _kernel32 = DynamicLibrary.open('kernel32.dll');
   static final DynamicLibrary _psapi = DynamicLibrary.open('psapi.dll');
   static final DynamicLibrary _advapi32 = DynamicLibrary.open('advapi32.dll');
   static final DynamicLibrary _shell32 = DynamicLibrary.open('shell32.dll');
+  static final DynamicLibrary _version = DynamicLibrary.open('version.dll');
 
   // Load native functions
   static final GetForegroundWindowDart _getForegroundWindow = 
@@ -318,6 +377,16 @@ class ForegroundWindowPlugin {
   static final LocalFreeDart _localFree = 
     _kernel32.lookupFunction<LocalFreeNative, LocalFreeDart>('LocalFree');
 
+  // Version info functions
+  static final GetFileVersionInfoSizeADart _getFileVersionInfoSizeA = 
+    _version.lookupFunction<GetFileVersionInfoSizeANative, GetFileVersionInfoSizeADart>('GetFileVersionInfoSizeA');
+
+  static final GetFileVersionInfoADart _getFileVersionInfoA = 
+    _version.lookupFunction<GetFileVersionInfoANative, GetFileVersionInfoADart>('GetFileVersionInfoA');
+
+  static final VerQueryValueADart _verQueryValueA = 
+    _version.lookupFunction<VerQueryValueANative, VerQueryValueADart>('VerQueryValueA');
+
   // Constant definitions
   static const int processQueryInformation = 0x0400;
   static const int processVMRead = 0x0010;
@@ -330,6 +399,115 @@ class ForegroundWindowPlugin {
 
   static Future<WindowInfo> getForegroundWindowInfo() async {
     return await compute(_getForegroundWindowInfoNative, null);
+  }
+
+  static String _extractExecutableName(String fullPath) {
+    if (fullPath.isEmpty) return "Unknown";
+    
+    // Extract filename from path
+    final lastSeparator = fullPath.lastIndexOf('\\');
+    String fileName = (lastSeparator != -1 && lastSeparator < fullPath.length - 1)
+        ? fullPath.substring(lastSeparator + 1)
+        : fullPath;
+    
+    // Remove .exe extension if present
+    final dotPos = fileName.lastIndexOf('.exe');
+    if (dotPos != -1) {
+      fileName = fileName.substring(0, dotPos);
+    }
+    
+    // Capitalize first letter
+    if (fileName.isNotEmpty) {
+      fileName = fileName[0].toUpperCase() + (fileName.length > 1 ? fileName.substring(1) : '');
+    }
+    
+    // Make it more readable by replacing underscores and hyphens with spaces
+    fileName = fileName.replaceAll('_', ' ').replaceAll('-', ' ');
+    
+    // Capitalize after spaces (for multi-word names)
+    final words = fileName.split(' ');
+    if (words.length > 1) {
+      for (int i = 1; i < words.length; i++) {
+        if (words[i].isNotEmpty) {
+          words[i] = words[i][0].toUpperCase() + (words[i].length > 1 ? words[i].substring(1) : '');
+        }
+      }
+      fileName = words.join(' ');
+    }
+    
+    return fileName;
+  }
+
+  static String _getProgramNameFromVersionInfo(String fullPath) {
+    if (fullPath.isEmpty || fullPath == "Unknown") return fullPath;
+    
+    final pathPtr = fullPath.toNativeUtf8().cast<Char>();
+    final handlePtr = calloc<Uint32>();
+    
+    try {
+      final versionInfoSize = _getFileVersionInfoSizeA(pathPtr, handlePtr);
+      if (versionInfoSize <= 0) {
+        return _extractExecutableName(fullPath);
+      }
+      
+      final versionInfoPtr = calloc<Uint8>(versionInfoSize);
+      final result = _getFileVersionInfoA(pathPtr, 0, versionInfoSize, versionInfoPtr.cast());
+      if (result == 0) {
+        return _extractExecutableName(fullPath);
+      }
+      
+      // Try common language codes for FileDescription or ProductName
+      final languageCodes = [
+        "\\StringFileInfo\\040904B0\\", // English US
+        "\\StringFileInfo\\040904E4\\", // English US
+        "\\StringFileInfo\\080404B0\\", // Chinese PRC
+        "\\StringFileInfo\\040704B0\\", // German
+        "\\StringFileInfo\\040C04B0\\", // French
+        "\\StringFileInfo\\041904B0\\", // Russian
+        "\\StringFileInfo\\040A04B0\\", // Spanish
+      ];
+      
+      for (final langCode in languageCodes) {
+        // Try FileDescription first
+        final fileDescPath = "$langCode\\FileDescription";
+        final fileDescPathPtr = fileDescPath.toNativeUtf8().cast<Char>();
+        final bufferPtr = calloc<Pointer<Void>>();
+        final lengthPtr = calloc<Uint32>();
+        
+        try {
+          if (_verQueryValueA(versionInfoPtr.cast(), fileDescPathPtr, bufferPtr, lengthPtr) != 0 && 
+              lengthPtr.value > 0) {
+            return bufferPtr.value.cast<Utf8>().toDartString();
+          }
+        } finally {
+          calloc.free(fileDescPathPtr);
+          calloc.free(bufferPtr);
+          calloc.free(lengthPtr);
+        }
+        
+        // Try ProductName if FileDescription fails
+        final productNamePath = "$langCode\\ProductName";
+        final productNamePathPtr = productNamePath.toNativeUtf8().cast<Char>();
+        final pBufferPtr = calloc<Pointer<Void>>();
+        final pLengthPtr = calloc<Uint32>();
+        
+        try {
+          if (_verQueryValueA(versionInfoPtr.cast(), productNamePathPtr, pBufferPtr, pLengthPtr) != 0 && 
+              pLengthPtr.value > 0) {
+            return pBufferPtr.value.cast<Utf8>().toDartString();
+          }
+        } finally {
+          calloc.free(productNamePathPtr);
+          calloc.free(pBufferPtr);
+          calloc.free(pLengthPtr);
+        }
+      }
+      
+      return _extractExecutableName(fullPath);
+    } finally {
+      calloc.free(pathPtr);
+      calloc.free(handlePtr);
+    }
   }
 
   static WindowInfo _getForegroundWindowInfoNative(dynamic _) {
@@ -348,45 +526,81 @@ class ForegroundWindowPlugin {
     // Get window title
     final titlePtr = calloc<Char>(256);
     final titleLength = _getWindowText(hwnd, titlePtr, 256);
-    final windowTitle = titlePtr.cast<Utf8>().toDartString(length: titleLength);
+    final windowTitle = _safeDartString(titlePtr, length: titleLength);
     calloc.free(titlePtr);
 
-    // Open process
+    // Initialize variables with default values
+    String processName = 'Unknown';
+    String executableName = 'Unknown';
+    String programName = 'Unknown';
+    int parentProcessId = 0;
+    String parentProcessName = 'Unknown';
+
+    // Open process - handle potential failure
     final hProcess = _openProcess(
       processQueryInformation | processVMRead, 
       0, 
       processId
     );
 
-    if (hProcess.address == 0) {
-      throw Exception('Failed to open process');
-    }
+    if (hProcess.address != 0) {
+      // Process opened successfully - get detailed information
+      final processNamePtr = calloc<Char>(maxPath);
+      final result = _getModuleFileNameExA(hProcess, nullptr, processNamePtr, maxPath);
 
-    // Get process name
-    final processNamePtr = calloc<Char>(maxPath);
-    final result = _getModuleFileNameExA(hProcess, nullptr, processNamePtr, maxPath);
-
-    String processName;
-    if (result > 0) {
-      processName = processNamePtr.cast<Utf8>().toDartString(length: result);
+      if (result > 0) {
+        processName = processNamePtr.cast<Utf8>().toDartString(length: result);
+        // Extract executable name
+        executableName = _extractExecutableName(processName);
+        // Get program name from version info
+        programName = _getProgramNameFromVersionInfo(processName);
+      }
+      
+      calloc.free(processNamePtr);
+      
+      // Get parent process info if process handle is valid
+      parentProcessId = _getParentProcessId(processId);
+      parentProcessName = _getProcessName(parentProcessId);
+      
+      // Clean up
+      _closeHandle(hProcess);
     } else {
-      processName = 'Unknown';
+      // Process can't be opened - likely due to privileges
+      // Try alternative methods to get basic information
+
+      // Get executable name from window class
+      final classNamePtr = calloc<Char>(256);
+      // _getClassName(hwnd, classNamePtr, 256);
+      String className = classNamePtr.cast<Utf8>().toDartString();
+      calloc.free(classNamePtr);
+
+      // Some processes have recognizable class names
+      if (className.contains('Chrome')) {
+        executableName = 'chrome.exe';
+        programName = 'Google Chrome';
+      } else if (className.contains('Firefox')) {
+        executableName = 'firefox.exe';
+        programName = 'Mozilla Firefox';
+      } else {
+        // Use window title as a fallback for program name
+        executableName = 'Unknown';
+        programName = windowTitle.isNotEmpty ? windowTitle : 'Protected Application';
+      }
+
+      // Try getting process name and parent info using alternative methods
+      // like WMI or Process Enumeration, but this would require additional code
+      parentProcessId = 0; // We'll use 0 to indicate "unknown" for parent process ID
     }
-    
-    // Get parent process ID and name
-    final parentProcessId = _getParentProcessId(processId);
-    final parentProcessName = _getProcessName(parentProcessId);
-    
-    // Clean up
-    calloc.free(processNamePtr);
-    _closeHandle(hProcess);
 
     return WindowInfo(
       windowTitle: windowTitle, 
       processName: processName, 
+      executableName: executableName,
+      programName: programName,
       processId: processId,
       parentProcessId: parentProcessId,
-      parentProcessName: parentProcessName
+      parentProcessName: parentProcessName,
+      
     );
   }
 
@@ -443,250 +657,5 @@ class ForegroundWindowPlugin {
     _closeHandle(hProcess);
     
     return processName;
-  }
-
-  static bool _isRegisteredForAutoStart() {
-    bool result = false;
-    
-    // Get current executable path
-    final exePathPtr = calloc<Char>(maxPath);
-    final hProcess = _getCurrentProcess();
-    final pathLength = _getModuleFileNameExA(hProcess, nullptr, exePathPtr, maxPath);
-    
-    if (pathLength == 0) {
-      calloc.free(exePathPtr);
-      return false;
-    }
-    
-    final exePath = exePathPtr.cast<Utf8>().toDartString(length: pathLength);
-    calloc.free(exePathPtr);
-    
-    // Check HKEY_CURRENT_USER\SOFTWARE\Microsoft\Windows\CurrentVersion\Run
-    result = _checkRegistryKeyForAutostart(hkeyCurrentUser, exePath);
-    
-    // If not found in HKCU, check HKEY_LOCAL_MACHINE
-    if (!result) {
-      result = _checkRegistryKeyForAutostart(hkeyLocalMachine, exePath);
-    }
-    
-    return result;
-  }
-  
-  static bool _checkRegistryKeyForAutostart(int rootKey, String exePath) {
-    final keyPtr = "SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Run".toNativeUtf8().cast<Char>();
-    final keyHandlePtr = calloc<IntPtr>();
-    
-    try {
-      if (_regOpenKeyExA(rootKey, keyPtr, 0, keyRead, keyHandlePtr) != errorSuccess) {
-        return false;
-      }
-      
-      final keyHandle = keyHandlePtr.value;
-      final valueNamePtr = calloc<Char>(maxPath);
-      final valueNameSizePtr = calloc<Uint32>();
-      final valueDataPtr = calloc<Uint8>(maxPath);
-      final valueDataSizePtr = calloc<Uint32>();
-      final valueTypePtr = calloc<Uint32>();
-      
-      bool found = false;
-      int index = 0;
-      
-      while (true) {
-        valueNameSizePtr.value = maxPath;
-        valueDataSizePtr.value = maxPath;
-        
-        final enumResult = _regEnumValueA(
-          keyHandle, 
-          index, 
-          valueNamePtr, 
-          valueNameSizePtr, 
-          nullptr, 
-          valueTypePtr, 
-          valueDataPtr, 
-          valueDataSizePtr
-        );
-        
-        if (enumResult != errorSuccess) break;
-        
-        // Convert value data to string and check if it contains our exe path
-        final data = valueDataPtr.cast<Utf8>().toDartString(length: valueDataSizePtr.value);
-        if (data.contains(exePath)) {
-          found = true;
-          break;
-        }
-        
-        index++;
-      }
-      
-      _regCloseKey(keyHandle);
-      
-      calloc.free(valueNamePtr);
-      calloc.free(valueNameSizePtr);
-      calloc.free(valueDataPtr);
-      calloc.free(valueDataSizePtr);
-      calloc.free(valueTypePtr);
-      
-      return found;
-    } finally {
-      calloc.free(keyPtr);
-      calloc.free(keyHandlePtr);
-    }
-  }
-  
-  static bool _wasStartedWithSystem() {
-    // Get process creation time
-    final hProcess = _getCurrentProcess();
-    final creationTimePtr = calloc<FILETIME>();
-    final exitTimePtr = calloc<FILETIME>();
-    final kernelTimePtr = calloc<FILETIME>();
-    final userTimePtr = calloc<FILETIME>();
-    
-    final result = _getProcessTimes(
-      hProcess, 
-      creationTimePtr, 
-      exitTimePtr, 
-      kernelTimePtr, 
-      userTimePtr
-    );
-    
-    if (result == 0) {
-      calloc.free(creationTimePtr);
-      calloc.free(exitTimePtr);
-      calloc.free(kernelTimePtr);
-      calloc.free(userTimePtr);
-      return false;
-    }
-    
-    // Get current system time
-    final systemTimePtr = calloc<FILETIME>();
-    _getSystemTimeAsFileTime(systemTimePtr);
-    
-    // Get system uptime in milliseconds
-    final uptime = _getTickCount64();
-    
-    // Calculate system boot time by subtracting uptime from current time
-    final systemTime = (systemTimePtr.ref.dwHighDateTime.toDouble() * 4294967296 + 
-                       systemTimePtr.ref.dwLowDateTime);
-    
-    final processTime = (creationTimePtr.ref.dwHighDateTime.toDouble() * 4294967296 + 
-                       creationTimePtr.ref.dwLowDateTime);
-    
-    // Convert uptime from milliseconds to 100-nanosecond intervals (FILETIME units)
-    final uptimeInFileTime = uptime * 10000;
-    final bootTime = systemTime - uptimeInFileTime;
-    
-    // If process started within 60 seconds of boot, it's likely auto-started
-    // Calculate time difference in seconds (100-nanoseconds -> seconds)
-    final diffInSeconds = (processTime - bootTime) / 10000000;
-    
-    calloc.free(creationTimePtr);
-    calloc.free(exitTimePtr);
-    calloc.free(kernelTimePtr);
-    calloc.free(userTimePtr);
-    calloc.free(systemTimePtr);
-    
-    return diffInSeconds < 60;
-  }
-  
-  static List<String> _getCommandLineArgs() {
-    final List<String> args = [];
-
-    final cmdLine = _getCommandLineW();
-    final argcPtr = calloc<Int32>();
-
-    final argv = _commandLineToArgvW(cmdLine, argcPtr);
-    if (argv != nullptr) {
-      final argc = argcPtr.value;
-
-      for (int i = 0; i < argc; i++) {
-        final Pointer<Utf16> argPtr = argv[i]; // Use indexing instead of elementAt(i).value
-        args.add(argPtr.toDartString()); // Convert Utf16 pointer to Dart string
-      }
-
-      _localFree(argv.cast());
-    }
-
-    calloc.free(argcPtr);
-    return args;
-  }
-
-
-  static Future<AppLaunchInfo> getAppLaunchInfo() async {
-    return await compute(_getAppLaunchInfoNative, null);
-  }
-
-  static AppLaunchInfo _getAppLaunchInfoNative(dynamic _) {
-    // Get current process ID
-    final processId = _getCurrentProcessId();
-    
-    // Get parent process ID and name
-    final parentProcessId = _getParentProcessId(processId);
-    final parentProcessName = _getProcessName(parentProcessId);
-    
-    // Check if registered for auto-start in registry
-    final isRegisteredAutoStart = _isRegisteredForAutoStart();
-    
-    // Check if started with system boot
-    final wasStartedWithSystem = _wasStartedWithSystem();
-    
-    // Get command line arguments
-    final commandLineArgs = _getCommandLineArgs();
-    
-    // Determine if we were launched with Windows
-    bool isSystemLaunched = false;
-    
-    // Check if the parent process is a system process
-    final lowerParentName = parentProcessName.toLowerCase();
-    if (lowerParentName.contains("svchost") || 
-        lowerParentName.contains("winlogon") ||
-        lowerParentName.contains("csrss") ||
-        lowerParentName.contains("smss") ||
-        lowerParentName.contains("services") ||
-        lowerParentName.contains("wininit") ||
-        lowerParentName.contains("userinit") ||
-        lowerParentName.contains("taskeng") ||
-        lowerParentName.contains("taskhost") ||
-        lowerParentName.contains("dwm") ||
-        lowerParentName.contains("startmenuexperiencehost")) {
-      
-      isSystemLaunched = true;
-    }
-    
-    // If parent is explorer.exe, it's likely user-launched (by clicking)
-    if (lowerParentName.contains("explorer.exe")) {
-      isSystemLaunched = false;
-    }
-    
-    // Make a launch type determination
-    String launchType = "USER_LAUNCHED";
-    
-    bool hasAutoStartParent = 
-        lowerParentName.isNotEmpty &&
-        !lowerParentName.contains("explorer.exe") && 
-        (lowerParentName.contains("svchost.exe") ||
-         lowerParentName.contains("winlogon.exe") ||
-         lowerParentName.contains("userinit.exe") ||
-         lowerParentName.contains("taskeng.exe") ||
-         lowerParentName.contains("startmenuexperiencehost.exe"));
-    
-    if (wasStartedWithSystem || isRegisteredAutoStart || hasAutoStartParent) {
-      launchType = "SYSTEM_LAUNCHED";
-    }
-    
-    return AppLaunchInfo(
-      processId: processId,
-      parentProcessId: parentProcessId,
-      parentProcessName: parentProcessName,
-      wasStartedWithSystem: wasStartedWithSystem,
-      isSystemLaunched: isSystemLaunched,
-      isRegisteredAutoStart: isRegisteredAutoStart,
-      commandLineArgs: commandLineArgs,
-      launchType: launchType,
-    );
-  }
-
-  static Future<bool> wasLaunchedBySystem() async {
-    final launchInfo = await getAppLaunchInfo();
-    return launchInfo.isSystemLaunched;
   }
 }
