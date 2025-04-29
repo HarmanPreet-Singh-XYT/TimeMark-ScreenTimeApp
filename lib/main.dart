@@ -72,7 +72,7 @@ class MyApp extends StatefulWidget {
 
 class _MyAppState extends State<MyApp> with TrayListener,WidgetsBindingObserver {
   bool notificationsEnabled = true;
-  final String appVersion = "v1.0.1";
+  final String appVersion = "v${SettingsManager().versionInfo["version"]}";
   bool focusMode = false;
   int selectedIndex = 0;
   final AppDataStore _dataStore = AppDataStore();

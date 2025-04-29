@@ -7,7 +7,7 @@ import 'package:url_launcher_platform_interface/url_launcher_platform_interface.
 // Create a SettingsProvider to centralize state management
 class SettingsProvider extends ChangeNotifier {
   final SettingsManager _settingsManager = SettingsManager();
-  final Map<String, String> version = {"version": "1.0.3", "type": "Stable Build"};
+  final Map<String, String> version = SettingsManager().versionInfo;
   
   String _theme = "";
   String _language = "English";

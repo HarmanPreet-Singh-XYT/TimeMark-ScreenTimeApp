@@ -93,7 +93,6 @@ class BackgroundAppTracker {
       // Usage
       String appTitle = currentAppInfo['title'] ?? '';
       if(appTitle.contains("Windows Explorer")) appTitle = "";
-      debugPrint(appTitle);
       // Check if app tracking is enabled
       AppMetadata? metadata = appDataStore.getAppMetadata(appTitle);
       
