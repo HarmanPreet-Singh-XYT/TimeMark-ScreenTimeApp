@@ -139,6 +139,10 @@ class Help extends StatelessWidget {
           "question": "Data is not showing, hive is not opening error",
           "answer": "The issue is known, the temporary fix is to clear data through settings and if it doesn't work then go to Documents and delete the following files if they exist - harman_screentime_app_usage_box.hive and harman_screentime_app_usage.lock, you are also suggested to update the app to the latest version."
         },
+        {
+          "question": "App opens on every startup, what to do?",
+          "answer": "This is a known issue that occurs on Windows 10, the temporary fix is to enable Launch as Minimized in settings so it launches as Minimized."
+        },
       ]
     }
   ];

@@ -294,7 +294,7 @@ class GeneralSection extends StatelessWidget {
               // ),
               OptionSetting(
                 title: "Launch as Minimized",
-                description: "Start the application in System Tray",
+                description: "Start the application in System Tray (Recommended for Windows 10)",
                 optionType: "switch",
                 settingType: "launchAsMinimized",
                 changeValue: (key, value) => settings.updateSetting(key, value),
