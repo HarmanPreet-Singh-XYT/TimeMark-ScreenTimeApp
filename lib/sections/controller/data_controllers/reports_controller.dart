@@ -100,6 +100,91 @@ class UsageAnalyticsController extends ChangeNotifier {
     if (previous == 0) return 0;
     return ((current - previous) / previous) * 100;
   }
+  // Get data for specific date range
+  Future<AnalyticsSummary> getSpecificDateRangeAnalytics(DateTime startDate, DateTime endDate, {bool compareWithPrevious = true}) async {
+    _setLoading(true);
+    
+    try {
+      // Normalize the dates to remove time component
+      final normalizedStartDate = DateTime(startDate.year, startDate.month, startDate.day);
+      final normalizedEndDate = DateTime(endDate.year, endDate.month, endDate.day);
+      
+      // Validate date range
+      if (normalizedEndDate.isBefore(normalizedStartDate)) {
+        throw ArgumentError('End date must be after start date');
+      }
+      
+      Map<String, DateTime>? comparisonPeriod;
+      
+      if (compareWithPrevious) {
+        // Calculate the comparison period
+        final int daysDifference = normalizedEndDate.difference(normalizedStartDate).inDays + 1;
+        
+        final DateTime previousEndDate = normalizedStartDate.subtract(const Duration(days: 1));
+        final DateTime previousStartDate = previousEndDate.subtract(Duration(days: daysDifference - 1));
+        
+        comparisonPeriod = {
+          "start": previousStartDate,
+          "end": previousEndDate
+        };
+      }
+      
+      final result = await _getAnalyticsForDateRange(
+        normalizedStartDate,
+        normalizedEndDate,
+        comparisonPeriod,
+      );
+      
+      _setLoading(false);
+      return result;
+    } catch (e) {
+      _setError("Error fetching specific date range analytics: $e");
+      _setLoading(false);
+      return _getEmptyAnalyticsSummary();
+    }
+  }
+  // Get data for specific date
+  Future<AnalyticsSummary> getSpecificDayAnalytics(DateTime date, {bool compareWithToday = true}) async {
+    _setLoading(true);
+    
+    try {
+      // Normalize the date to remove time component
+      final normalizedDate = DateTime(date.year, date.month, date.day);
+      
+      // For a single day, start and end date are the same
+      final DateTime startDate = normalizedDate;
+      final DateTime endDate = normalizedDate;
+      
+      Map<String, DateTime>? comparisonPeriod;
+      
+      if (compareWithToday) {
+        // Compare with today
+        final DateTime now = DateTime.now();
+        final DateTime today = DateTime(now.year, now.month, now.day);
+        
+        // Skip comparison if the selected date is today
+        if (normalizedDate != today) {
+          comparisonPeriod = {
+            "start": today,
+            "end": today
+          };
+        }
+      }
+      
+      final result = await _getAnalyticsForDateRange(
+        startDate,
+        endDate,
+        comparisonPeriod,
+      );
+      
+      _setLoading(false);
+      return result;
+    } catch (e) {
+      _setError("Error fetching specific day analytics: $e");
+      _setLoading(false);
+      return _getEmptyAnalyticsSummary();
+    }
+  }
   
   // Get data for lifetime
   Future<AnalyticsSummary> getLifetimeAnalytics() async {

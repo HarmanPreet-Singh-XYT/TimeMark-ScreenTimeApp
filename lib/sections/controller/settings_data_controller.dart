@@ -94,7 +94,7 @@ class SettingsManager {
       "reminderFrequency": 5, // minutes
     }
   };
-  Map<String, String> versionInfo = {"version": "1.0.3", "type": "Stable Build"};
+  Map<String, String> versionInfo = {"version": "1.1.0", "type": "Stable Build"};
   /// Initialize SharedPreferences and load settings
   Future<void> init() async {
     // if (!kIsWeb) {

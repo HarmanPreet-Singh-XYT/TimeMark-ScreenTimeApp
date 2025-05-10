@@ -21,7 +21,7 @@ class _ReportsState extends State<Reports> {
   bool _isLoading = true;
   String? _error;
   String _selectedPeriod = 'Last 7 Days';
-  final List<String> _periodOptions = ['Last 7 Days', 'Last Month', 'Last 3 Months', 'Lifetime'];
+  final List<String> _periodOptions = ['Last 7 Days', 'Last Month', 'Last 3 Months', 'Lifetime','Custom'];
 
   @override
   void initState() {
@@ -65,18 +65,31 @@ class _ReportsState extends State<Reports> {
       switch (_selectedPeriod) {
         case 'Last 7 Days':
           summary = await _analyticsController.getLastSevenDaysAnalytics();
+          graphData = summary.dailyScreenTimeData;
           break;
         case 'Last Month':
           summary = await _analyticsController.getLastMonthAnalytics();
+          graphData = summary.dailyScreenTimeData;
           break;
         case 'Last 3 Months':
           summary = await _analyticsController.getLastThreeMonthsAnalytics();
+          graphData = summary.dailyScreenTimeData;
           break;
         case 'Lifetime':
           summary = await _analyticsController.getLifetimeAnalytics();
+          graphData = summary.dailyScreenTimeData;
           break;
+        case 'Custom':
+          if (_startDate != null || _endDate != null && _isDateRangeMode == true) {
+          summary = await _analyticsController.getSpecificDateRangeAnalytics(_startDate!,_endDate!);
+          graphData = summary.dailyScreenTimeData;
+          }else if(_specificDate != null && _isDateRangeMode == false){
+            summary = await _analyticsController.getSpecificDayAnalytics(_specificDate!);
+            graphData = summary.dailyScreenTimeData;
+          }
         default:
           summary = await _analyticsController.getLastSevenDaysAnalytics();
+          graphData = summary.dailyScreenTimeData;
       }
 
       setState(() {
@@ -90,94 +103,116 @@ class _ReportsState extends State<Reports> {
       });
     }
   }
-
+  DateTime? _startDate;
+  DateTime? _endDate;
+  DateTime? _specificDate;
+  bool _isDateRangeMode = false;
+  List<DailyScreenTime> graphData = [];
+  Future<void> executeLineChart(DateTime specificDate) async{
+    setState(() {
+      _isLoading = true;
+    });
+    AnalyticsSummary? summary;
+    try {
+      summary = await _analyticsController.getSpecificDayAnalytics(specificDate);
+      setState(() {
+        _analyticsSummary = summary;
+        _isLoading = false;
+      });
+    } catch (e) {
+      setState(() {
+        _error = 'Error loading analytics data: $e. Please check your connection and try again.';
+        _isLoading = false;
+      });
+    }
+  }
   @override
-Widget build(BuildContext context) {
-  return NotificationListener<ScrollNotification>(
-    // Custom refresh implementation
-    onNotification: (ScrollNotification scrollInfo) {
-      if (scrollInfo is ScrollStartNotification && 
-          scrollInfo.metrics.pixels == scrollInfo.metrics.minScrollExtent) {
-        _loadAnalyticsData();
-        return true;
-      }
-      return false;
-    },
-    child: SingleChildScrollView(
-      physics: const AlwaysScrollableScrollPhysics(), // Enables scrolling
-      child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            // Header with period selector
-            _buildHeader(),
-            const SizedBox(height: 20),
-            
-            if (_isLoading)
-              _buildCustomLoadingIndicator()
-            else if (_error != null)
-              _buildCustomErrorDisplay()
-            else if (_analyticsSummary != null)
-              ..._buildAnalyticsContent(),
-          ],
+  Widget build(BuildContext context) {
+    return NotificationListener<ScrollNotification>(
+      // Custom refresh implementation
+      onNotification: (ScrollNotification scrollInfo) {
+        if (scrollInfo is ScrollStartNotification && 
+            scrollInfo.metrics.pixels == scrollInfo.metrics.minScrollExtent) {
+          _loadAnalyticsData();
+          return true;
+        }
+        return false;
+      },
+      child: SingleChildScrollView(
+        physics: const AlwaysScrollableScrollPhysics(), // Enables scrolling
+        child: Container(
+          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              // Header with period selector
+              _buildHeader(),
+              const SizedBox(height: 20),
+              
+              if (_isLoading)
+                _buildCustomLoadingIndicator()
+              else if (_error != null)
+                _buildCustomErrorDisplay()
+              else if (_analyticsSummary != null)
+                ..._buildAnalyticsContent(),
+            ],
+          ),
         ),
       ),
-    ),
-  );
-}
+    );
+  }
 
-Widget _buildCustomLoadingIndicator() {
-  return const Center(
-    child: Column(
-      children: [
-        SizedBox(
-          width: 40,
-          height: 40,
-          child: ProgressRing(
-            strokeWidth: 3,
-          ),
-        ),
-        SizedBox(height: 10),
-        Text('Loading analytics data...'),
-      ],
-    ),
-  );
-}
-
-Widget _buildCustomErrorDisplay() {
-  return Center(
-    child: Column(
-      children: [
-        Icon(
-          FluentIcons.error,
-          color: Colors.red,
-          size: 40,
-        ),
-        const SizedBox(height: 10),
-        Text(
-          _error!,
-          style: TextStyle(color: Colors.red),
-        ),
-        const SizedBox(height: 15),
-        GestureDetector(
-          onTap: _initializeAndLoadData,
-          child: Container(
-            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-            decoration: BoxDecoration(
-              border: Border.all(color: Colors.blue),
-              borderRadius: BorderRadius.circular(4),
-            ),
-            child: Text(
-              'Try Again',
-              style: TextStyle(color: Colors.blue),
+  Widget _buildCustomLoadingIndicator() {
+    return const Center(
+      child: Column(
+        children: [
+          SizedBox(
+            width: 40,
+            height: 40,
+            child: ProgressRing(
+              strokeWidth: 3,
             ),
           ),
-        ),
-      ],
-    ),
-  );
-}
+          SizedBox(height: 10),
+          Text('Loading analytics data...'),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildCustomErrorDisplay() {
+    return Center(
+      child: Column(
+        children: [
+          Icon(
+            FluentIcons.error,
+            color: Colors.red,
+            size: 40,
+          ),
+          const SizedBox(height: 10),
+          Text(
+            _error!,
+            style: TextStyle(color: Colors.red),
+          ),
+          const SizedBox(height: 15),
+          GestureDetector(
+            onTap: _initializeAndLoadData,
+            child: Container(
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+              decoration: BoxDecoration(
+                border: Border.all(color: Colors.blue),
+                borderRadius: BorderRadius.circular(4),
+              ),
+              child: Text(
+                'Try Again',
+                style: TextStyle(color: Colors.blue),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
 
   Widget _buildHeader() {
     return Row(
@@ -198,10 +233,14 @@ Widget _buildCustomErrorDisplay() {
           )).toList(),
           onChanged: (value) {
             if (value != null && value != _selectedPeriod) {
-              setState(() {
-                _selectedPeriod = value;
-              });
-              _loadAnalyticsData();
+              if (value == 'Custom') {
+                _showDateRangeDialog(context);
+              } else {
+                setState(() {
+                  _selectedPeriod = value;
+                });
+                _loadAnalyticsData();
+              }
             }
           },
           // accessibleLabel: 'Select time period for analytics',
@@ -209,7 +248,162 @@ Widget _buildCustomErrorDisplay() {
       ],
     );
   }
-
+  void _showDateRangeDialog(BuildContext context) {
+    // Default to current month and year
+    DateTime now = DateTime.now();
+    DateTime startDate = _startDate ?? DateTime(now.year, now.month-1, 1);
+    DateTime endDate = _endDate ?? DateTime(now.year, now.month, now.day); // Last day of current month
+    DateTime specificDate = _specificDate ?? now;
+    bool isRangeMode = _isDateRangeMode;
+    
+    showDialog(
+      context: context,
+      builder: (context) {
+        return StatefulBuilder(
+          builder: (context, setState) {
+            return ContentDialog(
+              title: const Text('Custom'),
+              content: SingleChildScrollView(
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const SizedBox(height: 10),
+                    Row(
+                      children: [
+                        ToggleSwitch(
+                          checked: isRangeMode,
+                          onChanged: (value) {
+                            setState(() {
+                              isRangeMode = value;
+                            });
+                          },
+                        ),
+                        const SizedBox(width: 8),
+                        Text(isRangeMode ? 'Date Range' : 'Specific Date'),
+                      ],
+                    ),
+                    const SizedBox(height: 16),
+                    
+                    if (isRangeMode) ...[
+                      // Date Range UI
+                      Row(
+                        children: [
+                          const Text('Start Date: '),
+                          const SizedBox(width: 8),
+                          Expanded(
+                            child: DatePicker(
+                              selected: startDate,
+                              onChanged: (date) {
+                                setState(() {
+                                  startDate = date;
+                                });
+                              },
+                            ),
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: 16),
+                      Row(
+                        children: [
+                          const Text('End Date: '),
+                          const SizedBox(width: 16),
+                          Expanded(
+                            child: DatePicker(
+                              selected: endDate,
+                              onChanged: (date) {
+                                setState(() {
+                                  endDate = date;
+                                });
+                              },
+                            ),
+                          ),
+                        ],
+                      ),
+                    ] else ...[
+                      // Specific Date UI
+                      Row(
+                        children: [
+                          const Text('Date: '),
+                          const SizedBox(width: 24),
+                          Expanded(
+                            child: DatePicker(
+                              selected: specificDate,
+                              onChanged: (date) {
+                                setState(() {
+                                  specificDate = date;
+                                });
+                              },
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ],
+                ),
+              ),
+              actions: [
+                Button(
+                  child: const Text('Cancel'),
+                  onPressed: () {
+                    Navigator.pop(context);
+                    // If we previously didn't have a custom date selection, revert to the previous option
+                    if (_selectedPeriod != 'Custom Range' && _selectedPeriod != 'Specific Date') {
+                      // Keep the previous selection
+                    }
+                  },
+                ),
+                FilledButton(
+                  child: const Text('Apply'),
+                  onPressed: () {
+                    // Validate before proceeding
+                    if (isRangeMode) {
+                      // For date range, ensure start date is before or equal to end date
+                      if (startDate.isAfter(endDate)) {
+                        showDialog(
+                          context: context,
+                          builder: (context) => ContentDialog(
+                            title: const Text('Invalid Date Range'),
+                            content: const Text('Start date must be before or equal to end date.'),
+                            actions: [
+                              Button(
+                                child: const Text('OK'),
+                                onPressed: () => Navigator.pop(context),
+                              ),
+                            ],
+                          ),
+                        );
+                        return;
+                      }
+                    }
+                    
+                    Navigator.pop(context);
+                    
+                    
+                    this.setState(() {
+                      _isDateRangeMode = isRangeMode;
+                        _selectedPeriod = 'Custom';
+                      if (isRangeMode) {
+                        _startDate = startDate;
+                        _endDate = endDate;
+                        _specificDate = null;
+                      } else {
+                        
+                        _specificDate = specificDate;
+                        _startDate = null;
+                        _endDate = null;
+                      }
+                    });
+                    _loadAnalyticsData();
+                  },
+                ),
+              ],
+            );
+          }
+        );
+      },
+    );
+  }
   List<Widget> _buildAnalyticsContent() {
     final summary = _analyticsSummary!;
     return [
@@ -258,8 +452,9 @@ Widget _buildCustomErrorDisplay() {
       child: SizedBox(
         child: LineChartWidget(
           chartType: ChartType.main,
-          dailyScreenTimeData: summary.dailyScreenTimeData,
+          dailyScreenTimeData: graphData,
           periodType: _selectedPeriod,
+          onDateSelected: executeLineChart,
         ),
       ),
     );
