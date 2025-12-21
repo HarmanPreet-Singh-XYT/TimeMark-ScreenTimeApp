@@ -593,7 +593,7 @@ class OptionSetting extends StatelessWidget {
           onPressed: onButtonPressed,
           child: Text(
             buttonType == "data" ? "Clear Data" : "Reset Settings",
-            style: const TextStyle(color: Colors.white, fontWeight: FontWeight.w600),
+            style: const TextStyle(fontWeight: FontWeight.w600),
           ),
         );
       default:

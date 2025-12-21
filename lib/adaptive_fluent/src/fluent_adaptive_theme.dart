@@ -134,14 +134,15 @@ class _FluentAdaptiveThemeState extends State<FluentAdaptiveTheme>
   Brightness get brightness => theme.brightness;
 
   @override
-  Future<bool> reset() async {
+  Future<void> reset() async {
     setTheme(
       light: widget.light,
       dark: widget.dark,
       notify: false,
     );
-    return super.reset();
+    await super.reset();
   }
+
 
   @override
   Widget build(BuildContext context) {
