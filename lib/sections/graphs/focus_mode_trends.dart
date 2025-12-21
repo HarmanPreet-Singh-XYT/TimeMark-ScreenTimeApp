@@ -228,7 +228,7 @@ class _FocusModeTrendsState extends State<FocusModeTrends> {
                     },
                     touchTooltipData: LineTouchTooltipData(
                       getTooltipColor: (touchedSpot) => Colors.pink,
-                      tooltipRoundedRadius: 8,
+                      tooltipBorderRadius:BorderRadius.circular(8.0),
                       getTooltipItems: (List<LineBarSpot> lineBarsSpot) {
                         return lineBarsSpot.map((lineBarSpot) {
                           String tooltipText = "";

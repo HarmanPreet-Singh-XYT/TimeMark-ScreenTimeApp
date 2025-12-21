@@ -4,6 +4,7 @@
 
 list(APPEND FLUTTER_PLUGIN_LIST
   bitsdojo_window_linux
+  flutter_localization
   local_notifier
   screen_retriever_linux
   tray_manager
