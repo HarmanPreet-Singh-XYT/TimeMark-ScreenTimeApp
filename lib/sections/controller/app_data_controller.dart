@@ -216,7 +216,7 @@ class AppDataStore extends ChangeNotifier {
             
             // Force close any open instances
             try {
-              final box = await Hive.box(boxName);
+              final box = Hive.box(boxName);
               if (box.isOpen) await box.close();
             } catch (_) {
               // Ignore errors during force close
@@ -323,7 +323,7 @@ class AppDataStore extends ChangeNotifier {
     Future<T> Function(B box) operation, 
     T defaultValue
   ) async {
-    if (!(await _ensureInitialized()) || box == null) return defaultValue;
+    if (!(_ensureInitialized()) || box == null) return defaultValue;
     
     return await lock.synchronized(() async {
       try {
@@ -867,7 +867,7 @@ class AppDataStore extends ChangeNotifier {
   /// Clear all data with improved performance and error handling
   Future<bool> clearAllData({Function(double)? progressCallback}) async {
     return await _initLock.synchronized(() async {
-      if (!(await _ensureInitialized())) return false;
+      if (!(_ensureInitialized())) return false;
 
       try {
         if (progressCallback != null) progressCallback(0.1);

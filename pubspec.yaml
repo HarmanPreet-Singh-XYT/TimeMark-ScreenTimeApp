@@ -10,11 +10,11 @@ dependencies:
   flutter:
     sdk: flutter
 
-  path_provider: ^2.1.1
-  file_picker: ^6.1.1
-  share_plus: ^7.2.1
-  archive: ^3.4.9
-  crypto: ^3.0.3
+  path_provider: ^2.1.5
+  file_picker: ^10.3.8
+  share_plus: ^12.0.1
+  archive: ^4.0.7
+  crypto: ^3.0.7
   
   # UI and Theming
   fluent_ui: ^4.12.0

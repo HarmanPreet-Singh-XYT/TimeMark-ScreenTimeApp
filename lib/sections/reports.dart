@@ -1215,10 +1215,10 @@ class _ApplicationUsageState extends State<ApplicationUsage> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: timeOfDayUsage.entries.map((entry) {
                         String localizedLabel = entry.key;
-                        if (entry.key.contains('Morning')) localizedLabel = l10n.morning;
-                        else if (entry.key.contains('Afternoon')) localizedLabel = l10n.afternoon;
-                        else if (entry.key.contains('Evening')) localizedLabel = l10n.evening;
-                        else if (entry.key.contains('Night')) localizedLabel = l10n.night;
+                        if (entry.key.contains('Morning')) {localizedLabel = l10n.morning;}
+                        else if (entry.key.contains('Afternoon')) {localizedLabel = l10n.afternoon;}
+                        else if (entry.key.contains('Evening')) {localizedLabel = l10n.evening;}
+                        else if (entry.key.contains('Night')) {localizedLabel = l10n.night;}
                         
                         return Padding(
                           padding: const EdgeInsets.symmetric(vertical: 8),
@@ -1413,10 +1413,10 @@ class _ApplicationUsageState extends State<ApplicationUsage> {
     final String primaryTimeOfDay = timeOfDay.entries.reduce((a, b) => a.value > b.value ? a : b).key;
     String localizedTimeOfDay = primaryTimeOfDay;
     
-    if (primaryTimeOfDay.contains('Morning')) localizedTimeOfDay = l10n.morning;
-    else if (primaryTimeOfDay.contains('Afternoon')) localizedTimeOfDay = l10n.afternoon;
-    else if (primaryTimeOfDay.contains('Evening')) localizedTimeOfDay = l10n.evening;
-    else if (primaryTimeOfDay.contains('Night')) localizedTimeOfDay = l10n.night;
+    if (primaryTimeOfDay.contains('Morning')) {localizedTimeOfDay = l10n.morning;}
+    else if (primaryTimeOfDay.contains('Afternoon')) {localizedTimeOfDay = l10n.afternoon;}
+    else if (primaryTimeOfDay.contains('Evening')) {localizedTimeOfDay = l10n.evening;}
+    else if (primaryTimeOfDay.contains('Night')) {localizedTimeOfDay = l10n.night;}
     
     insights.add(
       l10n.primaryUsageTime(app.name, localizedTimeOfDay),

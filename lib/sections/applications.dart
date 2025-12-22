@@ -197,7 +197,6 @@ class _ApplicationsState extends State<Applications> {
                                       changeCategory(category.name);
                                     },
                                   ))
-                              .toList(),
                         ],
                       )
                     ],

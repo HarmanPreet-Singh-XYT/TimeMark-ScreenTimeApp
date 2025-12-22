@@ -196,7 +196,7 @@ class Help extends StatelessWidget {
                   ),
                   const SizedBox(height: 5),
                 ],
-              )).toList(),
+              ))
             ],
           );
         },

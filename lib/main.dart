@@ -27,7 +27,20 @@ void main(List<String> args) async {
   
   // Get saved theme and locale preferences
   final String savedTheme = SettingsManager().getSetting("theme.selected") ?? "System";
-  final String? savedLocale = SettingsManager().getSetting("language.selected");
+  String? savedLocale = SettingsManager().getSetting("language.selected");
+  
+  // Auto-detect system locale if no saved preference exists
+  if (savedLocale == null) {
+    savedLocale = _detectSystemLocale();
+    if (savedLocale != null) {
+      // Save the detected locale
+      SettingsManager().updateSetting("language.selected", savedLocale);
+      debugPrint('🌍 Auto-detected and saved system locale: $savedLocale');
+    } else {
+      // Fallback to default
+      savedLocale = LanguageOptions.defaultLanguage;
+    }
+  }
   
   final AdaptiveThemeMode initialTheme;
   switch (savedTheme) {
@@ -45,7 +58,7 @@ void main(List<String> args) async {
   
   // Initialize tracker with locale (loads localizations internally)
   final tracker = BackgroundAppTracker();
-  await tracker.initializeTracking(locale: savedLocale ?? 'en');
+  await tracker.initializeTracking(locale: savedLocale);
   
   runApp(MyApp(
     initialTheme: initialTheme,
@@ -65,6 +78,38 @@ void main(List<String> args) async {
       win.show();
     }
   });
+}
+
+// Global navigator key for accessing context outside widget tree
+final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
+
+/// Detects the system locale and returns it if supported, otherwise null
+String? _detectSystemLocale() {
+  try {
+    // Get the system locale
+    final String systemLocale = Platform.localeName; // e.g., "en_US", "zh_CN", "es_ES"
+    
+    // Extract language code (before underscore)
+    final String languageCode = systemLocale.split('_').first.toLowerCase();
+    
+    debugPrint('🔍 System locale detected: $systemLocale (language: $languageCode)');
+    
+    // Check if the language is supported
+    final bool isSupported = LanguageOptions.available.any(
+      (lang) => lang['code'] == languageCode
+    );
+    
+    if (isSupported) {
+      debugPrint('✅ Language $languageCode is supported');
+      return languageCode;
+    } else {
+      debugPrint('⚠️ Language $languageCode is not supported, using default');
+      return null;
+    }
+  } catch (e) {
+    debugPrint('❌ Error detecting system locale: $e');
+    return null;
+  }
 }
 
 
@@ -107,6 +152,9 @@ class _MyAppState extends State<MyApp> with TrayListener, WidgetsBindingObserver
     // Update background tracker with new locale (reloads localizations)
     await BackgroundAppTracker().updateLocale(locale.languageCode);
     
+    // Update tray menu with new locale
+    await _updateTrayMenu();
+    
     debugPrint('🌍 Locale changed to: ${locale.languageCode}');
   }
 
@@ -139,17 +187,23 @@ class _MyAppState extends State<MyApp> with TrayListener, WidgetsBindingObserver
   }
 
   Future<void> _updateTrayMenu() async {
+    // Get the current context to access localizations
+    final context = navigatorKey.currentContext;
+    if (context == null) return;
+    
+    final l10n = AppLocalizations.of(context)!;
+    
     await trayManager.setContextMenu(
       Menu(items: [
-        MenuItem(label: 'Show Window', onClick: (_) => _showApp()),
+        MenuItem(label: l10n.trayShowWindow, onClick: (_) => _showApp()),
         MenuItem.separator(),
-        MenuItem(label: 'Reports', onClick: (_) => _openReports()),
-        MenuItem(label: 'Alerts & Limits', onClick: (_) => _openAlerts()),
-        MenuItem(label: 'Applications', onClick: (_) => _openApplications()),
+        MenuItem(label: l10n.navReports, onClick: (_) => _openReports()),
+        MenuItem(label: l10n.navAlertsLimits, onClick: (_) => _openAlerts()),
+        MenuItem(label: l10n.navApplications, onClick: (_) => _openApplications()),
         MenuItem.separator(),
-        MenuItem(disabled:true, label: 'Version: $appVersion', checked: false),
+        MenuItem(disabled:true, label: l10n.trayVersion(appVersion), checked: false),
         MenuItem.separator(),
-        MenuItem(label: 'Exit', onClick: (_) => _exitApp()),
+        MenuItem(label: l10n.trayExit, onClick: (_) => _exitApp()),
       ]),
     );
   }
@@ -217,15 +271,20 @@ class _MyAppState extends State<MyApp> with TrayListener, WidgetsBindingObserver
 
   @override
   void onTrayMenuItemClick(MenuItem menuItem) {
-    if (menuItem.label == 'Show Window') {
+    final context = navigatorKey.currentContext;
+    if (context == null) return;
+    
+    final l10n = AppLocalizations.of(context)!;
+    
+    if (menuItem.label == l10n.trayShowWindow) {
       appWindow.show();
-    } else if (menuItem.label == 'Exit') {
+    } else if (menuItem.label == l10n.trayExit) {
       _exitApp();
-    } else if (menuItem.label == 'Reports') {
+    } else if (menuItem.label == l10n.navReports) {
       _openReports();
-    } else if (menuItem.label == 'Alerts & Limits') {
+    } else if (menuItem.label == l10n.navAlertsLimits) {
       _openAlerts();
-    } else if (menuItem.label == 'Applications') {
+    } else if (menuItem.label == l10n.navApplications) {
       _openApplications();
     } else if (menuItem.label!.contains('Notifications')) {
       _toggleNotifications();
@@ -262,6 +321,7 @@ class _MyAppState extends State<MyApp> with TrayListener, WidgetsBindingObserver
         title: 'Productive ScreenTime',
         theme: theme,
         darkTheme: darkTheme,
+        navigatorKey: navigatorKey, // Add global navigator key
         // Localization configuration
         localizationsDelegates: AppLocalizations.localizationsDelegates,
         supportedLocales: AppLocalizations.supportedLocales,

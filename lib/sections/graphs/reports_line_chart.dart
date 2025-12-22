@@ -4,7 +4,6 @@ import './resources/app_resources.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:screentime/l10n/app_localizations.dart';
-import 'dart:math' as math;
 
 enum ChartType { main, alternate }
 enum DateDisplayMode { dayOfWeek, dayMonth, monthYear }
@@ -121,7 +120,7 @@ class LineChartWidget extends StatelessWidget {
       touchCallback: (FlTouchEvent event, LineTouchResponse? touchResponse) {
         // Handle tap event to trigger onDateSelected callback
         if (event is FlTapUpEvent && touchResponse != null && touchResponse.lineBarSpots != null && 
-            touchResponse.lineBarSpots!.isNotEmpty && onDateSelected != null) {
+            touchResponse.lineBarSpots!.isNotEmpty) {
           final spot = touchResponse.lineBarSpots!.first;
           final spotIndex = spot.x.toInt() - 1; // Convert to 0-based index
           
@@ -130,7 +129,7 @@ class LineChartWidget extends StatelessWidget {
               spotIndex < dailyScreenTimeData!.length) {
             // Get the date for the tapped spot and call the callback
             final date = dailyScreenTimeData![spotIndex].date;
-            onDateSelected!(date);
+            onDateSelected(date);
           }
         }
       },
@@ -236,7 +235,6 @@ class LineChartWidget extends StatelessWidget {
       ];
 
   SideTitles leftTitles(BuildContext context) {
-    final l10n = AppLocalizations.of(context)!;
     
     return SideTitles(
       getTitlesWidget: (value, meta) => leftTitleWidgets(value, meta, context),
