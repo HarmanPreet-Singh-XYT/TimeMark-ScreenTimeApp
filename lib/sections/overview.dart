@@ -546,10 +546,13 @@ class Application extends StatelessWidget {
         ),
         Expanded(
           flex: 2,
-          child: Text(
-            screenTime,
-            style: const TextStyle(fontWeight: FontWeight.bold),
-            textAlign: TextAlign.right,
+          child: Padding(
+            padding: const EdgeInsets.only(right: 10.0),
+            child: Text(
+              screenTime,
+              style: const TextStyle(fontWeight: FontWeight.bold),
+              textAlign: TextAlign.right,
+            ),
           ),
         ),
       ],
@@ -599,10 +602,13 @@ class Category extends StatelessWidget {
         ),
         Expanded(
           flex: 2,
-          child: Text(
-            totalScreenTime,
-            style: const TextStyle(fontWeight: FontWeight.bold),
-            textAlign: TextAlign.right,
+          child: Padding(
+            padding: const EdgeInsets.only(right: 10.0),
+            child: Text(
+              totalScreenTime,
+              style: const TextStyle(fontWeight: FontWeight.bold),
+              textAlign: TextAlign.right,
+            ),
           ),
         ),
       ],
