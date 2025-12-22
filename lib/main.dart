@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'package:fluent_ui/fluent_ui.dart';
+import 'package:screentime/l10n/app_localizations.dart';
 import 'package:hive_flutter/adapters.dart';
 import 'package:screentime/sections/controller/app_data_controller.dart';
 import 'package:screentime/sections/controller/notification_controller.dart';
@@ -19,17 +20,16 @@ import './sections/controller/application_controller.dart';
 
 void main(List<String> args) async {
   WidgetsFlutterBinding.ensureInitialized();
-  // Create an instance of the controller
   final bool wasSystemLaunched = args.contains('--auto-launched');
-  // Check the launch type
   await SettingsManager().init();
   final bool isMinimizeAtLaunch = await SettingsManager().getSetting("launchAsMinimized") ?? false;
   await NotificationController().initialize();
-  // Get the saved theme preference
-  final String savedTheme = SettingsManager().getSetting("theme.selected") ?? "System";
-  final AdaptiveThemeMode initialTheme;
   
-  // Convert string theme setting to AdaptiveThemeMode
+  // Get saved theme and locale preferences
+  final String savedTheme = SettingsManager().getSetting("theme.selected") ?? "System";
+  final String? savedLocale = SettingsManager().getSetting("language.selected");
+  
+  final AdaptiveThemeMode initialTheme;
   switch (savedTheme) {
     case "Dark":
       initialTheme = AdaptiveThemeMode.dark;
@@ -42,17 +42,23 @@ void main(List<String> args) async {
       initialTheme = AdaptiveThemeMode.system;
       break;
   }
+  
+  // Initialize tracker with locale (loads localizations internally)
   final tracker = BackgroundAppTracker();
-  tracker.initializeTracking();
-  runApp(MyApp(initialTheme: initialTheme));
+  await tracker.initializeTracking(locale: savedLocale ?? 'en');
+  
+  runApp(MyApp(
+    initialTheme: initialTheme,
+    savedLocale: savedLocale,
+  ));
+  
   doWhenWindowReady(() {
     final win = appWindow;
-    const String appName = 'TimeMark - Track Screen Time & App Usage';
     const initialSize = Size(1280, 800);
     win.minSize = initialSize;
     win.size = initialSize;
     win.alignment = Alignment.center;
-    win.title = appName;
+    win.title = 'TimeMark - Track Screen Time & App Usage';
     if(wasSystemLaunched || isMinimizeAtLaunch){
       win.hide();
     }else{
@@ -61,25 +67,47 @@ void main(List<String> args) async {
   });
 }
 
+
 class MyApp extends StatefulWidget {
   final AdaptiveThemeMode initialTheme;
+  final String? savedLocale;
   
-  const MyApp({super.key, this.initialTheme = AdaptiveThemeMode.system});
+  const MyApp({
+    super.key, 
+    this.initialTheme = AdaptiveThemeMode.system,
+    this.savedLocale,
+  });
 
   @override
   State<MyApp> createState() => _MyAppState();
 }
 
-class _MyAppState extends State<MyApp> with TrayListener,WidgetsBindingObserver {
+class _MyAppState extends State<MyApp> with TrayListener, WidgetsBindingObserver {
   bool notificationsEnabled = true;
   final String appVersion = "v${SettingsManager().versionInfo["version"]}";
   bool focusMode = false;
   int selectedIndex = 0;
   final AppDataStore _dataStore = AppDataStore();
+  Locale? _locale;
+  
   void changeIndex(int value){
     setState(() {
       selectedIndex = value;
     });
+  }
+
+  void setLocale(Locale locale) async {
+    setState(() {
+      _locale = locale;
+    });
+    
+    // Update settings
+    SettingsManager().updateSetting("language.selected", locale.languageCode);
+    
+    // Update background tracker with new locale (reloads localizations)
+    await BackgroundAppTracker().updateLocale(locale.languageCode);
+    
+    debugPrint('🌍 Locale changed to: ${locale.languageCode}');
   }
 
   @override
@@ -89,10 +117,17 @@ class _MyAppState extends State<MyApp> with TrayListener,WidgetsBindingObserver 
     _initDataStore();
     _initTray();
     trayManager.addListener(this);
+    
+    // Initialize locale from saved preference
+    if (widget.savedLocale != null) {
+      _locale = Locale(widget.savedLocale!);
+    }
   }
+  
   Future<void> _initDataStore() async {
     await _dataStore.init();
   }
+  
   Future<void> _initTray() async {
     await trayManager.setIcon(
       Platform.isWindows
@@ -107,14 +142,12 @@ class _MyAppState extends State<MyApp> with TrayListener,WidgetsBindingObserver 
     await trayManager.setContextMenu(
       Menu(items: [
         MenuItem(label: 'Show Window', onClick: (_) => _showApp()),
-        // MenuItem(label: !focusMode ? 'Start Focus Mode' : 'Stop Focus Mode', onClick: (_) => _startFocusMode()),
         MenuItem.separator(),
         MenuItem(label: 'Reports', onClick: (_) => _openReports()),
         MenuItem(label: 'Alerts & Limits', onClick: (_) => _openAlerts()),
         MenuItem(label: 'Applications', onClick: (_) => _openApplications()),
         MenuItem.separator(),
-        // MenuItem(disabled:true,label: notificationsEnabled ? 'Disable Notifications' : 'Enable Notifications', onClick: (_) => _toggleNotifications()),
-        MenuItem(disabled:true,label: 'Version: $appVersion', checked: false),
+        MenuItem(disabled:true, label: 'Version: $appVersion', checked: false),
         MenuItem.separator(),
         MenuItem(label: 'Exit', onClick: (_) => _exitApp()),
       ]),
@@ -129,13 +162,7 @@ class _MyAppState extends State<MyApp> with TrayListener,WidgetsBindingObserver 
     appWindow.close();
   }
 
-  // void _startFocusMode() {
-  //   // Implement focus mode activation
-    
-  // }
-
   void _openReports() {
-    // Implement opening reports section
     if(!appWindow.isVisible){
       changeIndex(3);
       appWindow.show();
@@ -148,7 +175,6 @@ class _MyAppState extends State<MyApp> with TrayListener,WidgetsBindingObserver 
   }
 
   void _openAlerts() {
-    // Implement opening alerts section
     if(!appWindow.isVisible){
       changeIndex(2);
       appWindow.show();
@@ -161,7 +187,6 @@ class _MyAppState extends State<MyApp> with TrayListener,WidgetsBindingObserver 
   }
 
   void _openApplications() {
-    // Implement opening applications section
     if(!appWindow.isVisible){
       changeIndex(1);
       appWindow.show();
@@ -184,6 +209,7 @@ class _MyAppState extends State<MyApp> with TrayListener,WidgetsBindingObserver 
   void onTrayIconMouseDown() {
     appWindow.show();
   }
+  
   @override
   void onTrayIconRightMouseDown() {
     trayManager.popUpContextMenu();
@@ -195,11 +221,7 @@ class _MyAppState extends State<MyApp> with TrayListener,WidgetsBindingObserver 
       appWindow.show();
     } else if (menuItem.label == 'Exit') {
       _exitApp();
-    } 
-    // else if (menuItem.label == 'Start Focus Mode') {
-    //   // _startFocusMode();
-    // } 
-    else if (menuItem.label == 'Reports') {
+    } else if (menuItem.label == 'Reports') {
       _openReports();
     } else if (menuItem.label == 'Alerts & Limits') {
       _openAlerts();
@@ -220,10 +242,12 @@ class _MyAppState extends State<MyApp> with TrayListener,WidgetsBindingObserver 
     trayManager.removeListener(this);
     super.dispose();
   }
+  
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
     _dataStore.handleAppLifecycleState(state);
   }
+  
   @override
   Widget build(BuildContext context) {
     return FluentAdaptiveTheme(
@@ -233,12 +257,20 @@ class _MyAppState extends State<MyApp> with TrayListener,WidgetsBindingObserver 
           cardColor: const Color(0xff202020),
           scaffoldBackgroundColor: const Color.fromARGB(255, 20, 20, 20)
       ),
-      initial: widget.initialTheme, // Use the initial theme from settings
+      initial: widget.initialTheme,
       builder: (theme, darkTheme) => FluentApp(
         title: 'Productive ScreenTime',
         theme: theme,
         darkTheme: darkTheme,
-        home: HomePage(selectedIndex: selectedIndex, changeIndex: changeIndex),
+        // Localization configuration
+        localizationsDelegates: AppLocalizations.localizationsDelegates,
+        supportedLocales: AppLocalizations.supportedLocales,
+        locale: _locale,
+        home: HomePage(
+          selectedIndex: selectedIndex, 
+          changeIndex: changeIndex,
+          setLocale: setLocale,
+        ),
       ),
     );
   }
@@ -248,11 +280,14 @@ class _MyAppState extends State<MyApp> with TrayListener,WidgetsBindingObserver 
 class HomePage extends StatefulWidget {
   final int selectedIndex;
   final Function(int) changeIndex;
+  final Function(Locale) setLocale;
+  
   const HomePage({
     super.key,
     required this.selectedIndex,
-    required this.changeIndex
-    });
+    required this.changeIndex,
+    required this.setLocale,
+  });
 
   @override
   State<HomePage> createState() => _HomePageState();
@@ -261,79 +296,83 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   PaneDisplayMode displayMode = PaneDisplayMode.compact;
 
-  List<NavigationPaneItem> items = [
-    PaneItem(
-      icon: const Icon(FluentIcons.home, size: 20),
-      title: const Text('Overview', style: TextStyle(fontWeight: FontWeight.w500)),
-      body: const Overview(),
-    ),
-    PaneItem(
-      icon: const Icon(FluentIcons.app_icon_default_list, size: 20),
-      title: const Text('Applications', style: TextStyle(fontWeight: FontWeight.w500)),
-      body: const Applications(),
-    ),
-    PaneItem(
-      icon: const Icon(FluentIcons.alert_settings, size: 20),
-      title: const Text('Alerts & Limits', style: TextStyle(fontWeight: FontWeight.w500)),
-      body: const AlertsLimits(),
-    ),
-    PaneItem(
-      icon: const Icon(FluentIcons.analytics_report, size: 20),
-      title: const Text('Reports', style: TextStyle(fontWeight: FontWeight.w500)),
-      body: const Reports(),
-    ),
-    PaneItem(
-      icon: const Icon(FluentIcons.red_eye, size: 20),
-      title: const Text('Focus Mode', style: TextStyle(fontWeight: FontWeight.w500)),
-      body: const FocusMode(),
-    ),
-    PaneItem(
-      icon: const Icon(FluentIcons.settings, size: 20),
-      title: const Text('Settings', style: TextStyle(fontWeight: FontWeight.w500)),
-      body: const Settings(),
-    ),
-    PaneItem(
-      icon: const Icon(FluentIcons.chat_bot, size: 20),
-      title: const Text('Help', style: TextStyle(fontWeight: FontWeight.w500)),
-      body: const Help(),
-    ),
-  ];
-
   @override
-Widget build(BuildContext context) {
-  return Column(
-    children: [
-      const TitleBar(), // Add the Title Bar at the top
-      Expanded(
-        child: WindowBorder(
-          color:FluentTheme.of(context).micaBackgroundColor,
-          child: NavigationView(
-            pane: NavigationPane(
-              selected: widget.selectedIndex,
-              onChanged: (index) => setState(() => widget.changeIndex(index)),
-              displayMode: displayMode,
-              items: items,
-              header: _buildSidebarHeader(context),
+  Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+    
+    List<NavigationPaneItem> items = [
+      PaneItem(
+        icon: const Icon(FluentIcons.home, size: 20),
+        title: Text(l10n.navOverview, style: const TextStyle(fontWeight: FontWeight.w500)),
+        body: const Overview(),
+      ),
+      PaneItem(
+        icon: const Icon(FluentIcons.app_icon_default_list, size: 20),
+        title: Text(l10n.navApplications, style: const TextStyle(fontWeight: FontWeight.w500)),
+        body: const Applications(),
+      ),
+      PaneItem(
+        icon: const Icon(FluentIcons.alert_settings, size: 20),
+        title: Text(l10n.navAlertsLimits, style: const TextStyle(fontWeight: FontWeight.w500)),
+        body: const AlertsLimits(),
+      ),
+      PaneItem(
+        icon: const Icon(FluentIcons.analytics_report, size: 20),
+        title: Text(l10n.navReports, style: const TextStyle(fontWeight: FontWeight.w500)),
+        body: const Reports(),
+      ),
+      PaneItem(
+        icon: const Icon(FluentIcons.red_eye, size: 20),
+        title: Text(l10n.navFocusMode, style: const TextStyle(fontWeight: FontWeight.w500)),
+        body: const FocusMode(),
+      ),
+      PaneItem(
+        icon: const Icon(FluentIcons.settings, size: 20),
+        title: Text(l10n.navSettings, style: const TextStyle(fontWeight: FontWeight.w500)),
+        body: Settings(setLocale: widget.setLocale),
+      ),
+      PaneItem(
+        icon: const Icon(FluentIcons.chat_bot, size: 20),
+        title: Text(l10n.navHelp, style: const TextStyle(fontWeight: FontWeight.w500)),
+        body: const Help(),
+      ),
+    ];
+
+    return Column(
+      children: [
+        const TitleBar(),
+        Expanded(
+          child: WindowBorder(
+            color: FluentTheme.of(context).micaBackgroundColor,
+            child: NavigationView(
+              pane: NavigationPane(
+                selected: widget.selectedIndex,
+                onChanged: (index) => setState(() => widget.changeIndex(index)),
+                displayMode: displayMode,
+                items: items,
+                header: _buildSidebarHeader(context),
+              ),
             ),
           ),
         ),
-      ),
-    ],
-  );
-}
+      ],
+    );
+  }
 
   Widget _buildSidebarHeader(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+    
     return Padding(
       padding: const EdgeInsets.all(12),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            'ScreenTime',
+            l10n.sidebarTitle,
             style: FluentTheme.of(context).typography.title,
           ),
           Text(
-            'Open Source',
+            l10n.sidebarSubtitle,
             style: FluentTheme.of(context).typography.caption?.copyWith(
                   fontSize: 14,
                   color: const Color(0xff555555),
@@ -353,13 +392,13 @@ class TitleBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final isDarkMode = FluentTheme.of(context).brightness == Brightness.dark;
-
+    final l10n = AppLocalizations.of(context)!;
     final Color backgroundColor = FluentTheme.of(context).micaBackgroundColor;
     final Color textColor = isDarkMode ? Colors.white : const Color.fromARGB(255, 20, 20, 20);
 
     return WindowTitleBarBox(
       child: Container(
-        color: backgroundColor, // Dynamically change color
+        color: backgroundColor,
         child: Row(
           children: [
             Expanded(
@@ -370,11 +409,11 @@ class TitleBar extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Text(
-                        "Productive ScreenTime",
+                        l10n.appTitle,
                         style: FluentTheme.of(context).typography.body?.copyWith(
                               fontSize: 14,
                               fontWeight: FontWeight.w500,
-                              color: textColor, // Change text color dynamically
+                              color: textColor,
                             ),
                       ),
                     ],
@@ -389,8 +428,6 @@ class TitleBar extends StatelessWidget {
     );
   }
 }
-
-
 
 /// Window Buttons (Minimize, Maximize, Close)
 final buttonColors = WindowButtonColors(
@@ -408,33 +445,6 @@ final closeButtonColors = WindowButtonColors(
 
 class WindowButtons extends StatelessWidget {
   const WindowButtons({super.key});
-  // void showExitDialog(BuildContext context) async {
-  // final result = await showDialog<String>(
-  //   context: context,
-  //   barrierDismissible: false,
-  //   builder: (context) => ContentDialog(
-  //       title: const Text('Exit Program?'),
-  //       content: const Text(
-  //         'The window will be hidden. To fully exit the program, use the system menu.',
-  //       ),
-  //       actions: [
-  //         Button(
-  //           child: const Text('Cancel'),
-  //           onPressed: () => Navigator.pop(context, 'User canceled'),
-  //         ),
-  //         FilledButton(
-  //           child: const Text('Exit'),
-  //           onPressed: () {
-  //             Navigator.pop(context, 'User confirmed exit');
-  //             appWindow.hide(); // Hides the window instead of closing
-  //           },
-  //         ),
-  //       ],
-  //     ),
-  //   );
-
-  //   debugPrint('Dialog result: $result'); // Optional: Check result in debug console
-  // }
 
   @override
   Widget build(BuildContext context) {

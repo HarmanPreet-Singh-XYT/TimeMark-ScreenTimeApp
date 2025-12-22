@@ -3,6 +3,7 @@ import 'package:screentime/sections/controller/data_controllers/reports_controll
 import './resources/app_resources.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:screentime/l10n/app_localizations.dart';
 import 'dart:math' as math;
 
 enum ChartType { main, alternate }
@@ -29,12 +30,12 @@ class LineChartWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return LineChart(
-      getChartData(chartType),
+      getChartData(chartType, context),
       duration: const Duration(milliseconds: 250),
     );
   }
 
-  LineChartData getChartData(ChartType type) {
+  LineChartData getChartData(ChartType type, BuildContext context) {
     // Calculate max Y value for the chart based on daily screen time data
     double maxY = 6.0; // Default value
     
@@ -56,9 +57,9 @@ class LineChartWidget extends StatelessWidget {
         : 7.5; // Default to 7 days if no data
 
     return LineChartData(
-      lineTouchData: type == ChartType.main ? lineTouchData1 : lineTouchData2,
+      lineTouchData: type == ChartType.main ? lineTouchData1(context) : lineTouchData2,
       gridData: gridData,
-      titlesData: type == ChartType.main ? titlesData1 : titlesData2,
+      titlesData: type == ChartType.main ? titlesData1(context) : titlesData2(context),
       borderData: borderData,
       lineBarsData: type == ChartType.main ? lineBarsData1 : lineBarsData2,
       minX: minX,
@@ -87,78 +88,92 @@ class LineChartWidget extends StatelessWidget {
   }
 
   // Format a date according to the display mode
-  String _formatDate(DateTime date, DateDisplayMode mode) {
+  String _formatDate(DateTime date, DateDisplayMode mode, BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+    
     switch (mode) {
       case DateDisplayMode.dayOfWeek:
-        // Short day name
-        final List<String> dayNames = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
+        // Use localized short day names
+        final List<String> dayNames = [
+          l10n.day_mondayShort,
+          l10n.day_tuesdayShort,
+          l10n.day_wednesdayShort,
+          l10n.day_thursdayShort,
+          l10n.day_fridayShort,
+          l10n.day_saturdayShort,
+          l10n.day_sundayShort,
+        ];
         return dayNames[date.weekday - 1];
       case DateDisplayMode.dayMonth:
-        // Day and month in short format
+        // Day and month in short format (locale-aware)
         return DateFormat('d/M').format(date);
       case DateDisplayMode.monthYear:
-        // Month abbreviation and year if changed
-        return DateFormat('MMM').format(date);
+        // Month abbreviation (locale-aware)
+        return DateFormat('MMM', l10n.localeName).format(date);
     }
   }
 
-  LineTouchData get lineTouchData1 => LineTouchData(
-        handleBuiltInTouches: true,
-        touchCallback: (FlTouchEvent event, LineTouchResponse? touchResponse) {
-          // Handle tap event to trigger onDateSelected callback
-          if (event is FlTapUpEvent && touchResponse != null && touchResponse.lineBarSpots != null && 
-              touchResponse.lineBarSpots!.isNotEmpty && onDateSelected != null) {
-            final spot = touchResponse.lineBarSpots!.first;
-            final spotIndex = spot.x.toInt() - 1; // Convert to 0-based index
-            
-            if (dailyScreenTimeData != null && 
-                spotIndex >= 0 && 
-                spotIndex < dailyScreenTimeData!.length) {
-              // Get the date for the tapped spot and call the callback
-              final date = dailyScreenTimeData![spotIndex].date;
-              onDateSelected!(date);
-            }
+  LineTouchData lineTouchData1(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+    
+    return LineTouchData(
+      handleBuiltInTouches: true,
+      touchCallback: (FlTouchEvent event, LineTouchResponse? touchResponse) {
+        // Handle tap event to trigger onDateSelected callback
+        if (event is FlTapUpEvent && touchResponse != null && touchResponse.lineBarSpots != null && 
+            touchResponse.lineBarSpots!.isNotEmpty && onDateSelected != null) {
+          final spot = touchResponse.lineBarSpots!.first;
+          final spotIndex = spot.x.toInt() - 1; // Convert to 0-based index
+          
+          if (dailyScreenTimeData != null && 
+              spotIndex >= 0 && 
+              spotIndex < dailyScreenTimeData!.length) {
+            // Get the date for the tapped spot and call the callback
+            final date = dailyScreenTimeData![spotIndex].date;
+            onDateSelected!(date);
           }
-        },
-        touchTooltipData: LineTouchTooltipData(
-          getTooltipItems: (List<LineBarSpot> touchedSpots) {
-            return touchedSpots.map((spot) {
-              if (dailyScreenTimeData != null && 
-                  spot.x.toInt() > 0 && 
-                  spot.x.toInt() <= dailyScreenTimeData!.length) {
-                final screenTime = dailyScreenTimeData![spot.x.toInt() - 1].screenTime;
-                final hours = screenTime.inHours;
-                final minutes = screenTime.inMinutes.remainder(60);
-                
-                // Include the date in the tooltip
-                final date = dailyScreenTimeData![spot.x.toInt() - 1].date;
-                final dateStr = DateFormat('MMM d, yyyy').format(date);
-                
-                return LineTooltipItem(
-                  '$dateStr: ${hours}h ${minutes}m',
-                  const TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
-                );
-              }
+        }
+      },
+      touchTooltipData: LineTouchTooltipData(
+        getTooltipItems: (List<LineBarSpot> touchedSpots) {
+          return touchedSpots.map((spot) {
+            if (dailyScreenTimeData != null && 
+                spot.x.toInt() > 0 && 
+                spot.x.toInt() <= dailyScreenTimeData!.length) {
+              final screenTime = dailyScreenTimeData![spot.x.toInt() - 1].screenTime;
+              final hours = screenTime.inHours;
+              final minutes = screenTime.inMinutes.remainder(60);
+              
+              // Include the date in the tooltip
+              final date = dailyScreenTimeData![spot.x.toInt() - 1].date;
+              final dateStr = DateFormat('MMM d, yyyy', l10n.localeName).format(date);
+              
               return LineTooltipItem(
-                '${spot.y.toStringAsFixed(1)} hours',
+                l10n.tooltip_dateScreenTime(dateStr, hours, minutes),
                 const TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
               );
-            }).toList();
-          },
-          getTooltipColor: (touchedSpot) => Colors.blueGrey.withValues(alpha: .8),
-        ),
-      );
+            }
+            return LineTooltipItem(
+              l10n.tooltip_hoursFormat(spot.y.toStringAsFixed(1)),
+              const TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+            );
+          }).toList();
+        },
+        getTooltipColor: (touchedSpot) => Colors.blueGrey.withValues(alpha: .8),
+      ),
+    );
+  }
 
   LineTouchData get lineTouchData2 => const LineTouchData(enabled: false);
 
-  FlTitlesData get titlesData1 => FlTitlesData(
-        bottomTitles: AxisTitles(sideTitles: bottomTitles),
+  FlTitlesData titlesData1(BuildContext context) => FlTitlesData(
+        bottomTitles: AxisTitles(sideTitles: bottomTitles(context)),
         rightTitles: const AxisTitles(sideTitles: SideTitles(showTitles: false)),
         topTitles: const AxisTitles(sideTitles: SideTitles(showTitles: false)),
-        leftTitles: AxisTitles(sideTitles: leftTitles()),
+        leftTitles: AxisTitles(sideTitles: leftTitles(context)),
       );
 
-  FlTitlesData get titlesData2 => titlesData1; // Reuse titlesData1
+  FlTitlesData titlesData2(BuildContext context) => titlesData1(context);
 
   List<LineChartBarData> get lineBarsData1 {
     if (dailyScreenTimeData != null && dailyScreenTimeData!.isNotEmpty) {
@@ -220,29 +235,35 @@ class LineChartWidget extends StatelessWidget {
         lineChartBarData2_2,
       ];
 
-  SideTitles leftTitles() => SideTitles(
-        getTitlesWidget: leftTitleWidgets,
-        showTitles: true,
-        interval: 1,
-        reservedSize: 40,
-      );
+  SideTitles leftTitles(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+    
+    return SideTitles(
+      getTitlesWidget: (value, meta) => leftTitleWidgets(value, meta, context),
+      showTitles: true,
+      interval: 1,
+      reservedSize: 40,
+    );
+  }
 
-  Widget leftTitleWidgets(double value, TitleMeta meta) {
+  Widget leftTitleWidgets(double value, TitleMeta meta, BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     const style = TextStyle(fontWeight: FontWeight.bold, fontSize: 14);
+    
     if (value == 0) return Container();
     
     final isInteger = value == value.roundToDouble();
     if (isInteger) {
       return SideTitleWidget(
         meta: meta, 
-        child: Text('${value.toInt()}h', style: style),
+        child: Text(l10n.time_hours(value.toInt()), style: style),
       );
     }
     
     return Container();
   }
 
-  SideTitles get bottomTitles {
+  SideTitles bottomTitles(BuildContext context) {
     // Calculate an appropriate interval based on the data length
     double interval = 1.0;  // Default for 7 days
     
@@ -269,11 +290,12 @@ class LineChartWidget extends StatelessWidget {
       showTitles: true,
       reservedSize: 40,  // Increased for longer labels
       interval: interval,
-      getTitlesWidget: bottomTitleWidgets,
+      getTitlesWidget: (value, meta) => bottomTitleWidgets(value, meta, context),
     );
   }
 
-  Widget bottomTitleWidgets(double value, TitleMeta meta) {
+  Widget bottomTitleWidgets(double value, TitleMeta meta, BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     const style = TextStyle(fontWeight: FontWeight.bold, fontSize: 12);
     String? text;
     
@@ -287,25 +309,25 @@ class LineChartWidget extends StatelessWidget {
       final displayMode = _getDateDisplayMode();
       
       // Format the date based on the determined display mode
-      text = _formatDate(date, displayMode);
+      text = _formatDate(date, displayMode, context);
       
       // For monthYear mode, only show year on January or first data point
       if (displayMode == DateDisplayMode.monthYear) {
         if (date.month == 1 || value == 1) {
-          text = '${text} ${date.year}';
+          text = '$text ${date.year}';
         }
       }
     } else {
-      // Fallback for sample data
+      // Fallback for sample data using localized day names
       switch (value.toInt()) {
         case 2:
-          text = 'Mon';
+          text = l10n.day_mondayShort;
           break;
         case 4:
-          text = 'Wed';
+          text = l10n.day_wednesdayShort;
           break;
         case 6:
-          text = 'Fri';
+          text = l10n.day_fridayShort;
           break;
       }
     }

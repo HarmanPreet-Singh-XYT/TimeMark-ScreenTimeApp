@@ -8,6 +8,7 @@ import 'package:screentime/sections/graphs/focus_mode_trends.dart';
 import 'controller/settings_data_controller.dart';
 import './controller/focus_mode_controller.dart';
 import 'package:intl/intl.dart';
+import 'package:screentime/l10n/app_localizations.dart';
 
 
 class FocusMode extends StatefulWidget {
@@ -163,6 +164,8 @@ class _FocusModeState extends State<FocusMode> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+    
     return SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.only(left: 20, right: 20, bottom: 20,top: 10),
@@ -174,7 +177,6 @@ class _FocusModeState extends State<FocusMode> {
               const Meter(),
               const SizedBox(height: 40),
               Container(
-                // height: 300,
                 width: MediaQuery.of(context).size.width * 1,
                 padding:const EdgeInsets.all(20),
                 decoration: BoxDecoration(
@@ -186,7 +188,7 @@ class _FocusModeState extends State<FocusMode> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const Text("History",style: TextStyle(fontSize: 18,fontWeight: FontWeight.w600),),
+                    Text(l10n.historySection, style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w600)),
                     FocusModeHistoryChart(data:sessionCountByDay)
                   ]
                 ),
@@ -204,7 +206,7 @@ class _FocusModeState extends State<FocusMode> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const Text("Trends",style: TextStyle(fontSize: 18,fontWeight: FontWeight.w600),),
+                    Text(l10n.trendsSection, style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w600)),
                     FocusModeTrends(data:focusTrends)
                   ]
                 ),
@@ -216,7 +218,6 @@ class _FocusModeState extends State<FocusMode> {
                   Expanded(
                     flex: 5,
                     child: Container(
-                      // height: 325,
                       padding: const EdgeInsets.all(20),
                       width: MediaQuery.of(context).size.width * 0.35,
                       decoration: BoxDecoration(
@@ -228,11 +229,11 @@ class _FocusModeState extends State<FocusMode> {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          const Text("Time Distribution",style: TextStyle(fontSize: 18,fontWeight: FontWeight.w600),),
+                          Text(l10n.timeDistributionSection, style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w600)),
                           FocusModePieChart(dataMap: {
-                            "Work Session": workPercentage,
-                            "Short Break": shortBreakPercentage,
-                            "Long Break": longBreakPercentage,
+                            l10n.workSession: workPercentage,
+                            l10n.shortBreak: shortBreakPercentage,
+                            l10n.longBreak: longBreakPercentage,
                           },colorList:const [
                             Color.fromRGBO(41, 164, 72, 1),
                             Color.fromRGBO(207, 52, 50, 1),
@@ -415,12 +416,9 @@ class _MeterState extends State<Meter> {
       }
     });
   }
+  
   void resetTimerSettings(){
     _timerService.resetTimer();
-    // _displayTime = "$workDuration";
-    // _percentComplete = 1.0;
-    // _isRunning = false;
-    // _currentTimerState = TimerState.idle;
   }
 
 
@@ -460,6 +458,7 @@ class _MeterState extends State<Meter> {
     // Start UI update timer for showing seconds
     _startUiUpdateTimer();
   }
+  
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -478,14 +477,12 @@ class _MeterState extends State<Meter> {
                 const TextStyle(fontWeight: FontWeight.bold, fontSize: 48.0),
           ),
           circularStrokeCap: CircularStrokeCap.round,
-          // progressColor:const Color(0xffFF5C50),
           progressColor: _getTimerColor(),
         ),
         const SizedBox(height: 25),
         Row(
-          mainAxisAlignment: MainAxisAlignment.center, // Centers buttons in row
+          mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            // 🔄 Reload Button (Smaller)
             Container(
               width: 50,
               height: 50,
@@ -503,9 +500,8 @@ class _MeterState extends State<Meter> {
               ),
             ),
     
-            const SizedBox(width: 50), // Space between buttons
+            const SizedBox(width: 50),
     
-            // ▶ Play Button (Bigger)
             SizedBox(
               width: 70,
               height: 70,
@@ -526,7 +522,7 @@ class _MeterState extends State<Meter> {
               ),
             ),
     
-            const SizedBox(width: 50), // Space between buttons
+            const SizedBox(width: 50),
     
             Container(
               width: 50,
@@ -549,10 +545,6 @@ class _MeterState extends State<Meter> {
       ],
     );
   }
-
-  // Function to handle mode selection changes
-
-  // Function to reset all settings
 
   // Save settings and apply them to the main widget state
   void _saveSettings(double newWorkDuration, double newShortBreak, double newLongBreak, 
@@ -593,6 +585,8 @@ class _MeterState extends State<Meter> {
   }
 
   void showSettingsDialog(BuildContext context) async {
+    final l10n = AppLocalizations.of(context)!;
+    
     // Create local variables that will be used in the dialog
     double dialogWorkDuration = workDuration;
     double dialogShortBreak = shortBreak;
@@ -607,14 +601,19 @@ class _MeterState extends State<Meter> {
       builder: (context) => StatefulBuilder(
         builder: (context, setDialogState) {
           return ContentDialog(
-            title: const Text('Focus Mode Settings'),
+            title: Text(l10n.focusModeSettingsTitle),
             content: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
                 // Focus Mode Selection
                 ComboBox<String>(
                   value: dialogSelectedMode,
-                  items: ["Custom", "Deep Work (60 min)", "Quick Tasks (25 min)", "Reading (45 min)"].map((mode) {
+                  items: [
+                    l10n.modeCustom,
+                    l10n.modeDeepWork,
+                    l10n.modeQuickTasks,
+                    l10n.modeReading
+                  ].map((mode) {
                     return ComboBoxItem<String>(
                       value: mode,
                       child: Text(mode),
@@ -624,13 +623,13 @@ class _MeterState extends State<Meter> {
                     if (value != null) {
                       setDialogState(() {
                         dialogSelectedMode = value;
-                        if (value == "Deep Work (60 min)") {
+                        if (value == l10n.modeDeepWork) {
                           dialogWorkDuration = 60;
                           dialogShortBreak = 10;
-                        } else if (value == "Quick Tasks (25 min)") {
+                        } else if (value == l10n.modeQuickTasks) {
                           dialogWorkDuration = 25;
                           dialogShortBreak = 5;
-                        } else if (value == "Reading (45 min)") {
+                        } else if (value == l10n.modeReading) {
                           dialogWorkDuration = 45;
                           dialogShortBreak = 10;
                         }
@@ -638,10 +637,10 @@ class _MeterState extends State<Meter> {
                     }
                   },
                 ),
-                const SizedBox(height: 15,),
+                const SizedBox(height: 15),
                 // Work Duration Slider
-                Text("Work Duration: ${dialogWorkDuration.toInt()} min"),
-                const SizedBox(height: 10,),
+                Text(l10n.workDurationLabel(dialogWorkDuration.toInt())),
+                const SizedBox(height: 10),
                 Slider(
                   value: dialogWorkDuration,
                   min: 15,
@@ -649,10 +648,10 @@ class _MeterState extends State<Meter> {
                   divisions: 21,
                   onChanged: (value) => setDialogState(() => dialogWorkDuration = value),
                 ),
-                const SizedBox(height: 15,),
+                const SizedBox(height: 15),
                 // Short Break Duration Slider
-                Text("Short Break: ${dialogShortBreak.toInt()} min"),
-                const SizedBox(height: 10,),
+                Text(l10n.shortBreakLabel(dialogShortBreak.toInt())),
+                const SizedBox(height: 10),
                 Slider(
                   value: dialogShortBreak,
                   min: 1,
@@ -660,10 +659,10 @@ class _MeterState extends State<Meter> {
                   divisions: 14,
                   onChanged: (value) => setDialogState(() => dialogShortBreak = value),
                 ),
-                const SizedBox(height: 15,),
+                const SizedBox(height: 15),
                 // Long Break Duration Slider
-                Text("Long Break: ${dialogLongBreak.toInt()} min"),
-                const SizedBox(height: 10,),
+                Text(l10n.longBreakLabel(dialogLongBreak.toInt())),
+                const SizedBox(height: 10),
                 Slider(
                   value: dialogLongBreak,
                   min: 5,
@@ -671,30 +670,24 @@ class _MeterState extends State<Meter> {
                   divisions: 11,
                   onChanged: (value) => setDialogState(() => dialogLongBreak = value),
                 ),
-                const SizedBox(height: 20,),
+                const SizedBox(height: 20),
                 // Toggle Options
                 Checkbox(
                   checked: dialogAutoStart,
                   onChanged: (value) => setDialogState(() => dialogAutoStart = value!),
-                  content: const Text("Auto-start next session"),
+                  content: Text(l10n.autoStartNextSession),
                 ),
-                const SizedBox(height: 10,),
-                // Checkbox(
-                //   checked: dialogBlockDistractions,
-                //   onChanged: (value) => setDialogState(() => dialogBlockDistractions = value!),
-                //   content: const Text("Block distractions during focus mode"),
-                // ),
-                // const SizedBox(height: 10,),
+                const SizedBox(height: 10),
                 Checkbox(
                   checked: dialogEnableSounds,
                   onChanged: (value) => setDialogState(() => dialogEnableSounds = value!),
-                  content: const Text("Enable notifications"),
+                  content: Text(l10n.enableNotifications),
                 ),
               ],
             ),
             actions: [
               Button(
-                child: const Text('Reset All'),
+                child: Text(l10n.resetAll),
                 onPressed: () {
                   setDialogState(() {
                     dialogWorkDuration = 25;
@@ -703,12 +696,12 @@ class _MeterState extends State<Meter> {
                     dialogAutoStart = false;
                     dialogBlockDistractions = false;
                     dialogEnableSounds = true;
-                    dialogSelectedMode = "Custom";
+                    dialogSelectedMode = l10n.modeCustom;
                   });
                 },
               ),
               FilledButton(
-                child: const Text('Save'),
+                child: Text(l10n.save),
                 onPressed: () {
                   // Save settings to the class variables
                   _saveSettings(
@@ -720,7 +713,7 @@ class _MeterState extends State<Meter> {
                     dialogEnableSounds,
                     dialogSelectedMode
                   );
-                  Navigator.pop(context, 'Saved');
+                  Navigator.pop(context, l10n.saved);
                 },
               ),
             ],
@@ -738,15 +731,12 @@ class Header extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+    
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        Text("Focus Mode",style: FluentTheme.of(context).typography.subtitle,),
-        // Button(
-        //   style: ButtonStyle(padding: WidgetStateProperty.all(const EdgeInsets.only(top: 8,bottom: 8,left: 25,right: 25))),
-        //   child: const Text('Settings',style: TextStyle(fontWeight: FontWeight.w600),),
-        //   onPressed: () => debugPrint('pressed button'),
-        // )
+        Text(l10n.focusModeTitle, style: FluentTheme.of(context).typography.subtitle),
       ],
     );
   }
@@ -761,6 +751,8 @@ class SessionHistory extends StatelessWidget {
     
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+    
     return Container(
       constraints:const BoxConstraints(
         minHeight: 200,
@@ -776,18 +768,18 @@ class SessionHistory extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Text(
-            "Session History",
-            style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
+          Text(
+            l10n.sessionHistorySection,
+            style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
           ),
           const SizedBox(height: 10),
-          const Padding(
-            padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                SizedBox(width: 200, child: Text("Date", style: TextStyle(fontWeight: FontWeight.w700))),
-                SizedBox(width: 100, child: Text("Duration", style: TextStyle(fontWeight: FontWeight.w700))),
+                SizedBox(width: 200, child: Text(l10n.dateHeader, style: const TextStyle(fontWeight: FontWeight.w700))),
+                SizedBox(width: 100, child: Text(l10n.durationHeader, style: const TextStyle(fontWeight: FontWeight.w700))),
               ],
             ),
           ),

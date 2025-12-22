@@ -1,155 +1,158 @@
 import 'package:fluent_ui/fluent_ui.dart';
+import 'package:screentime/l10n/app_localizations.dart';
 
 class Help extends StatelessWidget {
   const Help({super.key});
 
-  final List faqData = const [
-    // General Questions
-    {
-      "category": "General Questions",
-      "faqs": [
-        {
-          "question": "How does this app track screen time?",
-          "answer": "The app monitors your device's usage in real-time, tracking the time spent on different applications. It provides comprehensive insights into your digital habits, including total screen time, productive time, and application-specific usage."
-        },
-        {
-          "question": "What makes an app 'Productive'?",
-          "answer": "You can manually mark apps as productive in the 'Applications' section. Productive apps contribute to your Productive Score, which calculates the percentage of screen time spent on work-related or beneficial applications."
-        },
-        {
-          "question": "How accurate is the screen time tracking?",
-          "answer": "The app uses system-level tracking to provide precise measurement of your device usage. It captures foreground time for each application with minimal battery impact."
-        },
-        {
-          "question": "Can I customize my app categorization?",
-          "answer": "Absolutely! You can create custom categories, assign apps to specific categories, and easily modify these assignments in the 'Applications' section. This helps in creating more meaningful usage analytics."
-        },
-        {
-          "question": "What insights can I gain from this app?",
-          "answer": "The app offers comprehensive insights including Productive Score, usage patterns by time of day, detailed application usage, focus session tracking, and visual analytics like graphs and pie charts to help you understand and improve your digital habits."
-        }
-      ]
-    },
-    // Applications Management
-    {
-      "category": "Applications Management",
-      "faqs": [
-        {
-          "question": "How do I hide specific apps from tracking?",
-          "answer": "In the 'Applications' section, you can toggle the visibility of apps."
-        },
-        {
-          "question": "Can I search and filter my applications?",
-          "answer": "Yes, the Applications section includes a search functionality and filtering options. You can filter apps by category, productivity status, tracking status, and visibility."
-        },
-        {
-          "question": "What editing options are available for applications?",
-          "answer": "For each application, you can edit: category assignment, productivity status, tracking usage, visibility in reports, and set individual daily time limits."
-        },
-        {
-          "question": "How are application categories determined?",
-          "answer": "Initial categories are system-suggested, but you have full control to create, modify, and assign custom categories based on your workflow and preferences."
-        }
-      ]
-    },
-    // Usage Analytics & Reports
-    {
-      "category": "Usage Analytics & Reports",
-      "faqs": [
-        {
-          "question": "What types of reports are available?",
-          "answer": "Reports include: Total screen time, Productive time, Most used apps, Focus sessions, Daily screen time graph, Category breakdown pie chart, Detailed application usage, Weekly usage trends, and Usage pattern analysis by time of day."
-        },
-        {
-          "question": "How detailed are the application usage reports?",
-          "answer": "Detailed application usage reports show: App name, Category, Total time spent, Productivity status, and offer an 'Actions' section with deeper insights like usage summary, daily limits, usage trends, and productivity metrics."
-        },
-        {
-          "question": "Can I analyze my usage trends over time?",
-          "answer": "Yes! The app provides week-over-week comparisons, showing graphs of usage over past weeks, average daily usage, longest sessions, and weekly totals to help you track your digital habits."
-        },
-        {
-          "question": "What is the 'Usage Pattern' analysis?",
-          "answer": "Usage Pattern breaks down your screen time into morning, afternoon, evening, and night segments. This helps you understand when you're most active on your device and identify potential areas for improvement."
-        }
-      ]
-    },
-    // Alerts & Limits
-    {
-      "category": "Alerts & Limits",
-      "faqs": [
-        {
-          "question": "How granular are the screen time limits?",
-          "answer": "You can set overall daily screen time limits and individual app limits. Limits can be configured in hours and minutes, with options to reset or adjust as needed."
-        },
-        {
-          "question": "What notification options are available?",
-          "answer": "The app offers multiple notification types: System alerts when you exceed screen time, Frequent alerts at customizable intervals (1, 5, 15, 30, or 60 minutes), and toggles for focus mode, screen time, and application-specific notifications."
-        },
-        {
-          "question": "Can I customize limit alerts?",
-          "answer": "Yes, you can customize alert frequency, enable/disable specific types of alerts, and set different limits for overall screen time and individual applications."
-        }
-      ]
-    },
-    // Focus Mode & Pomodoro Timer
-    {
-      "category": "Focus Mode & Pomodoro Timer",
-      "faqs": [
-        {
-          "question": "What types of Focus Modes are available?",
-          "answer": "Available modes include Deep Work (longer focused sessions), Quick Tasks (short bursts of work), and Reading Mode. Each mode helps you structure your work and break times effectively."
-        },
-        {
-          "question": "How flexible is the Pomodoro Timer?",
-          "answer": "The timer is highly customizable. You can adjust work duration, short break length, and long break duration. Additional options include auto-start for next sessions and notification settings."
-        },
-        {
-          "question": "What does the Focus Mode history show?",
-          "answer": "Focus Mode history tracks daily focus sessions, showing the number of sessions per day, trends graph, average session duration, total focus time, and a time distribution pie chart breaking down work sessions, short breaks, and long breaks."
-        },
-        {
-          "question": "Can I track my focus session progress?",
-          "answer": "The app features a circular timer UI with play/pause, reload, and settings buttons. You can easily track and manage your focus sessions with intuitive controls."
-        }
-      ]
-    },
-    // Settings & Customization
-    {
-      "category": "Settings & Customization",
-      "faqs": [
-        {
-          "question": "What customization options are available?",
-          "answer": "Customization includes theme selection (System, Light, Dark), language settings, startup behavior, comprehensive notification controls, and data management options like clearing data or resetting settings."
-        },
-        {
-          "question": "How do I provide feedback or report issues?",
-          "answer": "At the bottom of the Settings section, you'll find buttons to Report a Bug, Submit Feedback, or Contact Support. These will redirect you to the appropriate support channels."
-        },
-        {
-          "question": "What happens when I clear my data?",
-          "answer": "Clearing data will reset all your usage statistics, focus session history, and custom settings. This is useful for starting fresh or troubleshooting."
-        }
-      ]
-    },
-    {
-      "category": "Troubleshooting",
-      "faqs": [
-        {
-          "question": "Data is not showing, hive is not opening error",
-          "answer": "The issue is known, the temporary fix is to clear data through settings and if it doesn't work then go to Documents and delete the following files if they exist - harman_screentime_app_usage_box.hive and harman_screentime_app_usage.lock, you are also suggested to update the app to the latest version."
-        },
-        {
-          "question": "App opens on every startup, what to do?",
-          "answer": "This is a known issue that occurs on Windows 10, the temporary fix is to enable Launch as Minimized in settings so it launches as Minimized."
-        },
-      ]
-    }
-  ];
-
-  // Rest of the class remains the same as in the original implementation
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+    
+    final List<Map<String, dynamic>> faqData = [
+      // General Questions
+      {
+        "category": l10n.faqCategoryGeneral,
+        "faqs": [
+          {
+            "question": l10n.faqGeneralQ1,
+            "answer": l10n.faqGeneralA1
+          },
+          {
+            "question": l10n.faqGeneralQ2,
+            "answer": l10n.faqGeneralA2
+          },
+          {
+            "question": l10n.faqGeneralQ3,
+            "answer": l10n.faqGeneralA3
+          },
+          {
+            "question": l10n.faqGeneralQ4,
+            "answer": l10n.faqGeneralA4
+          },
+          {
+            "question": l10n.faqGeneralQ5,
+            "answer": l10n.faqGeneralA5
+          }
+        ]
+      },
+      // Applications Management
+      {
+        "category": l10n.faqCategoryApplications,
+        "faqs": [
+          {
+            "question": l10n.faqAppsQ1,
+            "answer": l10n.faqAppsA1
+          },
+          {
+            "question": l10n.faqAppsQ2,
+            "answer": l10n.faqAppsA2
+          },
+          {
+            "question": l10n.faqAppsQ3,
+            "answer": l10n.faqAppsA3
+          },
+          {
+            "question": l10n.faqAppsQ4,
+            "answer": l10n.faqAppsA4
+          }
+        ]
+      },
+      // Usage Analytics & Reports
+      {
+        "category": l10n.faqCategoryReports,
+        "faqs": [
+          {
+            "question": l10n.faqReportsQ1,
+            "answer": l10n.faqReportsA1
+          },
+          {
+            "question": l10n.faqReportsQ2,
+            "answer": l10n.faqReportsA2
+          },
+          {
+            "question": l10n.faqReportsQ3,
+            "answer": l10n.faqReportsA3
+          },
+          {
+            "question": l10n.faqReportsQ4,
+            "answer": l10n.faqReportsA4
+          }
+        ]
+      },
+      // Alerts & Limits
+      {
+        "category": l10n.faqCategoryAlerts,
+        "faqs": [
+          {
+            "question": l10n.faqAlertsQ1,
+            "answer": l10n.faqAlertsA1
+          },
+          {
+            "question": l10n.faqAlertsQ2,
+            "answer": l10n.faqAlertsA2
+          },
+          {
+            "question": l10n.faqAlertsQ3,
+            "answer": l10n.faqAlertsA3
+          }
+        ]
+      },
+      // Focus Mode & Pomodoro Timer
+      {
+        "category": l10n.faqCategoryFocusMode,
+        "faqs": [
+          {
+            "question": l10n.faqFocusQ1,
+            "answer": l10n.faqFocusA1
+          },
+          {
+            "question": l10n.faqFocusQ2,
+            "answer": l10n.faqFocusA2
+          },
+          {
+            "question": l10n.faqFocusQ3,
+            "answer": l10n.faqFocusA3
+          },
+          {
+            "question": l10n.faqFocusQ4,
+            "answer": l10n.faqFocusA4
+          }
+        ]
+      },
+      // Settings & Customization
+      {
+        "category": l10n.faqCategorySettings,
+        "faqs": [
+          {
+            "question": l10n.faqSettingsQ1,
+            "answer": l10n.faqSettingsA1
+          },
+          {
+            "question": l10n.faqSettingsQ2,
+            "answer": l10n.faqSettingsA2
+          },
+          {
+            "question": l10n.faqSettingsQ3,
+            "answer": l10n.faqSettingsA3
+          }
+        ]
+      },
+      // Troubleshooting
+      {
+        "category": l10n.faqCategoryTroubleshooting,
+        "faqs": [
+          {
+            "question": l10n.faqTroubleQ1,
+            "answer": l10n.faqTroubleA1
+          },
+          {
+            "question": l10n.faqTroubleQ2,
+            "answer": l10n.faqTroubleA2
+          },
+        ]
+      }
+    ];
+
     return Padding(
       padding: const EdgeInsets.all(16.0),
       child: ListView.builder(
@@ -166,14 +169,14 @@ class Help extends StatelessWidget {
               Padding(
                 padding: const EdgeInsets.symmetric(vertical: 16.0),
                 child: Text(
-                  categoryData['category']!, 
+                  categoryData['category'] as String, 
                   style: const TextStyle(
                     fontSize: 18, 
                     fontWeight: FontWeight.bold
                   )
                 ),
               ),
-              ...categoryData['faqs']!.map((faq) => Column(
+              ...(categoryData['faqs'] as List<Map<String, String>>).map((faq) => Column(
                 children: [
                   FAQItem(
                     question: faq["question"]!,
@@ -189,8 +192,6 @@ class Help extends StatelessWidget {
     );
   }
 }
-
-// FAQItem and Header classes remain the same
 
 class FAQItem extends StatelessWidget {
   final String question;
@@ -215,10 +216,12 @@ class Header extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+    
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        Text("Help", style: FluentTheme.of(context).typography.subtitle),
+        Text(l10n.helpTitle, style: FluentTheme.of(context).typography.subtitle),
       ],
     );
   }

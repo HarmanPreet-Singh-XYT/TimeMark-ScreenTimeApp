@@ -1,5 +1,6 @@
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:percent_indicator/percent_indicator.dart';
+import 'package:screentime/l10n/app_localizations.dart';
 import './controller/data_controllers/overview_data_controller.dart';
 
 class Overview extends StatefulWidget {
@@ -60,8 +61,8 @@ class _OverviewState extends State<Overview> {
         focusSessions = overviewData.focusSessions.toString();
         
         // Progress indicators
-        screenTime = overviewData.screenTimePercentage / 100;  // Convert percentage to value between 0-1
-        productiveScore = overviewData.productivityScore / 100;  // Convert percentage to value between 0-1
+        screenTime = overviewData.screenTimePercentage / 100;
+        productiveScore = overviewData.productivityScore / 100;
         
         // Middle section - Top Applications
         topApplications = overviewData.topApplications.map((app) => {
@@ -69,7 +70,7 @@ class _OverviewState extends State<Overview> {
           "category": app.category,
           "screenTime": app.formattedScreenTime,
           "percentageOfTotalTime": app.percentageOfTotalTime,
-          "isVisible":app.isVisible
+          "isVisible": app.isVisible
         }).toList();
         
         // Middle section - Category Applications
@@ -103,7 +104,7 @@ class _OverviewState extends State<Overview> {
       setState(() {
         _isLoading = false;
         _hasError = true;
-        _errorMessage = 'Failed to load data: ${e.toString()}';
+        _errorMessage = AppLocalizations.of(context)!.errorLoadingData(e.toString());
       });
     }
   }
@@ -115,14 +116,16 @@ class _OverviewState extends State<Overview> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+    
     if (_isLoading) {
-      return const Center(
+      return Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            ProgressRing(),
-            SizedBox(height: 16),
-            Text("Loading your productivity data...")
+            const ProgressRing(),
+            const SizedBox(height: 16),
+            Text(l10n.loadingProductivityData)
           ],
         )
       );
@@ -139,7 +142,7 @@ class _OverviewState extends State<Overview> {
             const SizedBox(height: 16),
             Button(
               onPressed: refreshData,
-              child: const Text('Try Again'),
+              child: Text(l10n.tryAgain),
             ),
           ],
         ),
@@ -155,20 +158,20 @@ class _OverviewState extends State<Overview> {
             children: [
               const Icon(FluentIcons.info, size: 48),
               const SizedBox(height: 16),
-              const Text(
-                "No activity data available yet",
-                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+              Text(
+                l10n.noActivityDataAvailable,
+                style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                 textAlign: TextAlign.center,
               ),
               const SizedBox(height: 8),
-              const Text(
-                "Start using your applications to track screen time and productivity.",
+              Text(
+                l10n.startUsingApplications,
                 textAlign: TextAlign.center,
               ),
               const SizedBox(height: 16),
               Button(
                 onPressed: refreshData,
-                child: const Text('Refresh Data'),
+                child: Text(l10n.refreshData),
               ),
             ],
           ),
@@ -176,7 +179,6 @@ class _OverviewState extends State<Overview> {
       );
     }
     
-    // Simple approach with a manual refresh button at the top
     return Column(
       children: [
         Expanded(
@@ -231,6 +233,8 @@ class MidSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+    
     if (isEmpty) {
       return Container(
         padding: const EdgeInsets.symmetric(vertical: 30),
@@ -239,10 +243,10 @@ class MidSection extends StatelessWidget {
           borderRadius: BorderRadius.circular(10),
           border: Border.all(color: FluentTheme.of(context).inactiveBackgroundColor, width: 1)
         ),
-        child: const Center(
+        child: Center(
           child: Text(
-            "No application usage data available yet",
-            style: TextStyle(fontSize: 16),
+            l10n.noAppUsageDataAvailable,
+            style: const TextStyle(fontSize: 16),
           ),
         ),
       );
@@ -301,12 +305,14 @@ class TopApplications extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+    
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Text(
-          "Top Applications",
-          style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
+        Text(
+          l10n.topApplications,
+          style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
         ),
         const SizedBox(height: 20),
         if (isEmpty || data.isEmpty)
@@ -318,7 +324,7 @@ class TopApplications extends StatelessWidget {
                   const Icon(FluentIcons.app_icon_default, size: 32, color: Colors.grey),
                   const SizedBox(height: 12),
                   Text(
-                    "No application data available",
+                    l10n.noApplicationDataAvailable,
                     style: TextStyle(color: FluentTheme.of(context).inactiveColor),
                     textAlign: TextAlign.center,
                   )
@@ -332,15 +338,15 @@ class TopApplications extends StatelessWidget {
               child: Column(
                 children: (data
                         .where((app) => app['name'] != null && app['name'].toString().trim().isNotEmpty && app['isVisible'])
-                        .toList() // Convert to list before sorting
-                      ..sort((a, b) => (b['percentageOfTotalTime'] ?? 0).compareTo(a['percentageOfTotalTime'] ?? 0))) // Sort in descending order
-                    .take(25) // Take the top 20
+                        .toList()
+                      ..sort((a, b) => (b['percentageOfTotalTime'] ?? 0).compareTo(a['percentageOfTotalTime'] ?? 0)))
+                    .take(25)
                     .map((app) => Column(
                           children: [
                             Application(
-                              name: app['name'] ?? 'Unknown',
-                              category: app['category'] ?? 'Uncategorized',
-                              screenTime: app['screenTime'] ?? '0h 0m',
+                              name: app['name'] ?? l10n.unknownApp,
+                              category: app['category'] ?? l10n.uncategorized,
+                              screenTime: app['screenTime'] ?? l10n.defaultTime,
                               percentageOfTotalTime: (app['percentageOfTotalTime'] ?? 0).toDouble(),
                               barColor: const Color(0xff263A8A),
                             ),
@@ -351,7 +357,6 @@ class TopApplications extends StatelessWidget {
               ),
             ),
           ),
-
       ],
     );
   }
@@ -369,12 +374,14 @@ class ApplicationLimits extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+    
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Text(
-          "Application Limits",
-          style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
+        Text(
+          l10n.applicationLimits,
+          style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
         ),
         const SizedBox(height: 20),
         if (isEmpty || data.isEmpty)
@@ -386,7 +393,7 @@ class ApplicationLimits extends StatelessWidget {
                   const Icon(FluentIcons.timer, size: 32, color: Colors.grey),
                   const SizedBox(height: 12),
                   Text(
-                    "No application limits set",
+                    l10n.noApplicationLimitsSet,
                     style: TextStyle(color: FluentTheme.of(context).inactiveColor),
                     textAlign: TextAlign.center,
                   )
@@ -403,9 +410,9 @@ class ApplicationLimits extends StatelessWidget {
                     .map((app) => Column(
                           children: [
                             Application(
-                              name: app['name'] ?? 'Unknown',
-                              category: app['category'] ?? 'Uncategorized',
-                              screenTime: app['dailyLimit'] ?? '0h 0m',
+                              name: app['name'] ?? l10n.unknownApp,
+                              category: app['category'] ?? l10n.uncategorized,
+                              screenTime: app['dailyLimit'] ?? l10n.defaultTime,
                               percentageOfTotalTime: (app['percentageOfTotalTime'] ?? 0).toDouble(),
                               barColor: const Color(0xff263A8A),
                             ),
@@ -433,12 +440,14 @@ class CategoryBreakdown extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+    
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Text(
-          "Category Breakdown",
-          style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
+        Text(
+          l10n.categoryBreakdown,
+          style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
         ),
         const SizedBox(height: 20),
         if (isEmpty || data.isEmpty)
@@ -450,7 +459,7 @@ class CategoryBreakdown extends StatelessWidget {
                   const Icon(FluentIcons.category_classification, size: 32, color: Colors.grey),
                   const SizedBox(height: 12),
                   Text(
-                    "No category data available",
+                    l10n.noCategoryDataAvailable,
                     style: TextStyle(color: FluentTheme.of(context).inactiveColor),
                     textAlign: TextAlign.center,
                   )
@@ -467,8 +476,8 @@ class CategoryBreakdown extends StatelessWidget {
                     .map((category) => Column(
                       children: [
                         Category(
-                          name: category['name'] ?? 'Uncategorized',
-                          totalScreenTime: category['totalScreenTime'] ?? '0h 0m',
+                          name: category['name'] ?? l10n.uncategorized,
+                          totalScreenTime: category['totalScreenTime'] ?? l10n.defaultTime,
                           percentageOfTotalTime: (category['percentageOfTotalTime'] ?? 0).toDouble(),
                           barColor: const Color(0xff14532D),
                         ),
@@ -617,12 +626,12 @@ class BottomSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     final Size screenSize = MediaQuery.of(context).size;
-    // Use adaptive height based on screen size
     final double sectionHeight = screenSize.height * 0.24;
     final double circleSize = screenSize.width < 1200 
         ? screenSize.width * 0.05 
-        : screenSize.width * 0.06;  // Adaptive sizing for circles
+        : screenSize.width * 0.06;
         
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -659,16 +668,16 @@ class BottomSection extends StatelessWidget {
                 lineWidth: circleSize * 0.3,
                 animation: true,
                 percent: screenTime.clamp(0.0, 1.0),
-                center: const Column(
+                center: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Text(
-                      "Screen",
-                      style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16.0),
+                      l10n.screenLabel,
+                      style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16.0),
                     ),
                     Text(
-                      "Time",
-                      style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16.0),
+                      l10n.timeLabel,
+                      style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16.0),
                     ),
                   ],
                 ),
@@ -694,16 +703,16 @@ class BottomSection extends StatelessWidget {
                 lineWidth: circleSize * 0.3,
                 animation: true,
                 percent: productiveScore.clamp(0.0, 1.0),
-                center: const Column(
+                center: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Text(
-                      "Productive",
-                      style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16.0),
+                      l10n.productiveLabel,
+                      style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16.0),
                     ),
                     Text(
-                      "Score",
-                      style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16.0),
+                      l10n.scoreLabel,
+                      style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16.0),
                     ),
                   ],
                 ),
@@ -734,9 +743,10 @@ class TopBoxes extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+    
     return LayoutBuilder(
       builder: (context, constraints) {
-        // Use a Column layout for narrow screens
         if (constraints.maxWidth < 800) {
           return Column(
             children: [
@@ -746,14 +756,14 @@ class TopBoxes extends StatelessWidget {
                     boxColor: const Color(0xff263A8A),
                     textColor: const Color(0xffBFDBFE),
                     textContent: totalScreenTime,
-                    textHeading: "Total Screen Time"
+                    textHeading: l10n.totalScreenTime
                   )),
                   const SizedBox(width: 10),
                   Expanded(child: TopBox(
                     boxColor: const Color(0xff14532D),
                     textColor: const Color(0xffBBF7D0),
                     textContent: totalProductiveTime,
-                    textHeading: "Productive Time"
+                    textHeading: l10n.productiveTime
                   )),
                 ],
               ),
@@ -764,14 +774,14 @@ class TopBoxes extends StatelessWidget {
                     boxColor: const Color(0xff581C87),
                     textColor: const Color(0xffE8D5FF),
                     textContent: mostUsedApp,
-                    textHeading: "Most Used App"
+                    textHeading: l10n.mostUsedApp
                   )),
                   const SizedBox(width: 10),
                   Expanded(child: TopBox(
                     boxColor: const Color(0xff7C2D12),
                     textColor: const Color(0xffFED7AA),
                     textContent: focusSessions,
-                    textHeading: "Focus Sessions"
+                    textHeading: l10n.focusSessions
                   )),
                 ],
               ),
@@ -779,7 +789,6 @@ class TopBoxes extends StatelessWidget {
           );
         }
         
-        // Use a Row layout for wider screens
         return Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
@@ -787,28 +796,28 @@ class TopBoxes extends StatelessWidget {
               boxColor: const Color(0xff263A8A),
               textColor: const Color(0xffBFDBFE),
               textContent: totalScreenTime,
-              textHeading: "Total Screen Time"
+              textHeading: l10n.totalScreenTime
             )),
             const SizedBox(width: 10),
             Expanded(child: TopBox(
               boxColor: const Color(0xff14532D),
               textColor: const Color(0xffBBF7D0),
               textContent: totalProductiveTime,
-              textHeading: "Productive Time"
+              textHeading: l10n.productiveTime
             )),
             const SizedBox(width: 10),
             Expanded(child: TopBox(
               boxColor: const Color(0xff581C87),
               textColor: const Color(0xffE8D5FF),
               textContent: mostUsedApp,
-              textHeading: "Most Used App"
+              textHeading: l10n.mostUsedApp
             )),
             const SizedBox(width: 10),
             Expanded(child: TopBox(
               boxColor: const Color(0xff7C2D12),
               textColor: const Color(0xffFED7AA),
               textContent: focusSessions,
-              textHeading: "Focus Sessions"
+              textHeading: l10n.focusSessions
             )),
           ],
         );
@@ -833,6 +842,8 @@ class TopBox extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+    
     return Container(
       height: MediaQuery.of(context).size.height * 0.15,
       padding: const EdgeInsets.all(18),
@@ -858,13 +869,13 @@ class TopBox extends StatelessWidget {
                 textContent,
                 style: TextStyle(
                   color: textColor,
-                  fontSize: textHeading == 'Most Used App' 
+                  fontSize: textHeading == l10n.mostUsedApp
                     ? (textContent.length > 15 ? 16 : 18) 
                     : 28,
                   fontWeight: FontWeight.w700
                 ),
                 overflow: TextOverflow.ellipsis,
-                maxLines: textHeading == 'Most Used App' ? 2 : 1,
+                maxLines: textHeading == l10n.mostUsedApp ? 2 : 1,
               ),
             ),
           ),
@@ -883,44 +894,27 @@ class Header extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+    
     return LayoutBuilder(
       builder: (context, constraints) {
-        // For smaller screens, stack the elements vertically
         if (constraints.maxWidth < 640) {
           return Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                "Today's Overview",
+                l10n.overviewTitle,
                 style: FluentTheme.of(context).typography.subtitle,
               ),
-              // const SizedBox(height: 10),
-              // Button(
-              //   style: ButtonStyle(
-              //     padding: WidgetStateProperty.all(
-              //       const EdgeInsets.symmetric(vertical: 8, horizontal: 12)
-              //     )
-              //   ),
-              //   child: const Row(
-              //     mainAxisSize: MainAxisSize.min,
-              //     children: [
-              //       Icon(FluentIcons.red_eye, size: 20),
-              //       SizedBox(width: 10),
-              //       Text('Start Focus Mode', style: TextStyle(fontWeight: FontWeight.w600)),
-              //     ],
-              //   ),
-              //   onPressed: () => debugPrint('pressed focus mode button'),
-              // ),
             ],
           );
         }
         
-        // For larger screens, use the original row layout
         return Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Text(
-              "Today's Overview",
+              l10n.overviewTitle,
               style: FluentTheme.of(context).typography.subtitle,
             ),
             Row(
@@ -931,32 +925,15 @@ class Header extends StatelessWidget {
                       const EdgeInsets.symmetric(vertical: 8, horizontal: 12)
                     )
                   ),
-                  child: const Row(
+                  child: Row(
                     children: [
-                      Icon(FluentIcons.refresh, size: 15),
-                      SizedBox(width: 10),
-                      Text('Refresh', style: TextStyle(fontWeight: FontWeight.w600)),
+                      const Icon(FluentIcons.refresh, size: 15),
+                      const SizedBox(width: 10),
+                      Text(l10n.refresh, style: const TextStyle(fontWeight: FontWeight.w600)),
                     ],
                   ),
                   onPressed: () => refresh(),
                 ),
-                // const SizedBox(width: 20),
-                // Button(
-                //   style: ButtonStyle(
-                //     padding: WidgetStateProperty.all(
-                //       const EdgeInsets.symmetric(vertical: 8, horizontal: 12)
-                //     )
-                //   ),
-                //   child: const Row(
-                //     children: [
-                //       Icon(FluentIcons.red_eye, size: 20),
-                //       SizedBox(width: 10),
-                //       Text('Start Focus Mode', style: TextStyle(fontWeight: FontWeight.w600)),
-                //     ],
-                //   ),
-                //   onPressed: () => debugPrint('pressed focus mode button'),
-                // ),
-
               ],
             )
           ],

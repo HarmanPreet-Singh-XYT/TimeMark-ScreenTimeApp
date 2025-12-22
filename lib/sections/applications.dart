@@ -4,6 +4,7 @@ import 'controller/settings_data_controller.dart';
 import './controller/data_controllers/applications_data_controller.dart';
 import './controller/categories_controller.dart';
 import 'dart:async';
+import 'package:screentime/l10n/app_localizations.dart';
 
 class Applications extends StatefulWidget {
   const Applications({super.key});
@@ -16,7 +17,6 @@ class _ApplicationsState extends State<Applications> {
   SettingsManager settingsManager = SettingsManager();
   bool isTracking = false;
   bool isHidden = false;
-  // {"name":"Google Chrome","category":"Browser","screenTime":"3h 15m","isTracking":true,"isHidden":false}
   List<dynamic> apps = [];
   String selectedCategory = "All";
   String searchValue = '';
@@ -30,6 +30,7 @@ class _ApplicationsState extends State<Applications> {
     selectedCategory = settingsManager.getSetting("applications.selectedCategory");
     _loadData();
   }
+  
   bool _isLoading = true;
   
   // Function to load data and update state
@@ -59,7 +60,6 @@ class _ApplicationsState extends State<Applications> {
       debugPrint('Error loading overview data: $e');
       setState(() {
         _isLoading = false;
-        // You could set some error state here if needed
       });
     }
   }
@@ -71,6 +71,7 @@ class _ApplicationsState extends State<Applications> {
     });
     await _loadData();
   }
+  
   void changeSearchValue(String value) {
     if (_debounce?.isActive ?? false) _debounce!.cancel();
 
@@ -82,6 +83,7 @@ class _ApplicationsState extends State<Applications> {
       }
     });
   }
+  
   @override
   void dispose() {
     _debounce?.cancel();
@@ -90,6 +92,8 @@ class _ApplicationsState extends State<Applications> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+    
     void setSetting(String key, dynamic value) {
       switch (key) {
         case 'tracking':
@@ -106,6 +110,7 @@ class _ApplicationsState extends State<Applications> {
           break;
       }
     }
+    
     void changeCategory(String category) {
       setState(() {
         selectedCategory = category;
@@ -113,169 +118,178 @@ class _ApplicationsState extends State<Applications> {
       });
     }
     
-    void changeIndividualParam(String type, bool value, String name)async {
+    void changeIndividualParam(String type, bool value, String name) async {
       switch (type) {
         case 'isTracking':
           apps = apps.map((app) => app['name'] == name 
             ? {...app, "isTracking": value}
             : app
           ).toList();
-          await  AppDataStore().updateAppMetadata(name, isTracking: value);
-          setState(() {
-          });
+          await AppDataStore().updateAppMetadata(name, isTracking: value);
+          setState(() {});
           break;
         case 'isHidden':
           apps = apps.map((app) => app['name'] == name 
             ? {...app, "isHidden": value}
             : app
           ).toList();
-            await AppDataStore().updateAppMetadata(name, isVisible: !value); 
-          setState(() {
-          });
+          await AppDataStore().updateAppMetadata(name, isVisible: !value); 
+          setState(() {});
           break;
       }
     }
     
-    return _isLoading ? const Center(child: ProgressRing(),) : SingleChildScrollView(
-        child: Padding(
-          padding: const EdgeInsets.only(left: 20, right: 20, bottom: 20, top: 10),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Header(changeSearchValue: changeSearchValue),
-              const SizedBox(height: 20),
-              Container(
-                height: 60,
-                padding: const EdgeInsets.only(left: 20, right: 20),
-                width: MediaQuery.of(context).size.width * 1,
-                decoration: BoxDecoration(
-                  color: FluentTheme.of(context).micaBackgroundColor,
-                  borderRadius: BorderRadius.circular(10),
-                  border: Border.all(color: FluentTheme.of(context).inactiveBackgroundColor, width: 1)
-                ),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                  Row(
-                    children: [
-                      ToggleSwitch(
-                        checked: isTracking,
-                        onChanged: (v) => setSetting('tracking', v),
-                      ),
-                      const SizedBox(width: 10,),
-                      const Text("Tracking", style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),),
-                      const SizedBox(width: 40,),
-                      ToggleSwitch(
-                        checked: isHidden,
-                        onChanged: (v) => setSetting('isHidden', v),
-                      ),
-                      const SizedBox(width: 10,),
-                      const Text("Hidden/Visible", style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),),
-                    ]
+    return _isLoading 
+      ? const Center(child: ProgressRing()) 
+      : SingleChildScrollView(
+          child: Padding(
+            padding: const EdgeInsets.only(left: 20, right: 20, bottom: 20, top: 10),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Header(changeSearchValue: changeSearchValue),
+                const SizedBox(height: 20),
+                Container(
+                  height: 60,
+                  padding: const EdgeInsets.only(left: 20, right: 20),
+                  width: MediaQuery.of(context).size.width * 1,
+                  decoration: BoxDecoration(
+                    color: FluentTheme.of(context).micaBackgroundColor,
+                    borderRadius: BorderRadius.circular(10),
+                    border: Border.all(color: FluentTheme.of(context).inactiveBackgroundColor, width: 1)
                   ),
-                  DropDownButton(
-                    title: Text(
-                      selectedCategory == 'All' ? 'Select a Category' : selectedCategory,
-                      style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w600),
-                    ),
-                    items: AppCategories.categories
-                        .map((category) => MenuFlyoutItem(
-                              text: Text(category.name),
-                              onPressed: () {
-                                changeCategory(category.name);
-                              },
-                            ))
-                        .toList(),
-                  )
-                ],),
-              ),
-              const SizedBox(height: 20),
-              Container(
-                padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-                height: MediaQuery.of(context).size.height * 0.72,
-                width: MediaQuery.of(context).size.width * 1,
-                decoration: BoxDecoration(
-                  color: FluentTheme.of(context).micaBackgroundColor,
-                  borderRadius: BorderRadius.circular(10),
-                  border: Border.all(color: FluentTheme.of(context).inactiveBackgroundColor, width: 1)
-                ),
-                child: Column(
-                  children: [
-                    SizedBox(
-                      height: 45,
-                      child: Row(
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Row(
                         children: [
-                          const Expanded(
-                            flex: 2,
-                            child: Center(
-                              child: Text("Name", style: TextStyle(fontSize: 14, fontWeight: FontWeight.w600))
-                          )),
-                          Container(width: 2, color: FluentTheme.of(context).inactiveBackgroundColor),
-                          const Expanded(
-                            flex: 1,
-                            child: Center(
-                              child: Text("Category", style: TextStyle(fontSize: 14, fontWeight: FontWeight.w600))
-                          )),
-                          Container(width: 2, color: FluentTheme.of(context).inactiveBackgroundColor),
-                          const Expanded(
-                            flex: 1,
-                            child: Center(
-                              child: Text("Screen Time", style: TextStyle(fontSize: 14, fontWeight: FontWeight.w600))
-                          )),
-                          Container(width: 2, color: FluentTheme.of(context).inactiveBackgroundColor),
-                          const Expanded(
-                            flex: 1,
-                            child: Center(
-                              child: Text("Tracking", style: TextStyle(fontSize: 14, fontWeight: FontWeight.w600))
-                          )),
-                          Container(width: 2, color: FluentTheme.of(context).inactiveBackgroundColor),
-                          const Expanded(
-                            flex: 1,
-                            child: Center(
-                              child: Text("Hidden", style: TextStyle(fontSize: 14, fontWeight: FontWeight.w600))
-                          )),
-                          Container(width: 2, color: FluentTheme.of(context).inactiveBackgroundColor),
-                          const Expanded(
-                            flex: 1,
-                            child: Center(
-                              child: Text("Edit", style: TextStyle(fontSize: 14, fontWeight: FontWeight.w600))
-                          )),
-                        ],
+                          ToggleSwitch(
+                            checked: isTracking,
+                            onChanged: (v) => setSetting('tracking', v),
+                          ),
+                          const SizedBox(width: 10),
+                          Text(l10n.tracking, style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w600)),
+                          const SizedBox(width: 40),
+                          ToggleSwitch(
+                            checked: isHidden,
+                            onChanged: (v) => setSetting('isHidden', v),
+                          ),
+                          const SizedBox(width: 10),
+                          Text(l10n.hiddenVisible, style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w600)),
+                        ]
                       ),
-                    ),
-                    Container(width: MediaQuery.of(context).size.width * 1, height: 1, color: FluentTheme.of(context).inactiveBackgroundColor),
-                    Expanded(
-                      child: SingleChildScrollView(
-                        child: Column(
-                          children: apps.where((app) =>
-                            (app["isTracking"] == isTracking && app["isHidden"] == isHidden) &&
-                            app["screenTime"] != "0s" && app['name'] != '' &&
-                            (selectedCategory == "All" || selectedCategory.contains(app["category"])) &&
-                            (searchValue.isEmpty || app["name"].toLowerCase().contains(searchValue.toLowerCase()))
-                          ).map((app) => 
-                            Application(
-                              name: app["name"],
-                              category: app["category"],
-                              screenTime: app["screenTime"],
-                              tracking: app["isTracking"],
-                              isHidden: app["isHidden"],
-                              isProductive: app["isProductive"] ?? false,
-                              dailyLimit: app["dailyLimit"] ?? const Duration(),
-                              limitStatus: app["limitStatus"] ?? false,
-                              changeIndividualParam: changeIndividualParam,
-                              refreshData: refreshData,
-                            ),
-                          ).toList(),
+                      DropDownButton(
+                        title: Text(
+                          selectedCategory == 'All' ? l10n.selectCategory : selectedCategory,
+                          style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w600),
+                        ),
+                        items: [
+                          MenuFlyoutItem(
+                            text: Text(l10n.allCategories),
+                            onPressed: () {
+                              changeCategory('All');
+                            },
+                          ),
+                          ...AppCategories.categories
+                              .map((category) => MenuFlyoutItem(
+                                    text: Text(category.name),
+                                    onPressed: () {
+                                      changeCategory(category.name);
+                                    },
+                                  ))
+                              .toList(),
+                        ],
+                      )
+                    ],
+                  ),
+                ),
+                const SizedBox(height: 20),
+                Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                  height: MediaQuery.of(context).size.height * 0.72,
+                  width: MediaQuery.of(context).size.width * 1,
+                  decoration: BoxDecoration(
+                    color: FluentTheme.of(context).micaBackgroundColor,
+                    borderRadius: BorderRadius.circular(10),
+                    border: Border.all(color: FluentTheme.of(context).inactiveBackgroundColor, width: 1)
+                  ),
+                  child: Column(
+                    children: [
+                      SizedBox(
+                        height: 45,
+                        child: Row(
+                          children: [
+                            Expanded(
+                              flex: 2,
+                              child: Center(
+                                child: Text(l10n.tableName, style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w600))
+                            )),
+                            Container(width: 2, color: FluentTheme.of(context).inactiveBackgroundColor),
+                            Expanded(
+                              flex: 1,
+                              child: Center(
+                                child: Text(l10n.tableCategory, style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w600))
+                            )),
+                            Container(width: 2, color: FluentTheme.of(context).inactiveBackgroundColor),
+                            Expanded(
+                              flex: 1,
+                              child: Center(
+                                child: Text(l10n.tableScreenTime, style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w600))
+                            )),
+                            Container(width: 2, color: FluentTheme.of(context).inactiveBackgroundColor),
+                            Expanded(
+                              flex: 1,
+                              child: Center(
+                                child: Text(l10n.tableTracking, style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w600))
+                            )),
+                            Container(width: 2, color: FluentTheme.of(context).inactiveBackgroundColor),
+                            Expanded(
+                              flex: 1,
+                              child: Center(
+                                child: Text(l10n.tableHidden, style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w600))
+                            )),
+                            Container(width: 2, color: FluentTheme.of(context).inactiveBackgroundColor),
+                            Expanded(
+                              flex: 1,
+                              child: Center(
+                                child: Text(l10n.tableEdit, style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w600))
+                            )),
+                          ],
                         ),
                       ),
-                    ),
-                  ],
+                      Container(width: MediaQuery.of(context).size.width * 1, height: 1, color: FluentTheme.of(context).inactiveBackgroundColor),
+                      Expanded(
+                        child: SingleChildScrollView(
+                          child: Column(
+                            children: apps.where((app) =>
+                              (app["isTracking"] == isTracking && app["isHidden"] == isHidden) &&
+                              app["screenTime"] != "0s" && app['name'] != '' &&
+                              (selectedCategory == "All" || selectedCategory.contains(app["category"])) &&
+                              (searchValue.isEmpty || app["name"].toLowerCase().contains(searchValue.toLowerCase()))
+                            ).map((app) => 
+                              Application(
+                                name: app["name"],
+                                category: app["category"],
+                                screenTime: app["screenTime"],
+                                tracking: app["isTracking"],
+                                isHidden: app["isHidden"],
+                                isProductive: app["isProductive"] ?? false,
+                                dailyLimit: app["dailyLimit"] ?? const Duration(),
+                                limitStatus: app["limitStatus"] ?? false,
+                                changeIndividualParam: changeIndividualParam,
+                                refreshData: refreshData,
+                              ),
+                            ).toList(),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
-        ),
-      );
+        );
   }
 }
 
@@ -305,8 +319,9 @@ class Application extends StatelessWidget {
     required this.refreshData,
   });
 
-
   void _showEditDialog(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+    
     String selectedCategory = category;
     bool isProductiveValue = isProductive;
     bool isTrackingValue = tracking;
@@ -329,7 +344,7 @@ class Application extends StatelessWidget {
       context: context,
       builder: (context) {
         return ContentDialog(
-          title: Text('Edit $name', style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold)),
+          title: Text(l10n.editAppTitle(name), style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold)),
           content: StatefulBuilder(
             builder: (context, setState) {
               return SingleChildScrollView(
@@ -340,29 +355,28 @@ class Application extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       // Category Section
-                      _buildSectionHeader('Category'),
+                      _buildSectionHeader(l10n.categorySection),
                       const SizedBox(height: 8),
                       Row(
                         children: [
                           Expanded(
                             child: ComboBox<String>(
-                              value: isCustomCategory ? 'Custom' : selectedCategory,
+                              value: isCustomCategory ? l10n.customCategory : selectedCategory,
                               items: [
                                 ...AppCategories.categories
                                     .map((category) => ComboBoxItem<String>(
                                           value: category.name,
                                           child: Text(category.name),
-                                        ))
-                                    ,
-                                const ComboBoxItem<String>(
-                                  value: 'Custom',
-                                  child: Text('Custom'),
+                                        )),
+                                ComboBoxItem<String>(
+                                  value: l10n.customCategory,
+                                  child: Text(l10n.customCategory),
                                 ),
                               ],
                               onChanged: (value) {
                                 if (value != null) {
                                   setState(() {
-                                    if (value == 'Custom') {
+                                    if (value == l10n.customCategory) {
                                       isCustomCategory = true;
                                     } else {
                                       isCustomCategory = false;
@@ -383,7 +397,7 @@ class Application extends StatelessWidget {
                                 padding: const EdgeInsets.only(top: 8.0),
                                 child: TextBox(
                                   controller: customCategoryController,
-                                  placeholder: 'Enter custom category name',
+                                  placeholder: l10n.customCategoryPlaceholder,
                                   onChanged: (value) {
                                     setState(() {
                                       selectedCategory = value;
@@ -403,7 +417,7 @@ class Application extends StatelessWidget {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               _buildToggleRow(
-                                'Is Productive',
+                                l10n.isProductive,
                                 isProductiveValue,
                                 (value) {
                                   setState(() {
@@ -415,7 +429,7 @@ class Application extends StatelessWidget {
                               ),
                               const Divider(),
                               _buildToggleRow(
-                                'Track Usage',
+                                l10n.trackUsage,
                                 isTrackingValue,
                                 (value) {
                                   setState(() {
@@ -427,7 +441,7 @@ class Application extends StatelessWidget {
                               ),
                               const Divider(),
                               _buildToggleRow(
-                                'Visible in Reports',
+                                l10n.visibleInReports,
                                 isVisibleValue,
                                 (value) {
                                   setState(() {
@@ -444,7 +458,7 @@ class Application extends StatelessWidget {
                       const SizedBox(height: 20),
                       
                       // Time Limit Section
-                      _buildSectionHeader('Time Limits'),
+                      _buildSectionHeader(l10n.timeLimitsSection),
                       const SizedBox(height: 8),
                       Card(
                         child: Padding(
@@ -453,7 +467,7 @@ class Application extends StatelessWidget {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               _buildToggleRow(
-                                'Enable Daily Limit',
+                                l10n.enableDailyLimit,
                                 limitStatusValue,
                                 (value) {
                                   setState(() {
@@ -471,14 +485,16 @@ class Application extends StatelessWidget {
                                         child: Column(
                                           crossAxisAlignment: CrossAxisAlignment.start,
                                           children: [
-                                            const Text('Set daily time limit:',
-                                                style: TextStyle(fontSize: 14, fontWeight: FontWeight.w500)),
+                                            Text(
+                                              l10n.setDailyTimeLimit,
+                                              style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w500)
+                                            ),
                                             const SizedBox(height: 8),
                                             Row(
                                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                               children: [
                                                 _buildTimeInput(
-                                                  'Hours',
+                                                  l10n.hours,
                                                   limitHours,
                                                   0,
                                                   24,
@@ -490,7 +506,7 @@ class Application extends StatelessWidget {
                                                 ),
                                                 const SizedBox(width: 10),
                                                 _buildTimeInput(
-                                                  'Minutes',
+                                                  l10n.minutes,
                                                   limitMinutes,
                                                   0,
                                                   59,
@@ -519,19 +535,19 @@ class Application extends StatelessWidget {
           ),
           actions: [
             Button(
-              child: const Text('Cancel'),
+              child: Text(l10n.cancel),
               onPressed: () {
                 Navigator.pop(context);
               },
             ),
             FilledButton(
-              child: const Text('Save Changes'),
+              child: Text(l10n.saveChanges),
               onPressed: () async {
                 // If custom is selected, use the value from the text field
                 final finalCategory = isCustomCategory 
                     ? customCategoryController.text.isNotEmpty 
                         ? customCategoryController.text 
-                        : 'Uncategorized'
+                        : l10n.uncategorized
                     : selectedCategory;
                 
                 // Calculate new duration from hours and minutes
@@ -574,12 +590,12 @@ class Application extends StatelessWidget {
           style: const TextStyle(
             fontSize: 16,
             fontWeight: FontWeight.bold,
-            color: Color(0xFF0078D7), // Microsoft blue color constant
+            color: Color(0xFF0078D7),
           ),
         ),
         const SizedBox(width: 8),
         const Expanded(
-          child: Divider(), // Using default divider without color parameter
+          child: Divider(),
         ),
       ],
     );
@@ -600,14 +616,14 @@ class Application extends StatelessWidget {
           Row(
             children: [
               if (icon != null) ...[
-                Icon(icon, size: 18, color: iconColor), // Using const color
+                Icon(icon, size: 18, color: iconColor),
                 const SizedBox(width: 10),
               ],
               Text(
                 label, 
                 style: const TextStyle(
                   fontSize: 15,
-                  fontWeight: FontWeight.w500, // Added medium weight for better visibility
+                  fontWeight: FontWeight.w500,
                 ),
               ),
             ],
@@ -638,7 +654,7 @@ class Application extends StatelessWidget {
             style: const TextStyle(
               fontSize: 13,
               fontWeight: FontWeight.w500,
-              color: Color(0xFF0078D7), // Microsoft blue color constant
+              color: Color(0xFF0078D7),
             ),
           ),
           const SizedBox(height: 4),
@@ -730,10 +746,12 @@ class Header extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+    
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        Text("Applications", style: FluentTheme.of(context).typography.subtitle),
+        Text(l10n.applicationsTitle, style: FluentTheme.of(context).typography.subtitle),
         Row(
           children: [
             Container(
@@ -750,7 +768,7 @@ class Header extends StatelessWidget {
               height: 40,
               margin: const EdgeInsets.only(right: 10),
               child: TextBox(
-                placeholder: 'Search Application',
+                placeholder: l10n.searchApplication,
                 onChanged: (value) => {
                   changeSearchValue(value)
                 },

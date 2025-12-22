@@ -1,10 +1,6 @@
 import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:convert';
-// import 'dart:io';
-// import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-// import 'package:launch_at_startup/launch_at_startup.dart';
-// import 'package:package_info_plus/package_info_plus.dart';
 import 'package:adaptive_theme/adaptive_theme.dart';
 
 // Theme constants
@@ -18,22 +14,28 @@ class ThemeOptions {
 
 // Language constants
 class LanguageOptions {
-  static const String english = "English";
-  static const List<String> available = [english];
-  static const String defaultLanguage = english;
+  static const List<Map<String, String>> available = [
+    {'code': 'en', 'name': 'English'},
+    // Add more languages as you create translations
+    // {'code': 'es', 'name': 'Español'},
+    {'code': 'fr', 'name': 'Français'},
+    // {'code': 'de', 'name': 'Deutsch'},
+    // {'code': 'hi', 'name': 'हिन्दी'},
+  ];
+  static const String defaultLanguage = "en";
 }
 
 // Focus mode constants
 class FocusModeOptions {
   static const String custom = "Custom";
-  static const List<String> available = [custom]; // Add more as needed
+  static const List<String> available = [custom];
   static const String defaultMode = custom;
 }
 
 // App category constants
 class CategoryOptions {
   static const String all = "All";
-  static const List<String> available = [all]; // Add more as needed
+  static const List<String> available = [all];
   static const String defaultCategory = all;
 }
 
@@ -57,7 +59,7 @@ class SettingsManager {
       "selected": LanguageOptions.defaultLanguage,
     },
     "launchAtStartup": true,
-    "launchAsMinimized":false,
+    "launchAsMinimized": false,
     "notifications": {
       "enabled": true,
       "focusMode": true,
@@ -80,7 +82,7 @@ class SettingsManager {
       "isHidden": false,
       "selectedCategory": CategoryOptions.defaultCategory
     },
-    "focusModeSettings":{
+    "focusModeSettings": {
       "selectedMode": FocusModeOptions.defaultMode,
       "workDuration": 25.0,
       "shortBreak": 5.0,
@@ -89,27 +91,17 @@ class SettingsManager {
       "blockDistractions": false,
       "enableSoundsNotifications": true
     },
-    // Add the new notificationController section with default values
     "notificationController": {
       "reminderFrequency": 5, // minutes
     }
   };
-  Map<String, String> versionInfo = {"version": "1.1.0", "type": "Stable Build"};
+  
+  Map<String, String> versionInfo = {"version": "1.1.1", "type": "Stable Build"};
+  
   /// Initialize SharedPreferences and load settings
   Future<void> init() async {
-    // if (!kIsWeb) {
-    //   PackageInfo packageInfo = await PackageInfo.fromPlatform();
-    //   launchAtStartup.setup(
-    //     appName: packageInfo.appName,
-    //     appPath: Platform.resolvedExecutable,
-    //     packageName: "Harmanita.TimeMark-TrackScreenTimeAppUsage",
-    //     args: ['--auto-launched'],
-    //   );
-    // }
     _prefs = await SharedPreferences.getInstance();
     _loadSettings();
-    // bool isStartupEnabled = await launchAtStartup.isEnabled();
-    // settings["launchAtStartup"] = isStartupEnabled;
   }
 
   /// Load settings from SharedPreferences
@@ -118,16 +110,18 @@ class SettingsManager {
     if (storedSettings != null) {
       Map<String, dynamic> loadedSettings = jsonDecode(storedSettings);
       
-      // Merge loaded settings with default settings to ensure all required fields exist
+      // Merge loaded settings with default settings
       _mergeSettings(settings, loadedSettings);
       
-      // Validate theme - ensure it's one of the available options
+      // Validate theme
       if (!ThemeOptions.available.contains(settings["theme"]["selected"])) {
         settings["theme"]["selected"] = ThemeOptions.defaultTheme;
       }
       
-      // Validate language
-      if (!LanguageOptions.available.contains(settings["language"]["selected"])) {
+      // Validate language - check if it's a valid language code
+      String currentLang = settings["language"]["selected"];
+      bool isValidLang = LanguageOptions.available.any((lang) => lang['code'] == currentLang);
+      if (!isValidLang) {
         settings["language"]["selected"] = LanguageOptions.defaultLanguage;
       }
       
@@ -163,23 +157,20 @@ class SettingsManager {
     _prefs.setString("screenTime_settings", jsonEncode(settings));
   }
 
-  /// 📌 Update any setting dynamically
+  /// Update any setting dynamically
   void updateSetting(String key, dynamic value, [BuildContext? context]) async {
     List<String> keys = key.split(".");
 
     if (keys.length == 1) {
       if (settings.containsKey(keys[0])) {
         settings[keys[0]] = value;
-        // if(keys[0] == 'launchAtStartup'){
-        //   value ? await launchAtStartup.enable() : await launchAtStartup.disable();
-        // }
       } else {
         debugPrint("❌ ERROR: Invalid setting: ${keys[0]}");
       }
     } else {
       Map<String, dynamic> current = settings;
       
-      // Navigate to the nested object, creating it if it doesn't exist
+      // Navigate to the nested object
       for (int i = 0; i < keys.length - 1; i++) {
         if (!current.containsKey(keys[i])) {
           current[keys[i]] = <String, dynamic>{};
@@ -191,13 +182,11 @@ class SettingsManager {
         current = current[keys[i]];
       }
       
-      // Set the final value
       current[keys.last] = value;
     }
     
-    _saveSettings(); // Save updated settings
+    _saveSettings();
     
-    // Debug print for notification controller settings
     if (keys.isNotEmpty && keys[0] == "notificationController") {
       debugPrint("🔔 Updated notification setting: $key = $value");
     }
@@ -228,7 +217,7 @@ class SettingsManager {
     applyTheme(currentTheme, context);
   }
   
-  /// 📌 Get any setting dynamically
+  /// Get any setting dynamically
   dynamic getSetting(String key) {
     List<String> keys = key.split(".");
     dynamic current = settings;
@@ -244,13 +233,18 @@ class SettingsManager {
     return current;
   }
 
+  /// Save a setting directly (used for locale storage)
+  Future<void> saveSetting(String key, dynamic value) async {
+    await _prefs.setString(key, value.toString());
+  }
+
   // Get available theme options
   List<String> getAvailableThemes() {
     return ThemeOptions.available;
   }
   
   // Get available language options
-  List<String> getAvailableLanguages() {
+  List<Map<String, String>> getAvailableLanguages() {
     return LanguageOptions.available;
   }
   
@@ -264,9 +258,8 @@ class SettingsManager {
     return CategoryOptions.available;
   }
 
-  //reset
+  /// Reset settings to default
   Future<void> resetSettings([BuildContext? context]) async {
-    // Default settings map
     final Map<String, dynamic> defaultSettings = {
       "theme": {
         "selected": ThemeOptions.defaultTheme,
@@ -275,7 +268,7 @@ class SettingsManager {
         "selected": LanguageOptions.defaultLanguage,
       },
       "launchAtStartup": true,
-      "launchAsMinimized":false,
+      "launchAsMinimized": false,
       "notifications": {
         "enabled": true,
         "focusMode": true,
@@ -298,7 +291,7 @@ class SettingsManager {
         "isHidden": false,
         "selectedCategory": CategoryOptions.defaultCategory
       },
-      "focusModeSettings":{
+      "focusModeSettings": {
         "selectedMode": FocusModeOptions.defaultMode,
         "workDuration": 25.0,
         "shortBreak": 5.0,
@@ -307,25 +300,12 @@ class SettingsManager {
         "blockDistractions": false,
         "enableSoundsNotifications": true
       },
-      // Add the new notificationController section with default values
       "notificationController": {
-        "reminderFrequency": 5, // minute
+        "reminderFrequency": 5, // minutes
       }
     };
 
-    // Update the settings with default values
     settings = Map<String, dynamic>.from(defaultSettings);
-    
-    // Update launch at startup setting in the system
-    // if (!kIsWeb && (Platform.isWindows || Platform.isMacOS || Platform.isLinux)) {
-    //   if (settings["launchAtStartup"]) {
-    //     await launchAtStartup.enable();
-    //   } else {
-    //     await launchAtStartup.disable();
-    //   }
-    // }
-
-    // Save the default settings to persistent storage
     _saveSettings();
     
     debugPrint("✅ Settings reset to default values");

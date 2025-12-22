@@ -1,4 +1,5 @@
 import 'package:fluent_ui/fluent_ui.dart';
+import 'package:screentime/l10n/app_localizations.dart';
 import 'package:provider/provider.dart';
 import 'package:screentime/sections/controller/app_data_controller.dart';
 import 'controller/settings_data_controller.dart';
@@ -10,9 +11,9 @@ class SettingsProvider extends ChangeNotifier {
   final Map<String, String> version = SettingsManager().versionInfo;
   
   String _theme = "";
-  String _language = "English";
+  String _language = "en";
   bool _launchAtStartupVar = false;
-  bool _launchAsMinimized = false; // New setting
+  bool _launchAsMinimized = false;
   bool _notificationsEnabled = false;
   bool _notificationsFocusMode = false;
   bool _notificationsScreenTime = false;
@@ -22,7 +23,7 @@ class SettingsProvider extends ChangeNotifier {
   String get theme => _theme;
   String get language => _language;
   bool get launchAtStartupVar => _launchAtStartupVar;
-  bool get launchAsMinimized => _launchAsMinimized; // New getter
+  bool get launchAsMinimized => _launchAsMinimized;
   bool get notificationsEnabled => _notificationsEnabled;
   bool get notificationsFocusMode => _notificationsFocusMode;
   bool get notificationsScreenTime => _notificationsScreenTime;
@@ -30,7 +31,7 @@ class SettingsProvider extends ChangeNotifier {
   Map<String, String> get appVersion => version;
   
   List<dynamic> get themeOptions => _settingsManager.getAvailableThemes();
-  List<dynamic> get languageOptions => _settingsManager.getAvailableLanguages();
+  List<Map<String, String>> get languageOptions => _settingsManager.getAvailableLanguages();
   int _reminderFrequency = 60;
   int get reminderFrequency => _reminderFrequency;
   
@@ -40,9 +41,9 @@ class SettingsProvider extends ChangeNotifier {
   
   void _loadSettings() {
     _theme = _settingsManager.getSetting("theme.selected");
-    _language = _settingsManager.getSetting("language.selected");
+    _language = _settingsManager.getSetting("language.selected") ?? "en";
     _launchAtStartupVar = _settingsManager.getSetting("launchAtStartup");
-    _launchAsMinimized = _settingsManager.getSetting("launchAsMinimized") ?? false; // New setting with default false
+    _launchAsMinimized = _settingsManager.getSetting("launchAsMinimized") ?? false;
     _notificationsEnabled = _settingsManager.getSetting("notifications.enabled");
     _notificationsFocusMode = _settingsManager.getSetting("notifications.focusMode");
     _notificationsScreenTime = _settingsManager.getSetting("notifications.screenTime");
@@ -91,6 +92,7 @@ class SettingsProvider extends ChangeNotifier {
     }
     notifyListeners();
   }
+  
   int getReminderFrequency() {
     return _settingsManager.getSetting("notificationController.reminderFrequency") ?? 60;
   }
@@ -110,19 +112,23 @@ class SettingsProvider extends ChangeNotifier {
 }
 
 class Settings extends StatelessWidget {
-  const Settings({super.key});
+  final Function(Locale) setLocale;
+  
+  const Settings({super.key, required this.setLocale});
   
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
       create: (_) => SettingsProvider(),
-      child: const SettingsContent(),
+      child: SettingsContent(setLocale: setLocale),
     );
   }
 }
 
 class SettingsContent extends StatefulWidget {
-  const SettingsContent({super.key});
+  final Function(Locale) setLocale;
+  
+  const SettingsContent({super.key, required this.setLocale});
 
   @override
   State<SettingsContent> createState() => _SettingsContentState();
@@ -148,29 +154,32 @@ class _SettingsContentState extends State<SettingsContent> {
   }
 
   Widget _launchStatus(BuildContext context, AsyncSnapshot<void> snapshot) {
+    final l10n = AppLocalizations.of(context)!;
     if (snapshot.hasError) {
-      return Text('Error: ${snapshot.error}');
+      return Text(l10n.errorMessage(snapshot.error.toString()));
     } else {
       return const Text('');
     }
   }
   
-  final String urlContact = 'https://harman.vercel.app/details/screentime';
-  final String urlReport = 'https://harman.vercel.app/details/screentime';
-  final String urlFeedback = 'https://harman.vercel.app/details/screentime';
+  final String urlContact = 'https://harmanita.com/details/screentime';
+  final String urlReport = 'https://harmanita.com/details/screentime';
+  final String urlFeedback = 'https://harmanita.com/details/screentime';
   final String github = 'https://github.com/HarmanPreet-Singh-XYT/TimeMark-ScreenTimeApp';
   
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+    
     return SingleChildScrollView(
       child: Padding(
         padding: const EdgeInsets.only(left: 20, right: 20, bottom: 20, top: 10),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Header(),
+            Header(),
             const SizedBox(height: 30),
-            const GeneralSection(),
+            GeneralSection(setLocale: widget.setLocale),
             const SizedBox(height: 30),
             const NotificationSection(),
             const SizedBox(height: 30),
@@ -183,11 +192,11 @@ class _SettingsContentState extends State<SettingsContent> {
               children: [
                 Button(
                   style: ButtonStyle(padding: WidgetStateProperty.all(const EdgeInsets.only(top: 8, bottom: 8, left: 14, right: 14))),
-                  child: const Row(
+                  child: Row(
                     children: [
-                      Icon(FluentIcons.canned_chat, size: 18),
-                      SizedBox(width: 10),
-                      Text('Contact', style: TextStyle(fontWeight: FontWeight.w600)),
+                      const Icon(FluentIcons.canned_chat, size: 18),
+                      const SizedBox(width: 10),
+                      Text(l10n.contactButton, style: const TextStyle(fontWeight: FontWeight.w600)),
                     ],
                   ),
                   onPressed: () => setState(() {
@@ -197,11 +206,11 @@ class _SettingsContentState extends State<SettingsContent> {
                 const SizedBox(width: 25),
                 Button(
                   style: ButtonStyle(padding: WidgetStateProperty.all(const EdgeInsets.only(top: 8, bottom: 8, left: 14, right: 14))),
-                  child: const Row(
+                  child: Row(
                     children: [
-                      Icon(FluentIcons.bug, size: 18),
-                      SizedBox(width: 10),
-                      Text('Report Bug', style: TextStyle(fontWeight: FontWeight.w600)),
+                      const Icon(FluentIcons.bug, size: 18),
+                      const SizedBox(width: 10),
+                      Text(l10n.reportBugButton, style: const TextStyle(fontWeight: FontWeight.w600)),
                     ],
                   ),
                   onPressed: () => setState(() {
@@ -211,11 +220,11 @@ class _SettingsContentState extends State<SettingsContent> {
                 const SizedBox(width: 25),
                 Button(
                   style: ButtonStyle(padding: WidgetStateProperty.all(const EdgeInsets.symmetric(vertical: 8, horizontal: 12))),
-                  child: const Row(
+                  child: Row(
                     children: [
-                      Icon(FluentIcons.red_eye, size: 20),
-                      SizedBox(width: 10),
-                      Text('Submit Feedback', style: TextStyle(fontWeight: FontWeight.w600)),
+                      const Icon(FluentIcons.red_eye, size: 20),
+                      const SizedBox(width: 10),
+                      Text(l10n.submitFeedbackButton, style: const TextStyle(fontWeight: FontWeight.w600)),
                     ],
                   ),
                   onPressed: () => setState(() {
@@ -225,7 +234,7 @@ class _SettingsContentState extends State<SettingsContent> {
                 const SizedBox(width: 25),
                 Button(
                   style: ButtonStyle(padding: WidgetStateProperty.all(const EdgeInsets.symmetric(vertical: 8, horizontal: 12))),
-                  child:const Text('Github', style: TextStyle(fontWeight: FontWeight.w600)),
+                  child: Text(l10n.githubButton, style: const TextStyle(fontWeight: FontWeight.w600)),
                   onPressed: () => setState(() {
                     _launched = _launchInBrowser(github);
                   }),
@@ -245,19 +254,22 @@ class _SettingsContentState extends State<SettingsContent> {
 }
 
 class GeneralSection extends StatelessWidget {
-  const GeneralSection({super.key});
+  final Function(Locale) setLocale;
+  
+  const GeneralSection({super.key, required this.setLocale});
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     final settings = context.watch<SettingsProvider>();
     
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Text("General", style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600)),
+        Text(l10n.generalSection, style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w600)),
         const SizedBox(height: 15),
         Container(
-          height: 180, // Increased height to accommodate new option
+          height: 180,
           padding: const EdgeInsets.all(20),
           width: MediaQuery.of(context).size.width,
           decoration: BoxDecoration(
@@ -269,32 +281,28 @@ class GeneralSection extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               OptionSetting(
-                title: "Theme",
-                description: "Color theme of the application (Change Requires Restart)",
+                title: l10n.themeTitle,
+                description: l10n.themeDescription,
                 settingType: "theme",
                 changeValue: (key, value) => settings.updateSetting(key, value, context),
                 optionsValue: settings.theme,
                 options: settings.themeOptions,
               ),
               OptionSetting(
-                title: "Language",
-                description: "Language of the application",
+                title: l10n.languageTitle,
+                description: l10n.languageDescription,
                 settingType: "language",
-                changeValue: (key, value) => settings.updateSetting(key, value),
+                changeValue: (key, value) {
+                  settings.updateSetting(key, value);
+                  // Update the app locale
+                  setLocale(Locale(value));
+                },
                 optionsValue: settings.language,
-                options: settings.languageOptions,
+                languageOptions: settings.languageOptions,
               ),
-              // OptionSetting(
-              //   title: "Startup Behaviour",
-              //   description: "Launch at OS startup",
-              //   optionType: "switch",
-              //   settingType: "launchAtStartup",
-              //   changeValue: (key, value) => settings.updateSetting(key, value),
-              //   isChecked: settings.launchAtStartupVar,
-              // ),
               OptionSetting(
-                title: "Launch as Minimized",
-                description: "Start the application in System Tray (Recommended for Windows 10)",
+                title: l10n.launchMinimizedTitle,
+                description: l10n.launchMinimizedDescription,
                 optionType: "switch",
                 settingType: "launchAsMinimized",
                 changeValue: (key, value) => settings.updateSetting(key, value),
@@ -313,15 +321,16 @@ class NotificationSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     final settings = context.watch<SettingsProvider>();
     
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Text("Notifications", style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600)),
+        Text(l10n.notificationsSection, style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w600)),
         const SizedBox(height: 15),
         Container(
-          height: 300, // Increased height to accommodate more detailed setting
+          height: 300,
           padding: const EdgeInsets.all(20),
           width: MediaQuery.of(context).size.width,
           decoration: BoxDecoration(
@@ -333,45 +342,45 @@ class NotificationSection extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               OptionSetting(
-                title: "Notifications",
-                description: "All notifications of the application",
+                title: l10n.notificationsTitle,
+                description: l10n.notificationsAllDescription,
                 optionType: "switch",
                 settingType: "notificationsEnabled",
                 changeValue: (key, value) => settings.updateSetting(key, value),
                 isChecked: settings.notificationsEnabled,
               ),
               OptionSetting(
-                title: "Focus Mode",
-                description: "All Notifications for focus mode",
+                title: l10n.focusModeNotificationsTitle,
+                description: l10n.focusModeNotificationsDescription,
                 optionType: "switch",
                 settingType: "notificationsFocusMode",
                 changeValue: (key, value) => settings.updateSetting(key, value),
                 isChecked: settings.notificationsFocusMode,
               ),
               OptionSetting(
-                title: "Screen Time",
-                description: "All Notifications for screen time restriction",
+                title: l10n.screenTimeNotificationsTitle,
+                description: l10n.screenTimeNotificationsDescription,
                 optionType: "switch",
                 settingType: "notificationsScreenTime",
                 changeValue: (key, value) => settings.updateSetting(key, value),
                 isChecked: settings.notificationsScreenTime,
               ),
               OptionSetting(
-                title: "Application Screen Time",
-                description: "All Notifications for application screen time restriction",
+                title: l10n.appScreenTimeNotificationsTitle,
+                description: l10n.appScreenTimeNotificationsDescription,
                 optionType: "switch",
                 settingType: "notificationsAppScreenTime",
                 changeValue: (key, value) => settings.updateSetting(key, value),
                 isChecked: settings.notificationsAppScreenTime,
               ),
               OptionSetting(
-                title: "Frequent Alerts Interval",
-                description: "Set interval for frequent notifications (minutes)",
+                title: l10n.frequentAlertsTitle,
+                description: l10n.frequentAlertsDescription,
                 optionType: "options",
                 settingType: "reminderFrequency",
                 changeValue: (key, value) => settings.updateSetting(key, int.parse(value)),
                 optionsValue: settings.getReminderFrequency().toString(),
-                options:const [1,5,15,30, 60],
+                options: const [1, 5, 15, 30, 60],
               ),
             ],
           ),
@@ -386,12 +395,13 @@ class DataSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     final settings = Provider.of<SettingsProvider>(context);
     
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Text("Data", style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600)),
+        Text(l10n.dataSection, style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w600)),
         const SizedBox(height: 15),
         Container(
           height: 120,
@@ -406,16 +416,16 @@ class DataSection extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               OptionSetting(
-                title: "Clear Data",
-                description: "Clear all the history and other related data",
+                title: l10n.clearDataTitle,
+                description: l10n.clearDataDescription,
                 optionType: "button",
                 buttonType: "data",
                 settingType: "clearData",
                 onButtonPressed: () => _showDataDialog(context, settings),
               ),
               OptionSetting(
-                title: "Reset Settings",
-                description: "Reset all the settings",
+                title: l10n.resetSettingsTitle2,
+                description: l10n.resetSettingsDescription,
                 optionType: "button",
                 buttonType: "settings",
                 settingType: "resetSettings",
@@ -429,23 +439,23 @@ class DataSection extends StatelessWidget {
   }
 
   Future<void> _showDataDialog(BuildContext context, SettingsProvider settings) async {
+    final l10n = AppLocalizations.of(context)!;
+    
     await showDialog<String>(
       context: context,
       builder: (context) => ContentDialog(
-        title: const Text('Clear Data?'),
-        content: const Text(
-          'This will clear all history and related data. You won\'t be able to recover it. Do you want to proceed?',
-        ),
+        title: Text(l10n.clearDataDialogTitle),
+        content: Text(l10n.clearDataDialogContent),
         actions: [
           Button(
-            child: const Text('Clear Data'),
+            child: Text(l10n.clearDataButtonLabel),
             onPressed: () {
               settings.clearData();
               Navigator.pop(context, 'User cleared data');
             },
           ),
           FilledButton(
-            child: const Text('Cancel'),
+            child: Text(l10n.cancelButton),
             onPressed: () => Navigator.pop(context, 'User canceled dialog'),
           ),
         ],
@@ -454,23 +464,23 @@ class DataSection extends StatelessWidget {
   }
 
   Future<void> _showSettingsDialog(BuildContext context, SettingsProvider settings) async {
+    final l10n = AppLocalizations.of(context)!;
+    
     await showDialog<String>(
       context: context,
       builder: (context) => ContentDialog(
-        title: const Text('Reset Settings?'),
-        content: const Text(
-          'This will reset all settings to their default values. Do you want to proceed?',
-        ),
+        title: Text(l10n.resetSettingsDialogTitle),
+        content: Text(l10n.resetSettingsDialogContent),
         actions: [
           Button(
-            child: const Text('Reset'),
+            child: Text(l10n.resetButtonLabel),
             onPressed: () {
               settings.resetSettings();
               Navigator.pop(context, 'User reset settings');
             },
           ),
           FilledButton(
-            child: const Text('Cancel'),
+            child: Text(l10n.cancelButton),
             onPressed: () => Navigator.pop(context, 'User canceled dialog'),
           ),
         ],
@@ -484,13 +494,14 @@ class AboutSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     final settings = Provider.of<SettingsProvider>(context);
     final version = settings.appVersion;
     
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Text("Version", style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600)),
+        Text(l10n.versionSection, style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w600)),
         const SizedBox(height: 15),
         Container(
           height: 77,
@@ -507,11 +518,11 @@ class AboutSection extends StatelessWidget {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  const Column(
+                  Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text("Version", style: TextStyle(fontWeight: FontWeight.bold)),
-                      Text("Current version of the app", style: TextStyle(fontSize: 12, color: Color(0xff555555))),
+                      Text(l10n.versionTitle, style: const TextStyle(fontWeight: FontWeight.bold)),
+                      Text(l10n.versionDescription, style: const TextStyle(fontSize: 12, color: Color(0xff555555))),
                     ]
                   ),
                   Column(
@@ -530,7 +541,6 @@ class AboutSection extends StatelessWidget {
   }
 }
 
-// The OptionSetting widget remains largely the same
 class OptionSetting extends StatelessWidget {
   final String title;
   final String description;
@@ -541,6 +551,7 @@ class OptionSetting extends StatelessWidget {
   final void Function(String type, dynamic value)? changeValue;
   final String optionsValue;
   final List<dynamic> options;
+  final List<Map<String, String>> languageOptions;
   final VoidCallback? onButtonPressed;
 
   const OptionSetting({
@@ -554,11 +565,14 @@ class OptionSetting extends StatelessWidget {
     required this.settingType,
     this.optionsValue = "",
     this.options = const [],
+    this.languageOptions = const [],
     this.onButtonPressed,
   });
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+    
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
@@ -569,12 +583,19 @@ class OptionSetting extends StatelessWidget {
             Text(description, style: const TextStyle(fontSize: 12, color: Color(0xff555555))),
           ],
         ),
-        _buildOptionWidget(buttonType, isChecked, optionsValue, options),
+        _buildOptionWidget(l10n, buttonType, isChecked, optionsValue, options, languageOptions),
       ],
     );
   }
 
-  Widget _buildOptionWidget(String buttonType, bool isChecked, String optionsValue, List<dynamic> options) {
+  Widget _buildOptionWidget(
+    AppLocalizations l10n,
+    String buttonType, 
+    bool isChecked, 
+    String optionsValue, 
+    List<dynamic> options,
+    List<Map<String, String>> languageOptions,
+  ) {
     switch (optionType) {
       case "switch":
         return ToggleSwitch(
@@ -592,11 +613,30 @@ class OptionSetting extends StatelessWidget {
           ),
           onPressed: onButtonPressed,
           child: Text(
-            buttonType == "data" ? "Clear Data" : "Reset Settings",
+            buttonType == "data" ? l10n.clearDataButtonLabel : l10n.resetButtonLabel,
             style: const TextStyle(fontWeight: FontWeight.w600),
           ),
         );
       default:
+        // Handle language options separately
+        if (settingType == "language" && languageOptions.isNotEmpty) {
+          return ComboBox<String>(
+            value: optionsValue,
+            items: languageOptions.map((lang) {
+              return ComboBoxItem<String>(
+                value: lang['code']!,
+                child: Text(lang['name']!),
+              );
+            }).toList(),
+            onChanged: (value) {
+              if (value != null && changeValue != null) {
+                changeValue!(settingType, value);
+              }
+            },
+          );
+        }
+        
+        // Handle regular options
         return ComboBox<String>(
           value: optionsValue,
           items: options.map((content) {
@@ -620,10 +660,12 @@ class Header extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+    
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        Text("Settings", style: FluentTheme.of(context).typography.subtitle),
+        Text(l10n.settingsTitle, style: FluentTheme.of(context).typography.subtitle),
       ],
     );
   }

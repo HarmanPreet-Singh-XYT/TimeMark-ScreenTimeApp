@@ -1,6 +1,7 @@
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:screentime/sections/controller/data_controllers/alerts_limits_data_controller.dart';
 import 'package:screentime/sections/controller/settings_data_controller.dart';
+import 'package:screentime/l10n/app_localizations.dart';
 
 class AlertsLimits extends StatefulWidget {
   final ScreenTimeDataController? controller;
@@ -85,7 +86,7 @@ class _AlertsLimitsState extends State<AlertsLimits> {
     } catch (e) {
       if (mounted) {
         setState(() {
-          errorMessage = 'Failed to load data: ${e.toString()}';
+          errorMessage = AppLocalizations.of(context)!.failedToLoadData(e.toString());
           isLoading = false;
         });
       }
@@ -159,6 +160,8 @@ class _AlertsLimitsState extends State<AlertsLimits> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+    
     if (isLoading) {
       return const Center(child: ProgressRing());
     }
@@ -172,7 +175,7 @@ class _AlertsLimitsState extends State<AlertsLimits> {
             const SizedBox(height: 16),
             Button(
               onPressed: _loadData,
-              child: const Text('Retry'),
+              child: Text(l10n.retry),
             ),
           ],
         ),
@@ -207,18 +210,18 @@ class _AlertsLimitsState extends State<AlertsLimits> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        const Text(
-                          "Notifications Settings",
-                          style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
+                        Text(
+                          l10n.notificationsSettings,
+                          style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
                         ),
                         const SizedBox(height: 15),
-                        _buildToggleRow('Pop-up Alerts', popupAlerts, (v) => setSetting('popup', v)),
+                        _buildToggleRow(l10n.popupAlerts, popupAlerts, (v) => setSetting('popup', v)),
                         const SizedBox(height: 10),
-                        _buildToggleRow('Frequent Alerts', frequentAlerts, (v) => setSetting('frequent', v)),
+                        _buildToggleRow(l10n.frequentAlerts, frequentAlerts, (v) => setSetting('frequent', v)),
                         const SizedBox(height: 10),
-                        _buildToggleRow('Sound Alerts', soundAlerts, (v) => setSetting('sound', v)),
+                        _buildToggleRow(l10n.soundAlerts, soundAlerts, (v) => setSetting('sound', v)),
                         const SizedBox(height: 10),
-                        _buildToggleRow('System Alerts', systemAlerts, (v) => setSetting('system', v)),
+                        _buildToggleRow(l10n.systemAlerts, systemAlerts, (v) => setSetting('system', v)),
                       ],
                     ),
                   );
@@ -235,18 +238,16 @@ class _AlertsLimitsState extends State<AlertsLimits> {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        const Text(
-                          "Notifications Settings",
-                          style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
+                        Text(
+                          l10n.notificationsSettings,
+                          style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
                         ),
                         const SizedBox(height: 15),
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                           children: [
-                            // _buildToggleRow('Pop-up Alerts', popupAlerts, (v) => setSetting('popup', v)),
-                            _buildToggleRow('Frequent Alerts', frequentAlerts, (v) => setSetting('frequent', v)),
-                            // _buildToggleRow('Sound Alerts', soundAlerts, (v) => setSetting('sound', v)),
-                            _buildToggleRow('System Alerts', systemAlerts, (v) => setSetting('system', v)),
+                            _buildToggleRow(l10n.frequentAlerts, frequentAlerts, (v) => setSetting('frequent', v)),
+                            _buildToggleRow(l10n.systemAlerts, systemAlerts, (v) => setSetting('system', v)),
                           ],
                         ),
                       ],
@@ -272,9 +273,9 @@ class _AlertsLimitsState extends State<AlertsLimits> {
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          const Text(
-                            "Overall Screen Time Limit",
-                            style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
+                          Text(
+                            l10n.overallScreenTimeLimit,
+                            style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
                           ),
                           ToggleSwitch(
                             checked: overallLimitEnabled,
@@ -283,9 +284,6 @@ class _AlertsLimitsState extends State<AlertsLimits> {
                         ],
                       ),
                       
-                      // Toggle moved to the right side with Spacer
-                      
-                      
                       if(overallLimitEnabled) const SizedBox(height: 15),
                       
                       if (overallLimitEnabled) Column(
@@ -293,8 +291,8 @@ class _AlertsLimitsState extends State<AlertsLimits> {
                         children: [
                           Row(
                             children: [
-                              const Text('Daily Total Limit: ', 
-                                style: TextStyle(fontSize: 14, fontWeight: FontWeight.w500)),
+                              Text(l10n.dailyTotalLimit, 
+                                style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w500)),
                               Text(
                                 '${overallLimitHours.round()}h ${(overallLimitMinutes.round() ~/ 5 * 5)}m',
                                 style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w600),
@@ -307,7 +305,7 @@ class _AlertsLimitsState extends State<AlertsLimits> {
                           // Make sliders stretch to full width
                           Row(
                             children: [
-                              const Text('Hours: '),
+                              Text(l10n.hours),
                               Expanded(
                                 child: Slider(
                                   value: overallLimitHours,
@@ -332,7 +330,7 @@ class _AlertsLimitsState extends State<AlertsLimits> {
                           
                           Row(
                             children: [
-                              const Text('Minutes: '),
+                              Text(l10n.minutes),
                               Expanded(
                                 child: Slider(
                                   value: overallLimitMinutes,
@@ -360,8 +358,8 @@ class _AlertsLimitsState extends State<AlertsLimits> {
                           // Make progress bar stretch to full width
                           Row(
                             children: [
-                              const Text('Current Usage: ', 
-                                style: TextStyle(fontSize: 14, fontWeight: FontWeight.w500)),
+                              Text(l10n.currentUsage, 
+                                style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w500)),
                               Text(
                                 _formatDuration(totalScreenTime),
                                 style: TextStyle(
@@ -462,23 +460,27 @@ class _AlertsLimitsState extends State<AlertsLimits> {
   }
 
   String _formatDuration(Duration duration) {
+    final l10n = AppLocalizations.of(context)!;
+    
     if (duration == Duration.zero) {
-      return "None";
+      return l10n.durationNone;
     }
 
     final hours = duration.inHours;
     final minutes = duration.inMinutes % 60;
 
     if (hours > 0 && minutes > 0) {
-      return "${hours}h ${minutes}m";
+      return l10n.durationHoursMinutes(hours, minutes);
     } else if (hours > 0) {
       return "${hours}h";
     } else {
-      return "${minutes}m";
+      return l10n.durationMinutesOnly(minutes);
     }
   }
 
   void _resetAllLimits() {
+    final l10n = AppLocalizations.of(context)!;
+    
     try {
       // Reset app-specific limits
       final apps = controller.getAllAppsSummary();
@@ -502,11 +504,12 @@ class _AlertsLimitsState extends State<AlertsLimits> {
       _loadData();
     } catch (e) {
       setState(() {
-        errorMessage = 'Failed to reset limits: ${e.toString()}';
+        errorMessage = l10n.failedToLoadData(e.toString());
       });
     }
   }
 }
+
 class ApplicationLimits extends StatefulWidget {
   final List<AppUsageSummary> appSummaries;
   final ScreenTimeDataController controller;
@@ -526,6 +529,8 @@ class ApplicationLimits extends StatefulWidget {
 class _ApplicationLimitsState extends State<ApplicationLimits> {
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+    
     return Container(
       constraints: const BoxConstraints(
         minHeight: 200,
@@ -544,28 +549,28 @@ class _ApplicationLimitsState extends State<ApplicationLimits> {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              const Text(
-                "Application Limits",
-                style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
+              Text(
+                l10n.applicationLimits,
+                style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
               ),
               Button(
-                child: const Text("Add Limit"),
+                child: Text(l10n.addLimit),
                 onPressed: () => _showAddLimitDialog(context),
               ),
             ],
           ),
           const SizedBox(height: 10),
-          const Padding(
-            padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                SizedBox(width: 120, child: Text("Name", style: TextStyle(fontWeight: FontWeight.w600))),
-                SizedBox(width: 120, child: Text("Category", style: TextStyle(fontWeight: FontWeight.w600))),
-                SizedBox(width: 72, child: Text("Daily Limit", style: TextStyle(fontWeight: FontWeight.w600))),
-                SizedBox(width: 100, child: Text("Current Usage", style: TextStyle(fontWeight: FontWeight.w600))),
-                SizedBox(width: 55, child: Text("Status", style: TextStyle(fontWeight: FontWeight.w600))),
-                SizedBox(width: 85, child: Text("Actions", style: TextStyle(fontWeight: FontWeight.w600))),
+                SizedBox(width: 120, child: Text(l10n.tableName, style: const TextStyle(fontWeight: FontWeight.w600))),
+                SizedBox(width: 120, child: Text(l10n.tableCategory, style: const TextStyle(fontWeight: FontWeight.w600))),
+                SizedBox(width: 72, child: Text(l10n.tableDailyLimit, style: const TextStyle(fontWeight: FontWeight.w600))),
+                SizedBox(width: 100, child: Text(l10n.tableCurrentUsage, style: const TextStyle(fontWeight: FontWeight.w600))),
+                SizedBox(width: 55, child: Text(l10n.tableStatus, style: const TextStyle(fontWeight: FontWeight.w600))),
+                SizedBox(width: 85, child: Text(l10n.tableActions, style: const TextStyle(fontWeight: FontWeight.w600))),
               ],
             ),
           ),
@@ -573,11 +578,11 @@ class _ApplicationLimitsState extends State<ApplicationLimits> {
           const SizedBox(height: 10),
           Expanded(
             child: widget.appSummaries.isEmpty 
-              ? const Center(child: Text("No applications to display"))
+              ? Center(child: Text(l10n.noApplicationsToDisplay))
               : SingleChildScrollView(
                   child: Column(
                     children: widget.appSummaries
-                        .where((app) => app.appName.trim().isNotEmpty) // Filter out empty or null names
+                        .where((app) => app.appName.trim().isNotEmpty)
                         .map((app) => Application(
                               app: app,
                               onEdit: () => _showEditLimitDialog(context, app),
@@ -592,6 +597,7 @@ class _ApplicationLimitsState extends State<ApplicationLimits> {
   }
 
   void _showAddLimitDialog(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     final allApps = widget.appSummaries;
     String? selectedApp;
     double hours = 1.0;
@@ -603,18 +609,18 @@ class _ApplicationLimitsState extends State<ApplicationLimits> {
       builder: (context) => StatefulBuilder(
         builder: (context, setState) {
           return ContentDialog(
-            title: const Text('Add Application Limit'),
+            title: Text(l10n.addApplicationLimit),
             content: Column(
               mainAxisSize: MainAxisSize.min,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const Text('Select Application'),
+                Text(l10n.selectApplication),
                 const SizedBox(height: 8),
                 ComboBox<String>(
-                  placeholder: const Text('Select an application'),
+                  placeholder: Text(l10n.selectApplicationPlaceholder),
                   isExpanded: true,
                   items: allApps
-                      .where((app) => app.appName.trim().isNotEmpty) // Filter out empty or null names
+                      .where((app) => app.appName.trim().isNotEmpty)
                       .map((app) => ComboBoxItem<String>(
                             value: app.appName,
                             child: Text(app.appName),
@@ -631,7 +637,7 @@ class _ApplicationLimitsState extends State<ApplicationLimits> {
                 const SizedBox(height: 20),
                 Row(
                   children: [
-                    const Text('Enable Limit: '),
+                    Text(l10n.enableLimit),
                     ToggleSwitch(
                       checked: limitEnabled,
                       onChanged: (value) {
@@ -645,7 +651,7 @@ class _ApplicationLimitsState extends State<ApplicationLimits> {
                 const SizedBox(height: 20),
                 Row(
                   children: [
-                    const Text('Hours: '),
+                    Text(l10n.hours),
                     SizedBox(
                       width: 200,
                       child: Slider(
@@ -666,18 +672,18 @@ class _ApplicationLimitsState extends State<ApplicationLimits> {
                 ),
                 Row(
                   children: [
-                    const Text('Minutes: '),
+                    Text(l10n.minutes),
                     SizedBox(
                       width: 200,
                       child: Slider(
                         value: minutes,
                         min: 0,
                         max: 55,
-                        divisions: 12, // Corrected to match 5-minute increments (0, 5, 10, ... 55)
-                        label: (minutes.round() ~/ 5 * 5).toString(), // Ensure values are in 5-minute increments
+                        divisions: 12,
+                        label: (minutes.round() ~/ 5 * 5).toString(),
                         onChanged: (value) {
                           setState(() {
-                            minutes = (value ~/ 5 * 5).toDouble(); // Round to nearest 5-minute increment
+                            minutes = (value ~/ 5 * 5).toDouble();
                           });
                         },
                       ),
@@ -689,30 +695,30 @@ class _ApplicationLimitsState extends State<ApplicationLimits> {
             ),
             actions: [
               Button(
-                child: const Text('Cancel'),
+                child: Text(l10n.cancel),
                 onPressed: () => Navigator.pop(context),
               ),
               FilledButton(
-                child: const Text('Add'),
+                child: Text(l10n.add),
                 onPressed: () {
                   if (selectedApp != null) {
                     try {
                       final duration = Duration(
                         hours: hours.round(),
-                        minutes: (minutes.round() ~/ 5 * 5), // Ensure minutes are in 5-minute increments
+                        minutes: (minutes.round() ~/ 5 * 5),
                       );
                       widget.controller.updateAppLimit(selectedApp!, duration, limitEnabled);
-                      widget.onDataChanged(); // Reload data after changes
+                      widget.onDataChanged();
                       Navigator.pop(context);
                     } catch (e) {
                       showDialog(
                         context: context,
                         builder: (context) => ContentDialog(
-                          title: const Text('Error'),
-                          content: Text('Failed to update limit: ${e.toString()}'),
+                          title: Text(l10n.error),
+                          content: Text(l10n.failedToLoadData(e.toString())),
                           actions: [
                             Button(
-                              child: const Text('OK'),
+                              child: Text(l10n.ok),
                               onPressed: () => Navigator.pop(context),
                             ),
                           ],
@@ -730,6 +736,7 @@ class _ApplicationLimitsState extends State<ApplicationLimits> {
   }
 
   void _showEditLimitDialog(BuildContext context, AppUsageSummary app) {
+    final l10n = AppLocalizations.of(context)!;
     double hours = app.dailyLimit.inHours.toDouble();
     double minutes = (app.dailyLimit.inMinutes % 60).toDouble();
     bool limitEnabled = app.limitStatus;
@@ -739,13 +746,13 @@ class _ApplicationLimitsState extends State<ApplicationLimits> {
       builder: (context) => StatefulBuilder(
         builder: (context, setState) {
           return ContentDialog(
-            title: Text('Edit Limit: ${app.appName}'),
+            title: Text(l10n.editLimitTitle(app.appName)),
             content: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
                 Row(
                   children: [
-                    const Text('Enable Limit: '),
+                    Text(l10n.enableLimit),
                     ToggleSwitch(
                       checked: limitEnabled,
                       onChanged: (value) {
@@ -759,7 +766,7 @@ class _ApplicationLimitsState extends State<ApplicationLimits> {
                 const SizedBox(height: 20),
                 Row(
                   children: [
-                    const Text('Hours: '),
+                    Text(l10n.hours),
                     SizedBox(
                       width: 200,
                       child: Slider(
@@ -780,18 +787,18 @@ class _ApplicationLimitsState extends State<ApplicationLimits> {
                 ),
                 Row(
                   children: [
-                    const Text('Minutes: '),
+                    Text(l10n.minutes),
                     SizedBox(
                       width: 200,
                       child: Slider(
                         value: minutes,
                         min: 0,
                         max: 55,
-                        divisions: 12, // Corrected to match 5-minute increments
+                        divisions: 12,
                         label: (minutes.round() ~/ 5 * 5).toString(),
                         onChanged: (value) {
                           setState(() {
-                            minutes = (value ~/ 5 * 5).toDouble(); // Round to nearest 5-minute increment
+                            minutes = (value ~/ 5 * 5).toDouble();
                           });
                         },
                       ),
@@ -803,29 +810,29 @@ class _ApplicationLimitsState extends State<ApplicationLimits> {
             ),
             actions: [
               Button(
-                child: const Text('Cancel'),
+                child: Text(l10n.cancel),
                 onPressed: () => Navigator.pop(context),
               ),
               FilledButton(
-                child: const Text('Save'),
+                child: Text(l10n.save),
                 onPressed: () {
                   try {
                     final duration = Duration(
                       hours: hours.round(),
-                      minutes: (minutes.round() ~/ 5 * 5), // Ensure minutes are in 5-minute increments
+                      minutes: (minutes.round() ~/ 5 * 5),
                     );
                     widget.controller.updateAppLimit(app.appName, duration, limitEnabled);
-                    widget.onDataChanged(); // Reload data after changes
+                    widget.onDataChanged();
                     Navigator.pop(context);
                   } catch (e) {
                     showDialog(
                       context: context,
                       builder: (context) => ContentDialog(
-                        title: const Text('Error'),
-                        content: Text('Failed to update limit: ${e.toString()}'),
+                        title: Text(l10n.error),
+                        content: Text(l10n.failedToLoadData(e.toString())),
                         actions: [
                           Button(
-                            child: const Text('OK'),
+                            child: Text(l10n.ok),
                             onPressed: () => Navigator.pop(context),
                           ),
                         ],
@@ -854,6 +861,8 @@ class Application extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+    
     return Column(
       children: [
         Padding(
@@ -863,8 +872,8 @@ class Application extends StatelessWidget {
             children: [
               SizedBox(width: 120, height: 20, child: Text(app.appName)),
               SizedBox(width: 120, height: 20, child: Text(app.category)),
-              SizedBox(width: 72, height: 20, child: Text(_formatDuration(app.dailyLimit))),
-              SizedBox(width: 100, height: 20, child: Text(_formatDuration(app.currentUsage))),
+              SizedBox(width: 72, height: 20, child: Text(_formatDuration(app.dailyLimit, l10n))),
+              SizedBox(width: 100, height: 20, child: Text(_formatDuration(app.currentUsage, l10n))),
               SizedBox(
                 width: 55,
                 height: 20,
@@ -879,7 +888,7 @@ class Application extends StatelessWidget {
                       ),
                     ),
                     const SizedBox(width: 5),
-                    Text(app.limitStatus ? "Active" : "Off"),
+                    Text(app.limitStatus ? l10n.statusActive : l10n.statusOff),
                   ],
                 ),
               ),
@@ -905,20 +914,20 @@ class Application extends StatelessWidget {
     );
   }
 
-  String _formatDuration(Duration duration) {
+  String _formatDuration(Duration duration, AppLocalizations l10n) {
     if (duration == Duration.zero) {
-      return "None";
+      return l10n.durationNone;
     }
 
     final hours = duration.inHours;
     final minutes = duration.inMinutes % 60;
 
     if (hours > 0 && minutes > 0) {
-      return "${hours}h ${minutes}m";
+      return l10n.durationHoursMinutes(hours, minutes);
     } else if (hours > 0) {
       return "${hours}h";
     } else {
-      return "${minutes}m";
+      return l10n.durationMinutesOnly(minutes);
     }
   }
 
@@ -959,19 +968,21 @@ class Header extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+    
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        Text("Alerts & Limits", style: FluentTheme.of(context).typography.subtitle),
+        Text(l10n.alertsLimitsTitle, style: FluentTheme.of(context).typography.subtitle),
         Row(
           children: [
             Button(
               onPressed: onRefresh,
-              child: const Row(
+              child: Row(
                 children: [
-                  Icon(FluentIcons.refresh, size: 16),
-                  SizedBox(width: 10),
-                  Text('Refresh', style: TextStyle(fontWeight: FontWeight.w600)),
+                  const Icon(FluentIcons.refresh, size: 16),
+                  const SizedBox(width: 10),
+                  Text(l10n.refresh, style: const TextStyle(fontWeight: FontWeight.w600)),
                 ],
               ),
             ),
@@ -982,11 +993,11 @@ class Header extends StatelessWidget {
                   const EdgeInsets.only(top: 8, bottom: 8, left: 20, right: 20),
                 ),
               ),
-              child: const Row(
+              child: Row(
                 children: [
-                  Icon(FluentIcons.sync, size: 16),
-                  SizedBox(width: 10),
-                  Text('Reset All', style: TextStyle(fontWeight: FontWeight.w600)),
+                  const Icon(FluentIcons.sync, size: 16),
+                  const SizedBox(width: 10),
+                  Text(l10n.resetAll, style: const TextStyle(fontWeight: FontWeight.w600)),
                 ],
               ),
               onPressed: () => showContentDialog(context),
@@ -998,23 +1009,23 @@ class Header extends StatelessWidget {
   }
   
   void showContentDialog(BuildContext context) async {
+    final l10n = AppLocalizations.of(context)!;
+    
     await showDialog<String>(
       context: context,
       builder: (context) => ContentDialog(
-        title: const Text('Reset Settings?'),
-        content: const Text(
-          'If you reset settings, you won\'t be able to recover it. Do you want to reset it?',
-        ),
+        title: Text(l10n.resetSettingsTitle),
+        content: Text(l10n.resetSettingsContent),
         actions: [
           Button(
-            child: const Text('Reset All'),
+            child: Text(l10n.resetAll),
             onPressed: () {
               Navigator.pop(context, 'Reset confirmed');
               onReset();
             },
           ),
           FilledButton(
-            child: const Text('Cancel'),
+            child: Text(l10n.cancel),
             onPressed: () => Navigator.pop(context, 'User canceled dialog'),
           ),
         ],

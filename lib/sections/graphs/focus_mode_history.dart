@@ -2,6 +2,7 @@ import './resources/app_resources.dart';
 import './resources/color_extensions.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
+import 'package:screentime/l10n/app_localizations.dart';
 
 class _BarChart extends StatelessWidget {
   final Map<String, int> data;
@@ -13,9 +14,9 @@ class _BarChart extends StatelessWidget {
     return BarChart(
       BarChartData(
         barTouchData: barTouchData,
-        titlesData: titlesData,
+        titlesData: titlesData(context),
         borderData: borderData,
-        barGroups: barGroups,
+        barGroups: barGroups(context),
         gridData: const FlGridData(show: false),
         alignment: BarChartAlignment.spaceAround,
         maxY: 20,
@@ -46,34 +47,36 @@ class _BarChart extends StatelessWidget {
         ),
       );
 
-  Widget getTitles(double value, TitleMeta meta) {
+  Widget getTitles(double value, TitleMeta meta, BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     final style = TextStyle(
       color: AppColors.contentColorBlue.darken(20),
       fontWeight: FontWeight.bold,
       fontSize: 14,
     );
+    
     String text;
     switch (value.toInt()) {
       case 0:
-        text = 'Mn';
+        text = l10n.day_mondayAbbr;
         break;
       case 1:
-        text = 'Tu';
+        text = l10n.day_tuesdayAbbr;
         break;
       case 2:
-        text = 'Wd';
+        text = l10n.day_wednesdayAbbr;
         break;
       case 3:
-        text = 'Th';
+        text = l10n.day_thursdayAbbr;
         break;
       case 4:
-        text = 'Fr';
+        text = l10n.day_fridayAbbr;
         break;
       case 5:
-        text = 'St';
+        text = l10n.day_saturdayAbbr;
         break;
       case 6:
-        text = 'Sn';
+        text = l10n.day_sundayAbbr;
         break;
       default:
         text = '';
@@ -86,13 +89,13 @@ class _BarChart extends StatelessWidget {
     );
   }
 
-  FlTitlesData get titlesData => FlTitlesData(
+  FlTitlesData titlesData(BuildContext context) => FlTitlesData(
         show: true,
         bottomTitles: AxisTitles(
           sideTitles: SideTitles(
             showTitles: true,
             reservedSize: 30,
-            getTitlesWidget: getTitles,
+            getTitlesWidget: (value, meta) => getTitles(value, meta, context),
           ),
         ),
         leftTitles: const AxisTitles(
@@ -106,9 +109,7 @@ class _BarChart extends StatelessWidget {
         ),
       );
 
-  FlBorderData get borderData => FlBorderData(
-        show: false,
-      );
+  FlBorderData get borderData => FlBorderData(show: false);
 
   LinearGradient get _barsGradient => LinearGradient(
         colors: [
@@ -119,8 +120,17 @@ class _BarChart extends StatelessWidget {
         end: Alignment.topCenter,
       );
 
-  List<BarChartGroupData> get barGroups {
-    final List<String> days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
+  List<BarChartGroupData> barGroups(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+    final List<String> days = [
+      l10n.day_monday,
+      l10n.day_tuesday,
+      l10n.day_wednesday,
+      l10n.day_thursday,
+      l10n.day_friday,
+      l10n.day_saturday,
+      l10n.day_sunday
+    ];
     
     return List.generate(7, (index) {
       final dayName = days[index];
@@ -142,6 +152,7 @@ class _BarChart extends StatelessWidget {
 
 class FocusModeHistoryChart extends StatefulWidget {
   final Map<String, int> data;
+  
   const FocusModeHistoryChart({super.key, required this.data});
 
   @override

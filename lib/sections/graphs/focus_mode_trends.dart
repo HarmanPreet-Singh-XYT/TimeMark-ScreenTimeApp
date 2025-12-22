@@ -1,6 +1,7 @@
 import 'package:fl_chart/fl_chart.dart';
 import './resources/app_resources.dart';
 import 'package:flutter/material.dart';
+import 'package:screentime/l10n/app_localizations.dart';
 
 class FocusModeTrends extends StatefulWidget {
   const FocusModeTrends({
@@ -37,16 +38,17 @@ class _FocusModeTrendsState extends State<FocusModeTrends> {
     );
   }
 
-  String get yAxisTitle {
+  String getYAxisTitle(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     switch(_selectedMetric) {
       case 'sessionCounts':
-        return 'Sessions';
+        return l10n.chart_yAxis_sessions;
       case 'avgDuration':
-        return 'Minutes';
+        return l10n.chart_yAxis_minutes;
       case 'totalFocusTime':
-        return 'Minutes';
+        return l10n.chart_yAxis_minutes;
       default:
-        return 'Value';
+        return l10n.chart_yAxis_value;
     }
   }
 
@@ -70,7 +72,7 @@ class _FocusModeTrendsState extends State<FocusModeTrends> {
 
   @override
   Widget build(BuildContext context) {
-    // Create spots based on selected metric
+    final l10n = AppLocalizations.of(context)!;
     final spots = allSpots;
     
     final lineBarsData = [
@@ -112,18 +114,18 @@ class _FocusModeTrendsState extends State<FocusModeTrends> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             SegmentedButton<String>(
-              segments: const [
+              segments: [
                 ButtonSegment(
                   value: 'sessionCounts',
-                  label: Text('Session Count'),
+                  label: Text(l10n.chart_sessionCount),
                 ),
                 ButtonSegment(
                   value: 'avgDuration',
-                  label: Text('Avg Duration'),
+                  label: Text(l10n.chart_avgDuration),
                 ),
                 ButtonSegment(
                   value: 'totalFocusTime',
-                  label: Text('Total Focus'),
+                  label: Text(l10n.chart_totalFocus),
                 ),
               ],
               selected: {_selectedMetric},
@@ -141,9 +143,9 @@ class _FocusModeTrendsState extends State<FocusModeTrends> {
           padding: const EdgeInsets.symmetric(horizontal: 24.0),
           child: Row(
             children: [
-              const Text(
-                "Month-over-month change: ",
-                style: TextStyle(fontWeight: FontWeight.bold),
+              Text(
+                l10n.chart_monthOverMonthChange,
+                style: const TextStyle(fontWeight: FontWeight.bold),
               ),
               Text(
                 "${widget.data['percentageChange']}%",
@@ -236,7 +238,7 @@ class _FocusModeTrendsState extends State<FocusModeTrends> {
                           switch(_selectedMetric) {
                             case 'avgDuration':
                             case 'totalFocusTime':
-                              tooltipText = "${lineBarSpot.y.toStringAsFixed(1)} min";
+                              tooltipText = l10n.time_minutesFormat(lineBarSpot.y.toStringAsFixed(1));
                               break;
                             default:
                               tooltipText = lineBarSpot.y.toStringAsFixed(0);
@@ -257,7 +259,7 @@ class _FocusModeTrendsState extends State<FocusModeTrends> {
                   minY: 0,
                   titlesData: FlTitlesData(
                     leftTitles: AxisTitles(
-                      axisNameWidget: Text(yAxisTitle),
+                      axisNameWidget: Text(getYAxisTitle(context)),
                       axisNameSize: 24,
                       sideTitles: SideTitles(
                         showTitles: true,
@@ -290,13 +292,13 @@ class _FocusModeTrendsState extends State<FocusModeTrends> {
                         reservedSize: 0,
                       ),
                     ),
-                    topTitles: const AxisTitles(
+                    topTitles: AxisTitles(
                       axisNameWidget: Text(
-                        'Focus Trends',
+                        l10n.chart_focusTrends,
                         textAlign: TextAlign.left,
                       ),
                       axisNameSize: 24,
-                      sideTitles: SideTitles(
+                      sideTitles: const SideTitles(
                         showTitles: true,
                         reservedSize: 0,
                       ),
@@ -319,7 +321,6 @@ class _FocusModeTrendsState extends State<FocusModeTrends> {
   }
 }
 
-/// Lerps between a [LinearGradient] colors, based on [t]
 Color lerpGradient(List<Color> colors, List<double> stops, double t) {
   if (colors.isEmpty) {
     throw ArgumentError('"colors" is empty.');
@@ -329,8 +330,6 @@ Color lerpGradient(List<Color> colors, List<double> stops, double t) {
 
   if (stops.length != colors.length) {
     stops = [];
-
-    /// provided gradientColorStops is invalid and we calculate it here
     colors.asMap().forEach((index, color) {
       final percent = 1.0 / (colors.length - 1);
       stops.add(percent * index);
