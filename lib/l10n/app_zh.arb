@@ -1,0 +1,1261 @@
+{
+  "@@locale": "zh",
+  
+  "appWindowTitle": "TimeMark - 屏幕时间和应用使用追踪",
+  "@appWindowTitle": {
+    "description": "The title shown in the window title bar"
+  },
+  
+  "appName": "TimeMark",
+  "@appName": {
+    "description": "The name of the application"
+  },
+  
+  "appTitle": "高效屏幕时间",
+  "@appTitle": {
+    "description": "The app title/tagline"
+  },
+  
+  "sidebarTitle": "屏幕时间",
+  "@sidebarTitle": {
+    "description": "Title shown in the sidebar"
+  },
+  
+  "sidebarSubtitle": "开源软件",
+  "@sidebarSubtitle": {
+    "description": "Subtitle shown in the sidebar"
+  },
+  
+  "trayShowWindow": "显示窗口",
+  "@trayShowWindow": {
+    "description": "Tray menu item to show the main window"
+  },
+  
+  "trayStartFocusMode": "开始专注模式",
+  "@trayStartFocusMode": {
+    "description": "Tray menu item to start focus mode"
+  },
+  
+  "trayStopFocusMode": "停止专注模式",
+  "@trayStopFocusMode": {
+    "description": "Tray menu item to stop focus mode"
+  },
+  
+  "trayReports": "报告",
+  "@trayReports": {
+    "description": "Tray menu item for reports"
+  },
+  
+  "trayAlertsLimits": "提醒与限制",
+  "@trayAlertsLimits": {
+    "description": "Tray menu item for alerts and limits"
+  },
+  
+  "trayApplications": "应用程序",
+  "@trayApplications": {
+    "description": "Tray menu item for applications"
+  },
+  
+  "trayDisableNotifications": "关闭通知",
+  "@trayDisableNotifications": {
+    "description": "Tray menu item to disable notifications"
+  },
+  
+  "trayEnableNotifications": "开启通知",
+  "@trayEnableNotifications": {
+    "description": "Tray menu item to enable notifications"
+  },
+  
+  "trayVersionPrefix": "版本：",
+  "@trayVersionPrefix": {
+    "description": "Prefix text for version display in tray"
+  },
+  
+  "trayVersion": "版本：{version}",
+  "@trayVersion": {
+    "description": "Version display with placeholder",
+    "placeholders": {
+      "version": {
+        "type": "String",
+        "example": "1.0.0"
+      }
+    }
+  },
+  
+  "trayExit": "退出",
+  "@trayExit": {
+    "description": "Tray menu item to exit the application"
+  },
+  
+  "navOverview": "概览",
+  "@navOverview": {
+    "description": "Navigation item for overview page"
+  },
+  
+  "navApplications": "应用程序",
+  "@navApplications": {
+    "description": "Navigation item for applications page"
+  },
+  
+  "navAlertsLimits": "提醒与限制",
+  "@navAlertsLimits": {
+    "description": "Navigation item for alerts and limits page"
+  },
+  
+  "navReports": "报告",
+  "@navReports": {
+    "description": "Navigation item for reports page"
+  },
+  
+  "navFocusMode": "专注模式",
+  "@navFocusMode": {
+    "description": "Navigation item for focus mode page"
+  },
+  
+  "navSettings": "设置",
+  "@navSettings": {
+    "description": "Navigation item for settings page"
+  },
+  
+  "navHelp": "帮助",
+  "@navHelp": {
+    "description": "Navigation item for help page"
+  },
+  
+  "helpTitle": "帮助",
+  
+  "faqCategoryGeneral": "常见问题",
+  "faqCategoryApplications": "应用程序管理",
+  "faqCategoryReports": "使用分析与报告",
+  "faqCategoryAlerts": "提醒与限制",
+  "faqCategoryFocusMode": "专注模式与番茄钟",
+  "faqCategorySettings": "设置与个性化",
+  "faqCategoryTroubleshooting": "故障排除",
+  
+  "faqGeneralQ1": "这个应用如何追踪屏幕时间？",
+  "faqGeneralA1": "该应用实时监控您设备的使用情况，追踪在不同应用上花费的时间。它提供关于您数字习惯的全面分析，包括总屏幕时间、高效时间和特定应用的使用情况。",
+  
+  "faqGeneralQ2": "什么使应用被认为是\"高效\"的？",
+  "faqGeneralA2": "您可以在\"应用程序\"部分手动将应用标记为高效。高效应用会计入您的高效分数，该分数计算花在工作相关或有益应用上的屏幕时间百分比。",
+  
+  "faqGeneralQ3": "屏幕时间追踪有多准确？",
+  "faqGeneralA3": "该应用使用系统级追踪来精确测量您的设备使用情况。它以最小的电池影响捕获每个应用的前台使用时间。",
+  
+  "faqGeneralQ4": "我可以自定义应用分类吗？",
+  "faqGeneralA4": "当然可以！您可以创建自定义类别，将应用分配到特定类别，并在\"应用程序\"部分轻松修改这些分配。这有助于创建更有意义的使用分析。",
+  
+  "faqGeneralQ5": "我可以从这个应用获得什么洞察？",
+  "faqGeneralA5": "该应用提供全面的洞察，包括高效分数、按时间段的使用模式、详细的应用使用情况、专注会话追踪，以及图表和饼图等可视化分析，帮助您了解和改善您的数字习惯。",
+  
+  "faqAppsQ1": "如何隐藏特定应用的追踪？",
+  "faqAppsA1": "在\"应用程序\"部分，您可以切换应用的可见性。",
+  
+  "faqAppsQ2": "我可以搜索和筛选我的应用吗？",
+  "faqAppsA2": "是的，应用程序部分包含搜索功能和筛选选项。您可以按类别、高效状态、追踪状态和可见性筛选应用。",
+  
+  "faqAppsQ3": "应用有哪些编辑选项？",
+  "faqAppsA3": "对于每个应用，您可以编辑：类别分配、高效状态、使用追踪、报告可见性，以及设置单独的每日时间限制。",
+  
+  "faqAppsQ4": "应用类别是如何确定的？",
+  "faqAppsA4": "初始类别由系统建议，但您可以完全控制根据您的工作流程和偏好创建、修改和分配自定义类别。",
+  
+  "faqReportsQ1": "有哪些类型的报告？",
+  "faqReportsA1": "报告包括：总屏幕时间、高效时间、最常用应用、专注会话、每日屏幕时间图表、类别分布饼图、详细应用使用情况、每周使用趋势，以及按时间段的使用模式分析。",
+  
+  "faqReportsQ2": "应用使用报告有多详细？",
+  "faqReportsA2": "详细的应用使用报告显示：应用名称、类别、总使用时间、高效状态，并提供\"操作\"部分，包含更深入的洞察，如使用摘要、每日限制、使用趋势和高效指标。",
+  
+  "faqReportsQ3": "我可以分析我的长期使用趋势吗？",
+  "faqReportsA3": "可以！该应用提供周对周比较，显示过去几周的使用图表、平均每日使用量、最长会话和每周总量，帮助您追踪您的数字习惯。",
+  
+  "faqReportsQ4": "什么是\"使用模式\"分析？",
+  "faqReportsA4": "使用模式将您的屏幕时间分为早晨、下午、傍晚和夜间几个时段。这有助于您了解何时在设备上最活跃，并识别潜在的改进领域。",
+  
+  "faqAlertsQ1": "屏幕时间限制有多精细？",
+  "faqAlertsA1": "您可以设置整体每日屏幕时间限制和单个应用限制。限制可以按小时和分钟配置，并可根据需要重置或调整。",
+  
+  "faqAlertsQ2": "有哪些通知选项？",
+  "faqAlertsA2": "该应用提供多种通知类型：超出屏幕时间时的系统提醒、可自定义间隔（1、5、15、30或60分钟）的频繁提醒，以及专注模式、屏幕时间和特定应用通知的开关。",
+  
+  "faqAlertsQ3": "我可以自定义限制提醒吗？",
+  "faqAlertsA3": "是的，您可以自定义提醒频率、启用/禁用特定类型的提醒，并为整体屏幕时间和单个应用设置不同的限制。",
+  
+  "faqFocusQ1": "有哪些类型的专注模式？",
+  "faqFocusA1": "可用模式包括深度工作（较长的专注会话）、快速任务（短时间工作）和阅读模式。每种模式都有助于您有效地安排工作和休息时间。",
+  
+  "faqFocusQ2": "番茄钟有多灵活？",
+  "faqFocusA2": "计时器高度可定制。您可以调整工作时长、短休息时长和长休息时长。其他选项包括自动开始下一个会话和通知设置。",
+  
+  "faqFocusQ3": "专注模式历史记录显示什么？",
+  "faqFocusA3": "专注模式历史记录追踪每日专注会话，显示每天的会话数量、趋势图表、平均会话时长、总专注时间，以及分解工作会话、短休息和长休息的时间分布饼图。",
+  
+  "faqFocusQ4": "我可以追踪专注会话的进度吗？",
+  "faqFocusA4": "该应用具有圆形计时器界面，带有播放/暂停、重置和设置按钮。您可以通过直观的控件轻松追踪和管理您的专注会话。",
+  
+  "faqSettingsQ1": "有哪些自定义选项？",
+  "faqSettingsA1": "自定义选项包括主题选择（系统、浅色、深色）、语言设置、启动行为、全面的通知控制，以及清除数据或重置设置等数据管理选项。",
+  
+  "faqSettingsQ2": "如何提供反馈或报告问题？",
+  "faqSettingsA2": "在设置部分底部，您会找到报告错误、提交反馈或联系支持的按钮。这些将引导您到相应的支持渠道。",
+  
+  "faqSettingsQ3": "清除数据会发生什么？",
+  "faqSettingsA3": "清除数据将重置所有使用统计、专注会话历史和自定义设置。这对于重新开始或故障排除很有用。",
+  
+  "faqTroubleQ1": "数据不显示，hive无法打开错误",
+  "faqTroubleA1": "这是一个已知问题，临时解决方案是通过设置清除数据，如果不起作用，请转到\"文档\"并删除以下文件（如果存在）- harman_screentime_app_usage_box.hive 和 harman_screentime_app_usage.lock，同时建议您将应用更新到最新版本。",
+  
+  "faqTroubleQ2": "应用在每次启动时都会打开，该怎么办？",
+  "faqTroubleA2": "这是Windows 10上的一个已知问题，临时解决方案是在设置中启用\"启动时最小化\"，这样它将以最小化方式启动。",
+  
+  "usageAnalytics": "使用分析",
+  "@usageAnalytics": {
+    "description": "Main page title for the analytics/reports section"
+  },
+  
+  "last7Days": "最近7天",
+  "@last7Days": {
+    "description": "Time period option - last 7 days"
+  },
+  
+  "lastMonth": "最近一个月",
+  "@lastMonth": {
+    "description": "Time period option - last month"
+  },
+  
+  "last3Months": "最近3个月",
+  "@last3Months": {
+    "description": "Time period option - last 3 months"
+  },
+  
+  "lifetime": "全部时间",
+  "@lifetime": {
+    "description": "Time period option - all available data"
+  },
+  
+  "custom": "自定义",
+  "@custom": {
+    "description": "Time period option - custom date range"
+  },
+  
+  "loadingAnalyticsData": "正在加载分析数据...",
+  "@loadingAnalyticsData": {
+    "description": "Loading message while fetching analytics"
+  },
+  
+  "tryAgain": "重试",
+  "@tryAgain": {
+    "description": "Button to retry after an error"
+  },
+  
+  "failedToInitialize": "初始化分析失败。请重新启动应用程序。",
+  "@failedToInitialize": {
+    "description": "Error message when analytics system fails to start"
+  },
+  
+  "unexpectedError": "发生意外错误：{error}。请稍后再试。",
+  "@unexpectedError": {
+    "description": "Generic error message with error details",
+    "placeholders": {
+      "error": {
+        "type": "String",
+        "example": "Connection timeout"
+      }
+    }
+  },
+  
+  "errorLoadingAnalytics": "加载分析数据时出错：{error}。请检查您的连接并重试。",
+  "@errorLoadingAnalytics": {
+    "description": "Error message when loading analytics data fails",
+    "placeholders": {
+      "error": {
+        "type": "String",
+        "example": "Network error"
+      }
+    }
+  },
+  
+  "customDialogTitle": "自定义",
+  "@customDialogTitle": {
+    "description": "Title for custom date selection dialog"
+  },
+  
+  "dateRange": "日期范围",
+  "@dateRange": {
+    "description": "Label for date range selection mode"
+  },
+  
+  "specificDate": "特定日期",
+  "@specificDate": {
+    "description": "Label for single date selection mode"
+  },
+  
+  "startDate": "开始日期：",
+  "@startDate": {
+    "description": "Label for start date picker"
+  },
+  
+  "endDate": "结束日期：",
+  "@endDate": {
+    "description": "Label for end date picker"
+  },
+  
+  "date": "日期：",
+  "@date": {
+    "description": "Label for single date picker"
+  },
+  
+  "cancel": "取消",
+  "@cancel": {
+    "description": "Cancel button text"
+  },
+  
+  "apply": "应用",
+  "@apply": {
+    "description": "Apply/Confirm button text"
+  },
+  
+  "ok": "确定",
+  "@ok": {
+    "description": "OK button text"
+  },
+  
+  "invalidDateRange": "无效的日期范围",
+  "@invalidDateRange": {
+    "description": "Error dialog title for invalid date selection"
+  },
+  
+  "startDateBeforeEndDate": "开始日期必须早于或等于结束日期。",
+  "@startDateBeforeEndDate": {
+    "description": "Validation message for date range"
+  },
+  
+  "totalScreenTime": "总屏幕时间",
+  "@totalScreenTime": {
+    "description": "Analytics box title for total screen time"
+  },
+  
+  "productiveTime": "高效时间",
+  "@productiveTime": {
+    "description": "Analytics box title for productive time"
+  },
+  
+  "mostUsedApp": "最常用应用",
+  "@mostUsedApp": {
+    "description": "Analytics box title for most used application"
+  },
+  
+  "focusSessions": "专注会话",
+  "@focusSessions": {
+    "description": "Analytics box title for focus sessions count"
+  },
+  
+  "positiveComparison": "+{percent}% 相比上一周期",
+  "@positiveComparison": {
+    "description": "Comparison text for positive change",
+    "placeholders": {
+      "percent": {
+        "type": "String",
+        "example": "15.5"
+      }
+    }
+  },
+  
+  "negativeComparison": "{percent}% 相比上一周期",
+  "@negativeComparison": {
+    "description": "Comparison text for negative change",
+    "placeholders": {
+      "percent": {
+        "type": "String",
+        "example": "-12.3"
+      }
+    }
+  },
+  
+  "iconLabel": "{title}图标",
+  "@iconLabel": {
+    "description": "Accessibility label for icons",
+    "placeholders": {
+      "title": {
+        "type": "String",
+        "example": "Total Screen Time"
+      }
+    }
+  },
+  
+  "dailyScreenTime": "每日屏幕时间",
+  "@dailyScreenTime": {
+    "description": "Title for daily screen time chart"
+  },
+  
+  "categoryBreakdown": "类别分布",
+  "@categoryBreakdown": {
+    "description": "Title for category breakdown pie chart"
+  },
+  
+  "noDataAvailable": "暂无数据",
+  "@noDataAvailable": {
+    "description": "Empty state message when no data exists"
+  },
+  
+  "sectionLabel": "{title}部分",
+  "@sectionLabel": {
+    "description": "Accessibility label for sections",
+    "placeholders": {
+      "title": {
+        "type": "String",
+        "example": "Category Breakdown"
+      }
+    }
+  },
+  
+  "detailedApplicationUsage": "详细应用使用情况",
+  "@detailedApplicationUsage": {
+    "description": "Title for detailed application usage table"
+  },
+  
+  "searchApplications": "搜索应用",
+  "@searchApplications": {
+    "description": "Placeholder text for search box"
+  },
+  
+  "nameHeader": "名称",
+  "@nameHeader": {
+    "description": "Table column header for app name"
+  },
+  
+  "categoryHeader": "类别",
+  "@categoryHeader": {
+    "description": "Table column header for category"
+  },
+  
+  "totalTimeHeader": "总时间",
+  "@totalTimeHeader": {
+    "description": "Table column header for total time"
+  },
+  
+  "productivityHeader": "高效性",
+  "@productivityHeader": {
+    "description": "Table column header for productivity status"
+  },
+  
+  "actionsHeader": "操作",
+  "@actionsHeader": {
+    "description": "Table column header for action buttons"
+  },
+  
+  "sortByOption": "排序方式：{option}",
+  "@sortByOption": {
+    "description": "Sort dropdown option text",
+    "placeholders": {
+      "option": {
+        "type": "String",
+        "example": "Name"
+      }
+    }
+  },
+  
+  "sortByName": "名称",
+  "@sortByName": {
+    "description": "Sort option - by name"
+  },
+  
+  "sortByCategory": "类别",
+  "@sortByCategory": {
+    "description": "Sort option - by category"
+  },
+  
+  "sortByUsage": "使用量",
+  "@sortByUsage": {
+    "description": "Sort option - by usage time"
+  },
+  
+  "productive": "高效",
+  "@productive": {
+    "description": "Label for productive apps"
+  },
+  
+  "nonProductive": "非高效",
+  "@nonProductive": {
+    "description": "Label for non-productive apps"
+  },
+  
+  "noApplicationsMatch": "没有应用符合您的搜索条件",
+  "@noApplicationsMatch": {
+    "description": "Empty state when search returns no results"
+  },
+  
+  "viewDetails": "查看详情",
+  "@viewDetails": {
+    "description": "Tooltip for view details button"
+  },
+  
+  "usageSummary": "使用摘要",
+  "@usageSummary": {
+    "description": "Section title in app details dialog"
+  },
+  
+  "usageOverPastWeek": "过去一周的使用情况",
+  "@usageOverPastWeek": {
+    "description": "Section title for weekly usage chart"
+  },
+  
+  "usagePatternByTimeOfDay": "按时段的使用模式",
+  "@usagePatternByTimeOfDay": {
+    "description": "Section title for time of day breakdown"
+  },
+  
+  "patternAnalysis": "模式分析",
+  "@patternAnalysis": {
+    "description": "Section title for usage pattern insights"
+  },
+  
+  "today": "今天",
+  "@today": {
+    "description": "Label for today's usage"
+  },
+  
+  "dailyLimit": "每日限制",
+  "@dailyLimit": {
+    "description": "Label for daily usage limit"
+  },
+  
+  "noLimit": "无限制",
+  "@noLimit": {
+    "description": "Text shown when no limit is set"
+  },
+  
+  "usageTrend": "使用趋势",
+  "@usageTrend": {
+    "description": "Label for usage trend indicator"
+  },
+  
+  "productivity": "高效性",
+  "@productivity": {
+    "description": "Label for productivity status"
+  },
+  
+  "increasing": "增加",
+  "@increasing": {
+    "description": "Trend label - usage increasing"
+  },
+  
+  "decreasing": "减少",
+  "@decreasing": {
+    "description": "Trend label - usage decreasing"
+  },
+  
+  "stable": "稳定",
+  "@stable": {
+    "description": "Trend label - usage stable"
+  },
+  
+  "avgDailyUsage": "日均使用",
+  "@avgDailyUsage": {
+    "description": "Stat card label for average daily usage"
+  },
+  
+  "longestSession": "最长会话",
+  "@longestSession": {
+    "description": "Stat card label for longest session"
+  },
+  
+  "weeklyTotal": "每周总计",
+  "@weeklyTotal": {
+    "description": "Stat card label for weekly total"
+  },
+  
+  "noHistoricalData": "暂无历史数据",
+  "@noHistoricalData": {
+    "description": "Empty state for chart with no data"
+  },
+  
+  "morning": "早晨 (6-12)",
+  "@morning": {
+    "description": "Time of day label - morning hours"
+  },
+  
+  "afternoon": "下午 (12-5)",
+  "@afternoon": {
+    "description": "Time of day label - afternoon hours"
+  },
+  
+  "evening": "傍晚 (5-9)",
+  "@evening": {
+    "description": "Time of day label - evening hours"
+  },
+  
+  "night": "夜间 (9-6)",
+  "@night": {
+    "description": "Time of day label - night hours"
+  },
+  
+  "usageInsights": "使用洞察",
+  "@usageInsights": {
+    "description": "Section title for usage insights"
+  },
+  
+  "limitStatus": "限制状态",
+  "@limitStatus": {
+    "description": "Section title for limit status"
+  },
+  
+  "close": "关闭",
+  "@close": {
+    "description": "Close button text"
+  },
+  
+  "primaryUsageTime": "您主要在{timeOfDay}使用{appName}。",
+  "@primaryUsageTime": {
+    "description": "Insight about primary usage time",
+    "placeholders": {
+      "appName": {
+        "type": "String",
+        "example": "Chrome"
+      },
+      "timeOfDay": {
+        "type": "String",
+        "example": "Evening (5-9)"
+      }
+    }
+  },
+  
+  "significantIncrease": "与上一周期相比，您的使用量显著增加了（{percentage}%）。",
+  "@significantIncrease": {
+    "description": "Insight about significant usage increase",
+    "placeholders": {
+      "percentage": {
+        "type": "String",
+        "example": "25.5"
+      }
+    }
+  },
+  
+  "trendingUpward": "与上一周期相比，您的使用量呈上升趋势。",
+  "@trendingUpward": {
+    "description": "Insight about upward usage trend"
+  },
+  
+  "significantDecrease": "与上一周期相比，您的使用量显著减少了（{percentage}%）。",
+  "@significantDecrease": {
+    "description": "Insight about significant usage decrease",
+    "placeholders": {
+      "percentage": {
+        "type": "String",
+        "example": "18.3"
+      }
+    }
+  },
+  
+  "trendingDownward": "与上一周期相比，您的使用量呈下降趋势。",
+  "@trendingDownward": {
+    "description": "Insight about downward usage trend"
+  },
+  
+  "consistentUsage": "与上一周期相比，您的使用量保持一致。",
+  "@consistentUsage": {
+    "description": "Insight about consistent usage"
+  },
+  
+  "markedAsProductive": "这在您的设置中被标记为高效应用。",
+  "@markedAsProductive": {
+    "description": "Insight about productive app status"
+  },
+  
+  "markedAsNonProductive": "这在您的设置中被标记为非高效应用。",
+  "@markedAsNonProductive": {
+    "description": "Insight about non-productive app status"
+  },
+  
+  "mostActiveTime": "您最活跃的时间是{time}左右。",
+  "@mostActiveTime": {
+    "description": "Insight about most active hour",
+    "placeholders": {
+      "time": {
+        "type": "String",
+        "example": "3 PM"
+      }
+    }
+  },
+  
+  "noLimitSet": "此应用未设置使用限制。",
+  "@noLimitSet": {
+    "description": "Message when no limit is configured"
+  },
+  
+  "limitReached": "您已达到此应用的每日限制。",
+  "@limitReached": {
+    "description": "Message when limit is reached"
+  },
+  
+  "aboutToReachLimit": "您即将达到每日限制，仅剩{remainingTime}。",
+  "@aboutToReachLimit": {
+    "description": "Warning message when approaching limit",
+    "placeholders": {
+      "remainingTime": {
+        "type": "String",
+        "example": "15m"
+      }
+    }
+  },
+  
+  "percentOfLimitUsed": "您已使用每日限制的{percent}%，剩余{remainingTime}。",
+  "@percentOfLimitUsed": {
+    "description": "Message showing percentage used",
+    "placeholders": {
+      "percent": {
+        "type": "int",
+        "example": "75"
+      },
+      "remainingTime": {
+        "type": "String",
+        "example": "1h 30m"
+      }
+    }
+  },
+  
+  "remainingTime": "您的每日限制还剩{time}。",
+  "@remainingTime": {
+    "description": "Message showing remaining time",
+    "placeholders": {
+      "time": {
+        "type": "String",
+        "example": "2h 45m"
+      }
+    }
+  },
+  
+  "todayChart": "今天",
+  "@todayChart": {
+    "description": "Label for today on charts"
+  },
+  
+  "hourPeriodAM": "上午{hour}点",
+  "@hourPeriodAM": {
+    "description": "Time format - AM hours",
+    "placeholders": {
+      "hour": {
+        "type": "int",
+        "example": "9"
+      }
+    }
+  },
+  
+  "hourPeriodPM": "下午{hour}点",
+  "@hourPeriodPM": {
+    "description": "Time format - PM hours",
+    "placeholders": {
+      "hour": {
+        "type": "int",
+        "example": "3"
+      }
+    }
+  },
+  
+  "durationHoursMinutes": "{hours}小时{minutes}分钟",
+  "@durationHoursMinutes": {
+    "description": "Duration format with hours and minutes",
+    "placeholders": {
+      "hours": {
+        "type": "int",
+        "example": "5"
+      },
+      "minutes": {
+        "type": "int",
+        "example": "30"
+      }
+    }
+  },
+  
+  "durationMinutesOnly": "{minutes}分钟",
+  "@durationMinutesOnly": {
+    "description": "Duration format with minutes only",
+    "placeholders": {
+      "minutes": {
+        "type": "int",
+        "example": "45"
+      }
+    }
+  },
+  
+  "alertsLimitsTitle": "提醒与限制",
+  "notificationsSettings": "通知设置",
+  "overallScreenTimeLimit": "总屏幕时间限制",
+  "applicationLimits": "应用限制",
+  
+  "popupAlerts": "弹出提醒",
+  "frequentAlerts": "频繁提醒",
+  "soundAlerts": "声音提醒",
+  "systemAlerts": "系统提醒",
+  
+  "dailyTotalLimit": "每日总限制：",
+  "hours": "小时：",
+  "minutes": "分钟：",
+  "currentUsage": "当前使用：",
+  
+  "tableName": "名称",
+  "tableCategory": "类别",
+  "tableDailyLimit": "每日限制",
+  "tableCurrentUsage": "当前使用",
+  "tableStatus": "状态",
+  "tableActions": "操作",
+  
+  "addLimit": "添加限制",
+  "noApplicationsToDisplay": "没有可显示的应用",
+  
+  "statusActive": "活跃",
+  "statusOff": "关闭",
+  "durationNone": "无",
+  
+  "addApplicationLimit": "添加应用限制",
+  "selectApplication": "选择应用",
+  "selectApplicationPlaceholder": "选择一个应用",
+  "enableLimit": "启用限制：",
+  
+  "editLimitTitle": "编辑限制：{appName}",
+  "@editLimitTitle": {
+    "placeholders": {
+      "appName": {"type": "String"}
+    }
+  },
+  
+  "failedToLoadData": "加载数据失败：{error}",
+  "@failedToLoadData": {
+    "placeholders": {
+      "error": {"type": "String"}
+    }
+  },
+  
+  "resetSettingsTitle": "重置设置？",
+  "resetSettingsContent": "如果重置设置，您将无法恢复。确定要重置吗？",
+  "resetAll": "全部重置",
+  "refresh": "刷新",
+  "save": "保存",
+  "add": "添加",
+  "error": "错误",
+  "retry": "重试",
+  
+  "applicationsTitle": "应用程序",
+  "searchApplication": "搜索应用",
+  
+  "tracking": "追踪",
+  "hiddenVisible": "隐藏/可见",
+  "selectCategory": "选择类别",
+  "allCategories": "全部",
+  
+  "tableScreenTime": "屏幕时间",
+  "tableTracking": "追踪",
+  "tableHidden": "隐藏",
+  "tableEdit": "编辑",
+  
+  "editAppTitle": "编辑 {appName}",
+  "@editAppTitle": {
+    "placeholders": {
+      "appName": {"type": "String"}
+    }
+  },
+  
+  "categorySection": "类别",
+  "customCategory": "自定义",
+  "customCategoryPlaceholder": "输入自定义类别名称",
+  "uncategorized": "未分类",
+  
+  "isProductive": "是否高效",
+  "trackUsage": "追踪使用",
+  "visibleInReports": "在报告中可见",
+  
+  "timeLimitsSection": "时间限制",
+  "enableDailyLimit": "启用每日限制",
+  "setDailyTimeLimit": "设置每日时间限制：",
+  
+  "saveChanges": "保存更改",
+  
+  "errorLoadingData": "加载概览数据时出错：{error}",
+  "@errorLoadingData": {
+    "placeholders": {
+      "error": {"type": "String"}
+    }
+  },
+  
+  "focusModeTitle": "专注模式",
+  
+  "historySection": "历史记录",
+  "trendsSection": "趋势",
+  "timeDistributionSection": "时间分布",
+  "sessionHistorySection": "会话历史",
+  
+  "workSession": "工作会话",
+  "shortBreak": "短休息",
+  "longBreak": "长休息",
+  
+  "dateHeader": "日期",
+  "durationHeader": "时长",
+  
+  "monday": "星期一",
+  "tuesday": "星期二",
+  "wednesday": "星期三",
+  "thursday": "星期四",
+  "friday": "星期五",
+  "saturday": "星期六",
+  "sunday": "星期日",
+  
+  "focusModeSettingsTitle": "专注模式设置",
+  
+  "modeCustom": "自定义",
+  "modeDeepWork": "深度工作 (60分钟)",
+  "modeQuickTasks": "快速任务 (25分钟)",
+  "modeReading": "阅读 (45分钟)",
+  
+  "workDurationLabel": "工作时长：{minutes}分钟",
+  "@workDurationLabel": {
+    "placeholders": {
+      "minutes": {"type": "int"}
+    }
+  },
+  
+  "shortBreakLabel": "短休息：{minutes}分钟",
+  "@shortBreakLabel": {
+    "placeholders": {
+      "minutes": {"type": "int"}
+    }
+  },
+  
+  "longBreakLabel": "长休息：{minutes}分钟",
+  "@longBreakLabel": {
+    "placeholders": {
+      "minutes": {"type": "int"}
+    }
+  },
+  
+  "autoStartNextSession": "自动开始下一个会话",
+  "blockDistractions": "专注模式期间屏蔽干扰",
+  "enableNotifications": "启用通知",
+  
+  "saved": "已保存",
+  
+  "errorLoadingFocusModeData": "加载专注模式数据时出错：{error}",
+  "@errorLoadingFocusModeData": {
+    "placeholders": {
+      "error": {"type": "String"}
+    }
+  },
+  
+  "overviewTitle": "今日概览",
+  "startFocusMode": "开始专注模式",
+  
+  "loadingProductivityData": "正在加载您的生产力数据...",
+  "noActivityDataAvailable": "暂无活动数据",
+  "startUsingApplications": "开始使用您的应用程序来追踪屏幕时间和生产力。",
+  "refreshData": "刷新数据",
+  
+  "topApplications": "常用应用",
+  
+  "noAppUsageDataAvailable": "暂无应用使用数据",
+  "noApplicationDataAvailable": "暂无应用数据",
+  "noCategoryDataAvailable": "暂无类别数据",
+  "noApplicationLimitsSet": "未设置应用限制",
+  
+  "screenLabel": "屏幕",
+  "timeLabel": "时间",
+  "productiveLabel": "高效",
+  "scoreLabel": "分数",
+  
+  "defaultNone": "无",
+  "defaultTime": "0小时0分钟",
+  "defaultCount": "0",
+  "unknownApp": "未知",
+  
+  "settingsTitle": "设置",
+  
+  "generalSection": "通用",
+  "notificationsSection": "通知",
+  "dataSection": "数据",
+  "versionSection": "版本",
+  
+  "themeTitle": "主题",
+  "themeDescription": "应用程序的颜色主题（更改需要重启）",
+  
+  "languageTitle": "语言",
+  "languageDescription": "应用程序的语言",
+  
+  "startupBehaviourTitle": "启动行为",
+  "startupBehaviourDescription": "随系统启动",
+  
+  "launchMinimizedTitle": "启动时最小化",
+  "launchMinimizedDescription": "在系统托盘中启动应用程序（推荐Windows 10用户使用）",
+  
+  "notificationsTitle": "通知",
+  "notificationsAllDescription": "应用程序的所有通知",
+  
+  "focusModeNotificationsTitle": "专注模式",
+  "focusModeNotificationsDescription": "专注模式的所有通知",
+  
+  "screenTimeNotificationsTitle": "屏幕时间",
+  "screenTimeNotificationsDescription": "屏幕时间限制的所有通知",
+  
+  "appScreenTimeNotificationsTitle": "应用屏幕时间",
+  "appScreenTimeNotificationsDescription": "应用屏幕时间限制的所有通知",
+  
+  "frequentAlertsTitle": "频繁提醒间隔",
+  "frequentAlertsDescription": "设置频繁通知的间隔（分钟）",
+  
+  "clearDataTitle": "清除数据",
+  "clearDataDescription": "清除所有历史记录和相关数据",
+  
+  "resetSettingsTitle2": "重置设置",
+  "resetSettingsDescription": "重置所有设置",
+  
+  "versionTitle": "版本",
+  "versionDescription": "应用程序的当前版本",
+  
+  "contactButton": "联系我们",
+  "reportBugButton": "报告错误",
+  "submitFeedbackButton": "提交反馈",
+  "githubButton": "Github",
+  
+  "clearDataDialogTitle": "清除数据？",
+  "clearDataDialogContent": "这将清除所有历史记录和相关数据。您将无法恢复。确定要继续吗？",
+  "clearDataButtonLabel": "清除数据",
+  
+  "resetSettingsDialogTitle": "重置设置？",
+  "resetSettingsDialogContent": "这将把所有设置重置为默认值。确定要继续吗？",
+  "resetButtonLabel": "重置",
+  
+  "cancelButton": "取消",
+  
+  "couldNotLaunchUrl": "无法打开 {url}",
+  "@couldNotLaunchUrl": {
+    "placeholders": {
+      "url": {"type": "String"}
+    }
+  },
+  
+  "errorMessage": "错误：{message}",
+  "@errorMessage": {
+    "placeholders": {
+      "message": {"type": "String"}
+    }
+  },
+
+  "chart_focusTrends": "专注趋势",
+  "@chart_focusTrends": {
+    "description": "Title for focus trends chart"
+  },
+  
+  "chart_sessionCount": "会话数量",
+  "@chart_sessionCount": {
+    "description": "Label for session count metric"
+  },
+  
+  "chart_avgDuration": "平均时长",
+  "@chart_avgDuration": {
+    "description": "Label for average duration metric"
+  },
+  
+  "chart_totalFocus": "总专注时间",
+  "@chart_totalFocus": {
+    "description": "Label for total focus time metric"
+  },
+  
+  "chart_yAxis_sessions": "会话",
+  "@chart_yAxis_sessions": {
+    "description": "Y-axis label for session count"
+  },
+  
+  "chart_yAxis_minutes": "分钟",
+  "@chart_yAxis_minutes": {
+    "description": "Y-axis label for time in minutes"
+  },
+  
+  "chart_yAxis_value": "数值",
+  "@chart_yAxis_value": {
+    "description": "Generic y-axis label"
+  },
+  
+  "chart_monthOverMonthChange": "月环比变化：",
+  "@chart_monthOverMonthChange": {
+    "description": "Label for percentage change display"
+  },
+  
+  "chart_customRange": "自定义范围",
+  "@chart_customRange": {
+    "description": "Label for custom date range"
+  },
+  
+  "day_monday": "星期一",
+  "day_mondayShort": "周一",
+  "day_mondayAbbr": "一",
+  
+  "day_tuesday": "星期二",
+  "day_tuesdayShort": "周二",
+  "day_tuesdayAbbr": "二",
+  
+  "day_wednesday": "星期三",
+  "day_wednesdayShort": "周三",
+  "day_wednesdayAbbr": "三",
+  
+  "day_thursday": "星期四",
+  "day_thursdayShort": "周四",
+  "day_thursdayAbbr": "四",
+  
+  "day_friday": "星期五",
+  "day_fridayShort": "周五",
+  "day_fridayAbbr": "五",
+  
+  "day_saturday": "星期六",
+  "day_saturdayShort": "周六",
+  "day_saturdayAbbr": "六",
+  
+  "day_sunday": "星期日",
+  "day_sundayShort": "周日",
+  "day_sundayAbbr": "日",
+  
+  "time_hours": "{count}小时",
+  "@time_hours": {
+    "description": "Hours format",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  
+  "time_hoursMinutes": "{hours}小时{minutes}分钟",
+  "@time_hoursMinutes": {
+    "description": "Hours and minutes format",
+    "placeholders": {
+      "hours": {
+        "type": "int"
+      },
+      "minutes": {
+        "type": "int"
+      }
+    }
+  },
+  
+  "time_minutesFormat": "{count}分钟",
+  "@time_minutesFormat": {
+    "description": "Minutes format for tooltips",
+    "placeholders": {
+      "count": {
+        "type": "String"
+      }
+    }
+  },
+  
+  "tooltip_dateScreenTime": "{date}：{hours}小时{minutes}分钟",
+  "@tooltip_dateScreenTime": {
+    "description": "Tooltip showing date and screen time",
+    "placeholders": {
+      "date": {
+        "type": "String"
+      },
+      "hours": {
+        "type": "int"
+      },
+      "minutes": {
+        "type": "int"
+      }
+    }
+  },
+  
+  "tooltip_hoursFormat": "{count}小时",
+  "@tooltip_hoursFormat": {
+    "description": "Hours format for tooltip fallback",
+    "placeholders": {
+      "count": {
+        "type": "String"
+      }
+    }
+  },
+  
+  "month_january": "一月",
+  "month_januaryShort": "1月",
+  "month_february": "二月",
+  "month_februaryShort": "2月",
+  "month_march": "三月",
+  "month_marchShort": "3月",
+  "month_april": "四月",
+  "month_aprilShort": "4月",
+  "month_may": "五月",
+  "month_mayShort": "5月",
+  "month_june": "六月",
+  "month_juneShort": "6月",
+  "month_july": "七月",
+  "month_julyShort": "7月",
+  "month_august": "八月",
+  "month_augustShort": "8月",
+  "month_september": "九月",
+  "month_septemberShort": "9月",
+  "month_october": "十月",
+  "month_octoberShort": "10月",
+  "month_november": "十一月",
+  "month_novemberShort": "11月",
+  "month_december": "十二月",
+  "month_decemberShort": "12月",
+  
+  "categoryAll": "全部",
+  "@categoryAll": {
+    "description": "Category filter for all applications"
+  },
+  "categoryProductivity": "生产力",
+  "categoryDevelopment": "开发",
+  "categorySocialMedia": "社交媒体",
+  "categoryEntertainment": "娱乐",
+  "categoryGaming": "游戏",
+  "categoryCommunication": "通讯",
+  "categoryWebBrowsing": "网页浏览",
+  "categoryCreative": "创意",
+  "categoryEducation": "教育",
+  "categoryUtility": "实用工具",
+  "categoryUncategorized": "未分类",
+  
+  "appMicrosoftWord": "Microsoft Word",
+  "appExcel": "Excel",
+  "appPowerPoint": "PowerPoint",
+  "appGoogleDocs": "Google 文档",
+  "appNotion": "Notion",
+  "appEvernote": "印象笔记",
+  "appTrello": "Trello",
+  "appAsana": "Asana",
+  "appSlack": "Slack",
+  "appMicrosoftTeams": "Microsoft Teams",
+  "appZoom": "Zoom",
+  "appGoogleCalendar": "Google 日历",
+  "appAppleCalendar": "日历",
+  "appVisualStudioCode": "Visual Studio Code",
+  "appTerminal": "终端",
+  "appCommandPrompt": "命令提示符",
+  "appChrome": "Chrome",
+  "appFirefox": "Firefox",
+  "appSafari": "Safari",
+  "appEdge": "Edge",
+  "appOpera": "Opera",
+  "appBrave": "Brave",
+  "appNetflix": "Netflix",
+  "appYouTube": "YouTube",
+  "appSpotify": "Spotify",
+  "appAppleMusic": "Apple Music",
+  "appCalculator": "计算器",
+  "appNotes": "备忘录",
+  "appSystemPreferences": "系统偏好设置",
+  "appTaskManager": "任务管理器",
+  "appFileExplorer": "文件资源管理器",
+  "appDropbox": "Dropbox",
+  "appGoogleDrive": "Google 云端硬盘",
+  "loadingApplication": "正在加载应用...",
+  "@loadingApplication": {
+    "description": "应用正在加载时显示的消息"
+  },
+  "loadingData": "正在加载数据...",
+  "@loadingData": {
+    "description": "数据正在加载时显示的消息"
+  },
+  "reportsError": "错误",
+  "@reportsError": {
+    "description": "错误消息的标签"
+  },
+  "reportsRetry": "重试",
+  "@reportsRetry": {
+    "description": "用于重新尝试操作的按钮文本"
+  }
+}

@@ -16,12 +16,19 @@ class ThemeOptions {
 class LanguageOptions {
   static const List<Map<String, String>> available = [
     {'code': 'en', 'name': 'English'},
-    // Add more languages as you create translations
-    // {'code': 'es', 'name': 'Español'},
+    {'code': 'zh', 'name': '中文 (Chinese)'},
+    {'code': 'hi', 'name': 'हिन्दी (Hindi)'},
+    {'code': 'es', 'name': 'Español'},
     {'code': 'fr', 'name': 'Français'},
-    // {'code': 'de', 'name': 'Deutsch'},
-    // {'code': 'hi', 'name': 'हिन्दी'},
+    {'code': 'ar', 'name': 'العربية (Arabic)'},
+    {'code': 'bn', 'name': 'বাংলা (Bengali)'},
+    {'code': 'pt', 'name': 'Português'},
+    {'code': 'ru', 'name': 'Русский (Russian)'},
+    {'code': 'ur', 'name': 'اردو (Urdu)'},
+    {'code': 'id', 'name': 'Bahasa Indonesia'},
+    {'code': 'ja', 'name': '日本語 (Japanese)'},
   ];
+
   static const String defaultLanguage = "en";
 }
 

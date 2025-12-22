@@ -6,7 +6,9 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:intl/intl.dart' as intl;
 
 import 'app_localizations_en.dart';
+import 'app_localizations_es.dart';
 import 'app_localizations_fr.dart';
+import 'app_localizations_zh.dart';
 
 // ignore_for_file: type=lint
 
@@ -95,7 +97,9 @@ abstract class AppLocalizations {
   /// A list of this localizations delegate's supported locales.
   static const List<Locale> supportedLocales = <Locale>[
     Locale('en'),
-    Locale('fr')
+    Locale('es'),
+    Locale('fr'),
+    Locale('zh')
   ];
 
   /// The title shown in the window title bar
@@ -2653,6 +2657,30 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Google Drive'**
   String get appGoogleDrive;
+
+  /// Message shown when the application is loading
+  ///
+  /// In en, this message translates to:
+  /// **'Loading application...'**
+  String get loadingApplication;
+
+  /// Message shown when data is being loaded
+  ///
+  /// In en, this message translates to:
+  /// **'Loading data...'**
+  String get loadingData;
+
+  /// Label for error messages
+  ///
+  /// In en, this message translates to:
+  /// **'Error'**
+  String get reportsError;
+
+  /// Button text to retry an operation
+  ///
+  /// In en, this message translates to:
+  /// **'Retry'**
+  String get reportsRetry;
 }
 
 class _AppLocalizationsDelegate
@@ -2666,7 +2694,7 @@ class _AppLocalizationsDelegate
 
   @override
   bool isSupported(Locale locale) =>
-      <String>['en', 'fr'].contains(locale.languageCode);
+      <String>['en', 'es', 'fr', 'zh'].contains(locale.languageCode);
 
   @override
   bool shouldReload(_AppLocalizationsDelegate old) => false;
@@ -2677,8 +2705,12 @@ AppLocalizations lookupAppLocalizations(Locale locale) {
   switch (locale.languageCode) {
     case 'en':
       return AppLocalizationsEn();
+    case 'es':
+      return AppLocalizationsEs();
     case 'fr':
       return AppLocalizationsFr();
+    case 'zh':
+      return AppLocalizationsZh();
   }
 
   throw FlutterError(

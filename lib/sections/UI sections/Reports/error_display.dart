@@ -1,4 +1,5 @@
 import 'package:fluent_ui/fluent_ui.dart';
+import 'package:screentime/l10n/app_localizations.dart';
 
 class ErrorDisplay extends StatelessWidget {
   final String errorMessage;
@@ -11,11 +12,13 @@ class ErrorDisplay extends StatelessWidget {
     required this.errorMessage, 
     required this.onRetry,
     this.icon = FluentIcons.error,
-    this.retryText = 'Retry',
+    this.retryText,
   });
   
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+    
     return Center(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -28,13 +31,13 @@ class ErrorDisplay extends StatelessWidget {
               errorMessage, 
               style: TextStyle(color: Colors.red),
               textAlign: TextAlign.center,
-              semanticsLabel: 'Error: $errorMessage',
+              semanticsLabel: '${l10n.reportsError}: $errorMessage',
             ),
           ),
           const SizedBox(height: 24),
           Button(
             onPressed: onRetry,
-            child: Text(retryText ?? 'Retry'),
+            child: Text(retryText ?? l10n.reportsRetry),
           ),
         ],
       ),

@@ -1,4 +1,5 @@
 import 'package:fluent_ui/fluent_ui.dart';
+import 'package:screentime/l10n/app_localizations.dart';
 
 class LoadingIndicator extends StatelessWidget {
   final String message;
@@ -36,21 +37,22 @@ class LoadingIndicator extends StatelessWidget {
   }
 }
 
-// For specific loading states, you might want to use these factory constructors:
 class AppLoadingIndicator extends LoadingIndicator {
-  const AppLoadingIndicator({
+  AppLoadingIndicator({
     super.key,
-    super.message = 'Loading application...',
+    required BuildContext context,
   }) : super(
+    message: AppLocalizations.of(context)!.loadingApplication,
     progressRingSize: 32.0,
   );
 }
 
 class DataLoadingIndicator extends LoadingIndicator {
-  const DataLoadingIndicator({
+  DataLoadingIndicator({
     super.key,
-    super.message = 'Loading data...',
+    required BuildContext context,
   }) : super(
+    message: AppLocalizations.of(context)!.loadingData,
     progressRingSize: 20.0,
   );
 }

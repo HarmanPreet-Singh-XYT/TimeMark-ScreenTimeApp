@@ -1430,4 +1430,16 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get appGoogleDrive => 'Google Drive';
+
+  @override
+  String get loadingApplication => 'Chargement de l’application...';
+
+  @override
+  String get loadingData => 'Chargement des données...';
+
+  @override
+  String get reportsError => 'Erreur';
+
+  @override
+  String get reportsRetry => 'Réessayer';
 }

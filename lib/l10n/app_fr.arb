@@ -1241,5 +1241,21 @@
   "appTaskManager": "Gestionnaire des Tâches",
   "appFileExplorer": "Explorateur de Fichiers",
   "appDropbox": "Dropbox",
-  "appGoogleDrive": "Google Drive"
+  "appGoogleDrive": "Google Drive",
+  "loadingApplication": "Chargement de l’application...",
+  "@loadingApplication": {
+    "description": "Message affiché lorsque l’application est en cours de chargement"
+  },
+  "loadingData": "Chargement des données...",
+  "@loadingData": {
+    "description": "Message affiché lorsque les données sont en cours de chargement"
+  },
+  "reportsError": "Erreur",
+  "@reportsError": {
+    "description": "Libellé pour les messages d’erreur"
+  },
+  "reportsRetry": "Réessayer",
+  "@reportsRetry": {
+    "description": "Texte du bouton pour réessayer une opération"
+  }
 }

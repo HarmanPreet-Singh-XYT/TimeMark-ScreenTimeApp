@@ -1401,4 +1401,16 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get appGoogleDrive => 'Google Drive';
+
+  @override
+  String get loadingApplication => 'Loading application...';
+
+  @override
+  String get loadingData => 'Loading data...';
+
+  @override
+  String get reportsError => 'Error';
+
+  @override
+  String get reportsRetry => 'Retry';
 }

@@ -1,15 +1,15 @@
-// analytics_proxy_widget.dart
 import 'package:flutter/material.dart';
-import 'loading_indicator.dart'; // Assuming you have this widget
-import 'error_display.dart'; // Assuming you have this widget
+import 'package:screentime/l10n/app_localizations.dart';
+import 'loading_indicator.dart';
+import 'error_display.dart';
 
 class AnalyticsProxyWidget extends StatelessWidget {
-  final Future<void> Function() onRefresh; // Function to refresh data
-  final Widget header; // Header widget
-  final bool isLoading; // Loading state
-  final String? error; // Error message
-  final List<Widget> analyticsContent; // Analytics content widgets
-  final VoidCallback onRetry; // Function to retry loading data
+  final Future<void> Function() onRefresh;
+  final Widget header;
+  final bool isLoading;
+  final String? error;
+  final List<Widget> analyticsContent;
+  final VoidCallback onRetry;
 
   const AnalyticsProxyWidget({
     super.key,
@@ -23,21 +23,22 @@ class AnalyticsProxyWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+    
     return RefreshIndicator(
       onRefresh: onRefresh,
       child: SingleChildScrollView(
-        physics: const AlwaysScrollableScrollPhysics(), // Enables pull-to-refresh
+        physics: const AlwaysScrollableScrollPhysics(),
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              // Header with period selector
               header,
               const SizedBox(height: 20),
               
               if (isLoading)
-                const LoadingIndicator(message: 'Loading analytics data...')
+                LoadingIndicator(message: l10n.loadingAnalyticsData)
               else if (error != null)
                 ErrorDisplay(
                   errorMessage: error!,

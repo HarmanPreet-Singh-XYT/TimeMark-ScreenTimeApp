@@ -1239,5 +1239,21 @@
   "appTaskManager": "Task Manager",
   "appFileExplorer": "File Explorer",
   "appDropbox": "Dropbox",
-  "appGoogleDrive": "Google Drive"
+  "appGoogleDrive": "Google Drive",
+  "loadingApplication": "Loading application...",
+  "@loadingApplication": {
+    "description": "Message shown when the application is loading"
+  },
+  "loadingData": "Loading data...",
+  "@loadingData": {
+    "description": "Message shown when data is being loaded"
+  },
+  "reportsError": "Error",
+  "@reportsError": {
+    "description": "Label for error messages"
+  },
+  "reportsRetry": "Retry",
+  "@reportsRetry": {
+    "description": "Button text to retry an operation"
+  }
 }
