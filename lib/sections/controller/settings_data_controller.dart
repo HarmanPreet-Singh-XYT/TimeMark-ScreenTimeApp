@@ -103,7 +103,7 @@ class SettingsManager {
     }
   };
   
-  Map<String, String> versionInfo = {"version": "1.1.1", "type": "Stable Build"};
+  Map<String, String> versionInfo = {"version": "1.2.0", "type": "Stable Build"};
   
   /// Initialize SharedPreferences and load settings
   Future<void> init() async {

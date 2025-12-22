@@ -1,0 +1,1310 @@
+{
+  "@@locale": "ar",
+  
+  "appWindowTitle": "تايم مارك - تتبع وقت الشاشة واستخدام التطبيقات",
+  "@appWindowTitle": {
+    "description": "The title shown in the window title bar"
+  },
+  
+  "appName": "تايم مارك",
+  "@appName": {
+    "description": "The name of the application"
+  },
+  
+  "appTitle": "وقت شاشة منتج",
+  "@appTitle": {
+    "description": "The app title/tagline"
+  },
+  
+  "sidebarTitle": "وقت الشاشة",
+  "@sidebarTitle": {
+    "description": "Title shown in the sidebar"
+  },
+  
+  "sidebarSubtitle": "مفتوح المصدر",
+  "@sidebarSubtitle": {
+    "description": "Subtitle shown in the sidebar"
+  },
+  
+  "trayShowWindow": "إظهار النافذة",
+  "@trayShowWindow": {
+    "description": "Tray menu item to show the main window"
+  },
+  
+  "trayStartFocusMode": "بدء وضع التركيز",
+  "@trayStartFocusMode": {
+    "description": "Tray menu item to start focus mode"
+  },
+  
+  "trayStopFocusMode": "إيقاف وضع التركيز",
+  "@trayStopFocusMode": {
+    "description": "Tray menu item to stop focus mode"
+  },
+  
+  "trayReports": "التقارير",
+  "@trayReports": {
+    "description": "Tray menu item for reports"
+  },
+  
+  "trayAlertsLimits": "التنبيهات والحدود",
+  "@trayAlertsLimits": {
+    "description": "Tray menu item for alerts and limits"
+  },
+  
+  "trayApplications": "التطبيقات",
+  "@trayApplications": {
+    "description": "Tray menu item for applications"
+  },
+  
+  "trayDisableNotifications": "تعطيل الإشعارات",
+  "@trayDisableNotifications": {
+    "description": "Tray menu item to disable notifications"
+  },
+  
+  "trayEnableNotifications": "تفعيل الإشعارات",
+  "@trayEnableNotifications": {
+    "description": "Tray menu item to enable notifications"
+  },
+  
+  "trayVersionPrefix": "الإصدار: ",
+  "@trayVersionPrefix": {
+    "description": "Prefix text for version display in tray"
+  },
+  
+  "trayVersion": "الإصدار: {version}",
+  "@trayVersion": {
+    "description": "Version display with placeholder",
+    "placeholders": {
+      "version": {
+        "type": "String",
+        "example": "1.0.0"
+      }
+    }
+  },
+  
+  "trayExit": "خروج",
+  "@trayExit": {
+    "description": "Tray menu item to exit the application"
+  },
+  
+  "navOverview": "نظرة عامة",
+  "@navOverview": {
+    "description": "Navigation item for overview page"
+  },
+  
+  "navApplications": "التطبيقات",
+  "@navApplications": {
+    "description": "Navigation item for applications page"
+  },
+  
+  "navAlertsLimits": "التنبيهات والحدود",
+  "@navAlertsLimits": {
+    "description": "Navigation item for alerts and limits page"
+  },
+  
+  "navReports": "التقارير",
+  "@navReports": {
+    "description": "Navigation item for reports page"
+  },
+  
+  "navFocusMode": "وضع التركيز",
+  "@navFocusMode": {
+    "description": "Navigation item for focus mode page"
+  },
+  
+  "navSettings": "الإعدادات",
+  "@navSettings": {
+    "description": "Navigation item for settings page"
+  },
+  
+  "navHelp": "المساعدة",
+  "@navHelp": {
+    "description": "Navigation item for help page"
+  },
+  
+  "helpTitle": "المساعدة",
+  
+  "faqCategoryGeneral": "أسئلة عامة",
+  "faqCategoryApplications": "إدارة التطبيقات",
+  "faqCategoryReports": "تحليلات الاستخدام والتقارير",
+  "faqCategoryAlerts": "التنبيهات والحدود",
+  "faqCategoryFocusMode": "وضع التركيز ومؤقت بومودورو",
+  "faqCategorySettings": "الإعدادات والتخصيص",
+  "faqCategoryTroubleshooting": "استكشاف الأخطاء وإصلاحها",
+  
+  "faqGeneralQ1": "كيف يتتبع هذا التطبيق وقت الشاشة؟",
+  "faqGeneralA1": "يراقب التطبيق استخدام جهازك في الوقت الفعلي، ويتتبع الوقت المستغرق في التطبيقات المختلفة. يوفر رؤى شاملة حول عاداتك الرقمية، بما في ذلك إجمالي وقت الشاشة والوقت المنتج واستخدام كل تطبيق.",
+  
+  "faqGeneralQ2": "ما الذي يجعل التطبيق 'منتجاً'؟",
+  "faqGeneralA2": "يمكنك تحديد التطبيقات كمنتجة يدوياً في قسم 'التطبيقات'. تساهم التطبيقات المنتجة في نقاط الإنتاجية الخاصة بك، والتي تحسب نسبة وقت الشاشة المستغرق في التطبيقات المتعلقة بالعمل أو المفيدة.",
+  
+  "faqGeneralQ3": "ما مدى دقة تتبع وقت الشاشة؟",
+  "faqGeneralA3": "يستخدم التطبيق التتبع على مستوى النظام لتوفير قياس دقيق لاستخدام جهازك. يلتقط وقت المقدمة لكل تطبيق مع تأثير ضئيل على البطارية.",
+  
+  "faqGeneralQ4": "هل يمكنني تخصيص تصنيف التطبيقات؟",
+  "faqGeneralA4": "بالتأكيد! يمكنك إنشاء فئات مخصصة وتعيين التطبيقات لفئات محددة وتعديل هذه التعيينات بسهولة في قسم 'التطبيقات'. يساعد هذا في إنشاء تحليلات استخدام أكثر فائدة.",
+  
+  "faqGeneralQ5": "ما الرؤى التي يمكنني الحصول عليها من هذا التطبيق؟",
+  "faqGeneralA5": "يقدم التطبيق رؤى شاملة تشمل نقاط الإنتاجية وأنماط الاستخدام حسب الوقت من اليوم واستخدام التطبيقات التفصيلي وتتبع جلسات التركيز والتحليلات المرئية مثل الرسوم البيانية والمخططات الدائرية لمساعدتك على فهم وتحسين عاداتك الرقمية.",
+  
+  "faqAppsQ1": "كيف أخفي تطبيقات معينة من التتبع؟",
+  "faqAppsA1": "في قسم 'التطبيقات'، يمكنك تبديل رؤية التطبيقات.",
+  
+  "faqAppsQ2": "هل يمكنني البحث وتصفية التطبيقات؟",
+  "faqAppsA2": "نعم، يتضمن قسم التطبيقات وظيفة البحث وخيارات التصفية. يمكنك تصفية التطبيقات حسب الفئة وحالة الإنتاجية وحالة التتبع والرؤية.",
+  
+  "faqAppsQ3": "ما خيارات التحرير المتاحة للتطبيقات؟",
+  "faqAppsA3": "لكل تطبيق، يمكنك تحرير: تعيين الفئة وحالة الإنتاجية وتتبع الاستخدام والرؤية في التقارير وتعيين حدود زمنية يومية فردية.",
+  
+  "faqAppsQ4": "كيف يتم تحديد فئات التطبيقات؟",
+  "faqAppsA4": "الفئات الأولية مقترحة من النظام، لكن لديك السيطرة الكاملة لإنشاء وتعديل وتعيين فئات مخصصة بناءً على سير عملك وتفضيلاتك.",
+  
+  "faqReportsQ1": "ما أنواع التقارير المتاحة؟",
+  "faqReportsA1": "تشمل التقارير: إجمالي وقت الشاشة، الوقت المنتج، التطبيقات الأكثر استخداماً، جلسات التركيز، رسم بياني لوقت الشاشة اليومي، مخطط دائري لتوزيع الفئات، استخدام التطبيقات التفصيلي، اتجاهات الاستخدام الأسبوعية، وتحليل أنماط الاستخدام حسب الوقت من اليوم.",
+  
+  "faqReportsQ2": "ما مدى تفصيل تقارير استخدام التطبيقات؟",
+  "faqReportsA2": "تعرض تقارير استخدام التطبيقات التفصيلية: اسم التطبيق والفئة وإجمالي الوقت المستغرق وحالة الإنتاجية، وتوفر قسم 'الإجراءات' مع رؤى أعمق مثل ملخص الاستخدام والحدود اليومية واتجاهات الاستخدام ومقاييس الإنتاجية.",
+  
+  "faqReportsQ3": "هل يمكنني تحليل اتجاهات الاستخدام بمرور الوقت؟",
+  "faqReportsA3": "نعم! يوفر التطبيق مقارنات أسبوعية، تعرض رسوماً بيانية للاستخدام على مدى الأسابيع الماضية ومتوسط الاستخدام اليومي وأطول الجلسات والإجماليات الأسبوعية لمساعدتك على تتبع عاداتك الرقمية.",
+  
+  "faqReportsQ4": "ما هو تحليل 'نمط الاستخدام'؟",
+  "faqReportsA4": "يقسم نمط الاستخدام وقت الشاشة إلى فترات الصباح والظهر والمساء والليل. يساعدك هذا على فهم متى تكون أكثر نشاطاً على جهازك وتحديد المجالات المحتملة للتحسين.",
+  
+  "faqAlertsQ1": "ما مدى دقة حدود وقت الشاشة؟",
+  "faqAlertsA1": "يمكنك تعيين حدود يومية إجمالية لوقت الشاشة وحدود فردية للتطبيقات. يمكن تكوين الحدود بالساعات والدقائق، مع خيارات لإعادة التعيين أو التعديل حسب الحاجة.",
+  
+  "faqAlertsQ2": "ما خيارات الإشعارات المتاحة؟",
+  "faqAlertsA2": "يقدم التطبيق أنواعاً متعددة من الإشعارات: تنبيهات النظام عند تجاوز وقت الشاشة، تنبيهات متكررة بفترات قابلة للتخصيص (1 أو 5 أو 15 أو 30 أو 60 دقيقة)، ومفاتيح تبديل لوضع التركيز ووقت الشاشة والإشعارات الخاصة بالتطبيقات.",
+  
+  "faqAlertsQ3": "هل يمكنني تخصيص تنبيهات الحدود؟",
+  "faqAlertsA3": "نعم، يمكنك تخصيص تردد التنبيهات وتمكين/تعطيل أنواع محددة من التنبيهات وتعيين حدود مختلفة لوقت الشاشة الإجمالي والتطبيقات الفردية.",
+  
+  "faqFocusQ1": "ما أنواع أوضاع التركيز المتاحة؟",
+  "faqFocusA1": "تشمل الأوضاع المتاحة العمل العميق (جلسات تركيز أطول) والمهام السريعة (فترات عمل قصيرة) ووضع القراءة. يساعدك كل وضع على هيكلة عملك وأوقات الراحة بفعالية.",
+  
+  "faqFocusQ2": "ما مدى مرونة مؤقت بومودورو؟",
+  "faqFocusA2": "المؤقت قابل للتخصيص بدرجة عالية. يمكنك ضبط مدة العمل وطول الاستراحة القصيرة ومدة الاستراحة الطويلة. تشمل الخيارات الإضافية البدء التلقائي للجلسات التالية وإعدادات الإشعارات.",
+  
+  "faqFocusQ3": "ماذا يظهر سجل وضع التركيز؟",
+  "faqFocusA3": "يتتبع سجل وضع التركيز جلسات التركيز اليومية، ويعرض عدد الجلسات في اليوم ورسم بياني للاتجاهات ومتوسط مدة الجلسة وإجمالي وقت التركيز ومخطط دائري لتوزيع الوقت يقسم جلسات العمل والاستراحات القصيرة والاستراحات الطويلة.",
+  
+  "faqFocusQ4": "هل يمكنني تتبع تقدم جلسة التركيز؟",
+  "faqFocusA4": "يتميز التطبيق بواجهة مؤقت دائرية مع أزرار التشغيل/الإيقاف وإعادة التحميل والإعدادات. يمكنك بسهولة تتبع وإدارة جلسات التركيز بعناصر تحكم بديهية.",
+  
+  "faqSettingsQ1": "ما خيارات التخصيص المتاحة؟",
+  "faqSettingsA1": "يشمل التخصيص اختيار السمة (النظام، فاتح، داكن) وإعدادات اللغة وسلوك بدء التشغيل وعناصر تحكم شاملة في الإشعارات وخيارات إدارة البيانات مثل مسح البيانات أو إعادة تعيين الإعدادات.",
+  
+  "faqSettingsQ2": "كيف أقدم ملاحظات أو أبلغ عن مشاكل؟",
+  "faqSettingsA2": "في أسفل قسم الإعدادات، ستجد أزراراً للإبلاغ عن خطأ أو إرسال ملاحظات أو الاتصال بالدعم. ستوجهك هذه إلى قنوات الدعم المناسبة.",
+  
+  "faqSettingsQ3": "ماذا يحدث عند مسح البيانات؟",
+  "faqSettingsA3": "سيؤدي مسح البيانات إلى إعادة تعيين جميع إحصائيات الاستخدام وسجل جلسات التركيز والإعدادات المخصصة. هذا مفيد للبدء من جديد أو استكشاف الأخطاء وإصلاحها.",
+  
+  "faqTroubleQ1": "البيانات لا تظهر، خطأ عدم فتح hive",
+  "faqTroubleA1": "المشكلة معروفة، الحل المؤقت هو مسح البيانات من خلال الإعدادات وإذا لم ينجح ذلك فانتقل إلى المستندات واحذف الملفات التالية إذا كانت موجودة - harman_screentime_app_usage_box.hive و harman_screentime_app_usage.lock، يُنصح أيضاً بتحديث التطبيق إلى أحدث إصدار.",
+  
+  "faqTroubleQ2": "التطبيق يفتح عند كل بدء تشغيل، ماذا أفعل؟",
+  "faqTroubleA2": "هذه مشكلة معروفة تحدث في ويندوز 10، الحل المؤقت هو تمكين التشغيل كمصغر في الإعدادات حتى يتم تشغيله كمصغر.",
+  
+  "usageAnalytics": "تحليلات الاستخدام",
+  "@usageAnalytics": {
+    "description": "Main page title for the analytics/reports section"
+  },
+  
+  "last7Days": "آخر 7 أيام",
+  "@last7Days": {
+    "description": "Time period option - last 7 days"
+  },
+  
+  "lastMonth": "الشهر الماضي",
+  "@lastMonth": {
+    "description": "Time period option - last month"
+  },
+  
+  "last3Months": "آخر 3 أشهر",
+  "@last3Months": {
+    "description": "Time period option - last 3 months"
+  },
+  
+  "lifetime": "كل الوقت",
+  "@lifetime": {
+    "description": "Time period option - all available data"
+  },
+  
+  "custom": "مخصص",
+  "@custom": {
+    "description": "Time period option - custom date range"
+  },
+  
+  "loadingAnalyticsData": "جارٍ تحميل بيانات التحليلات...",
+  "@loadingAnalyticsData": {
+    "description": "Loading message while fetching analytics"
+  },
+  
+  "tryAgain": "حاول مرة أخرى",
+  "@tryAgain": {
+    "description": "Button to retry after an error"
+  },
+  
+  "failedToInitialize": "فشل في تهيئة التحليلات. يرجى إعادة تشغيل التطبيق.",
+  "@failedToInitialize": {
+    "description": "Error message when analytics system fails to start"
+  },
+  
+  "unexpectedError": "حدث خطأ غير متوقع: {error}. يرجى المحاولة لاحقاً.",
+  "@unexpectedError": {
+    "description": "Generic error message with error details",
+    "placeholders": {
+      "error": {
+        "type": "String",
+        "example": "Connection timeout"
+      }
+    }
+  },
+  
+  "errorLoadingAnalytics": "خطأ في تحميل بيانات التحليلات: {error}. يرجى التحقق من اتصالك والمحاولة مرة أخرى.",
+  "@errorLoadingAnalytics": {
+    "description": "Error message when loading analytics data fails",
+    "placeholders": {
+      "error": {
+        "type": "String",
+        "example": "Network error"
+      }
+    }
+  },
+  
+  "customDialogTitle": "مخصص",
+  "@customDialogTitle": {
+    "description": "Title for custom date selection dialog"
+  },
+  
+  "dateRange": "نطاق التاريخ",
+  "@dateRange": {
+    "description": "Label for date range selection mode"
+  },
+  
+  "specificDate": "تاريخ محدد",
+  "@specificDate": {
+    "description": "Label for single date selection mode"
+  },
+  
+  "startDate": "تاريخ البداية: ",
+  "@startDate": {
+    "description": "Label for start date picker"
+  },
+  
+  "endDate": "تاريخ النهاية: ",
+  "@endDate": {
+    "description": "Label for end date picker"
+  },
+  
+  "date": "التاريخ: ",
+  "@date": {
+    "description": "Label for single date picker"
+  },
+  
+  "cancel": "إلغاء",
+  "@cancel": {
+    "description": "Cancel button text"
+  },
+  
+  "apply": "تطبيق",
+  "@apply": {
+    "description": "Apply/Confirm button text"
+  },
+  
+  "ok": "موافق",
+  "@ok": {
+    "description": "OK button text"
+  },
+  
+  "invalidDateRange": "نطاق تاريخ غير صالح",
+  "@invalidDateRange": {
+    "description": "Error dialog title for invalid date selection"
+  },
+  
+  "startDateBeforeEndDate": "يجب أن يكون تاريخ البداية قبل أو يساوي تاريخ النهاية.",
+  "@startDateBeforeEndDate": {
+    "description": "Validation message for date range"
+  },
+  
+  "totalScreenTime": "إجمالي وقت الشاشة",
+  "@totalScreenTime": {
+    "description": "Analytics box title for total screen time"
+  },
+  
+  "productiveTime": "الوقت المنتج",
+  "@productiveTime": {
+    "description": "Analytics box title for productive time"
+  },
+  
+  "mostUsedApp": "التطبيق الأكثر استخداماً",
+  "@mostUsedApp": {
+    "description": "Analytics box title for most used application"
+  },
+  
+  "focusSessions": "جلسات التركيز",
+  "@focusSessions": {
+    "description": "Analytics box title for focus sessions count"
+  },
+  
+  "positiveComparison": "+{percent}% مقارنة بالفترة السابقة",
+  "@positiveComparison": {
+    "description": "Comparison text for positive change",
+    "placeholders": {
+      "percent": {
+        "type": "String",
+        "example": "15.5"
+      }
+    }
+  },
+  
+  "negativeComparison": "{percent}% مقارنة بالفترة السابقة",
+  "@negativeComparison": {
+    "description": "Comparison text for negative change",
+    "placeholders": {
+      "percent": {
+        "type": "String",
+        "example": "-12.3"
+      }
+    }
+  },
+  
+  "iconLabel": "أيقونة {title}",
+  "@iconLabel": {
+    "description": "Accessibility label for icons",
+    "placeholders": {
+      "title": {
+        "type": "String",
+        "example": "Total Screen Time"
+      }
+    }
+  },
+  
+  "dailyScreenTime": "وقت الشاشة اليومي",
+  "@dailyScreenTime": {
+    "description": "Title for daily screen time chart"
+  },
+  
+  "categoryBreakdown": "توزيع الفئات",
+  "@categoryBreakdown": {
+    "description": "Title for category breakdown pie chart"
+  },
+  
+  "noDataAvailable": "لا توجد بيانات متاحة",
+  "@noDataAvailable": {
+    "description": "Empty state message when no data exists"
+  },
+  
+  "sectionLabel": "قسم {title}",
+  "@sectionLabel": {
+    "description": "Accessibility label for sections",
+    "placeholders": {
+      "title": {
+        "type": "String",
+        "example": "Category Breakdown"
+      }
+    }
+  },
+  
+  "detailedApplicationUsage": "استخدام التطبيقات التفصيلي",
+  "@detailedApplicationUsage": {
+    "description": "Title for detailed application usage table"
+  },
+  
+  "searchApplications": "البحث عن تطبيقات",
+  "@searchApplications": {
+    "description": "Placeholder text for search box"
+  },
+  
+  "nameHeader": "الاسم",
+  "@nameHeader": {
+    "description": "Table column header for app name"
+  },
+  
+  "categoryHeader": "الفئة",
+  "@categoryHeader": {
+    "description": "Table column header for category"
+  },
+  
+  "totalTimeHeader": "إجمالي الوقت",
+  "@totalTimeHeader": {
+    "description": "Table column header for total time"
+  },
+  
+  "productivityHeader": "الإنتاجية",
+  "@productivityHeader": {
+    "description": "Table column header for productivity status"
+  },
+  
+  "actionsHeader": "الإجراءات",
+  "@actionsHeader": {
+    "description": "Table column header for action buttons"
+  },
+  
+  "sortByOption": "ترتيب حسب: {option}",
+  "@sortByOption": {
+    "description": "Sort dropdown option text",
+    "placeholders": {
+      "option": {
+        "type": "String",
+        "example": "Name"
+      }
+    }
+  },
+  
+  "sortByName": "الاسم",
+  "@sortByName": {
+    "description": "Sort option - by name"
+  },
+  
+  "sortByCategory": "الفئة",
+  "@sortByCategory": {
+    "description": "Sort option - by category"
+  },
+  
+  "sortByUsage": "الاستخدام",
+  "@sortByUsage": {
+    "description": "Sort option - by usage time"
+  },
+  
+  "productive": "منتج",
+  "@productive": {
+    "description": "Label for productive apps"
+  },
+  
+  "nonProductive": "غير منتج",
+  "@nonProductive": {
+    "description": "Label for non-productive apps"
+  },
+  
+  "noApplicationsMatch": "لا توجد تطبيقات تطابق معايير البحث",
+  "@noApplicationsMatch": {
+    "description": "Empty state when search returns no results"
+  },
+  
+  "viewDetails": "عرض التفاصيل",
+  "@viewDetails": {
+    "description": "Tooltip for view details button"
+  },
+  
+  "usageSummary": "ملخص الاستخدام",
+  "@usageSummary": {
+    "description": "Section title in app details dialog"
+  },
+  
+  "usageOverPastWeek": "الاستخدام خلال الأسبوع الماضي",
+  "@usageOverPastWeek": {
+    "description": "Section title for weekly usage chart"
+  },
+  
+  "usagePatternByTimeOfDay": "نمط الاستخدام حسب الوقت من اليوم",
+  "@usagePatternByTimeOfDay": {
+    "description": "Section title for time of day breakdown"
+  },
+  
+  "patternAnalysis": "تحليل الأنماط",
+  "@patternAnalysis": {
+    "description": "Section title for usage pattern insights"
+  },
+  
+  "today": "اليوم",
+  "@today": {
+    "description": "Label for today's usage"
+  },
+  
+  "dailyLimit": "الحد اليومي",
+  "@dailyLimit": {
+    "description": "Label for daily usage limit"
+  },
+  
+  "noLimit": "بدون حد",
+  "@noLimit": {
+    "description": "Text shown when no limit is set"
+  },
+  
+  "usageTrend": "اتجاه الاستخدام",
+  "@usageTrend": {
+    "description": "Label for usage trend indicator"
+  },
+  
+  "productivity": "الإنتاجية",
+  "@productivity": {
+    "description": "Label for productivity status"
+  },
+  
+  "increasing": "متزايد",
+  "@increasing": {
+    "description": "Trend label - usage increasing"
+  },
+  
+  "decreasing": "متناقص",
+  "@decreasing": {
+    "description": "Trend label - usage decreasing"
+  },
+  
+  "stable": "مستقر",
+  "@stable": {
+    "description": "Trend label - usage stable"
+  },
+  
+  "avgDailyUsage": "متوسط الاستخدام اليومي",
+  "@avgDailyUsage": {
+    "description": "Stat card label for average daily usage"
+  },
+  
+  "longestSession": "أطول جلسة",
+  "@longestSession": {
+    "description": "Stat card label for longest session"
+  },
+  
+  "weeklyTotal": "الإجمالي الأسبوعي",
+  "@weeklyTotal": {
+    "description": "Stat card label for weekly total"
+  },
+  
+  "noHistoricalData": "لا توجد بيانات تاريخية متاحة",
+  "@noHistoricalData": {
+    "description": "Empty state for chart with no data"
+  },
+  
+  "morning": "الصباح (6-12)",
+  "@morning": {
+    "description": "Time of day label - morning hours"
+  },
+  
+  "afternoon": "الظهر (12-5)",
+  "@afternoon": {
+    "description": "Time of day label - afternoon hours"
+  },
+  
+  "evening": "المساء (5-9)",
+  "@evening": {
+    "description": "Time of day label - evening hours"
+  },
+  
+  "night": "الليل (9-6)",
+  "@night": {
+    "description": "Time of day label - night hours"
+  },
+  
+  "usageInsights": "رؤى الاستخدام",
+  "@usageInsights": {
+    "description": "Section title for usage insights"
+  },
+  
+  "limitStatus": "حالة الحد",
+  "@limitStatus": {
+    "description": "Section title for limit status"
+  },
+  
+  "close": "إغلاق",
+  "@close": {
+    "description": "Close button text"
+  },
+  
+  "primaryUsageTime": "تستخدم {appName} بشكل أساسي خلال {timeOfDay}.",
+  "@primaryUsageTime": {
+    "description": "Insight about primary usage time",
+    "placeholders": {
+      "appName": {
+        "type": "String",
+        "example": "Chrome"
+      },
+      "timeOfDay": {
+        "type": "String",
+        "example": "Evening (5-9)"
+      }
+    }
+  },
+  
+  "significantIncrease": "زاد استخدامك بشكل ملحوظ ({percentage}%) مقارنة بالفترة السابقة.",
+  "@significantIncrease": {
+    "description": "Insight about significant usage increase",
+    "placeholders": {
+      "percentage": {
+        "type": "String",
+        "example": "25.5"
+      }
+    }
+  },
+  
+  "trendingUpward": "استخدامك يتجه نحو الارتفاع مقارنة بالفترة السابقة.",
+  "@trendingUpward": {
+    "description": "Insight about upward usage trend"
+  },
+  
+  "significantDecrease": "انخفض استخدامك بشكل ملحوظ ({percentage}%) مقارنة بالفترة السابقة.",
+  "@significantDecrease": {
+    "description": "Insight about significant usage decrease",
+    "placeholders": {
+      "percentage": {
+        "type": "String",
+        "example": "18.3"
+      }
+    }
+  },
+  
+  "trendingDownward": "استخدامك يتجه نحو الانخفاض مقارنة بالفترة السابقة.",
+  "@trendingDownward": {
+    "description": "Insight about downward usage trend"
+  },
+  
+  "consistentUsage": "كان استخدامك متسقاً مقارنة بالفترة السابقة.",
+  "@consistentUsage": {
+    "description": "Insight about consistent usage"
+  },
+  
+  "markedAsProductive": "هذا مُعلَّم كتطبيق منتج في إعداداتك.",
+  "@markedAsProductive": {
+    "description": "Insight about productive app status"
+  },
+  
+  "markedAsNonProductive": "هذا مُعلَّم كتطبيق غير منتج في إعداداتك.",
+  "@markedAsNonProductive": {
+    "description": "Insight about non-productive app status"
+  },
+  
+  "mostActiveTime": "وقتك الأكثر نشاطاً هو حوالي الساعة {time}.",
+  "@mostActiveTime": {
+    "description": "Insight about most active hour",
+    "placeholders": {
+      "time": {
+        "type": "String",
+        "example": "3 PM"
+      }
+    }
+  },
+  
+  "noLimitSet": "لم يتم تعيين حد استخدام لهذا التطبيق.",
+  "@noLimitSet": {
+    "description": "Message when no limit is configured"
+  },
+  
+  "limitReached": "لقد وصلت إلى الحد اليومي لهذا التطبيق.",
+  "@limitReached": {
+    "description": "Message when limit is reached"
+  },
+  
+  "aboutToReachLimit": "أنت على وشك الوصول إلى الحد اليومي مع بقاء {remainingTime} فقط.",
+  "@aboutToReachLimit": {
+    "description": "Warning message when approaching limit",
+    "placeholders": {
+      "remainingTime": {
+        "type": "String",
+        "example": "15m"
+      }
+    }
+  },
+  
+  "percentOfLimitUsed": "لقد استخدمت {percent}% من الحد اليومي مع بقاء {remainingTime}.",
+  "@percentOfLimitUsed": {
+    "description": "Message showing percentage used",
+    "placeholders": {
+      "percent": {
+        "type": "int",
+        "example": "75"
+      },
+      "remainingTime": {
+        "type": "String",
+        "example": "1h 30m"
+      }
+    }
+  },
+  
+  "remainingTime": "لديك {time} متبقٍ من الحد اليومي.",
+  "@remainingTime": {
+    "description": "Message showing remaining time",
+    "placeholders": {
+      "time": {
+        "type": "String",
+        "example": "2h 45m"
+      }
+    }
+  },
+  
+  "todayChart": "اليوم",
+  "@todayChart": {
+    "description": "Label for today on charts"
+  },
+  
+  "hourPeriodAM": "{hour} صباحاً",
+  "@hourPeriodAM": {
+    "description": "Time format - AM hours",
+    "placeholders": {
+      "hour": {
+        "type": "int",
+        "example": "9"
+      }
+    }
+  },
+  
+  "hourPeriodPM": "{hour} مساءً",
+  "@hourPeriodPM": {
+    "description": "Time format - PM hours",
+    "placeholders": {
+      "hour": {
+        "type": "int",
+        "example": "3"
+      }
+    }
+  },
+  
+  "durationHoursMinutes": "{hours}س {minutes}د",
+  "@durationHoursMinutes": {
+    "description": "Duration format with hours and minutes",
+    "placeholders": {
+      "hours": {
+        "type": "int",
+        "example": "5"
+      },
+      "minutes": {
+        "type": "int",
+        "example": "30"
+      }
+    }
+  },
+  
+  "durationMinutesOnly": "{minutes}د",
+  "@durationMinutesOnly": {
+    "description": "Duration format with minutes only",
+    "placeholders": {
+      "minutes": {
+        "type": "int",
+        "example": "45"
+      }
+    }
+  },
+  
+  "alertsLimitsTitle": "التنبيهات والحدود",
+  "notificationsSettings": "إعدادات الإشعارات",
+  "overallScreenTimeLimit": "الحد الإجمالي لوقت الشاشة",
+  "applicationLimits": "حدود التطبيقات",
+  
+  "popupAlerts": "التنبيهات المنبثقة",
+  "frequentAlerts": "التنبيهات المتكررة",
+  "soundAlerts": "التنبيهات الصوتية",
+  "systemAlerts": "تنبيهات النظام",
+  
+  "dailyTotalLimit": "الحد اليومي الإجمالي: ",
+  "hours": "الساعات: ",
+  "minutes": "الدقائق: ",
+  "currentUsage": "الاستخدام الحالي: ",
+  
+  "tableName": "الاسم",
+  "tableCategory": "الفئة",
+  "tableDailyLimit": "الحد اليومي",
+  "tableCurrentUsage": "الاستخدام الحالي",
+  "tableStatus": "الحالة",
+  "tableActions": "الإجراءات",
+  
+  "addLimit": "إضافة حد",
+  "noApplicationsToDisplay": "لا توجد تطبيقات للعرض",
+  
+  "statusActive": "نشط",
+  "statusOff": "متوقف",
+  "durationNone": "لا يوجد",
+  
+  "addApplicationLimit": "إضافة حد للتطبيق",
+  "selectApplication": "اختر تطبيقاً",
+  "selectApplicationPlaceholder": "اختر تطبيقاً",
+  "enableLimit": "تفعيل الحد: ",
+  
+  "editLimitTitle": "تعديل الحد: {appName}",
+  "@editLimitTitle": {
+    "placeholders": {
+      "appName": {"type": "String"}
+    }
+  },
+  
+  "failedToLoadData": "فشل في تحميل البيانات: {error}",
+  "@failedToLoadData": {
+    "placeholders": {
+      "error": {"type": "String"}
+    }
+  },
+  
+  "resetSettingsTitle": "إعادة تعيين الإعدادات؟",
+  "resetSettingsContent": "إذا قمت بإعادة تعيين الإعدادات، لن تتمكن من استعادتها. هل تريد إعادة التعيين؟",
+  "resetAll": "إعادة تعيين الكل",
+  "refresh": "تحديث",
+  "save": "حفظ",
+  "add": "إضافة",
+  "error": "خطأ",
+  "retry": "إعادة المحاولة",
+  
+  "applicationsTitle": "التطبيقات",
+  "searchApplication": "البحث عن تطبيق",
+  
+  "tracking": "التتبع",
+  "hiddenVisible": "مخفي/مرئي",
+  "selectCategory": "اختر فئة",
+  "allCategories": "الكل",
+  
+  "tableScreenTime": "وقت الشاشة",
+  "tableTracking": "التتبع",
+  "tableHidden": "مخفي",
+  "tableEdit": "تعديل",
+  
+  "editAppTitle": "تعديل {appName}",
+  "@editAppTitle": {
+    "placeholders": {
+      "appName": {"type": "String"}
+    }
+  },
+  
+  "categorySection": "الفئة",
+  "customCategory": "مخصص",
+  "customCategoryPlaceholder": "أدخل اسم الفئة المخصصة",
+  "uncategorized": "غير مصنف",
+  
+  "isProductive": "منتج",
+  "trackUsage": "تتبع الاستخدام",
+  "visibleInReports": "مرئي في التقارير",
+  
+  "timeLimitsSection": "حدود الوقت",
+  "enableDailyLimit": "تفعيل الحد اليومي",
+  "setDailyTimeLimit": "تعيين الحد الزمني اليومي:",
+  
+  "saveChanges": "حفظ التغييرات",
+  
+  "errorLoadingData": "خطأ في تحميل بيانات النظرة العامة: {error}",
+  "@errorLoadingData": {
+    "placeholders": {
+      "error": {"type": "String"}
+    }
+  },
+  
+  "focusModeTitle": "وضع التركيز",
+  
+  "historySection": "السجل",
+  "trendsSection": "الاتجاهات",
+  "timeDistributionSection": "توزيع الوقت",
+  "sessionHistorySection": "سجل الجلسات",
+  
+  "workSession": "جلسة عمل",
+  "shortBreak": "استراحة قصيرة",
+  "longBreak": "استراحة طويلة",
+  
+  "dateHeader": "التاريخ",
+  "durationHeader": "المدة",
+  
+  "monday": "الإثنين",
+  "tuesday": "الثلاثاء",
+  "wednesday": "الأربعاء",
+  "thursday": "الخميس",
+  "friday": "الجمعة",
+  "saturday": "السبت",
+  "sunday": "الأحد",
+  
+  "focusModeSettingsTitle": "إعدادات وضع التركيز",
+  
+  "modeCustom": "مخصص",
+  "modeDeepWork": "عمل عميق (60 دقيقة)",
+  "modeQuickTasks": "مهام سريعة (25 دقيقة)",
+  "modeReading": "قراءة (45 دقيقة)",
+  
+  "workDurationLabel": "مدة العمل: {minutes} دقيقة",
+  "@workDurationLabel": {
+    "placeholders": {
+      "minutes": {"type": "int"}
+    }
+  },
+  
+  "shortBreakLabel": "استراحة قصيرة: {minutes} دقيقة",
+  "@shortBreakLabel": {
+    "placeholders": {
+      "minutes": {"type": "int"}
+    }
+  },
+  
+  "longBreakLabel": "استراحة طويلة: {minutes} دقيقة",
+  "@longBreakLabel": {
+    "placeholders": {
+      "minutes": {"type": "int"}
+    }
+  },
+  
+  "autoStartNextSession": "البدء التلقائي للجلسة التالية",
+  "blockDistractions": "حظر المشتتات أثناء وضع التركيز",
+  "enableNotifications": "تفعيل الإشعارات",
+  
+  "saved": "تم الحفظ",
+  
+  "errorLoadingFocusModeData": "خطأ في تحميل بيانات وضع التركيز: {error}",
+  "@errorLoadingFocusModeData": {
+    "placeholders": {
+      "error": {"type": "String"}
+    }
+  },
+  
+  "overviewTitle": "نظرة عامة على اليوم",
+  "startFocusMode": "بدء وضع التركيز",
+  
+  "loadingProductivityData": "جارٍ تحميل بيانات الإنتاجية...",
+  "noActivityDataAvailable": "لا توجد بيانات نشاط متاحة بعد",
+  "startUsingApplications": "ابدأ باستخدام تطبيقاتك لتتبع وقت الشاشة والإنتاجية.",
+  "refreshData": "تحديث البيانات",
+  
+  "topApplications": "أكثر التطبيقات استخداماً",
+  
+  "noAppUsageDataAvailable": "لا توجد بيانات استخدام التطبيقات متاحة بعد",
+  "noApplicationDataAvailable": "لا توجد بيانات تطبيقات متاحة",
+  "noCategoryDataAvailable": "لا توجد بيانات فئات متاحة",
+  "noApplicationLimitsSet": "لم يتم تعيين حدود للتطبيقات",
+  
+  "screenLabel": "الشاشة",
+  "timeLabel": "الوقت",
+  "productiveLabel": "منتج",
+  "scoreLabel": "النتيجة",
+  
+  "defaultNone": "لا يوجد",
+  "defaultTime": "0س 0د",
+  "defaultCount": "0",
+  "unknownApp": "غير معروف",
+  
+  "settingsTitle": "الإعدادات",
+  
+  "generalSection": "عام",
+  "notificationsSection": "الإشعارات",
+  "dataSection": "البيانات",
+  "versionSection": "الإصدار",
+  
+  "themeTitle": "السمة",
+  "themeDescription": "سمة ألوان التطبيق (يتطلب إعادة التشغيل)",
+  
+  "languageTitle": "اللغة",
+  "languageDescription": "لغة التطبيق",
+  
+  "startupBehaviourTitle": "سلوك بدء التشغيل",
+  "startupBehaviourDescription": "التشغيل عند بدء نظام التشغيل",
+  
+  "launchMinimizedTitle": "التشغيل كمصغر",
+  "launchMinimizedDescription": "بدء التطبيق في شريط النظام (موصى به لويندوز 10)",
+  
+  "notificationsTitle": "الإشعارات",
+  "notificationsAllDescription": "جميع إشعارات التطبيق",
+  
+  "focusModeNotificationsTitle": "وضع التركيز",
+  "focusModeNotificationsDescription": "جميع إشعارات وضع التركيز",
+  
+  "screenTimeNotificationsTitle": "وقت الشاشة",
+  "screenTimeNotificationsDescription": "جميع إشعارات تقييد وقت الشاشة",
+  
+  "appScreenTimeNotificationsTitle": "وقت شاشة التطبيق",
+  "appScreenTimeNotificationsDescription": "جميع إشعارات تقييد وقت شاشة التطبيق",
+  
+  "frequentAlertsTitle": "فترة التنبيهات المتكررة",
+  "frequentAlertsDescription": "تعيين فترة الإشعارات المتكررة (بالدقائق)",
+  
+  "clearDataTitle": "مسح البيانات",
+  "clearDataDescription": "مسح جميع السجلات والبيانات ذات الصلة",
+  
+  "resetSettingsTitle2": "إعادة تعيين الإعدادات",
+  "resetSettingsDescription": "إعادة تعيين جميع الإعدادات",
+  
+  "versionTitle": "الإصدار",
+  "versionDescription": "الإصدار الحالي للتطبيق",
+  
+  "contactButton": "اتصل بنا",
+  "reportBugButton": "الإبلاغ عن خطأ",
+  "submitFeedbackButton": "إرسال ملاحظات",
+  "githubButton": "جيت هب",
+  
+  "clearDataDialogTitle": "مسح البيانات؟",
+  "clearDataDialogContent": "سيؤدي هذا إلى مسح جميع السجلات والبيانات ذات الصلة. لن تتمكن من استعادتها. هل تريد المتابعة؟",
+  "clearDataButtonLabel": "مسح البيانات",
+  
+  "resetSettingsDialogTitle": "إعادة تعيين الإعدادات؟",
+  "resetSettingsDialogContent": "سيؤدي هذا إلى إعادة تعيين جميع الإعدادات إلى قيمها الافتراضية. هل تريد المتابعة؟",
+  "resetButtonLabel": "إعادة تعيين",
+  
+  "cancelButton": "إلغاء",
+  
+  "couldNotLaunchUrl": "تعذر فتح {url}",
+  "@couldNotLaunchUrl": {
+    "placeholders": {
+      "url": {"type": "String"}
+    }
+  },
+  
+  "errorMessage": "خطأ: {message}",
+  "@errorMessage": {
+    "placeholders": {
+      "message": {"type": "String"}
+    }
+  },
+
+  "chart_focusTrends": "اتجاهات التركيز",
+  "@chart_focusTrends": {
+    "description": "Title for focus trends chart"
+  },
+  
+  "chart_sessionCount": "عدد الجلسات",
+  "@chart_sessionCount": {
+    "description": "Label for session count metric"
+  },
+  
+  "chart_avgDuration": "متوسط المدة",
+  "@chart_avgDuration": {
+    "description": "Label for average duration metric"
+  },
+  
+  "chart_totalFocus": "إجمالي التركيز",
+  "@chart_totalFocus": {
+    "description": "Label for total focus time metric"
+  },
+  
+  "chart_yAxis_sessions": "الجلسات",
+  "@chart_yAxis_sessions": {
+    "description": "Y-axis label for session count"
+  },
+  
+  "chart_yAxis_minutes": "الدقائق",
+  "@chart_yAxis_minutes": {
+    "description": "Y-axis label for time in minutes"
+  },
+  
+  "chart_yAxis_value": "القيمة",
+  "@chart_yAxis_value": {
+    "description": "Generic y-axis label"
+  },
+  
+  "chart_monthOverMonthChange": "التغيير من شهر لآخر: ",
+  "@chart_monthOverMonthChange": {
+    "description": "Label for percentage change display"
+  },
+  
+  "chart_customRange": "نطاق مخصص",
+  "@chart_customRange": {
+    "description": "Label for custom date range"
+  },
+  
+  "day_monday": "الإثنين",
+  "day_mondayShort": "إثن",
+  "day_mondayAbbr": "ن",
+  
+  "day_tuesday": "الثلاثاء",
+  "day_tuesdayShort": "ثلا",
+  "day_tuesdayAbbr": "ث",
+  
+  "day_wednesday": "الأربعاء",
+  "day_wednesdayShort": "أرب",
+  "day_wednesdayAbbr": "ر",
+  
+  "day_thursday": "الخميس",
+  "day_thursdayShort": "خمي",
+  "day_thursdayAbbr": "خ",
+  
+  "day_friday": "الجمعة",
+  "day_fridayShort": "جمع",
+  "day_fridayAbbr": "ج",
+  
+  "day_saturday": "السبت",
+  "day_saturdayShort": "سبت",
+  "day_saturdayAbbr": "س",
+  
+  "day_sunday": "الأحد",
+  "day_sundayShort": "أحد",
+  "day_sundayAbbr": "ح",
+  
+  "time_hours": "{count}س",
+  "@time_hours": {
+    "description": "Hours format",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  
+  "time_hoursMinutes": "{hours}س {minutes}د",
+  "@time_hoursMinutes": {
+    "description": "Hours and minutes format",
+    "placeholders": {
+      "hours": {
+        "type": "int"
+      },
+      "minutes": {
+        "type": "int"
+      }
+    }
+  },
+  
+  "time_minutesFormat": "{count} دقيقة",
+  "@time_minutesFormat": {
+    "description": "Minutes format for tooltips",
+    "placeholders": {
+      "count": {
+        "type": "String"
+      }
+    }
+  },
+  
+  "tooltip_dateScreenTime": "{date}: {hours}س {minutes}د",
+  "@tooltip_dateScreenTime": {
+    "description": "Tooltip showing date and screen time",
+    "placeholders": {
+      "date": {
+        "type": "String"
+      },
+      "hours": {
+        "type": "int"
+      },
+      "minutes": {
+        "type": "int"
+      }
+    }
+  },
+  
+  "tooltip_hoursFormat": "{count} ساعة",
+  "@tooltip_hoursFormat": {
+    "description": "Hours format for tooltip fallback",
+    "placeholders": {
+      "count": {
+        "type": "String"
+      }
+    }
+  },
+  
+  "month_january": "يناير",
+  "month_januaryShort": "ينا",
+  "month_february": "فبراير",
+  "month_februaryShort": "فبر",
+  "month_march": "مارس",
+  "month_marchShort": "مار",
+  "month_april": "أبريل",
+  "month_aprilShort": "أبر",
+  "month_may": "مايو",
+  "month_mayShort": "ماي",
+  "month_june": "يونيو",
+  "month_juneShort": "يون",
+  "month_july": "يوليو",
+  "month_julyShort": "يول",
+  "month_august": "أغسطس",
+  "month_augustShort": "أغس",
+  "month_september": "سبتمبر",
+  "month_septemberShort": "سبت",
+  "month_october": "أكتوبر",
+  "month_octoberShort": "أكت",
+  "month_november": "نوفمبر",
+  "month_novemberShort": "نوف",
+  "month_december": "ديسمبر",
+  "month_decemberShort": "ديس",
+  
+  "categoryAll": "الكل",
+  "@categoryAll": {
+    "description": "Category filter for all applications"
+  },
+  "categoryProductivity": "الإنتاجية",
+  "categoryDevelopment": "التطوير",
+  "categorySocialMedia": "وسائل التواصل الاجتماعي",
+  "categoryEntertainment": "الترفيه",
+  "categoryGaming": "الألعاب",
+  "categoryCommunication": "التواصل",
+  "categoryWebBrowsing": "تصفح الويب",
+  "categoryCreative": "الإبداع",
+  "categoryEducation": "التعليم",
+  "categoryUtility": "الأدوات المساعدة",
+  "categoryUncategorized": "غير مصنف",
+  
+  "appMicrosoftWord": "مايكروسوفت وورد",
+  "appExcel": "إكسل",
+  "appPowerPoint": "باوربوينت",
+  "appGoogleDocs": "مستندات جوجل",
+  "appNotion": "نوشن",
+  "appEvernote": "إيفرنوت",
+  "appTrello": "تريلو",
+  "appAsana": "أسانا",
+  "appSlack": "سلاك",
+  "appMicrosoftTeams": "مايكروسوفت تيمز",
+  "appZoom": "زووم",
+  "appGoogleCalendar": "تقويم جوجل",
+  "appAppleCalendar": "التقويم",
+  "appVisualStudioCode": "فيجوال ستوديو كود",
+  "appTerminal": "الطرفية",
+  "appCommandPrompt": "موجه الأوامر",
+  "appChrome": "كروم",
+  "appFirefox": "فايرفوكس",
+  "appSafari": "سفاري",
+  "appEdge": "إيدج",
+  "appOpera": "أوبرا",
+  "appBrave": "بريف",
+  "appNetflix": "نتفليكس",
+  "appYouTube": "يوتيوب",
+  "appSpotify": "سبوتيفاي",
+  "appAppleMusic": "آبل ميوزك",
+  "appCalculator": "الآلة الحاسبة",
+  "appNotes": "الملاحظات",
+  "appSystemPreferences": "تفضيلات النظام",
+  "appTaskManager": "إدارة المهام",
+  "appFileExplorer": "مستكشف الملفات",
+  "appDropbox": "دروب بوكس",
+  "appGoogleDrive": "جوجل درايف",
+  
+  "loadingApplication": "جارٍ تحميل التطبيق...",
+  "@loadingApplication": {
+    "description": "Message shown when the application is loading"
+  },
+  "loadingData": "جارٍ تحميل البيانات...",
+  "@loadingData": {
+    "description": "Message shown when data is being loaded"
+  },
+  "reportsError": "خطأ",
+  "@reportsError": {
+    "description": "Label for error messages"
+  },
+    "reportsRetry": "إعادة المحاولة",
+  "@reportsRetry": {
+    "description": "Button text to retry an operation"
+  },
+  
+  "backupRestoreSection": "النسخ الاحتياطي والاستعادة",
+  "backupRestoreTitle": "النسخ الاحتياطي والاستعادة",
+  "exportDataTitle": "تصدير البيانات",
+  "exportDataDescription": "إنشاء نسخة احتياطية من جميع بياناتك",
+  "importDataTitle": "استيراد البيانات",
+  "importDataDescription": "الاستعادة من ملف النسخ الاحتياطي",
+  "exportButton": "تصدير",
+  "importButton": "استيراد",
+  "closeButton": "إغلاق",
+  "noButton": "لا",
+  "shareButton": "مشاركة",
+  "exportStarting": "جارٍ بدء التصدير...",
+  "exportSuccessful": "تم التصدير بنجاح! تم حفظ الملف في المستندات/TimeMark-Backups",
+  "exportFailed": "فشل التصدير",
+  "exportComplete": "اكتمل التصدير",
+  "shareBackupQuestion": "هل تريد مشاركة ملف النسخ الاحتياطي؟",
+  "importStarting": "جارٍ بدء الاستيراد...",
+  "importSuccessful": "تم الاستيراد بنجاح!",
+  "importFailed": "فشل الاستيراد",
+  "importOptionsTitle": "خيارات الاستيراد",
+  "importOptionsQuestion": "كيف تريد استيراد البيانات؟",
+  "replaceModeTitle": "استبدال",
+  "replaceModeDescription": "استبدال جميع البيانات الموجودة",
+  "mergeModeTitle": "دمج",
+  "mergeModeDescription": "الدمج مع البيانات الموجودة",
+  "appendModeTitle": "إلحاق",
+  "appendModeDescription": "إضافة السجلات الجديدة فقط",
+  "warningTitle": "⚠️ تحذير",
+  "replaceWarningMessage": "سيؤدي هذا إلى استبدال جميع بياناتك الموجودة. هل أنت متأكد أنك تريد المتابعة؟",
+  "replaceAllButton": "استبدال الكل",
+  "fileLabel": "الملف",
+  "sizeLabel": "الحجم",
+  "recordsLabel": "السجلات",
+  "usageRecordsLabel": "سجلات الاستخدام",
+  "focusSessionsLabel": "جلسات التركيز",
+  "appMetadataLabel": "بيانات التطبيق الوصفية",
+  "updatedLabel": "تم التحديث",
+  "skippedLabel": "تم التخطي",
+  
+  "faqSettingsQ4": "كيف يمكنني استعادة أو تصدير بياناتي؟",
+  "faqSettingsA4": "يمكنك الذهاب إلى الإعدادات، وهناك ستجد قسم النسخ الاحتياطي والاستعادة. يمكنك تصدير أو استيراد البيانات من هنا، لاحظ أن ملف البيانات المصدّر يتم تخزينه في المستندات في مجلد TimeMark-Backups ويمكن استخدام هذا الملف فقط لاستعادة البيانات، ولا يمكن استخدام أي ملف آخر.",
+  
+  "faqGeneralQ6": "كيف يمكنني تغيير اللغة وما اللغات المتاحة، وماذا لو وجدت أن الترجمة خاطئة؟",
+  "faqGeneralA6": "يمكن تغيير اللغة من خلال قسم الإعدادات العامة، جميع اللغات المتاحة مدرجة هناك، يمكنك طلب ترجمة بالنقر على اتصل بنا وإرسال طلبك مع اللغة المحددة. اعلم أن الترجمة قد تكون خاطئة لأنها مُولّدة بالذكاء الاصطناعي من الإنجليزية وإذا كنت تريد الإبلاغ فيمكنك الإبلاغ من خلال الإبلاغ عن خطأ أو اتصل بنا، أو إذا كنت مطوراً يمكنك فتح مشكلة على جيت هب. المساهمات المتعلقة باللغة مرحب بها أيضاً!",
+  
+  "faqGeneralQ7": "ماذا لو وجدت أن الترجمة خاطئة؟",
+  "faqGeneralA7": "قد تكون الترجمة خاطئة لأنها مُولّدة بالذكاء الاصطناعي من الإنجليزية وإذا كنت تريد الإبلاغ فيمكنك الإبلاغ من خلال الإبلاغ عن خطأ أو اتصل بنا، أو إذا كنت مطوراً يمكنك فتح مشكلة على جيت هب. المساهمات المتعلقة باللغة مرحب بها أيضاً!"
+}

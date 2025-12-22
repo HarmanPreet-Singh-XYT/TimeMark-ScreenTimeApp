@@ -1440,140 +1440,143 @@ class AppLocalizationsEs extends AppLocalizations {
   String get reportsRetry => 'Reintentar';
 
   @override
-  String get backupRestoreSection => 'Backup & Restore';
+  String get backupRestoreSection => 'Copia de seguridad y restauración';
 
   @override
-  String get backupRestoreTitle => 'Backup & Restore';
+  String get backupRestoreTitle => 'Copia de seguridad y restauración';
 
   @override
-  String get exportDataTitle => 'Export Data';
+  String get exportDataTitle => 'Exportar datos';
 
   @override
-  String get exportDataDescription => 'Create a backup of all your data';
+  String get exportDataDescription =>
+      'Crear una copia de seguridad de todos tus datos';
 
   @override
-  String get importDataTitle => 'Import Data';
+  String get importDataTitle => 'Importar datos';
 
   @override
-  String get importDataDescription => 'Restore from a backup file';
+  String get importDataDescription =>
+      'Restaurar desde un archivo de copia de seguridad';
 
   @override
-  String get exportButton => 'Export';
+  String get exportButton => 'Exportar';
 
   @override
-  String get importButton => 'Import';
+  String get importButton => 'Importar';
 
   @override
-  String get closeButton => 'Close';
+  String get closeButton => 'Cerrar';
 
   @override
   String get noButton => 'No';
 
   @override
-  String get shareButton => 'Share';
+  String get shareButton => 'Compartir';
 
   @override
-  String get exportStarting => 'Starting export...';
+  String get exportStarting => 'Iniciando exportación...';
 
   @override
   String get exportSuccessful =>
-      'Export successful! File saved at Documents/TimeMark-Backups';
+      '¡Exportación exitosa! Archivo guardado en Documentos/TimeMark-Backups';
 
   @override
-  String get exportFailed => 'Export failed';
+  String get exportFailed => 'Error en la exportación';
 
   @override
-  String get exportComplete => 'Export Complete';
+  String get exportComplete => 'Exportación completada';
 
   @override
-  String get shareBackupQuestion => 'Would you like to share the backup file?';
+  String get shareBackupQuestion =>
+      '¿Te gustaría compartir el archivo de copia de seguridad?';
 
   @override
-  String get importStarting => 'Starting import...';
+  String get importStarting => 'Iniciando importación...';
 
   @override
-  String get importSuccessful => 'Import successful!';
+  String get importSuccessful => '¡Importación exitosa!';
 
   @override
-  String get importFailed => 'Import failed';
+  String get importFailed => 'Error en la importación';
 
   @override
-  String get importOptionsTitle => 'Import Options';
+  String get importOptionsTitle => 'Opciones de importación';
 
   @override
-  String get importOptionsQuestion => 'How would you like to import the data?';
+  String get importOptionsQuestion => '¿Cómo te gustaría importar los datos?';
 
   @override
-  String get replaceModeTitle => 'Replace';
+  String get replaceModeTitle => 'Reemplazar';
 
   @override
-  String get replaceModeDescription => 'Replace all existing data';
+  String get replaceModeDescription => 'Reemplazar todos los datos existentes';
 
   @override
-  String get mergeModeTitle => 'Merge';
+  String get mergeModeTitle => 'Fusionar';
 
   @override
-  String get mergeModeDescription => 'Combine with existing data';
+  String get mergeModeDescription => 'Combinar con los datos existentes';
 
   @override
-  String get appendModeTitle => 'Append';
+  String get appendModeTitle => 'Añadir';
 
   @override
-  String get appendModeDescription => 'Only add new records';
+  String get appendModeDescription => 'Solo agregar nuevos registros';
 
   @override
-  String get warningTitle => '⚠️ Warning';
+  String get warningTitle => '⚠️ Advertencia';
 
   @override
   String get replaceWarningMessage =>
-      'This will replace ALL your existing data. Are you sure you want to continue?';
+      'Esto reemplazará TODOS tus datos existentes. ¿Estás seguro de que deseas continuar?';
 
   @override
-  String get replaceAllButton => 'Replace All';
+  String get replaceAllButton => 'Reemplazar todo';
 
   @override
-  String get fileLabel => 'File';
+  String get fileLabel => 'Archivo';
 
   @override
-  String get sizeLabel => 'Size';
+  String get sizeLabel => 'Tamaño';
 
   @override
-  String get recordsLabel => 'Records';
+  String get recordsLabel => 'Registros';
 
   @override
-  String get usageRecordsLabel => 'Usage records';
+  String get usageRecordsLabel => 'Registros de uso';
 
   @override
-  String get focusSessionsLabel => 'Focus sessions';
+  String get focusSessionsLabel => 'Sesiones de concentración';
 
   @override
-  String get appMetadataLabel => 'App metadata';
+  String get appMetadataLabel => 'Metadatos de la aplicación';
 
   @override
-  String get updatedLabel => 'Updated';
+  String get updatedLabel => 'Actualizado';
 
   @override
-  String get skippedLabel => 'Skipped';
+  String get skippedLabel => 'Omitido';
 
   @override
-  String get faqSettingsQ4 => 'How can i restore or export my data?';
+  String get faqSettingsQ4 => '¿Cómo puedo restaurar o exportar mis datos?';
 
   @override
   String get faqSettingsA4 =>
-      'You can go to settings, and there you\'ll find Backup & Restore section. You can export or import data from here, note that Exported data file is stored in Documents at TimeMark-Backups Folder and only this file can be used to restore data, no other file.';
+      'Puedes ir a configuración, y allí encontrarás la sección de Copia de seguridad y restauración. Puedes exportar o importar datos desde aquí. Ten en cuenta que el archivo de datos exportado se guarda en Documentos en la carpeta TimeMark-Backups y solo este archivo puede ser usado para restaurar datos, ningún otro archivo.';
 
   @override
   String get faqGeneralQ6 =>
-      'How can I change language and which languages are available, also what if I found that translation is wrong?';
+      '¿Cómo puedo cambiar el idioma y qué idiomas están disponibles? ¿Y si encuentro que la traducción es incorrecta?';
 
   @override
   String get faqGeneralA6 =>
-      'Language can be changed through Settings General section, all the available languages are listed there, you can request translation by clicking on Contact and sending your request with given language. Just know that translation can be wrong as It is generated by AI from English and if you want to report then either you can report through report bug, or contact, or if you are a developer then open issue on Github. Contributions regarding language are also welcome!';
+      'El idioma se puede cambiar en la sección General de configuración, todos los idiomas disponibles están listados allí. Puedes solicitar una traducción haciendo clic en Contacto y enviando tu solicitud con el idioma deseado. Ten en cuenta que la traducción puede ser incorrecta ya que es generada por IA desde el inglés. Si deseas reportar un error, puedes hacerlo a través de reportar error, contacto, o si eres desarrollador, abrir un problema en Github. ¡Las contribuciones relacionadas con idiomas también son bienvenidas!';
 
   @override
-  String get faqGeneralQ7 => 'What if I found that translation is wrong?';
+  String get faqGeneralQ7 => '¿Y si encuentro que la traducción es incorrecta?';
 
   @override
   String get faqGeneralA7 =>
-      'Translation can be wrong as It is Generated by AI from English and if you want to report then either you can report through report bug, or contact, or if you are a developer then open issue on Github. Contributions regarding language are also welcome!';
+      'La traducción puede ser incorrecta ya que es generada por IA desde el inglés. Si deseas reportar un error, puedes hacerlo a través de reportar error, contacto, o si eres desarrollador, abrir un problema en Github. ¡Las contribuciones relacionadas con idiomas también son bienvenidas!';
 }

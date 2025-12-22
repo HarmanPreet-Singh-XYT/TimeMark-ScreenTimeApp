@@ -1,0 +1,1307 @@
+{
+  "@@locale": "ru",
+  
+  "appWindowTitle": "TimeMark - Отслеживание экранного времени и использования приложений",
+  "@appWindowTitle": {
+    "description": "Заголовок, отображаемый в строке заголовка окна"
+  },
+  
+  "appName": "TimeMark",
+  "@appName": {
+    "description": "Название приложения"
+  },
+  
+  "appTitle": "Продуктивное экранное время",
+  "@appTitle": {
+    "description": "Заголовок/слоган приложения"
+  },
+  
+  "sidebarTitle": "Экранное время",
+  "@sidebarTitle": {
+    "description": "Заголовок, отображаемый на боковой панели"
+  },
+  
+  "sidebarSubtitle": "Открытый исходный код",
+  "@sidebarSubtitle": {
+    "description": "Подзаголовок, отображаемый на боковой панели"
+  },
+  
+  "trayShowWindow": "Показать окно",
+  "@trayShowWindow": {
+    "description": "Пункт меню трея для отображения главного окна"
+  },
+  
+  "trayStartFocusMode": "Запустить режим фокусировки",
+  "@trayStartFocusMode": {
+    "description": "Пункт меню трея для запуска режима фокусировки"
+  },
+  
+  "trayStopFocusMode": "Остановить режим фокусировки",
+  "@trayStopFocusMode": {
+    "description": "Пункт меню трея для остановки режима фокусировки"
+  },
+  
+  "trayReports": "Отчёты",
+  "@trayReports": {
+    "description": "Пункт меню трея для отчётов"
+  },
+  
+  "trayAlertsLimits": "Оповещения и лимиты",
+  "@trayAlertsLimits": {
+    "description": "Пункт меню трея для оповещений и лимитов"
+  },
+  
+  "trayApplications": "Приложения",
+  "@trayApplications": {
+    "description": "Пункт меню трея для приложений"
+  },
+  
+  "trayDisableNotifications": "Отключить уведомления",
+  "@trayDisableNotifications": {
+    "description": "Пункт меню трея для отключения уведомлений"
+  },
+  
+  "trayEnableNotifications": "Включить уведомления",
+  "@trayEnableNotifications": {
+    "description": "Пункт меню трея для включения уведомлений"
+  },
+  
+  "trayVersionPrefix": "Версия: ",
+  "@trayVersionPrefix": {
+    "description": "Префикс для отображения версии в трее"
+  },
+  
+  "trayVersion": "Версия: {version}",
+  "@trayVersion": {
+    "description": "Отображение версии с заполнителем",
+    "placeholders": {
+      "version": {
+        "type": "String",
+        "example": "1.0.0"
+      }
+    }
+  },
+  
+  "trayExit": "Выход",
+  "@trayExit": {
+    "description": "Пункт меню трея для выхода из приложения"
+  },
+  
+  "navOverview": "Обзор",
+  "@navOverview": {
+    "description": "Пункт навигации для страницы обзора"
+  },
+  
+  "navApplications": "Приложения",
+  "@navApplications": {
+    "description": "Пункт навигации для страницы приложений"
+  },
+  
+  "navAlertsLimits": "Оповещения и лимиты",
+  "@navAlertsLimits": {
+    "description": "Пункт навигации для страницы оповещений и лимитов"
+  },
+  
+  "navReports": "Отчёты",
+  "@navReports": {
+    "description": "Пункт навигации для страницы отчётов"
+  },
+  
+  "navFocusMode": "Режим фокусировки",
+  "@navFocusMode": {
+    "description": "Пункт навигации для страницы режима фокусировки"
+  },
+  
+  "navSettings": "Настройки",
+  "@navSettings": {
+    "description": "Пункт навигации для страницы настроек"
+  },
+  
+  "navHelp": "Помощь",
+  "@navHelp": {
+    "description": "Пункт навигации для страницы помощи"
+  },
+  
+  "helpTitle": "Помощь",
+  
+  "faqCategoryGeneral": "Общие вопросы",
+  "faqCategoryApplications": "Управление приложениями",
+  "faqCategoryReports": "Аналитика использования и отчёты",
+  "faqCategoryAlerts": "Оповещения и лимиты",
+  "faqCategoryFocusMode": "Режим фокусировки и таймер Помодоро",
+  "faqCategorySettings": "Настройки и персонализация",
+  "faqCategoryTroubleshooting": "Устранение неполадок",
+  
+  "faqGeneralQ1": "Как приложение отслеживает экранное время?",
+  "faqGeneralA1": "Приложение отслеживает использование вашего устройства в реальном времени, фиксируя время, проведённое в различных приложениях. Оно предоставляет полную информацию о ваших цифровых привычках, включая общее экранное время, продуктивное время и использование конкретных приложений.",
+  
+  "faqGeneralQ2": "Что делает приложение 'Продуктивным'?",
+  "faqGeneralA2": "Вы можете вручную отметить приложения как продуктивные в разделе 'Приложения'. Продуктивные приложения учитываются в вашем показателе продуктивности, который рассчитывает процент экранного времени, потраченного на рабочие или полезные приложения.",
+  
+  "faqGeneralQ3": "Насколько точно отслеживание экранного времени?",
+  "faqGeneralA3": "Приложение использует отслеживание на системном уровне для точного измерения использования вашего устройства. Оно фиксирует время активного использования каждого приложения с минимальным влиянием на батарею.",
+  
+  "faqGeneralQ4": "Могу ли я настроить категоризацию приложений?",
+  "faqGeneralA4": "Конечно! Вы можете создавать пользовательские категории, назначать приложения определённым категориям и легко изменять эти назначения в разделе 'Приложения'. Это помогает создавать более осмысленную аналитику использования.",
+  
+  "faqGeneralQ5": "Какую информацию я могу получить из этого приложения?",
+  "faqGeneralA5": "Приложение предлагает комплексную аналитику, включая показатель продуктивности, паттерны использования по времени суток, детальное использование приложений, отслеживание сессий фокусировки и визуальную аналитику в виде графиков и диаграмм, чтобы помочь вам понять и улучшить ваши цифровые привычки.",
+  
+  "faqAppsQ1": "Как скрыть определённые приложения из отслеживания?",
+  "faqAppsA1": "В разделе 'Приложения' вы можете переключить видимость приложений.",
+  
+  "faqAppsQ2": "Можно ли искать и фильтровать приложения?",
+  "faqAppsA2": "Да, раздел Приложения включает функцию поиска и параметры фильтрации. Вы можете фильтровать приложения по категории, статусу продуктивности, статусу отслеживания и видимости.",
+  
+  "faqAppsQ3": "Какие параметры редактирования доступны для приложений?",
+  "faqAppsA3": "Для каждого приложения вы можете редактировать: назначение категории, статус продуктивности, отслеживание использования, видимость в отчётах и устанавливать индивидуальные дневные лимиты времени.",
+  
+  "faqAppsQ4": "Как определяются категории приложений?",
+  "faqAppsA4": "Начальные категории предлагаются системой, но вы имеете полный контроль для создания, изменения и назначения пользовательских категорий в соответствии с вашим рабочим процессом и предпочтениями.",
+  
+  "faqReportsQ1": "Какие типы отчётов доступны?",
+  "faqReportsA1": "Отчёты включают: общее экранное время, продуктивное время, наиболее используемые приложения, сессии фокусировки, график дневного экранного времени, круговую диаграмму распределения по категориям, детальное использование приложений, недельные тренды использования и анализ паттернов использования по времени суток.",
+  
+  "faqReportsQ2": "Насколько детальны отчёты об использовании приложений?",
+  "faqReportsA2": "Детальные отчёты об использовании приложений показывают: название приложения, категорию, общее время использования, статус продуктивности и предлагают раздел 'Действия' с более глубокой аналитикой, такой как сводка использования, дневные лимиты, тренды использования и метрики продуктивности.",
+  
+  "faqReportsQ3": "Можно ли анализировать тренды использования за период?",
+  "faqReportsA3": "Да! Приложение предоставляет сравнения по неделям, показывая графики использования за прошлые недели, среднее дневное использование, самые длинные сессии и недельные итоги, чтобы помочь вам отслеживать ваши цифровые привычки.",
+  
+  "faqReportsQ4": "Что такое анализ 'Паттерна использования'?",
+  "faqReportsA4": "Паттерн использования разбивает ваше экранное время на сегменты: утро, день, вечер и ночь. Это помогает понять, когда вы наиболее активно используете устройство, и определить потенциальные области для улучшения.",
+  
+  "faqAlertsQ1": "Насколько детально можно настроить лимиты экранного времени?",
+  "faqAlertsA1": "Вы можете установить общие дневные лимиты экранного времени и индивидуальные лимиты для приложений. Лимиты можно настроить в часах и минутах с возможностью сброса или корректировки по мере необходимости.",
+  
+  "faqAlertsQ2": "Какие параметры уведомлений доступны?",
+  "faqAlertsA2": "Приложение предлагает несколько типов уведомлений: системные оповещения при превышении экранного времени, частые оповещения с настраиваемыми интервалами (1, 5, 15, 30 или 60 минут) и переключатели для уведомлений режима фокусировки, экранного времени и конкретных приложений.",
+  
+  "faqAlertsQ3": "Можно ли настроить оповещения о лимитах?",
+  "faqAlertsA3": "Да, вы можете настроить частоту оповещений, включить/отключить определённые типы оповещений и установить разные лимиты для общего экранного времени и отдельных приложений.",
+  
+  "faqFocusQ1": "Какие типы режимов фокусировки доступны?",
+  "faqFocusA1": "Доступные режимы включают Глубокую работу (длительные сфокусированные сессии), Быстрые задачи (короткие рабочие интервалы) и Режим чтения. Каждый режим помогает эффективно структурировать ваше рабочее время и перерывы.",
+  
+  "faqFocusQ2": "Насколько гибок таймер Помодоро?",
+  "faqFocusA2": "Таймер очень настраиваемый. Вы можете регулировать продолжительность работы, длину короткого перерыва и продолжительность длинного перерыва. Дополнительные опции включают автозапуск следующих сессий и настройки уведомлений.",
+  
+  "faqFocusQ3": "Что показывает история режима фокусировки?",
+  "faqFocusA3": "История режима фокусировки отслеживает дневные сессии фокусировки, показывая количество сессий в день, график трендов, среднюю продолжительность сессии, общее время фокусировки и круговую диаграмму распределения времени между рабочими сессиями, короткими и длинными перерывами.",
+  
+  "faqFocusQ4": "Можно ли отслеживать прогресс сессии фокусировки?",
+  "faqFocusA4": "Приложение имеет круговой интерфейс таймера с кнопками воспроизведения/паузы, перезагрузки и настроек. Вы можете легко отслеживать и управлять сессиями фокусировки с помощью интуитивного управления.",
+  
+  "faqSettingsQ1": "Какие параметры настройки доступны?",
+  "faqSettingsA1": "Настройка включает выбор темы (Системная, Светлая, Тёмная), языковые настройки, поведение при запуске, комплексное управление уведомлениями и параметры управления данными, такие как очистка данных или сброс настроек.",
+  
+  "faqSettingsQ2": "Как отправить отзыв или сообщить о проблеме?",
+  "faqSettingsA2": "В нижней части раздела Настройки вы найдёте кнопки для сообщения об ошибке, отправки отзыва или связи с поддержкой. Они перенаправят вас в соответствующие каналы поддержки.",
+  
+  "faqSettingsQ3": "Что происходит при очистке данных?",
+  "faqSettingsA3": "Очистка данных сбросит всю вашу статистику использования, историю сессий фокусировки и пользовательские настройки. Это полезно для начала с чистого листа или устранения неполадок.",
+  
+  "faqTroubleQ1": "Данные не отображаются, ошибка открытия hive",
+  "faqTroubleA1": "Проблема известна, временное решение — очистить данные через настройки, и если это не помогает, перейдите в Документы и удалите следующие файлы, если они существуют — harman_screentime_app_usage_box.hive и harman_screentime_app_usage.lock, также рекомендуется обновить приложение до последней версии.",
+  
+  "faqTroubleQ2": "Приложение открывается при каждом запуске, что делать?",
+  "faqTroubleA2": "Это известная проблема, которая возникает в Windows 10, временное решение — включить Запуск в свёрнутом виде в настройках, чтобы оно запускалось свёрнутым.",
+  
+  "usageAnalytics": "Аналитика использования",
+  "@usageAnalytics": {
+    "description": "Заголовок главной страницы раздела аналитики/отчётов"
+  },
+  
+  "last7Days": "Последние 7 дней",
+  "@last7Days": {
+    "description": "Опция периода времени — последние 7 дней"
+  },
+  
+  "lastMonth": "Последний месяц",
+  "@lastMonth": {
+    "description": "Опция периода времени — последний месяц"
+  },
+  
+  "last3Months": "Последние 3 месяца",
+  "@last3Months": {
+    "description": "Опция периода времени — последние 3 месяца"
+  },
+  
+  "lifetime": "За всё время",
+  "@lifetime": {
+    "description": "Опция периода времени — все доступные данные"
+  },
+  
+  "custom": "Пользовательский",
+  "@custom": {
+    "description": "Опция периода времени — пользовательский диапазон дат"
+  },
+  
+  "loadingAnalyticsData": "Загрузка аналитических данных...",
+  "@loadingAnalyticsData": {
+    "description": "Сообщение загрузки при получении аналитики"
+  },
+  
+  "tryAgain": "Попробовать снова",
+  "@tryAgain": {
+    "description": "Кнопка повтора после ошибки"
+  },
+  
+  "failedToInitialize": "Не удалось инициализировать аналитику. Пожалуйста, перезапустите приложение.",
+  "@failedToInitialize": {
+    "description": "Сообщение об ошибке при сбое запуска системы аналитики"
+  },
+  
+  "unexpectedError": "Произошла непредвиденная ошибка: {error}. Пожалуйста, попробуйте позже.",
+  "@unexpectedError": {
+    "description": "Общее сообщение об ошибке с деталями",
+    "placeholders": {
+      "error": {
+        "type": "String",
+        "example": "Тайм-аут соединения"
+      }
+    }
+  },
+  
+  "errorLoadingAnalytics": "Ошибка загрузки аналитических данных: {error}. Пожалуйста, проверьте подключение и попробуйте снова.",
+  "@errorLoadingAnalytics": {
+    "description": "Сообщение об ошибке при сбое загрузки аналитических данных",
+    "placeholders": {
+      "error": {
+        "type": "String",
+        "example": "Сетевая ошибка"
+      }
+    }
+  },
+  
+  "customDialogTitle": "Пользовательский",
+  "@customDialogTitle": {
+    "description": "Заголовок диалога выбора пользовательской даты"
+  },
+  
+  "dateRange": "Диапазон дат",
+  "@dateRange": {
+    "description": "Метка для режима выбора диапазона дат"
+  },
+  
+  "specificDate": "Конкретная дата",
+  "@specificDate": {
+    "description": "Метка для режима выбора одной даты"
+  },
+  
+  "startDate": "Дата начала: ",
+  "@startDate": {
+    "description": "Метка для выбора начальной даты"
+  },
+  
+  "endDate": "Дата окончания: ",
+  "@endDate": {
+    "description": "Метка для выбора конечной даты"
+  },
+  
+  "date": "Дата: ",
+  "@date": {
+    "description": "Метка для выбора одной даты"
+  },
+  
+  "cancel": "Отмена",
+  "@cancel": {
+    "description": "Текст кнопки отмены"
+  },
+  
+  "apply": "Применить",
+  "@apply": {
+    "description": "Текст кнопки применения/подтверждения"
+  },
+  
+  "ok": "ОК",
+  "@ok": {
+    "description": "Текст кнопки ОК"
+  },
+  
+  "invalidDateRange": "Недопустимый диапазон дат",
+  "@invalidDateRange": {
+    "description": "Заголовок диалога ошибки при неверном выборе даты"
+  },
+  
+  "startDateBeforeEndDate": "Дата начала должна быть раньше или равна дате окончания.",
+  "@startDateBeforeEndDate": {
+    "description": "Сообщение валидации для диапазона дат"
+  },
+  
+  "totalScreenTime": "Общее экранное время",
+  "@totalScreenTime": {
+    "description": "Заголовок блока аналитики для общего экранного времени"
+  },
+  
+  "productiveTime": "Продуктивное время",
+  "@productiveTime": {
+    "description": "Заголовок блока аналитики для продуктивного времени"
+  },
+  
+  "mostUsedApp": "Самое используемое приложение",
+  "@mostUsedApp": {
+    "description": "Заголовок блока аналитики для наиболее используемого приложения"
+  },
+  
+  "focusSessions": "Сессии фокусировки",
+  "@focusSessions": {
+    "description": "Заголовок блока аналитики для количества сессий фокусировки"
+  },
+  
+  "positiveComparison": "+{percent}% по сравнению с предыдущим периодом",
+  "@positiveComparison": {
+    "description": "Текст сравнения для положительного изменения",
+    "placeholders": {
+      "percent": {
+        "type": "String",
+        "example": "15.5"
+      }
+    }
+  },
+  
+  "negativeComparison": "{percent}% по сравнению с предыдущим периодом",
+  "@negativeComparison": {
+    "description": "Текст сравнения для отрицательного изменения",
+    "placeholders": {
+      "percent": {
+        "type": "String",
+        "example": "-12.3"
+      }
+    }
+  },
+  
+  "iconLabel": "Иконка {title}",
+  "@iconLabel": {
+    "description": "Метка доступности для иконок",
+    "placeholders": {
+      "title": {
+        "type": "String",
+        "example": "Общее экранное время"
+      }
+    }
+  },
+  
+  "dailyScreenTime": "Дневное экранное время",
+  "@dailyScreenTime": {
+    "description": "Заголовок графика дневного экранного времени"
+  },
+  
+  "categoryBreakdown": "Распределение по категориям",
+  "@categoryBreakdown": {
+    "description": "Заголовок круговой диаграммы распределения по категориям"
+  },
+  
+  "noDataAvailable": "Данные недоступны",
+  "@noDataAvailable": {
+    "description": "Сообщение пустого состояния при отсутствии данных"
+  },
+  
+  "sectionLabel": "Раздел {title}",
+  "@sectionLabel": {
+    "description": "Метка доступности для разделов",
+    "placeholders": {
+      "title": {
+        "type": "String",
+        "example": "Распределение по категориям"
+      }
+    }
+  },
+  
+  "detailedApplicationUsage": "Детальное использование приложений",
+  "@detailedApplicationUsage": {
+    "description": "Заголовок таблицы детального использования приложений"
+  },
+  
+  "searchApplications": "Поиск приложений",
+  "@searchApplications": {
+    "description": "Текст-заполнитель для поля поиска"
+  },
+  
+  "nameHeader": "Название",
+  "@nameHeader": {
+    "description": "Заголовок столбца таблицы для названия приложения"
+  },
+  
+  "categoryHeader": "Категория",
+  "@categoryHeader": {
+    "description": "Заголовок столбца таблицы для категории"
+  },
+  
+  "totalTimeHeader": "Общее время",
+  "@totalTimeHeader": {
+    "description": "Заголовок столбца таблицы для общего времени"
+  },
+  
+  "productivityHeader": "Продуктивность",
+  "@productivityHeader": {
+    "description": "Заголовок столбца таблицы для статуса продуктивности"
+  },
+  
+  "actionsHeader": "Действия",
+  "@actionsHeader": {
+    "description": "Заголовок столбца таблицы для кнопок действий"
+  },
+  
+  "sortByOption": "Сортировать по: {option}",
+  "@sortByOption": {
+    "description": "Текст опции выпадающего списка сортировки",
+    "placeholders": {
+      "option": {
+        "type": "String",
+        "example": "Название"
+      }
+    }
+  },
+  
+  "sortByName": "Название",
+  "@sortByName": {
+    "description": "Опция сортировки — по названию"
+  },
+  
+  "sortByCategory": "Категория",
+  "@sortByCategory": {
+    "description": "Опция сортировки — по категории"
+  },
+  
+  "sortByUsage": "Использование",
+  "@sortByUsage": {
+    "description": "Опция сортировки — по времени использования"
+  },
+  
+  "productive": "Продуктивное",
+  "@productive": {
+    "description": "Метка для продуктивных приложений"
+  },
+  
+  "nonProductive": "Непродуктивное",
+  "@nonProductive": {
+    "description": "Метка для непродуктивных приложений"
+  },
+  
+  "noApplicationsMatch": "Нет приложений, соответствующих критериям поиска",
+  "@noApplicationsMatch": {
+    "description": "Пустое состояние, когда поиск не возвращает результатов"
+  },
+  
+  "viewDetails": "Просмотр деталей",
+  "@viewDetails": {
+    "description": "Подсказка для кнопки просмотра деталей"
+  },
+  
+  "usageSummary": "Сводка использования",
+  "@usageSummary": {
+    "description": "Заголовок раздела в диалоге деталей приложения"
+  },
+  
+  "usageOverPastWeek": "Использование за прошлую неделю",
+  "@usageOverPastWeek": {
+    "description": "Заголовок раздела для графика недельного использования"
+  },
+  
+  "usagePatternByTimeOfDay": "Паттерн использования по времени суток",
+  "@usagePatternByTimeOfDay": {
+    "description": "Заголовок раздела для разбивки по времени суток"
+  },
+  
+  "patternAnalysis": "Анализ паттернов",
+  "@patternAnalysis": {
+    "description": "Заголовок раздела для инсайтов о паттернах использования"
+  },
+  
+  "today": "Сегодня",
+  "@today": {
+    "description": "Метка для сегодняшнего использования"
+  },
+  
+  "dailyLimit": "Дневной лимит",
+  "@dailyLimit": {
+    "description": "Метка для дневного лимита использования"
+  },
+  
+  "noLimit": "Без лимита",
+  "@noLimit": {
+    "description": "Текст, отображаемый при отсутствии лимита"
+  },
+  
+  "usageTrend": "Тренд использования",
+  "@usageTrend": {
+    "description": "Метка для индикатора тренда использования"
+  },
+  
+  "productivity": "Продуктивность",
+  "@productivity": {
+    "description": "Метка для статуса продуктивности"
+  },
+  
+  "increasing": "Растёт",
+  "@increasing": {
+    "description": "Метка тренда — использование растёт"
+  },
+  
+  "decreasing": "Снижается",
+  "@decreasing": {
+    "description": "Метка тренда — использование снижается"
+  },
+  
+  "stable": "Стабильно",
+  "@stable": {
+    "description": "Метка тренда — использование стабильно"
+  },
+  
+  "avgDailyUsage": "Среднее дневное использование",
+  "@avgDailyUsage": {
+    "description": "Метка карточки статистики для среднего дневного использования"
+  },
+  
+  "longestSession": "Самая длинная сессия",
+  "@longestSession": {
+    "description": "Метка карточки статистики для самой длинной сессии"
+  },
+  
+  "weeklyTotal": "Недельный итог",
+  "@weeklyTotal": {
+    "description": "Метка карточки статистики для недельного итога"
+  },
+  
+  "noHistoricalData": "Исторические данные недоступны",
+  "@noHistoricalData": {
+    "description": "Пустое состояние для графика без данных"
+  },
+  
+  "morning": "Утро (6-12)",
+  "@morning": {
+    "description": "Метка времени суток — утренние часы"
+  },
+  
+  "afternoon": "День (12-17)",
+  "@afternoon": {
+    "description": "Метка времени суток — дневные часы"
+  },
+  
+  "evening": "Вечер (17-21)",
+  "@evening": {
+    "description": "Метка времени суток — вечерние часы"
+  },
+  
+  "night": "Ночь (21-6)",
+  "@night": {
+    "description": "Метка времени суток — ночные часы"
+  },
+  
+  "usageInsights": "Инсайты использования",
+  "@usageInsights": {
+    "description": "Заголовок раздела для инсайтов использования"
+  },
+  
+  "limitStatus": "Статус лимита",
+  "@limitStatus": {
+    "description": "Заголовок раздела для статуса лимита"
+  },
+  
+  "close": "Закрыть",
+  "@close": {
+    "description": "Текст кнопки закрытия"
+  },
+  
+  "primaryUsageTime": "Вы преимущественно используете {appName} в {timeOfDay}.",
+  "@primaryUsageTime": {
+    "description": "Инсайт о преимущественном времени использования",
+    "placeholders": {
+      "appName": {
+        "type": "String",
+        "example": "Chrome"
+      },
+      "timeOfDay": {
+        "type": "String",
+        "example": "Вечер (17-21)"
+      }
+    }
+  },
+  
+  "significantIncrease": "Ваше использование значительно выросло ({percentage}%) по сравнению с предыдущим периодом.",
+  "@significantIncrease": {
+    "description": "Инсайт о значительном росте использования",
+    "placeholders": {
+      "percentage": {
+        "type": "String",
+        "example": "25.5"
+      }
+    }
+  },
+  
+  "trendingUpward": "Ваше использование имеет тенденцию к росту по сравнению с предыдущим периодом.",
+  "@trendingUpward": {
+    "description": "Инсайт о восходящем тренде использования"
+  },
+  
+  "significantDecrease": "Ваше использование значительно снизилось ({percentage}%) по сравнению с предыдущим периодом.",
+  "@significantDecrease": {
+    "description": "Инсайт о значительном снижении использования",
+    "placeholders": {
+      "percentage": {
+        "type": "String",
+        "example": "18.3"
+      }
+    }
+  },
+  
+  "trendingDownward": "Ваше использование имеет тенденцию к снижению по сравнению с предыдущим периодом.",
+  "@trendingDownward": {
+    "description": "Инсайт о нисходящем тренде использования"
+  },
+  
+  "consistentUsage": "Ваше использование было стабильным по сравнению с предыдущим периодом.",
+  "@consistentUsage": {
+    "description": "Инсайт о стабильном использовании"
+  },
+  
+  "markedAsProductive": "Это приложение отмечено как продуктивное в ваших настройках.",
+  "@markedAsProductive": {
+    "description": "Инсайт о статусе продуктивного приложения"
+  },
+  
+  "markedAsNonProductive": "Это приложение отмечено как непродуктивное в ваших настройках.",
+  "@markedAsNonProductive": {
+    "description": "Инсайт о статусе непродуктивного приложения"
+  },
+  
+  "mostActiveTime": "Ваше самое активное время — около {time}.",
+  "@mostActiveTime": {
+    "description": "Инсайт о самом активном часе",
+    "placeholders": {
+      "time": {
+        "type": "String",
+        "example": "15:00"
+      }
+    }
+  },
+  
+  "noLimitSet": "Лимит использования для этого приложения не установлен.",
+  "@noLimitSet": {
+    "description": "Сообщение при отсутствии настроенного лимита"
+  },
+  
+  "limitReached": "Вы достигли дневного лимита для этого приложения.",
+  "@limitReached": {
+    "description": "Сообщение при достижении лимита"
+  },
+  
+  "aboutToReachLimit": "Вы близки к достижению дневного лимита, осталось всего {remainingTime}.",
+  "@aboutToReachLimit": {
+    "description": "Предупреждение при приближении к лимиту",
+    "placeholders": {
+      "remainingTime": {
+        "type": "String",
+        "example": "15м"
+      }
+    }
+  },
+  
+  "percentOfLimitUsed": "Вы использовали {percent}% дневного лимита, осталось {remainingTime}.",
+  "@percentOfLimitUsed": {
+    "description": "Сообщение, показывающее процент использования",
+    "placeholders": {
+      "percent": {
+        "type": "int",
+        "example": "75"
+      },
+      "remainingTime": {
+        "type": "String",
+        "example": "1ч 30м"
+      }
+    }
+  },
+  
+  "remainingTime": "У вас осталось {time} от дневного лимита.",
+  "@remainingTime": {
+    "description": "Сообщение, показывающее оставшееся время",
+    "placeholders": {
+      "time": {
+        "type": "String",
+        "example": "2ч 45м"
+      }
+    }
+  },
+  
+  "todayChart": "Сегодня",
+  "@todayChart": {
+    "description": "Метка для сегодняшнего дня на графиках"
+  },
+  
+  "hourPeriodAM": "{hour} утра",
+  "@hourPeriodAM": {
+    "description": "Формат времени — утренние часы",
+    "placeholders": {
+      "hour": {
+        "type": "int",
+        "example": "9"
+      }
+    }
+  },
+  
+  "hourPeriodPM": "{hour} вечера",
+  "@hourPeriodPM": {
+    "description": "Формат времени — вечерние часы",
+    "placeholders": {
+      "hour": {
+        "type": "int",
+        "example": "3"
+      }
+    }
+  },
+  
+  "durationHoursMinutes": "{hours}ч {minutes}м",
+  "@durationHoursMinutes": {
+    "description": "Формат продолжительности с часами и минутами",
+    "placeholders": {
+      "hours": {
+        "type": "int",
+        "example": "5"
+      },
+      "minutes": {
+        "type": "int",
+        "example": "30"
+      }
+    }
+  },
+  
+  "durationMinutesOnly": "{minutes}м",
+  "@durationMinutesOnly": {
+    "description": "Формат продолжительности только с минутами",
+    "placeholders": {
+      "minutes": {
+        "type": "int",
+        "example": "45"
+      }
+    }
+  },
+  
+  "alertsLimitsTitle": "Оповещения и лимиты",
+  "notificationsSettings": "Настройки уведомлений",
+  "overallScreenTimeLimit": "Общий лимит экранного времени",
+  "applicationLimits": "Лимиты приложений",
+  
+  "popupAlerts": "Всплывающие оповещения",
+  "frequentAlerts": "Частые оповещения",
+  "soundAlerts": "Звуковые оповещения",
+  "systemAlerts": "Системные оповещения",
+  
+  "dailyTotalLimit": "Дневной общий лимит: ",
+  "hours": "Часы: ",
+  "minutes": "Минуты: ",
+  "currentUsage": "Текущее использование: ",
+  
+  "tableName": "Название",
+  "tableCategory": "Категория",
+  "tableDailyLimit": "Дневной лимит",
+  "tableCurrentUsage": "Текущее использование",
+  "tableStatus": "Статус",
+  "tableActions": "Действия",
+  
+  "addLimit": "Добавить лимит",
+  "noApplicationsToDisplay": "Нет приложений для отображения",
+  
+  "statusActive": "Активен",
+  "statusOff": "Выкл",
+  "durationNone": "Нет",
+  
+  "addApplicationLimit": "Добавить лимит приложения",
+  "selectApplication": "Выбрать приложение",
+  "selectApplicationPlaceholder": "Выберите приложение",
+  "enableLimit": "Включить лимит: ",
+  
+  "editLimitTitle": "Редактировать лимит: {appName}",
+  "@editLimitTitle": {
+    "placeholders": {
+      "appName": {"type": "String"}
+    }
+  },
+  
+  "failedToLoadData": "Не удалось загрузить данные: {error}",
+  "@failedToLoadData": {
+    "placeholders": {
+      "error": {"type": "String"}
+    }
+  },
+  
+  "resetSettingsTitle": "Сбросить настройки?",
+  "resetSettingsContent": "Если вы сбросите настройки, вы не сможете их восстановить. Вы хотите сбросить?",
+  "resetAll": "Сбросить всё",
+  "refresh": "Обновить",
+  "save": "Сохранить",
+  "add": "Добавить",
+  "error": "Ошибка",
+  "retry": "Повторить",
+  
+  "applicationsTitle": "Приложения",
+  "searchApplication": "Поиск приложения",
+  
+  "tracking": "Отслеживание",
+  "hiddenVisible": "Скрытые/Видимые",
+  "selectCategory": "Выберите категорию",
+  "allCategories": "Все",
+  
+  "tableScreenTime": "Экранное время",
+  "tableTracking": "Отслеживание",
+  "tableHidden": "Скрыто",
+  "tableEdit": "Редактировать",
+  
+  "editAppTitle": "Редактировать {appName}",
+  "@editAppTitle": {
+    "placeholders": {
+      "appName": {"type": "String"}
+    }
+  },
+  
+  "categorySection": "Категория",
+  "customCategory": "Пользовательская",
+  "customCategoryPlaceholder": "Введите название пользовательской категории",
+  "uncategorized": "Без категории",
+  
+  "isProductive": "Продуктивное",
+  "trackUsage": "Отслеживать использование",
+  "visibleInReports": "Видимое в отчётах",
+  
+  "timeLimitsSection": "Временные лимиты",
+  "enableDailyLimit": "Включить дневной лимит",
+  "setDailyTimeLimit": "Установить дневной лимит времени:",
+  
+  "saveChanges": "Сохранить изменения",
+  
+  "errorLoadingData": "Ошибка загрузки данных обзора: {error}",
+  "@errorLoadingData": {
+    "placeholders": {
+      "error": {"type": "String"}
+    }
+  },
+  
+  "focusModeTitle": "Режим фокусировки",
+  
+  "historySection": "История",
+  "trendsSection": "Тренды",
+  "timeDistributionSection": "Распределение времени",
+  "sessionHistorySection": "История сессий",
+  
+  "workSession": "Рабочая сессия",
+  "shortBreak": "Короткий перерыв",
+  "longBreak": "Длинный перерыв",
+  
+  "dateHeader": "Дата",
+  "durationHeader": "Продолжительность",
+  
+  "monday": "Понедельник",
+  "tuesday": "Вторник",
+  "wednesday": "Среда",
+  "thursday": "Четверг",
+  "friday": "Пятница",
+  "saturday": "Суббота",
+  "sunday": "Воскресенье",
+  
+  "focusModeSettingsTitle": "Настройки режима фокусировки",
+  
+  "modeCustom": "Пользовательский",
+  "modeDeepWork": "Глубокая работа (60 мин)",
+  "modeQuickTasks": "Быстрые задачи (25 мин)",
+  "modeReading": "Чтение (45 мин)",
+  
+  "workDurationLabel": "Продолжительность работы: {minutes} мин",
+  "@workDurationLabel": {
+    "placeholders": {
+      "minutes": {"type": "int"}
+    }
+  },
+  
+  "shortBreakLabel": "Короткий перерыв: {minutes} мин",
+  "@shortBreakLabel": {
+    "placeholders": {
+      "minutes": {"type": "int"}
+    }
+  },
+  
+  "longBreakLabel": "Длинный перерыв: {minutes} мин",
+  "@longBreakLabel": {
+    "placeholders": {
+      "minutes": {"type": "int"}
+    }
+  },
+  
+  "autoStartNextSession": "Автозапуск следующей сессии",
+  "blockDistractions": "Блокировать отвлечения во время режима фокусировки",
+  "enableNotifications": "Включить уведомления",
+  
+  "saved": "Сохранено",
+  
+  "errorLoadingFocusModeData": "Ошибка загрузки данных режима фокусировки: {error}",
+  "@errorLoadingFocusModeData": {
+    "placeholders": {
+      "error": {"type": "String"}
+    }
+  },
+  
+  "overviewTitle": "Обзор за сегодня",
+  "startFocusMode": "Запустить режим фокусировки",
+  
+  "loadingProductivityData": "Загрузка ваших данных продуктивности...",
+  "noActivityDataAvailable": "Данные об активности пока недоступны",
+  "startUsingApplications": "Начните использовать приложения для отслеживания экранного времени и продуктивности.",
+  "refreshData": "Обновить данные",
+  
+  "topApplications": "Топ приложений",
+  
+  "noAppUsageDataAvailable": "Данные об использовании приложений пока недоступны",
+  "noApplicationDataAvailable": "Данные о приложениях недоступны",
+  "noCategoryDataAvailable": "Данные о категориях недоступны",
+  "noApplicationLimitsSet": "Лимиты приложений не установлены",
+  
+  "screenLabel": "Экран",
+  "timeLabel": "Время",
+  "productiveLabel": "Продуктивное",
+  "scoreLabel": "Оценка",
+  
+  "defaultNone": "Нет",
+  "defaultTime": "0ч 0м",
+  "defaultCount": "0",
+  "unknownApp": "Неизвестно",
+  
+  "settingsTitle": "Настройки",
+  
+  "generalSection": "Общие",
+  "notificationsSection": "Уведомления",
+  "dataSection": "Данные",
+  "versionSection": "Версия",
+  
+  "themeTitle": "Тема",
+  "themeDescription": "Цветовая тема приложения (требуется перезапуск)",
+  
+  "languageTitle": "Язык",
+  "languageDescription": "Язык приложения",
+  
+  "startupBehaviourTitle": "Поведение при запуске",
+  "startupBehaviourDescription": "Запускать при старте ОС",
+  
+  "launchMinimizedTitle": "Запускать свёрнутым",
+  "launchMinimizedDescription": "Запускать приложение в системном трее (рекомендуется для Windows 10)",
+  
+  "notificationsTitle": "Уведомления",
+  "notificationsAllDescription": "Все уведомления приложения",
+  
+  "focusModeNotificationsTitle": "Режим фокусировки",
+  "focusModeNotificationsDescription": "Все уведомления для режима фокусировки",
+  
+  "screenTimeNotificationsTitle": "Экранное время",
+  "screenTimeNotificationsDescription": "Все уведомления для ограничения экранного времени",
+  
+  "appScreenTimeNotificationsTitle": "Экранное время приложений",
+  "appScreenTimeNotificationsDescription": "Все уведомления для ограничения экранного времени приложений",
+  
+  "frequentAlertsTitle": "Интервал частых оповещений",
+  "frequentAlertsDescription": "Установить интервал для частых уведомлений (минуты)",
+  
+  "clearDataTitle": "Очистить данные",
+  "clearDataDescription": "Очистить всю историю и связанные данные",
+  
+  "resetSettingsTitle2": "Сбросить настройки",
+  "resetSettingsDescription": "Сбросить все настройки",
+  
+  "versionTitle": "Версия",
+  "versionDescription": "Текущая версия приложения",
+  
+  "contactButton": "Связаться",
+  "reportBugButton": "Сообщить об ошибке",
+  "submitFeedbackButton": "Отправить отзыв",
+  "githubButton": "Github",
+  
+  "clearDataDialogTitle": "Очистить данные?",
+  "clearDataDialogContent": "Это очистит всю историю и связанные данные. Вы не сможете их восстановить. Вы хотите продолжить?",
+  "clearDataButtonLabel": "Очистить данные",
+  
+  "resetSettingsDialogTitle": "Сбросить настройки?",
+  "resetSettingsDialogContent": "Это сбросит все настройки к значениям по умолчанию. Вы хотите продолжить?",
+  "resetButtonLabel": "Сбросить",
+  
+  "cancelButton": "Отмена",
+  
+  "couldNotLaunchUrl": "Не удалось открыть {url}",
+  "@couldNotLaunchUrl": {
+    "placeholders": {
+      "url": {"type": "String"}
+    }
+  },
+  
+  "errorMessage": "Ошибка: {message}",
+  "@errorMessage": {
+    "placeholders": {
+      "message": {"type": "String"}
+    }
+  },
+
+  "chart_focusTrends": "Тренды фокусировки",
+  "@chart_focusTrends": {
+    "description": "Заголовок графика трендов фокусировки"
+  },
+  
+  "chart_sessionCount": "Количество сессий",
+  "@chart_sessionCount": {
+    "description": "Метка для метрики количества сессий"
+  },
+  
+  "chart_avgDuration": "Средняя продолжительность",
+  "@chart_avgDuration": {
+    "description": "Метка для метрики средней продолжительности"
+  },
+  
+  "chart_totalFocus": "Общее время фокусировки",
+  "@chart_totalFocus": {
+    "description": "Метка для метрики общего времени фокусировки"
+  },
+  
+  "chart_yAxis_sessions": "Сессии",
+  "@chart_yAxis_sessions": {
+    "description": "Метка оси Y для количества сессий"
+  },
+  
+  "chart_yAxis_minutes": "Минуты",
+  "@chart_yAxis_minutes": {
+    "description": "Метка оси Y для времени в минутах"
+  },
+  
+  "chart_yAxis_value": "Значение",
+  "@chart_yAxis_value": {
+    "description": "Общая метка оси Y"
+  },
+  
+  "chart_monthOverMonthChange": "Изменение по сравнению с прошлым месяцем: ",
+  "@chart_monthOverMonthChange": {
+    "description": "Метка для отображения процентного изменения"
+  },
+  
+  "chart_customRange": "Пользовательский диапазон",
+  "@chart_customRange": {
+    "description": "Метка для пользовательского диапазона дат"
+  },
+  
+  "day_monday": "Понедельник",
+  "day_mondayShort": "Пн",
+  "day_mondayAbbr": "Пн",
+  
+  "day_tuesday": "Вторник",
+  "day_tuesdayShort": "Вт",
+  "day_tuesdayAbbr": "Вт",
+  
+  "day_wednesday": "Среда",
+  "day_wednesdayShort": "Ср",
+  "day_wednesdayAbbr": "Ср",
+  
+  "day_thursday": "Четверг",
+  "day_thursdayShort": "Чт",
+  "day_thursdayAbbr": "Чт",
+  
+  "day_friday": "Пятница",
+  "day_fridayShort": "Пт",
+  "day_fridayAbbr": "Пт",
+  
+  "day_saturday": "Суббота",
+  "day_saturdayShort": "Сб",
+  "day_saturdayAbbr": "Сб",
+  
+  "day_sunday": "Воскресенье",
+  "day_sundayShort": "Вс",
+  "day_sundayAbbr": "Вс",
+  
+  "time_hours": "{count}ч",
+  "@time_hours": {
+    "description": "Формат часов",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  
+  "time_hoursMinutes": "{hours}ч {minutes}м",
+  "@time_hoursMinutes": {
+    "description": "Формат часов и минут",
+    "placeholders": {
+      "hours": {
+        "type": "int"
+      },
+      "minutes": {
+        "type": "int"
+      }
+    }
+  },
+  
+  "time_minutesFormat": "{count} мин",
+  "@time_minutesFormat": {
+    "description": "Формат минут для подсказок",
+    "placeholders": {
+      "count": {
+        "type": "String"
+      }
+    }
+  },
+  
+  "tooltip_dateScreenTime": "{date}: {hours}ч {minutes}м",
+  "@tooltip_dateScreenTime": {
+    "description": "Подсказка, показывающая дату и экранное время",
+    "placeholders": {
+      "date": {
+        "type": "String"
+      },
+      "hours": {
+        "type": "int"
+      },
+      "minutes": {
+        "type": "int"
+      }
+    }
+  },
+  
+  "tooltip_hoursFormat": "{count} часов",
+  "@tooltip_hoursFormat": {
+    "description": "Формат часов для резервной подсказки",
+    "placeholders": {
+      "count": {
+        "type": "String"
+      }
+    }
+  },
+  
+  "month_january": "Январь",
+  "month_januaryShort": "Янв",
+  "month_february": "Февраль",
+  "month_februaryShort": "Фев",
+  "month_march": "Март",
+  "month_marchShort": "Мар",
+  "month_april": "Апрель",
+  "month_aprilShort": "Апр",
+  "month_may": "Май",
+  "month_mayShort": "Май",
+  "month_june": "Июнь",
+  "month_juneShort": "Июн",
+  "month_july": "Июль",
+  "month_julyShort": "Июл",
+  "month_august": "Август",
+  "month_augustShort": "Авг",
+  "month_september": "Сентябрь",
+  "month_septemberShort": "Сен",
+  "month_october": "Октябрь",
+  "month_octoberShort": "Окт",
+  "month_november": "Ноябрь",
+  "month_novemberShort": "Ноя",
+  "month_december": "Декабрь",
+  "month_decemberShort": "Дек",
+  
+  "categoryAll": "Все",
+  "@categoryAll": {
+    "description": "Фильтр категорий для всех приложений"
+  },
+  "categoryProductivity": "Продуктивность",
+  "categoryDevelopment": "Разработка",
+  "categorySocialMedia": "Социальные сети",
+  "categoryEntertainment": "Развлечения",
+  "categoryGaming": "Игры",
+  "categoryCommunication": "Общение",
+  "categoryWebBrowsing": "Веб-сёрфинг",
+  "categoryCreative": "Творчество",
+  "categoryEducation": "Образование",
+  "categoryUtility": "Утилиты",
+  "categoryUncategorized": "Без категории",
+  
+  "appMicrosoftWord": "Microsoft Word",
+  "appExcel": "Excel",
+  "appPowerPoint": "PowerPoint",
+  "appGoogleDocs": "Google Документы",
+  "appNotion": "Notion",
+  "appEvernote": "Evernote",
+  "appTrello": "Trello",
+  "appAsana": "Asana",
+  "appSlack": "Slack",
+  "appMicrosoftTeams": "Microsoft Teams",
+  "appZoom": "Zoom",
+  "appGoogleCalendar": "Google Календарь",
+  "appAppleCalendar": "Календарь",
+  "appVisualStudioCode": "Visual Studio Code",
+  "appTerminal": "Терминал",
+  "appCommandPrompt": "Командная строка",
+  "appChrome": "Chrome",
+  "appFirefox": "Firefox",
+  "appSafari": "Safari",
+  "appEdge": "Edge",
+  "appOpera": "Opera",
+  "appBrave": "Brave",
+  "appNetflix": "Netflix",
+  "appYouTube": "YouTube",
+  "appSpotify": "Spotify",
+  "appAppleMusic": "Apple Music",
+  "appCalculator": "Калькулятор",
+  "appNotes": "Заметки",
+  "appSystemPreferences": "Системные настройки",
+  "appTaskManager": "Диспетчер задач",
+  "appFileExplorer": "Проводник",
+  "appDropbox": "Dropbox",
+  "appGoogleDrive": "Google Диск",
+  
+  "loadingApplication": "Загрузка приложения...",
+  "@loadingApplication": {
+    "description": "Сообщение, отображаемое при загрузке приложения"
+  },
+  "loadingData": "Загрузка данных...",
+  "@loadingData": {
+    "description": "Сообщение, отображаемое при загрузке данных"
+  },
+  "reportsError": "Ошибка",
+  "@reportsError": {
+    "description": "Метка для сообщений об ошибках"
+  },
+  "reportsRetry": "Повторить",
+  "@reportsRetry": {
+    "description": "Текст кнопки для повтора операции"
+  },
+  
+  "backupRestoreSection": "Резервное копирование и восстановление",
+  "backupRestoreTitle": "Резервное копирование и восстановление",
+  "exportDataTitle": "Экспорт данных",
+  "exportDataDescription": "Создать резервную копию всех ваших данных",
+  "importDataTitle": "Импорт данных",
+  "importDataDescription": "Восстановить из файла резервной копии",
+  "exportButton": "Экспорт",
+  "importButton": "Импорт",
+  "closeButton": "Закрыть",
+  "noButton": "Нет",
+  "shareButton": "Поделиться",
+  "exportStarting": "Начало экспорта...",
+  "exportSuccessful": "Экспорт успешен! Файл сохранён в Документы/TimeMark-Backups",
+  "exportFailed": "Ошибка экспорта",
+  "exportComplete": "Экспорт завершён",
+  "shareBackupQuestion": "Хотите поделиться файлом резервной копии?",
+  "importStarting": "Начало импорта...",
+  "importSuccessful": "Импорт успешен!",
+  "importFailed": "Ошибка импорта",
+  "importOptionsTitle": "Параметры импорта",
+  "importOptionsQuestion": "Как вы хотите импортировать данные?",
+  "replaceModeTitle": "Заменить",
+  "replaceModeDescription": "Заменить все существующие данные",
+  "mergeModeTitle": "Объединить",
+    "mergeModeDescription": "Объединить с существующими данными",
+  "appendModeTitle": "Добавить",
+  "appendModeDescription": "Добавить только новые записи",
+  "warningTitle": "⚠️ Предупреждение",
+  "replaceWarningMessage": "Это заменит ВСЕ ваши существующие данные. Вы уверены, что хотите продолжить?",
+  "replaceAllButton": "Заменить всё",
+  "fileLabel": "Файл",
+  "sizeLabel": "Размер",
+  "recordsLabel": "Записи",
+  "usageRecordsLabel": "Записи использования",
+  "focusSessionsLabel": "Сессии фокусировки",
+  "appMetadataLabel": "Метаданные приложений",
+  "updatedLabel": "Обновлено",
+  "skippedLabel": "Пропущено",
+  "faqSettingsQ4": "Как я могу восстановить или экспортировать свои данные?",
+  "faqSettingsA4": "Вы можете перейти в настройки, там вы найдёте раздел Резервное копирование и восстановление. Здесь вы можете экспортировать или импортировать данные. Обратите внимание, что экспортированный файл данных сохраняется в Документах в папке TimeMark-Backups, и только этот файл можно использовать для восстановления данных, никакой другой файл.",
+  "faqGeneralQ6": "Как я могу изменить язык и какие языки доступны, а также что делать, если я обнаружил неправильный перевод?",
+  "faqGeneralA6": "Язык можно изменить в разделе Настройки - Общие, все доступные языки перечислены там. Вы можете запросить перевод, нажав на Связаться и отправив свой запрос с указанием нужного языка. Имейте в виду, что перевод может быть неточным, так как он генерируется ИИ из английского, и если вы хотите сообщить об этом, вы можете сделать это через сообщение об ошибке, связаться с нами или, если вы разработчик, открыть issue на Github. Вклад в перевод также приветствуется!",
+  "faqGeneralQ7": "Что делать, если я обнаружил неправильный перевод?",
+  "faqGeneralA7": "Перевод может быть неточным, так как он генерируется ИИ из английского, и если вы хотите сообщить об этом, вы можете сделать это через сообщение об ошибке, связаться с нами или, если вы разработчик, открыть issue на Github. Вклад в перевод также приветствуется!"
+}

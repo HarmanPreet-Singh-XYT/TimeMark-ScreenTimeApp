@@ -163,9 +163,9 @@ class _SettingsContentState extends State<SettingsContent> {
     }
   }
   
-  final String urlContact = 'https://harmanita.com/details/screentime';
-  final String urlReport = 'https://harmanita.com/details/screentime';
-  final String urlFeedback = 'https://harmanita.com/details/screentime';
+  final String urlContact = 'https://harmanita.com/details/screentime?intent=contact';
+  final String urlReport = 'https://harmanita.com/details/screentime?intent=report';
+  final String urlFeedback = 'https://harmanita.com/details/screentime?intent=feedback';
   final String github = 'https://github.com/HarmanPreet-Singh-XYT/TimeMark-ScreenTimeApp';
   
   @override

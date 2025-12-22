@@ -1383,140 +1383,137 @@ class AppLocalizationsZh extends AppLocalizations {
   String get reportsRetry => '重试';
 
   @override
-  String get backupRestoreSection => 'Backup & Restore';
+  String get backupRestoreSection => '备份与恢复';
 
   @override
-  String get backupRestoreTitle => 'Backup & Restore';
+  String get backupRestoreTitle => '备份与恢复';
 
   @override
-  String get exportDataTitle => 'Export Data';
+  String get exportDataTitle => '导出数据';
 
   @override
-  String get exportDataDescription => 'Create a backup of all your data';
+  String get exportDataDescription => '创建所有数据的备份';
 
   @override
-  String get importDataTitle => 'Import Data';
+  String get importDataTitle => '导入数据';
 
   @override
-  String get importDataDescription => 'Restore from a backup file';
+  String get importDataDescription => '从备份文件恢复';
 
   @override
-  String get exportButton => 'Export';
+  String get exportButton => '导出';
 
   @override
-  String get importButton => 'Import';
+  String get importButton => '导入';
 
   @override
-  String get closeButton => 'Close';
+  String get closeButton => '关闭';
 
   @override
-  String get noButton => 'No';
+  String get noButton => '否';
 
   @override
-  String get shareButton => 'Share';
+  String get shareButton => '分享';
 
   @override
-  String get exportStarting => 'Starting export...';
+  String get exportStarting => '正在开始导出...';
 
   @override
-  String get exportSuccessful =>
-      'Export successful! File saved at Documents/TimeMark-Backups';
+  String get exportSuccessful => '导出成功！文件已保存至 Documents/TimeMark-Backups';
 
   @override
-  String get exportFailed => 'Export failed';
+  String get exportFailed => '导出失败';
 
   @override
-  String get exportComplete => 'Export Complete';
+  String get exportComplete => '导出完成';
 
   @override
-  String get shareBackupQuestion => 'Would you like to share the backup file?';
+  String get shareBackupQuestion => '您想分享备份文件吗？';
 
   @override
-  String get importStarting => 'Starting import...';
+  String get importStarting => '正在开始导入...';
 
   @override
-  String get importSuccessful => 'Import successful!';
+  String get importSuccessful => '导入成功！';
 
   @override
-  String get importFailed => 'Import failed';
+  String get importFailed => '导入失败';
 
   @override
-  String get importOptionsTitle => 'Import Options';
+  String get importOptionsTitle => '导入选项';
 
   @override
-  String get importOptionsQuestion => 'How would you like to import the data?';
+  String get importOptionsQuestion => '您想如何导入数据？';
 
   @override
-  String get replaceModeTitle => 'Replace';
+  String get replaceModeTitle => '替换';
 
   @override
-  String get replaceModeDescription => 'Replace all existing data';
+  String get replaceModeDescription => '替换所有现有数据';
 
   @override
-  String get mergeModeTitle => 'Merge';
+  String get mergeModeTitle => '合并';
 
   @override
-  String get mergeModeDescription => 'Combine with existing data';
+  String get mergeModeDescription => '与现有数据合并';
 
   @override
-  String get appendModeTitle => 'Append';
+  String get appendModeTitle => '追加';
 
   @override
-  String get appendModeDescription => 'Only add new records';
+  String get appendModeDescription => '仅添加新记录';
 
   @override
-  String get warningTitle => '⚠️ Warning';
+  String get warningTitle => '⚠️ 警告';
 
   @override
-  String get replaceWarningMessage =>
-      'This will replace ALL your existing data. Are you sure you want to continue?';
+  String get replaceWarningMessage => '这将替换您所有的现有数据。您确定要继续吗？';
 
   @override
-  String get replaceAllButton => 'Replace All';
+  String get replaceAllButton => '全部替换';
 
   @override
-  String get fileLabel => 'File';
+  String get fileLabel => '文件';
 
   @override
-  String get sizeLabel => 'Size';
+  String get sizeLabel => '大小';
 
   @override
-  String get recordsLabel => 'Records';
+  String get recordsLabel => '记录';
 
   @override
-  String get usageRecordsLabel => 'Usage records';
+  String get usageRecordsLabel => '使用记录';
 
   @override
-  String get focusSessionsLabel => 'Focus sessions';
+  String get focusSessionsLabel => '专注时段';
 
   @override
-  String get appMetadataLabel => 'App metadata';
+  String get appMetadataLabel => '应用元数据';
 
   @override
-  String get updatedLabel => 'Updated';
+  String get updatedLabel => '已更新';
 
   @override
-  String get skippedLabel => 'Skipped';
+  String get skippedLabel => '已跳过';
 
   @override
-  String get faqSettingsQ4 => 'How can i restore or export my data?';
+  String get faqSettingsQ4 => '我如何恢复或导出我的数据？';
 
   @override
   String get faqSettingsA4 =>
-      'You can go to settings, and there you\'ll find Backup & Restore section. You can export or import data from here, note that Exported data file is stored in Documents at TimeMark-Backups Folder and only this file can be used to restore data, no other file.';
+      '您可以进入设置，在那里您会找到备份与恢复部分。您可以在这里导出或导入数据。请注意，导出的数据文件存储在文档的 TimeMark-Backups 文件夹中，只有这个文件可以用于恢复数据，其他文件不可以。';
 
   @override
-  String get faqGeneralQ6 =>
-      'How can I change language and which languages are available, also what if I found that translation is wrong?';
+  String get faqGeneralQ6 => '我如何更改语言？有哪些可用的语言？如果我发现翻译有误怎么办？';
 
   @override
   String get faqGeneralA6 =>
-      'Language can be changed through Settings General section, all the available languages are listed there, you can request translation by clicking on Contact and sending your request with given language. Just know that translation can be wrong as It is generated by AI from English and if you want to report then either you can report through report bug, or contact, or if you are a developer then open issue on Github. Contributions regarding language are also welcome!';
+      '语言可以在设置的通用部分进行更改，所有可用的语言都列在那里。您可以点击联系并发送您的请求和所需语言来请求翻译。请注意，翻译可能存在错误，因为它是由人工智能从英语生成的。如果您想报告问题，可以通过报告错误、联系我们，或者如果您是开发者，可以在 Github 上提交问题。我们也欢迎关于语言的贡献！';
 
   @override
-  String get faqGeneralQ7 => 'What if I found that translation is wrong?';
+  String get faqGeneralQ7 => '如果我发现翻译有误怎么办？';
 
   @override
   String get faqGeneralA7 =>
-      'Translation can be wrong as It is Generated by AI from English and if you want to report then either you can report through report bug, or contact, or if you are a developer then open issue on Github. Contributions regarding language are also welcome!';
+      '翻译可能存在错误，因为它是由人工智能从英语生成的。如果您想报告问题，可以通过报告错误、联系我们，或者如果您是开发者，可以在 Github 上提交问题。我们也欢迎关于语言的贡献！';
 }
