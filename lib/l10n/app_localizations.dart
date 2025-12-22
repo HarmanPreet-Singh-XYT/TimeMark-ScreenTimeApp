@@ -2681,6 +2681,270 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Retry'**
   String get reportsRetry;
+
+  /// No description provided for @backupRestoreSection.
+  ///
+  /// In en, this message translates to:
+  /// **'Backup & Restore'**
+  String get backupRestoreSection;
+
+  /// No description provided for @backupRestoreTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Backup & Restore'**
+  String get backupRestoreTitle;
+
+  /// No description provided for @exportDataTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Export Data'**
+  String get exportDataTitle;
+
+  /// No description provided for @exportDataDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'Create a backup of all your data'**
+  String get exportDataDescription;
+
+  /// No description provided for @importDataTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Import Data'**
+  String get importDataTitle;
+
+  /// No description provided for @importDataDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'Restore from a backup file'**
+  String get importDataDescription;
+
+  /// No description provided for @exportButton.
+  ///
+  /// In en, this message translates to:
+  /// **'Export'**
+  String get exportButton;
+
+  /// No description provided for @importButton.
+  ///
+  /// In en, this message translates to:
+  /// **'Import'**
+  String get importButton;
+
+  /// No description provided for @closeButton.
+  ///
+  /// In en, this message translates to:
+  /// **'Close'**
+  String get closeButton;
+
+  /// No description provided for @noButton.
+  ///
+  /// In en, this message translates to:
+  /// **'No'**
+  String get noButton;
+
+  /// No description provided for @shareButton.
+  ///
+  /// In en, this message translates to:
+  /// **'Share'**
+  String get shareButton;
+
+  /// No description provided for @exportStarting.
+  ///
+  /// In en, this message translates to:
+  /// **'Starting export...'**
+  String get exportStarting;
+
+  /// No description provided for @exportSuccessful.
+  ///
+  /// In en, this message translates to:
+  /// **'Export successful! File saved at Documents/TimeMark-Backups'**
+  String get exportSuccessful;
+
+  /// No description provided for @exportFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Export failed'**
+  String get exportFailed;
+
+  /// No description provided for @exportComplete.
+  ///
+  /// In en, this message translates to:
+  /// **'Export Complete'**
+  String get exportComplete;
+
+  /// No description provided for @shareBackupQuestion.
+  ///
+  /// In en, this message translates to:
+  /// **'Would you like to share the backup file?'**
+  String get shareBackupQuestion;
+
+  /// No description provided for @importStarting.
+  ///
+  /// In en, this message translates to:
+  /// **'Starting import...'**
+  String get importStarting;
+
+  /// No description provided for @importSuccessful.
+  ///
+  /// In en, this message translates to:
+  /// **'Import successful!'**
+  String get importSuccessful;
+
+  /// No description provided for @importFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Import failed'**
+  String get importFailed;
+
+  /// No description provided for @importOptionsTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Import Options'**
+  String get importOptionsTitle;
+
+  /// No description provided for @importOptionsQuestion.
+  ///
+  /// In en, this message translates to:
+  /// **'How would you like to import the data?'**
+  String get importOptionsQuestion;
+
+  /// No description provided for @replaceModeTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Replace'**
+  String get replaceModeTitle;
+
+  /// No description provided for @replaceModeDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'Replace all existing data'**
+  String get replaceModeDescription;
+
+  /// No description provided for @mergeModeTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Merge'**
+  String get mergeModeTitle;
+
+  /// No description provided for @mergeModeDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'Combine with existing data'**
+  String get mergeModeDescription;
+
+  /// No description provided for @appendModeTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Append'**
+  String get appendModeTitle;
+
+  /// No description provided for @appendModeDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'Only add new records'**
+  String get appendModeDescription;
+
+  /// No description provided for @warningTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'⚠️ Warning'**
+  String get warningTitle;
+
+  /// No description provided for @replaceWarningMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'This will replace ALL your existing data. Are you sure you want to continue?'**
+  String get replaceWarningMessage;
+
+  /// No description provided for @replaceAllButton.
+  ///
+  /// In en, this message translates to:
+  /// **'Replace All'**
+  String get replaceAllButton;
+
+  /// No description provided for @fileLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'File'**
+  String get fileLabel;
+
+  /// No description provided for @sizeLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Size'**
+  String get sizeLabel;
+
+  /// No description provided for @recordsLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Records'**
+  String get recordsLabel;
+
+  /// No description provided for @usageRecordsLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Usage records'**
+  String get usageRecordsLabel;
+
+  /// No description provided for @focusSessionsLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Focus sessions'**
+  String get focusSessionsLabel;
+
+  /// No description provided for @appMetadataLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'App metadata'**
+  String get appMetadataLabel;
+
+  /// No description provided for @updatedLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Updated'**
+  String get updatedLabel;
+
+  /// No description provided for @skippedLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Skipped'**
+  String get skippedLabel;
+
+  /// No description provided for @faqSettingsQ4.
+  ///
+  /// In en, this message translates to:
+  /// **'How can i restore or export my data?'**
+  String get faqSettingsQ4;
+
+  /// No description provided for @faqSettingsA4.
+  ///
+  /// In en, this message translates to:
+  /// **'You can go to settings, and there you\'ll find Backup & Restore section. You can export or import data from here, note that Exported data file is stored in Documents at TimeMark-Backups Folder and only this file can be used to restore data, no other file.'**
+  String get faqSettingsA4;
+
+  /// No description provided for @faqGeneralQ6.
+  ///
+  /// In en, this message translates to:
+  /// **'How can I change language and which languages are available, also what if I found that translation is wrong?'**
+  String get faqGeneralQ6;
+
+  /// No description provided for @faqGeneralA6.
+  ///
+  /// In en, this message translates to:
+  /// **'Language can be changed through Settings General section, all the available languages are listed there, you can request translation by clicking on Contact and sending your request with given language. Just know that translation can be wrong as It is generated by AI from English and if you want to report then either you can report through report bug, or contact, or if you are a developer then open issue on Github. Contributions regarding language are also welcome!'**
+  String get faqGeneralA6;
+
+  /// No description provided for @faqGeneralQ7.
+  ///
+  /// In en, this message translates to:
+  /// **'What if I found that translation is wrong?'**
+  String get faqGeneralQ7;
+
+  /// No description provided for @faqGeneralA7.
+  ///
+  /// In en, this message translates to:
+  /// **'Translation can be wrong as It is Generated by AI from English and if you want to report then either you can report through report bug, or contact, or if you are a developer then open issue on Github. Contributions regarding language are also welcome!'**
+  String get faqGeneralA7;
 }
 
 class _AppLocalizationsDelegate

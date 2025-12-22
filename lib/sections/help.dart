@@ -32,6 +32,14 @@ class Help extends StatelessWidget {
           {
             "question": l10n.faqGeneralQ5,
             "answer": l10n.faqGeneralA5
+          },
+          {
+            "question": l10n.faqGeneralQ6,
+            "answer": l10n.faqGeneralA6
+          },
+          {
+            "question": l10n.faqGeneralQ7,
+            "answer": l10n.faqGeneralA7
           }
         ]
       },
@@ -134,6 +142,10 @@ class Help extends StatelessWidget {
           {
             "question": l10n.faqSettingsQ3,
             "answer": l10n.faqSettingsA3
+          },
+          {
+            "question": l10n.faqSettingsQ4,
+            "answer": l10n.faqSettingsA4
           }
         ]
       },

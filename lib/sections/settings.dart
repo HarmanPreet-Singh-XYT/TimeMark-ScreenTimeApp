@@ -2,6 +2,7 @@ import 'package:fluent_ui/fluent_ui.dart';
 import 'package:screentime/l10n/app_localizations.dart';
 import 'package:provider/provider.dart';
 import 'package:screentime/sections/controller/app_data_controller.dart';
+import 'UI sections/import_export_dialog.dart';
 import 'controller/settings_data_controller.dart';
 import 'package:url_launcher_platform_interface/url_launcher_platform_interface.dart';
 
@@ -184,6 +185,8 @@ class _SettingsContentState extends State<SettingsContent> {
             const NotificationSection(),
             const SizedBox(height: 30),
             const DataSection(),
+            const SizedBox(height: 30),
+            const BackupRestoreSection(),  // Add this line
             const SizedBox(height: 30),
             const AboutSection(),
             const SizedBox(height: 20),
