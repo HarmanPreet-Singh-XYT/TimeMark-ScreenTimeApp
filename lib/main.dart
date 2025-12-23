@@ -152,8 +152,10 @@ class _MyAppState extends State<MyApp> with TrayListener, WidgetsBindingObserver
     // Update background tracker with new locale (reloads localizations)
     await BackgroundAppTracker().updateLocale(locale.languageCode);
     
-    // Update tray menu with new locale
-    await _updateTrayMenu();
+    // Wait for the widget tree to rebuild with new locale before updating tray
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _updateTrayMenu();
+    });
     
     debugPrint('🌍 Locale changed to: ${locale.languageCode}');
   }
