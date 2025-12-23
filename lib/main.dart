@@ -17,14 +17,24 @@ import 'package:adaptive_theme/adaptive_theme.dart';
 import 'package:bitsdojo_window/bitsdojo_window.dart';
 import 'package:tray_manager/tray_manager.dart';
 import './sections/controller/application_controller.dart';
+import 'package:flutter_single_instance/flutter_single_instance.dart';
+import 'utils/single_instance_ipc.dart';
 
 void main(List<String> args) async {
   WidgetsFlutterBinding.ensureInitialized();
   final bool wasSystemLaunched = args.contains('--auto-launched');
+  final singleInstance = FlutterSingleInstance();
+
+  // SECOND INSTANCE → ask primary to show & exit
+  if (!await singleInstance.isFirstInstance()) {
+    await SingleInstanceIPC.requestShow();
+    exit(0);
+  }
+  await SingleInstanceIPC.startServer();
   await SettingsManager().init();
   final bool isMinimizeAtLaunch = await SettingsManager().getSetting("launchAsMinimized") ?? false;
   await NotificationController().initialize();
-  
+  await windowManager.ensureInitialized();
   // Get saved theme and locale preferences
   final String savedTheme = SettingsManager().getSetting("theme.selected") ?? "System";
   String? savedLocale = SettingsManager().getSetting("language.selected");
@@ -65,19 +75,22 @@ void main(List<String> args) async {
     savedLocale: savedLocale,
   ));
   
-  doWhenWindowReady(() {
-    final win = appWindow;
-    const initialSize = Size(1280, 800);
-    win.minSize = initialSize;
-    win.size = initialSize;
-    win.alignment = Alignment.center;
-    win.title = 'TimeMark - Track Screen Time & App Usage';
-    if(wasSystemLaunched || isMinimizeAtLaunch){
-      win.hide();
-    }else{
-      win.show();
-    }
-  });
+  doWhenWindowReady(() async {
+      final win = appWindow;
+
+      const initialSize = Size(1280, 800);
+      win.minSize = initialSize;
+      win.size = initialSize;
+      win.alignment = Alignment.center;
+      win.title = 'TimeMark - Track Screen Time & App Usage';
+
+      if(wasSystemLaunched || isMinimizeAtLaunch){
+        win.hide();
+      }else{
+        win.show();
+      }
+    });
+
 }
 
 // Global navigator key for accessing context outside widget tree

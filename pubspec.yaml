@@ -50,6 +50,7 @@ dependencies:
   window_manager: ^0.5.1
   synchronized: ^3.3.1
   flutter_localization: ^0.3.3
+  flutter_single_instance: ^1.7.0
   # launch_at_startup: ^0.4.0
 
   # Native Code Interaction for Foreground Window
@@ -87,7 +88,7 @@ msix_config:
     parameters: --auto-launched
   publisher_display_name: Harmanita
   identity_name: Harmanita.TimeMark-TrackScreenTimeAppUsage
-  msix_version: 1.2.0.0
+  msix_version: 1.2.1.0
   logo_path: C:\Code\TimeMark-ScreenTimeApp\assets\icons\tray_icon.png
   publisher: CN=5EB16640-AA72-4826-B8B0-95B5C4F31CF0
   store: true
