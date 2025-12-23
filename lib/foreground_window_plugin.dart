@@ -398,10 +398,10 @@ class ForegroundWindowPlugin {
   static const int errorSuccess = 0;
 
   static Future<WindowInfo> getForegroundWindowInfo() async {
-    return await compute(_getForegroundWindowInfoNative, null);
-  }
+      return await compute(_getForegroundWindowInfoNative, null);
+    }
 
-  static String _extractExecutableName(String fullPath) {
+    static String _extractExecutableName(String fullPath) {
     if (fullPath.isEmpty) return "Unknown";
     
     // Extract filename from path
@@ -410,10 +410,9 @@ class ForegroundWindowPlugin {
         ? fullPath.substring(lastSeparator + 1)
         : fullPath;
     
-    // Remove .exe extension if present
-    final dotPos = fileName.lastIndexOf('.exe');
-    if (dotPos != -1) {
-      fileName = fileName.substring(0, dotPos);
+    // Remove .exe extension if present (case-insensitive)
+    if (fileName.toLowerCase().endsWith('.exe')) {
+      fileName = fileName.substring(0, fileName.length - 4);
     }
     
     // Capitalize first letter
@@ -438,6 +437,18 @@ class ForegroundWindowPlugin {
     return fileName;
   }
 
+  static String _cleanProgramName(String name) {
+    if (name.isEmpty) return name;
+    
+    // Remove .exe extension if present (case-insensitive)
+    String cleaned = name;
+    if (cleaned.toLowerCase().endsWith('.exe')) {
+      cleaned = cleaned.substring(0, cleaned.length - 4);
+    }
+    
+    return cleaned;
+  }
+
   static String _getProgramNameFromVersionInfo(String fullPath) {
     if (fullPath.isEmpty || fullPath == "Unknown") return fullPath;
     
@@ -453,18 +464,19 @@ class ForegroundWindowPlugin {
       final versionInfoPtr = calloc<Uint8>(versionInfoSize);
       final result = _getFileVersionInfoA(pathPtr, 0, versionInfoSize, versionInfoPtr.cast());
       if (result == 0) {
+        calloc.free(versionInfoPtr);
         return _extractExecutableName(fullPath);
       }
       
       // Try common language codes for FileDescription or ProductName
       final languageCodes = [
-        "\\StringFileInfo\\040904B0\\", // English US
-        "\\StringFileInfo\\040904E4\\", // English US
-        "\\StringFileInfo\\080404B0\\", // Chinese PRC
-        "\\StringFileInfo\\040704B0\\", // German
-        "\\StringFileInfo\\040C04B0\\", // French
-        "\\StringFileInfo\\041904B0\\", // Russian
-        "\\StringFileInfo\\040A04B0\\", // Spanish
+        "\\StringFileInfo\\040904B0", // English US
+        "\\StringFileInfo\\040904E4", // English US
+        "\\StringFileInfo\\080404B0", // Chinese PRC
+        "\\StringFileInfo\\040704B0", // German
+        "\\StringFileInfo\\040C04B0", // French
+        "\\StringFileInfo\\041904B0", // Russian
+        "\\StringFileInfo\\040A04B0", // Spanish
       ];
       
       for (final langCode in languageCodes) {
@@ -477,7 +489,9 @@ class ForegroundWindowPlugin {
         try {
           if (_verQueryValueA(versionInfoPtr.cast(), fileDescPathPtr, bufferPtr, lengthPtr) != 0 && 
               lengthPtr.value > 0) {
-            return bufferPtr.value.cast<Utf8>().toDartString();
+            final programName = bufferPtr.value.cast<Utf8>().toDartString();
+            calloc.free(versionInfoPtr);
+            return _cleanProgramName(programName);
           }
         } finally {
           calloc.free(fileDescPathPtr);
@@ -494,7 +508,9 @@ class ForegroundWindowPlugin {
         try {
           if (_verQueryValueA(versionInfoPtr.cast(), productNamePathPtr, pBufferPtr, pLengthPtr) != 0 && 
               pLengthPtr.value > 0) {
-            return pBufferPtr.value.cast<Utf8>().toDartString();
+            final programName = pBufferPtr.value.cast<Utf8>().toDartString();
+            calloc.free(versionInfoPtr);
+            return _cleanProgramName(programName);
           }
         } finally {
           calloc.free(productNamePathPtr);
@@ -503,6 +519,9 @@ class ForegroundWindowPlugin {
         }
       }
       
+      calloc.free(versionInfoPtr);
+      return _extractExecutableName(fullPath);
+    } catch (e) {
       return _extractExecutableName(fullPath);
     } finally {
       calloc.free(pathPtr);
