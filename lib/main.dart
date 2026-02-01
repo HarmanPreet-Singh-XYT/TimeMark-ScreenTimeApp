@@ -32,13 +32,15 @@ void main(List<String> args) async {
   }
   await SingleInstanceIPC.startServer();
   await SettingsManager().init();
-  final bool isMinimizeAtLaunch = await SettingsManager().getSetting("launchAsMinimized") ?? false;
+  final bool isMinimizeAtLaunch =
+      await SettingsManager().getSetting("launchAsMinimized") ?? false;
   await NotificationController().initialize();
   await windowManager.ensureInitialized();
   // Get saved theme and locale preferences
-  final String savedTheme = SettingsManager().getSetting("theme.selected") ?? "System";
+  final String savedTheme =
+      SettingsManager().getSetting("theme.selected") ?? "System";
   String? savedLocale = SettingsManager().getSetting("language.selected");
-  
+
   // Auto-detect system locale if no saved preference exists
   if (savedLocale == null) {
     savedLocale = _detectSystemLocale();
@@ -51,7 +53,7 @@ void main(List<String> args) async {
       savedLocale = LanguageOptions.defaultLanguage;
     }
   }
-  
+
   final AdaptiveThemeMode initialTheme;
   switch (savedTheme) {
     case "Dark":
@@ -65,32 +67,31 @@ void main(List<String> args) async {
       initialTheme = AdaptiveThemeMode.system;
       break;
   }
-  
+
   // Initialize tracker with locale (loads localizations internally)
   final tracker = BackgroundAppTracker();
   await tracker.initializeTracking(locale: savedLocale);
-  
+
   runApp(MyApp(
     initialTheme: initialTheme,
     savedLocale: savedLocale,
   ));
-  
+
   doWhenWindowReady(() async {
-      final win = appWindow;
+    final win = appWindow;
 
-      const initialSize = Size(1280, 800);
-      win.minSize = initialSize;
-      win.size = initialSize;
-      win.alignment = Alignment.center;
-      win.title = 'TimeMark - Track Screen Time & App Usage';
+    const initialSize = Size(1280, 800);
+    win.minSize = initialSize;
+    win.size = initialSize;
+    win.alignment = Alignment.center;
+    win.title = 'TimeMark - Track Screen Time & App Usage';
 
-      if(wasSystemLaunched || isMinimizeAtLaunch){
-        win.hide();
-      }else{
-        win.show();
-      }
-    });
-
+    if (wasSystemLaunched || isMinimizeAtLaunch) {
+      win.hide();
+    } else {
+      win.show();
+    }
+  });
 }
 
 // Global navigator key for accessing context outside widget tree
@@ -100,18 +101,19 @@ final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 String? _detectSystemLocale() {
   try {
     // Get the system locale
-    final String systemLocale = Platform.localeName; // e.g., "en_US", "zh_CN", "es_ES"
-    
+    final String systemLocale =
+        Platform.localeName; // e.g., "en_US", "zh_CN", "es_ES"
+
     // Extract language code (before underscore)
     final String languageCode = systemLocale.split('_').first.toLowerCase();
-    
-    debugPrint('🔍 System locale detected: $systemLocale (language: $languageCode)');
-    
+
+    debugPrint(
+        '🔍 System locale detected: $systemLocale (language: $languageCode)');
+
     // Check if the language is supported
-    final bool isSupported = LanguageOptions.available.any(
-      (lang) => lang['code'] == languageCode
-    );
-    
+    final bool isSupported =
+        LanguageOptions.available.any((lang) => lang['code'] == languageCode);
+
     if (isSupported) {
       debugPrint('✅ Language $languageCode is supported');
       return languageCode;
@@ -125,13 +127,12 @@ String? _detectSystemLocale() {
   }
 }
 
-
 class MyApp extends StatefulWidget {
   final AdaptiveThemeMode initialTheme;
   final String? savedLocale;
-  
+
   const MyApp({
-    super.key, 
+    super.key,
     this.initialTheme = AdaptiveThemeMode.system,
     this.savedLocale,
   });
@@ -140,15 +141,16 @@ class MyApp extends StatefulWidget {
   State<MyApp> createState() => _MyAppState();
 }
 
-class _MyAppState extends State<MyApp> with TrayListener, WidgetsBindingObserver {
+class _MyAppState extends State<MyApp>
+    with TrayListener, WidgetsBindingObserver {
   bool notificationsEnabled = true;
   final String appVersion = "v${SettingsManager().versionInfo["version"]}";
   bool focusMode = false;
   int selectedIndex = 0;
   final AppDataStore _dataStore = AppDataStore();
   Locale? _locale;
-  
-  void changeIndex(int value){
+
+  void changeIndex(int value) {
     setState(() {
       selectedIndex = value;
     });
@@ -158,18 +160,18 @@ class _MyAppState extends State<MyApp> with TrayListener, WidgetsBindingObserver
     setState(() {
       _locale = locale;
     });
-    
+
     // Update settings
     SettingsManager().updateSetting("language.selected", locale.languageCode);
-    
+
     // Update background tracker with new locale (reloads localizations)
     await BackgroundAppTracker().updateLocale(locale.languageCode);
-    
+
     // Wait for the widget tree to rebuild with new locale before updating tray
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _updateTrayMenu();
     });
-    
+
     debugPrint('🌍 Locale changed to: ${locale.languageCode}');
   }
 
@@ -180,22 +182,22 @@ class _MyAppState extends State<MyApp> with TrayListener, WidgetsBindingObserver
     _initDataStore();
     _initTray();
     trayManager.addListener(this);
-    
+
     // Initialize locale from saved preference
     if (widget.savedLocale != null) {
       _locale = Locale(widget.savedLocale!);
     }
   }
-  
+
   Future<void> _initDataStore() async {
     await _dataStore.init();
   }
-  
+
   Future<void> _initTray() async {
     await trayManager.setIcon(
       Platform.isWindows
-        ? 'assets/icons/tray_icon.ico'
-        : 'assets/icons/tray_icon.png',
+          ? 'assets/icons/tray_icon.ico'
+          : 'assets/icons/tray_icon.png',
     );
     await trayManager.setToolTip("TimeMark");
     await _updateTrayMenu();
@@ -205,25 +207,29 @@ class _MyAppState extends State<MyApp> with TrayListener, WidgetsBindingObserver
     // Get the current context to access localizations
     final context = navigatorKey.currentContext;
     if (context == null) return;
-    
+
     final l10n = AppLocalizations.of(context)!;
-    
+
     await trayManager.setContextMenu(
       Menu(items: [
         MenuItem(label: l10n.trayShowWindow, onClick: (_) => _showApp()),
         MenuItem.separator(),
         MenuItem(label: l10n.navReports, onClick: (_) => _openReports()),
         MenuItem(label: l10n.navAlertsLimits, onClick: (_) => _openAlerts()),
-        MenuItem(label: l10n.navApplications, onClick: (_) => _openApplications()),
+        MenuItem(
+            label: l10n.navApplications, onClick: (_) => _openApplications()),
         MenuItem.separator(),
-        MenuItem(disabled:true, label: l10n.trayVersion(appVersion), checked: false),
+        MenuItem(
+            disabled: true,
+            label: l10n.trayVersion(appVersion),
+            checked: false),
         MenuItem.separator(),
         MenuItem(label: l10n.trayExit, onClick: (_) => _exitApp()),
       ]),
     );
   }
 
-  void _showApp(){
+  void _showApp() {
     appWindow.show();
   }
 
@@ -232,11 +238,11 @@ class _MyAppState extends State<MyApp> with TrayListener, WidgetsBindingObserver
   }
 
   void _openReports() {
-    if(!appWindow.isVisible){
+    if (!appWindow.isVisible) {
       changeIndex(3);
       appWindow.show();
       setState(() {});
-    }else{
+    } else {
       setState(() {
         changeIndex(3);
       });
@@ -244,11 +250,11 @@ class _MyAppState extends State<MyApp> with TrayListener, WidgetsBindingObserver
   }
 
   void _openAlerts() {
-    if(!appWindow.isVisible){
+    if (!appWindow.isVisible) {
       changeIndex(2);
       appWindow.show();
       setState(() {});
-    }else{
+    } else {
       setState(() {
         changeIndex(2);
       });
@@ -256,11 +262,11 @@ class _MyAppState extends State<MyApp> with TrayListener, WidgetsBindingObserver
   }
 
   void _openApplications() {
-    if(!appWindow.isVisible){
+    if (!appWindow.isVisible) {
       changeIndex(1);
       appWindow.show();
       setState(() {});
-    }else{
+    } else {
       setState(() {
         changeIndex(1);
       });
@@ -278,7 +284,7 @@ class _MyAppState extends State<MyApp> with TrayListener, WidgetsBindingObserver
   void onTrayIconMouseDown() {
     appWindow.show();
   }
-  
+
   @override
   void onTrayIconRightMouseDown() {
     trayManager.popUpContextMenu();
@@ -288,9 +294,9 @@ class _MyAppState extends State<MyApp> with TrayListener, WidgetsBindingObserver
   void onTrayMenuItemClick(MenuItem menuItem) {
     final context = navigatorKey.currentContext;
     if (context == null) return;
-    
+
     final l10n = AppLocalizations.of(context)!;
-    
+
     if (menuItem.label == l10n.trayShowWindow) {
       appWindow.show();
     } else if (menuItem.label == l10n.trayExit) {
@@ -316,12 +322,12 @@ class _MyAppState extends State<MyApp> with TrayListener, WidgetsBindingObserver
     trayManager.removeListener(this);
     super.dispose();
   }
-  
+
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
     _dataStore.handleAppLifecycleState(state);
   }
-  
+
   @override
   Widget build(BuildContext context) {
     return FluentAdaptiveTheme(
@@ -329,8 +335,7 @@ class _MyAppState extends State<MyApp> with TrayListener, WidgetsBindingObserver
       dark: FluentThemeData(
           brightness: Brightness.dark,
           cardColor: const Color(0xff202020),
-          scaffoldBackgroundColor: const Color.fromARGB(255, 20, 20, 20)
-      ),
+          scaffoldBackgroundColor: const Color.fromARGB(255, 20, 20, 20)),
       initial: widget.initialTheme,
       builder: (theme, darkTheme) => FluentApp(
         title: 'Productive ScreenTime',
@@ -342,7 +347,7 @@ class _MyAppState extends State<MyApp> with TrayListener, WidgetsBindingObserver
         supportedLocales: AppLocalizations.supportedLocales,
         locale: _locale,
         home: HomePage(
-          selectedIndex: selectedIndex, 
+          selectedIndex: selectedIndex,
           changeIndex: changeIndex,
           setLocale: setLocale,
         ),
@@ -351,12 +356,11 @@ class _MyAppState extends State<MyApp> with TrayListener, WidgetsBindingObserver
   }
 }
 
-
 class HomePage extends StatefulWidget {
   final int selectedIndex;
   final Function(int) changeIndex;
   final Function(Locale) setLocale;
-  
+
   const HomePage({
     super.key,
     required this.selectedIndex,
@@ -374,41 +378,48 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
-    
+
     List<NavigationPaneItem> items = [
       PaneItem(
         icon: const Icon(FluentIcons.home, size: 20),
-        title: Text(l10n.navOverview, style: const TextStyle(fontWeight: FontWeight.w500)),
+        title: Text(l10n.navOverview,
+            style: const TextStyle(fontWeight: FontWeight.w500)),
         body: const Overview(),
       ),
       PaneItem(
         icon: const Icon(FluentIcons.app_icon_default_list, size: 20),
-        title: Text(l10n.navApplications, style: const TextStyle(fontWeight: FontWeight.w500)),
+        title: Text(l10n.navApplications,
+            style: const TextStyle(fontWeight: FontWeight.w500)),
         body: const Applications(),
       ),
       PaneItem(
         icon: const Icon(FluentIcons.alert_settings, size: 20),
-        title: Text(l10n.navAlertsLimits, style: const TextStyle(fontWeight: FontWeight.w500)),
+        title: Text(l10n.navAlertsLimits,
+            style: const TextStyle(fontWeight: FontWeight.w500)),
         body: const AlertsLimits(),
       ),
       PaneItem(
         icon: const Icon(FluentIcons.analytics_report, size: 20),
-        title: Text(l10n.navReports, style: const TextStyle(fontWeight: FontWeight.w500)),
+        title: Text(l10n.navReports,
+            style: const TextStyle(fontWeight: FontWeight.w500)),
         body: const Reports(),
       ),
       PaneItem(
         icon: const Icon(FluentIcons.red_eye, size: 20),
-        title: Text(l10n.navFocusMode, style: const TextStyle(fontWeight: FontWeight.w500)),
+        title: Text(l10n.navFocusMode,
+            style: const TextStyle(fontWeight: FontWeight.w500)),
         body: const FocusMode(),
       ),
       PaneItem(
         icon: const Icon(FluentIcons.settings, size: 20),
-        title: Text(l10n.navSettings, style: const TextStyle(fontWeight: FontWeight.w500)),
+        title: Text(l10n.navSettings,
+            style: const TextStyle(fontWeight: FontWeight.w500)),
         body: Settings(setLocale: widget.setLocale),
       ),
       PaneItem(
         icon: const Icon(FluentIcons.chat_bot, size: 20),
-        title: Text(l10n.navHelp, style: const TextStyle(fontWeight: FontWeight.w500)),
+        title: Text(l10n.navHelp,
+            style: const TextStyle(fontWeight: FontWeight.w500)),
         body: const Help(),
       ),
     ];
@@ -436,7 +447,7 @@ class _HomePageState extends State<HomePage> {
 
   Widget _buildSidebarHeader(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
-    
+
     return Padding(
       padding: const EdgeInsets.all(12),
       child: Column(
@@ -468,8 +479,12 @@ class TitleBar extends StatelessWidget {
   Widget build(BuildContext context) {
     final isDarkMode = FluentTheme.of(context).brightness == Brightness.dark;
     final l10n = AppLocalizations.of(context)!;
-    final Color backgroundColor = FluentTheme.of(context).micaBackgroundColor;
-    final Color textColor = isDarkMode ? Colors.white : const Color.fromARGB(255, 20, 20, 20);
+    final backgroundColor = FluentTheme.of(context).micaBackgroundColor;
+
+    final textColor =
+        isDarkMode ? Colors.white : const Color.fromARGB(255, 20, 20, 20);
+
+    final isMacOS = Platform.isMacOS;
 
     return WindowTitleBarBox(
       child: Container(
@@ -480,18 +495,17 @@ class TitleBar extends StatelessWidget {
               child: MoveWindow(
                 child: Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 10),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Text(
-                        l10n.appTitle,
-                        style: FluentTheme.of(context).typography.body?.copyWith(
-                              fontSize: 14,
-                              fontWeight: FontWeight.w500,
-                              color: textColor,
-                            ),
-                      ),
-                    ],
+                  child: Align(
+                    alignment:
+                        isMacOS ? Alignment.center : Alignment.centerLeft,
+                    child: Text(
+                      l10n.appTitle,
+                      style: FluentTheme.of(context).typography.body?.copyWith(
+                            fontSize: 14,
+                            fontWeight: FontWeight.w500,
+                            color: textColor,
+                          ),
+                    ),
                   ),
                 ),
               ),
