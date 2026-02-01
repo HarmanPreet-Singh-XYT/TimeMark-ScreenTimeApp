@@ -70,10 +70,10 @@ flutter:
   uses-material-design: true
   assets:
     - assets/icons/
-  plugin:
-    platforms:
-      macos:
-        pluginClass: ForegroundWindowPlugin
+  # plugin:
+  #   platforms:
+  #     macos:
+  #       pluginClass: ForegroundWindowPlugin
    # Add more assets as needed
   # plugin:
   #   platforms:
