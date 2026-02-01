@@ -1560,4 +1560,135 @@ class AppLocalizationsBn extends AppLocalizations {
   @override
   String get faqGeneralA7 =>
       'অনুবাদ ভুল হতে পারে কারণ এটি ইংরেজি থেকে AI দ্বারা তৈরি করা হয়েছে এবং আপনি যদি রিপোর্ট করতে চান তবে আপনি বাগ রিপোর্ট, বা যোগাযোগের মাধ্যমে রিপোর্ট করতে পারেন, অথবা আপনি যদি একজন ডেভেলপার হন তবে গিটহাবে ইস্যু খুলুন। ভাষা সম্পর্কিত অবদানও স্বাগত!';
+
+  @override
+  String get activityTrackingSection => 'কার্যকলাপ ট্র্যাকিং';
+
+  @override
+  String get idleDetectionTitle => 'নিষ্ক্রিয় সনাক্তকরণ';
+
+  @override
+  String get idleDetectionDescription => 'নিষ্ক্রিয় থাকলে ট্র্যাকিং বন্ধ করুন';
+
+  @override
+  String get idleTimeoutTitle => 'নিষ্ক্রিয় সময়সীমা';
+
+  @override
+  String idleTimeoutDescription(String timeout) {
+    return 'নিষ্ক্রিয় বিবেচনা করার আগে সময় ($timeout)';
+  }
+
+  @override
+  String get advancedWarning =>
+      'উন্নত বৈশিষ্ট্যগুলি সম্পদের ব্যবহার বাড়াতে পারে। শুধুমাত্র প্রয়োজন হলে সক্ষম করুন।';
+
+  @override
+  String get monitorAudioTitle => 'সিস্টেম অডিও মনিটর করুন';
+
+  @override
+  String get monitorAudioDescription =>
+      'অডিও প্লেব্যাক থেকে কার্যকলাপ সনাক্ত করুন';
+
+  @override
+  String get audioSensitivityTitle => 'অডিও সংবেদনশীলতা';
+
+  @override
+  String audioSensitivityDescription(String value) {
+    return 'সনাক্তকরণ থ্রেশহোল্ড ($value)';
+  }
+
+  @override
+  String get monitorControllersTitle => 'গেম কন্ট্রোলার মনিটর করুন';
+
+  @override
+  String get monitorControllersDescription =>
+      'Xbox/XInput কন্ট্রোলার সনাক্ত করুন';
+
+  @override
+  String get monitorHIDTitle => 'HID ডিভাইস মনিটর করুন';
+
+  @override
+  String get monitorHIDDescription =>
+      'হুইল, ট্যাবলেট, কাস্টম ডিভাইস সনাক্ত করুন';
+
+  @override
+  String get setIdleTimeoutTitle => 'নিষ্ক্রিয় সময়সীমা সেট করুন';
+
+  @override
+  String get idleTimeoutDialogDescription =>
+      'আপনাকে নিষ্ক্রিয় বিবেচনা করার আগে কতক্ষণ অপেক্ষা করতে হবে তা চয়ন করুন:';
+
+  @override
+  String get seconds30 => '30 সেকেন্ড';
+
+  @override
+  String get minute1 => '1 মিনিট';
+
+  @override
+  String get minutes2 => '2 মিনিট';
+
+  @override
+  String get minutes5 => '5 মিনিট';
+
+  @override
+  String get minutes10 => '10 মিনিট';
+
+  @override
+  String get customOption => 'কাস্টম';
+
+  @override
+  String get customDurationTitle => 'কাস্টম সময়কাল';
+
+  @override
+  String get minutesLabel => 'মিনিট';
+
+  @override
+  String get secondsLabel => 'সেকেন্ড';
+
+  @override
+  String get minAbbreviation => 'মি';
+
+  @override
+  String get secAbbreviation => 'সে';
+
+  @override
+  String totalLabel(String duration) {
+    return 'মোট: $duration';
+  }
+
+  @override
+  String minimumError(String value) {
+    return 'সর্বনিম্ন হল $value';
+  }
+
+  @override
+  String maximumError(String value) {
+    return 'সর্বোচ্চ হল $value';
+  }
+
+  @override
+  String rangeInfo(String min, String max) {
+    return 'পরিসীমা: $min - $max';
+  }
+
+  @override
+  String get saveButton => 'সংরক্ষণ করুন';
+
+  @override
+  String timeFormatSeconds(int seconds) {
+    return '$secondsসে';
+  }
+
+  @override
+  String get timeFormatMinute => '1 মিনিট';
+
+  @override
+  String timeFormatMinutes(int minutes) {
+    return '$minutes মিনিট';
+  }
+
+  @override
+  String timeFormatMinutesSeconds(int minutes, int seconds) {
+    return '$minutes মি $secondsসে';
+  }
 }

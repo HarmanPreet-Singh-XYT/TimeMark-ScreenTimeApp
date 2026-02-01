@@ -1564,4 +1564,136 @@ class AppLocalizationsRu extends AppLocalizations {
   @override
   String get faqGeneralA7 =>
       'Перевод может быть неточным, так как он генерируется ИИ из английского, и если вы хотите сообщить об этом, вы можете сделать это через сообщение об ошибке, связаться с нами или, если вы разработчик, открыть issue на Github. Вклад в перевод также приветствуется!';
+
+  @override
+  String get activityTrackingSection => 'Отслеживание Активности';
+
+  @override
+  String get idleDetectionTitle => 'Обнаружение Бездействия';
+
+  @override
+  String get idleDetectionDescription =>
+      'Прекратить отслеживание при неактивности';
+
+  @override
+  String get idleTimeoutTitle => 'Тайм-аут Бездействия';
+
+  @override
+  String idleTimeoutDescription(String timeout) {
+    return 'Время до признания бездействующим ($timeout)';
+  }
+
+  @override
+  String get advancedWarning =>
+      'Расширенные функции могут увеличить использование ресурсов. Включайте только при необходимости.';
+
+  @override
+  String get monitorAudioTitle => 'Мониторинг Системного Звука';
+
+  @override
+  String get monitorAudioDescription =>
+      'Обнаружение активности по воспроизведению звука';
+
+  @override
+  String get audioSensitivityTitle => 'Чувствительность Звука';
+
+  @override
+  String audioSensitivityDescription(String value) {
+    return 'Порог обнаружения ($value)';
+  }
+
+  @override
+  String get monitorControllersTitle => 'Мониторинг Игровых Контроллеров';
+
+  @override
+  String get monitorControllersDescription =>
+      'Обнаружение контроллеров Xbox/XInput';
+
+  @override
+  String get monitorHIDTitle => 'Мониторинг HID Устройств';
+
+  @override
+  String get monitorHIDDescription =>
+      'Обнаружение рулей, планшетов, пользовательских устройств';
+
+  @override
+  String get setIdleTimeoutTitle => 'Установить Тайм-аут Бездействия';
+
+  @override
+  String get idleTimeoutDialogDescription =>
+      'Выберите, сколько ждать перед признанием вас бездействующим:';
+
+  @override
+  String get seconds30 => '30 секунд';
+
+  @override
+  String get minute1 => '1 минута';
+
+  @override
+  String get minutes2 => '2 минуты';
+
+  @override
+  String get minutes5 => '5 минут';
+
+  @override
+  String get minutes10 => '10 минут';
+
+  @override
+  String get customOption => 'Пользовательский';
+
+  @override
+  String get customDurationTitle => 'Пользовательская Длительность';
+
+  @override
+  String get minutesLabel => 'Минуты';
+
+  @override
+  String get secondsLabel => 'Секунды';
+
+  @override
+  String get minAbbreviation => 'мин';
+
+  @override
+  String get secAbbreviation => 'сек';
+
+  @override
+  String totalLabel(String duration) {
+    return 'Итого: $duration';
+  }
+
+  @override
+  String minimumError(String value) {
+    return 'Минимум $value';
+  }
+
+  @override
+  String maximumError(String value) {
+    return 'Максимум $value';
+  }
+
+  @override
+  String rangeInfo(String min, String max) {
+    return 'Диапазон: $min - $max';
+  }
+
+  @override
+  String get saveButton => 'Сохранить';
+
+  @override
+  String timeFormatSeconds(int seconds) {
+    return '$secondsс';
+  }
+
+  @override
+  String get timeFormatMinute => '1 мин';
+
+  @override
+  String timeFormatMinutes(int minutes) {
+    return '$minutes мин';
+  }
+
+  @override
+  String timeFormatMinutesSeconds(int minutes, int seconds) {
+    return '$minutes мин $secondsс';
+  }
 }

@@ -55,7 +55,10 @@ dependencies:
     git:
       url: https://github.com/HarmanPreet-Singh-XYT/local_notifier
       ref: main
-
+  window_focus:
+    git:
+      url: https://github.com/HarmanPreet-Singh-XYT/Window_focus
+      ref: master
   # Native Code Interaction for Foreground Window
   # You'll need to implement a custom plugin or package
   # Placeholder for your native window tracking plugin

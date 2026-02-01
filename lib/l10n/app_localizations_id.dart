@@ -1562,4 +1562,134 @@ class AppLocalizationsId extends AppLocalizations {
   @override
   String get faqGeneralA7 =>
       'Terjemahan bisa salah karena dihasilkan oleh AI dari bahasa Inggris dan jika Anda ingin melaporkan maka Anda dapat melaporkan melalui laporkan bug, atau kontak, atau jika Anda seorang pengembang maka buka issue di Github. Kontribusi mengenai bahasa juga diterima!';
+
+  @override
+  String get activityTrackingSection => 'Pelacakan Aktivitas';
+
+  @override
+  String get idleDetectionTitle => 'Deteksi Idle';
+
+  @override
+  String get idleDetectionDescription => 'Berhenti melacak saat tidak aktif';
+
+  @override
+  String get idleTimeoutTitle => 'Batas Waktu Idle';
+
+  @override
+  String idleTimeoutDescription(String timeout) {
+    return 'Waktu sebelum dianggap idle ($timeout)';
+  }
+
+  @override
+  String get advancedWarning =>
+      'Fitur lanjutan dapat meningkatkan penggunaan sumber daya. Aktifkan hanya jika diperlukan.';
+
+  @override
+  String get monitorAudioTitle => 'Pantau Audio Sistem';
+
+  @override
+  String get monitorAudioDescription =>
+      'Deteksi aktivitas dari pemutaran audio';
+
+  @override
+  String get audioSensitivityTitle => 'Sensitivitas Audio';
+
+  @override
+  String audioSensitivityDescription(String value) {
+    return 'Ambang batas deteksi ($value)';
+  }
+
+  @override
+  String get monitorControllersTitle => 'Pantau Kontroler Game';
+
+  @override
+  String get monitorControllersDescription => 'Deteksi kontroler Xbox/XInput';
+
+  @override
+  String get monitorHIDTitle => 'Pantau Perangkat HID';
+
+  @override
+  String get monitorHIDDescription =>
+      'Deteksi roda kemudi, tablet, perangkat khusus';
+
+  @override
+  String get setIdleTimeoutTitle => 'Atur Batas Waktu Idle';
+
+  @override
+  String get idleTimeoutDialogDescription =>
+      'Pilih berapa lama menunggu sebelum menganggap Anda idle:';
+
+  @override
+  String get seconds30 => '30 detik';
+
+  @override
+  String get minute1 => '1 menit';
+
+  @override
+  String get minutes2 => '2 menit';
+
+  @override
+  String get minutes5 => '5 menit';
+
+  @override
+  String get minutes10 => '10 menit';
+
+  @override
+  String get customOption => 'Kustom';
+
+  @override
+  String get customDurationTitle => 'Durasi Kustom';
+
+  @override
+  String get minutesLabel => 'Menit';
+
+  @override
+  String get secondsLabel => 'Detik';
+
+  @override
+  String get minAbbreviation => 'mnt';
+
+  @override
+  String get secAbbreviation => 'dtk';
+
+  @override
+  String totalLabel(String duration) {
+    return 'Total: $duration';
+  }
+
+  @override
+  String minimumError(String value) {
+    return 'Minimum adalah $value';
+  }
+
+  @override
+  String maximumError(String value) {
+    return 'Maksimum adalah $value';
+  }
+
+  @override
+  String rangeInfo(String min, String max) {
+    return 'Rentang: $min - $max';
+  }
+
+  @override
+  String get saveButton => 'Simpan';
+
+  @override
+  String timeFormatSeconds(int seconds) {
+    return '${seconds}dtk';
+  }
+
+  @override
+  String get timeFormatMinute => '1 mnt';
+
+  @override
+  String timeFormatMinutes(int minutes) {
+    return '$minutes mnt';
+  }
+
+  @override
+  String timeFormatMinutesSeconds(int minutes, int seconds) {
+    return '$minutes mnt ${seconds}dtk';
+  }
 }

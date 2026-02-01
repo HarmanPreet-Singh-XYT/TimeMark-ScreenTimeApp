@@ -1530,4 +1530,130 @@ class AppLocalizationsJa extends AppLocalizations {
   @override
   String get faqGeneralA7 =>
       '翻訳はAIによって英語から生成されるため、間違っている可能性があります。報告したい場合は、バグ報告、お問い合わせ、または開発者の場合はGithubでイシューを開くことができます。言語に関する貢献も歓迎します！';
+
+  @override
+  String get activityTrackingSection => 'アクティビティ追跡';
+
+  @override
+  String get idleDetectionTitle => 'アイドル検出';
+
+  @override
+  String get idleDetectionDescription => '非アクティブ時に追跡を停止';
+
+  @override
+  String get idleTimeoutTitle => 'アイドルタイムアウト';
+
+  @override
+  String idleTimeoutDescription(String timeout) {
+    return 'アイドルと見なすまでの時間（$timeout）';
+  }
+
+  @override
+  String get advancedWarning => '高度な機能はリソース使用量を増加させる可能性があります。必要な場合のみ有効にしてください。';
+
+  @override
+  String get monitorAudioTitle => 'システムオーディオを監視';
+
+  @override
+  String get monitorAudioDescription => 'オーディオ再生からアクティビティを検出';
+
+  @override
+  String get audioSensitivityTitle => 'オーディオ感度';
+
+  @override
+  String audioSensitivityDescription(String value) {
+    return '検出しきい値（$value）';
+  }
+
+  @override
+  String get monitorControllersTitle => 'ゲームコントローラーを監視';
+
+  @override
+  String get monitorControllersDescription => 'Xbox/XInputコントローラーを検出';
+
+  @override
+  String get monitorHIDTitle => 'HIDデバイスを監視';
+
+  @override
+  String get monitorHIDDescription => 'ホイール、タブレット、カスタムデバイスを検出';
+
+  @override
+  String get setIdleTimeoutTitle => 'アイドルタイムアウトを設定';
+
+  @override
+  String get idleTimeoutDialogDescription => 'アイドルと見なすまでの待機時間を選択してください：';
+
+  @override
+  String get seconds30 => '30秒';
+
+  @override
+  String get minute1 => '1分';
+
+  @override
+  String get minutes2 => '2分';
+
+  @override
+  String get minutes5 => '5分';
+
+  @override
+  String get minutes10 => '10分';
+
+  @override
+  String get customOption => 'カスタム';
+
+  @override
+  String get customDurationTitle => 'カスタム期間';
+
+  @override
+  String get minutesLabel => '分';
+
+  @override
+  String get secondsLabel => '秒';
+
+  @override
+  String get minAbbreviation => '分';
+
+  @override
+  String get secAbbreviation => '秒';
+
+  @override
+  String totalLabel(String duration) {
+    return '合計：$duration';
+  }
+
+  @override
+  String minimumError(String value) {
+    return '最小値は$valueです';
+  }
+
+  @override
+  String maximumError(String value) {
+    return '最大値は$valueです';
+  }
+
+  @override
+  String rangeInfo(String min, String max) {
+    return '範囲：$min - $max';
+  }
+
+  @override
+  String get saveButton => '保存';
+
+  @override
+  String timeFormatSeconds(int seconds) {
+    return '$seconds秒';
+  }
+
+  @override
+  String get timeFormatMinute => '1分';
+
+  @override
+  String timeFormatMinutes(int minutes) {
+    return '$minutes分';
+  }
+
+  @override
+  String timeFormatMinutesSeconds(int minutes, int seconds) {
+    return '$minutes分$seconds秒';
+  }
 }

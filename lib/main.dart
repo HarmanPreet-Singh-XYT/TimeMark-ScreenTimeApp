@@ -19,10 +19,20 @@ import 'package:tray_manager/tray_manager.dart';
 import './sections/controller/application_controller.dart';
 import 'package:flutter_single_instance/flutter_single_instance.dart';
 import 'utils/single_instance_ipc.dart';
+import 'package:flutter/services.dart';
+
+const _launchChannel = MethodChannel('timemark/launch');
+
+Future<bool> wasLaunchedAtLoginMacOS() async {
+  if (!Platform.isMacOS) return false;
+  return await _launchChannel.invokeMethod<bool>('wasLaunchedAtLogin') ?? false;
+}
 
 void main(List<String> args) async {
   WidgetsFlutterBinding.ensureInitialized();
-  final bool wasSystemLaunched = args.contains('--auto-launched');
+  final bool wasSystemLaunchedWindows = args.contains('--auto-launched');
+
+  final bool wasSystemLaunchedMacOS = await wasLaunchedAtLoginMacOS();
   final singleInstance = FlutterSingleInstance();
 
   // SECOND INSTANCE → ask primary to show & exit
@@ -86,7 +96,9 @@ void main(List<String> args) async {
     win.alignment = Alignment.center;
     win.title = 'TimeMark - Track Screen Time & App Usage';
 
-    if (wasSystemLaunched || isMinimizeAtLaunch) {
+    if (wasSystemLaunchedWindows ||
+        wasSystemLaunchedMacOS ||
+        isMinimizeAtLaunch) {
       win.hide();
     } else {
       win.show();

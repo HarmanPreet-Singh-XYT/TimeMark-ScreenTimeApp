@@ -1560,4 +1560,134 @@ class AppLocalizationsHi extends AppLocalizations {
   @override
   String get faqGeneralA7 =>
       'अनुवाद गलत हो सकता है क्योंकि यह AI द्वारा अंग्रेजी से उत्पन्न किया गया है और यदि आप रिपोर्ट करना चाहते हैं तो आप बग रिपोर्ट करें, या संपर्क के माध्यम से रिपोर्ट कर सकते हैं, या यदि आप डेवलपर हैं तो Github पर इश्यू खोलें। भाषा के संबंध में योगदान का भी स्वागत है!';
+
+  @override
+  String get activityTrackingSection => 'गतिविधि ट्रैकिंग';
+
+  @override
+  String get idleDetectionTitle => 'निष्क्रिय पहचान';
+
+  @override
+  String get idleDetectionDescription => 'निष्क्रिय होने पर ट्रैकिंग बंद करें';
+
+  @override
+  String get idleTimeoutTitle => 'निष्क्रिय समय सीमा';
+
+  @override
+  String idleTimeoutDescription(String timeout) {
+    return 'निष्क्रिय मानने से पहले का समय ($timeout)';
+  }
+
+  @override
+  String get advancedWarning =>
+      'उन्नत सुविधाएं संसाधन उपयोग बढ़ा सकती हैं। केवल आवश्यकता होने पर सक्षम करें।';
+
+  @override
+  String get monitorAudioTitle => 'सिस्टम ऑडियो मॉनिटर करें';
+
+  @override
+  String get monitorAudioDescription => 'ऑडियो प्लेबैक से गतिविधि का पता लगाएं';
+
+  @override
+  String get audioSensitivityTitle => 'ऑडियो संवेदनशीलता';
+
+  @override
+  String audioSensitivityDescription(String value) {
+    return 'पता लगाने की सीमा ($value)';
+  }
+
+  @override
+  String get monitorControllersTitle => 'गेम कंट्रोलर मॉनिटर करें';
+
+  @override
+  String get monitorControllersDescription =>
+      'Xbox/XInput कंट्रोलर का पता लगाएं';
+
+  @override
+  String get monitorHIDTitle => 'HID उपकरण मॉनिटर करें';
+
+  @override
+  String get monitorHIDDescription =>
+      'व्हील, टैबलेट, कस्टम उपकरणों का पता लगाएं';
+
+  @override
+  String get setIdleTimeoutTitle => 'निष्क्रिय समय सीमा सेट करें';
+
+  @override
+  String get idleTimeoutDialogDescription =>
+      'आपको निष्क्रिय मानने से पहले कितनी देर प्रतीक्षा करनी है चुनें:';
+
+  @override
+  String get seconds30 => '30 सेकंड';
+
+  @override
+  String get minute1 => '1 मिनट';
+
+  @override
+  String get minutes2 => '2 मिनट';
+
+  @override
+  String get minutes5 => '5 मिनट';
+
+  @override
+  String get minutes10 => '10 मिनट';
+
+  @override
+  String get customOption => 'कस्टम';
+
+  @override
+  String get customDurationTitle => 'कस्टम अवधि';
+
+  @override
+  String get minutesLabel => 'मिनट';
+
+  @override
+  String get secondsLabel => 'सेकंड';
+
+  @override
+  String get minAbbreviation => 'मि';
+
+  @override
+  String get secAbbreviation => 'से';
+
+  @override
+  String totalLabel(String duration) {
+    return 'कुल: $duration';
+  }
+
+  @override
+  String minimumError(String value) {
+    return 'न्यूनतम $value है';
+  }
+
+  @override
+  String maximumError(String value) {
+    return 'अधिकतम $value है';
+  }
+
+  @override
+  String rangeInfo(String min, String max) {
+    return 'सीमा: $min - $max';
+  }
+
+  @override
+  String get saveButton => 'सहेजें';
+
+  @override
+  String timeFormatSeconds(int seconds) {
+    return '$secondsसे';
+  }
+
+  @override
+  String get timeFormatMinute => '1 मिनट';
+
+  @override
+  String timeFormatMinutes(int minutes) {
+    return '$minutes मिनट';
+  }
+
+  @override
+  String timeFormatMinutesSeconds(int minutes, int seconds) {
+    return '$minutes मि $secondsसे';
+  }
 }

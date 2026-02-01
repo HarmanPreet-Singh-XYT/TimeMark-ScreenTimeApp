@@ -1554,4 +1554,134 @@ class AppLocalizationsUr extends AppLocalizations {
   @override
   String get faqGeneralA7 =>
       'ترجمہ غلط ہو سکتا ہے کیونکہ یہ انگریزی سے AI کے ذریعے تیار کیا گیا ہے اور اگر آپ رپورٹ کرنا چاہتے ہیں تو یا تو بگ رپورٹ کر سکتے ہیں، یا رابطہ کر سکتے ہیں، یا اگر آپ ڈیولپر ہیں تو گٹ ہب پر مسئلہ کھولیں۔ زبان سے متعلق تعاون کا بھی خیرمقدم ہے!';
+
+  @override
+  String get activityTrackingSection => 'سرگرمی کی ٹریکنگ';
+
+  @override
+  String get idleDetectionTitle => 'بیکار ہونے کا پتہ لگانا';
+
+  @override
+  String get idleDetectionDescription => 'غیر فعال ہونے پر ٹریکنگ بند کریں';
+
+  @override
+  String get idleTimeoutTitle => 'بیکار ٹائم آؤٹ';
+
+  @override
+  String idleTimeoutDescription(String timeout) {
+    return 'بیکار سمجھنے سے پہلے کا وقت ($timeout)';
+  }
+
+  @override
+  String get advancedWarning =>
+      'جدید خصوصیات وسائل کے استعمال میں اضافہ کر سکتی ہیں۔ صرف ضرورت پڑنے پر فعال کریں۔';
+
+  @override
+  String get monitorAudioTitle => 'سسٹم آڈیو کی نگرانی کریں';
+
+  @override
+  String get monitorAudioDescription => 'آڈیو پلے بیک سے سرگرمی کا پتہ لگائیں';
+
+  @override
+  String get audioSensitivityTitle => 'آڈیو حساسیت';
+
+  @override
+  String audioSensitivityDescription(String value) {
+    return 'پتہ لگانے کی حد ($value)';
+  }
+
+  @override
+  String get monitorControllersTitle => 'گیم کنٹرولرز کی نگرانی کریں';
+
+  @override
+  String get monitorControllersDescription =>
+      'Xbox/XInput کنٹرولرز کا پتہ لگائیں';
+
+  @override
+  String get monitorHIDTitle => 'HID آلات کی نگرانی کریں';
+
+  @override
+  String get monitorHIDDescription =>
+      'وہیلز، ٹیبلٹس، حسب ضرورت آلات کا پتہ لگائیں';
+
+  @override
+  String get setIdleTimeoutTitle => 'بیکار ٹائم آؤٹ سیٹ کریں';
+
+  @override
+  String get idleTimeoutDialogDescription =>
+      'منتخب کریں کہ آپ کو بیکار سمجھنے سے پہلے کتنی دیر انتظار کرنا ہے:';
+
+  @override
+  String get seconds30 => '30 سیکنڈ';
+
+  @override
+  String get minute1 => '1 منٹ';
+
+  @override
+  String get minutes2 => '2 منٹ';
+
+  @override
+  String get minutes5 => '5 منٹ';
+
+  @override
+  String get minutes10 => '10 منٹ';
+
+  @override
+  String get customOption => 'حسب ضرورت';
+
+  @override
+  String get customDurationTitle => 'حسب ضرورت مدت';
+
+  @override
+  String get minutesLabel => 'منٹ';
+
+  @override
+  String get secondsLabel => 'سیکنڈ';
+
+  @override
+  String get minAbbreviation => 'م';
+
+  @override
+  String get secAbbreviation => 'س';
+
+  @override
+  String totalLabel(String duration) {
+    return 'کل: $duration';
+  }
+
+  @override
+  String minimumError(String value) {
+    return 'کم از کم $value ہے';
+  }
+
+  @override
+  String maximumError(String value) {
+    return 'زیادہ سے زیادہ $value ہے';
+  }
+
+  @override
+  String rangeInfo(String min, String max) {
+    return 'حد: $min - $max';
+  }
+
+  @override
+  String get saveButton => 'محفوظ کریں';
+
+  @override
+  String timeFormatSeconds(int seconds) {
+    return '$secondsس';
+  }
+
+  @override
+  String get timeFormatMinute => '1 منٹ';
+
+  @override
+  String timeFormatMinutes(int minutes) {
+    return '$minutes منٹ';
+  }
+
+  @override
+  String timeFormatMinutesSeconds(int minutes, int seconds) {
+    return '$minutes م $secondsس';
+  }
 }

@@ -46,6 +46,23 @@ class CategoryOptions {
   static const String defaultCategory = all;
 }
 
+// Idle timeout preset options
+class IdleTimeoutOptions {
+  // Values only - labels are handled via localization in the UI
+  static const List<Map<String, dynamic>> presets = [
+    {'value': 30}, // 30 seconds
+    {'value': 60}, // 1 minute
+    {'value': 120}, // 2 minutes
+    {'value': 300}, // 5 minutes
+    {'value': 600}, // 10 minutes
+    {'value': -1}, // Custom
+  ];
+
+  static const int defaultTimeout = 600; // 10 minute default
+  static const int minTimeout = 10; // 10 seconds minimum
+  static const int maxTimeout = 3600; // 1 hour maximum
+}
+
 class SettingsManager {
   static final SettingsManager _instance = SettingsManager._internal();
 
@@ -78,11 +95,7 @@ class SettingsManager {
       "frequent": true,
       "sound": true,
       "system": true,
-      "overallLimit": {
-        "enabled": false,
-        "hours": 2,
-        "minutes": 0
-      }
+      "overallLimit": {"enabled": false, "hours": 2, "minutes": 0}
     },
     "applications": {
       "tracking": true,
@@ -100,11 +113,23 @@ class SettingsManager {
     },
     "notificationController": {
       "reminderFrequency": 5, // minutes
+    },
+    // All tracking settings default to true
+    "tracking": {
+      "idleDetection": true,
+      "idleTimeout": IdleTimeoutOptions.defaultTimeout,
+      "monitorAudio": true,
+      "monitorControllers": true,
+      "monitorHIDDevices": true,
+      "audioThreshold": 0.01,
     }
   };
-  
-  Map<String, String> versionInfo = {"version": "1.2.0", "type": "Stable Build"};
-  
+
+  Map<String, String> versionInfo = {
+    "version": "1.2.2",
+    "type": "Stable Build"
+  };
+
   /// Initialize SharedPreferences and load settings
   Future<void> init() async {
     _prefs = await SharedPreferences.getInstance();
@@ -116,42 +141,70 @@ class SettingsManager {
     String? storedSettings = _prefs.getString("screenTime_settings");
     if (storedSettings != null) {
       Map<String, dynamic> loadedSettings = jsonDecode(storedSettings);
-      
+
       // Merge loaded settings with default settings
       _mergeSettings(settings, loadedSettings);
-      
+
       // Validate theme
       if (!ThemeOptions.available.contains(settings["theme"]["selected"])) {
         settings["theme"]["selected"] = ThemeOptions.defaultTheme;
       }
-      
+
       // Validate language - check if it's a valid language code
       String currentLang = settings["language"]["selected"];
-      bool isValidLang = LanguageOptions.available.any((lang) => lang['code'] == currentLang);
+      bool isValidLang =
+          LanguageOptions.available.any((lang) => lang['code'] == currentLang);
       if (!isValidLang) {
         settings["language"]["selected"] = LanguageOptions.defaultLanguage;
       }
-      
+
       // Validate focus mode
-      if (settings.containsKey("focusModeSettings") && 
+      if (settings.containsKey("focusModeSettings") &&
           settings["focusModeSettings"].containsKey("selectedMode") &&
-          !FocusModeOptions.available.contains(settings["focusModeSettings"]["selectedMode"])) {
-        settings["focusModeSettings"]["selectedMode"] = FocusModeOptions.defaultMode;
+          !FocusModeOptions.available
+              .contains(settings["focusModeSettings"]["selectedMode"])) {
+        settings["focusModeSettings"]["selectedMode"] =
+            FocusModeOptions.defaultMode;
       }
-      
+
       // Validate category
-      if (settings.containsKey("applications") && 
+      if (settings.containsKey("applications") &&
           settings["applications"].containsKey("selectedCategory") &&
-          !CategoryOptions.available.contains(settings["applications"]["selectedCategory"])) {
-        settings["applications"]["selectedCategory"] = CategoryOptions.defaultCategory;
+          !CategoryOptions.available
+              .contains(settings["applications"]["selectedCategory"])) {
+        settings["applications"]["selectedCategory"] =
+            CategoryOptions.defaultCategory;
+      }
+
+      // Validate tracking settings
+      if (settings.containsKey("tracking")) {
+        // Ensure idleTimeout is within reasonable bounds
+        int idleTimeout = settings["tracking"]["idleTimeout"] ??
+            IdleTimeoutOptions.defaultTimeout;
+        if (idleTimeout < IdleTimeoutOptions.minTimeout) {
+          idleTimeout = IdleTimeoutOptions.minTimeout;
+        }
+        if (idleTimeout > IdleTimeoutOptions.maxTimeout) {
+          idleTimeout = IdleTimeoutOptions.maxTimeout;
+        }
+        settings["tracking"]["idleTimeout"] = idleTimeout;
+
+        // Ensure audioThreshold is within valid range (0.0001 - 0.1)
+        double audioThreshold = settings["tracking"]["audioThreshold"] ?? 0.001;
+        if (audioThreshold < 0.0001) audioThreshold = 0.0001;
+        if (audioThreshold > 0.1) audioThreshold = 0.1;
+        settings["tracking"]["audioThreshold"] = audioThreshold;
       }
     }
   }
-  
+
   // Recursively merge loaded settings into default settings
-  void _mergeSettings(Map<String, dynamic> target, Map<String, dynamic> source) {
+  void _mergeSettings(
+      Map<String, dynamic> target, Map<String, dynamic> source) {
     source.forEach((key, value) {
-      if (value is Map<String, dynamic> && target.containsKey(key) && target[key] is Map) {
+      if (value is Map<String, dynamic> &&
+          target.containsKey(key) &&
+          target[key] is Map) {
         _mergeSettings(target[key], value);
       } else {
         target[key] = value;
@@ -176,7 +229,7 @@ class SettingsManager {
       }
     } else {
       Map<String, dynamic> current = settings;
-      
+
       // Navigate to the nested object
       for (int i = 0; i < keys.length - 1; i++) {
         if (!current.containsKey(keys[i])) {
@@ -188,14 +241,19 @@ class SettingsManager {
         }
         current = current[keys[i]];
       }
-      
+
       current[keys.last] = value;
     }
-    
+
     _saveSettings();
-    
-    if (keys.isNotEmpty && keys[0] == "notificationController") {
-      debugPrint("🔔 Updated notification setting: $key = $value");
+
+    // Log specific setting updates
+    if (keys.isNotEmpty) {
+      if (keys[0] == "notificationController") {
+        debugPrint("🔔 Updated notification setting: $key = $value");
+      } else if (keys[0] == "tracking") {
+        debugPrint("📊 Updated tracking setting: $key = $value");
+      }
     }
   }
 
@@ -220,10 +278,11 @@ class SettingsManager {
 
   /// Apply current theme setting to the given context
   void applyCurrentTheme(BuildContext context) {
-    String currentTheme = getSetting("theme.selected") ?? ThemeOptions.defaultTheme;
+    String currentTheme =
+        getSetting("theme.selected") ?? ThemeOptions.defaultTheme;
     applyTheme(currentTheme, context);
   }
-  
+
   /// Get any setting dynamically
   dynamic getSetting(String key) {
     List<String> keys = key.split(".");
@@ -249,20 +308,25 @@ class SettingsManager {
   List<String> getAvailableThemes() {
     return ThemeOptions.available;
   }
-  
+
   // Get available language options
   List<Map<String, String>> getAvailableLanguages() {
     return LanguageOptions.available;
   }
-  
+
   // Get available focus mode options
   List<String> getAvailableFocusModes() {
     return FocusModeOptions.available;
   }
-  
+
   // Get available category options
   List<String> getAvailableCategories() {
     return CategoryOptions.available;
+  }
+
+  // Get available idle timeout presets
+  List<Map<String, dynamic>> getIdleTimeoutPresets() {
+    return IdleTimeoutOptions.presets;
   }
 
   /// Reset settings to default
@@ -287,11 +351,7 @@ class SettingsManager {
         "frequent": true,
         "sound": true,
         "system": true,
-        "overallLimit": {
-          "enabled": false,
-          "hours": 2,
-          "minutes": 0
-        }
+        "overallLimit": {"enabled": false, "hours": 2, "minutes": 0}
       },
       "applications": {
         "tracking": true,
@@ -308,13 +368,22 @@ class SettingsManager {
         "enableSoundsNotifications": true
       },
       "notificationController": {
-        "reminderFrequency": 5, // minutes
+        "reminderFrequency": 5,
+      },
+      // All tracking settings default to true
+      "tracking": {
+        "idleDetection": true,
+        "idleTimeout": IdleTimeoutOptions.defaultTimeout,
+        "monitorAudio": true,
+        "monitorControllers": true,
+        "monitorHIDDevices": true,
+        "audioThreshold": 0.01,
       }
     };
 
     settings = Map<String, dynamic>.from(defaultSettings);
     _saveSettings();
-    
+
     debugPrint("✅ Settings reset to default values");
   }
 }

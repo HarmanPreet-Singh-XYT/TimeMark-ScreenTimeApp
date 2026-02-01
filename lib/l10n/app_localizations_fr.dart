@@ -1588,4 +1588,136 @@ class AppLocalizationsFr extends AppLocalizations {
   @override
   String get faqGeneralA7 =>
       'La traduction peut être incorrecte car elle est générée par IA à partir de l\'anglais. Si vous souhaitez signaler une erreur, vous pouvez le faire via signaler un bug, contact, ou si vous êtes développeur, ouvrir un problème sur Github. Les contributions concernant les langues sont également les bienvenues !';
+
+  @override
+  String get activityTrackingSection => 'Suivi d\'Activité';
+
+  @override
+  String get idleDetectionTitle => 'Détection d\'Inactivité';
+
+  @override
+  String get idleDetectionDescription =>
+      'Arrêter le suivi en cas d\'inactivité';
+
+  @override
+  String get idleTimeoutTitle => 'Délai d\'Inactivité';
+
+  @override
+  String idleTimeoutDescription(String timeout) {
+    return 'Temps avant de vous considérer inactif ($timeout)';
+  }
+
+  @override
+  String get advancedWarning =>
+      'Les fonctionnalités avancées peuvent augmenter l\'utilisation des ressources. Activez uniquement si nécessaire.';
+
+  @override
+  String get monitorAudioTitle => 'Surveiller l\'Audio Système';
+
+  @override
+  String get monitorAudioDescription =>
+      'Détecter l\'activité par la lecture audio';
+
+  @override
+  String get audioSensitivityTitle => 'Sensibilité Audio';
+
+  @override
+  String audioSensitivityDescription(String value) {
+    return 'Seuil de détection ($value)';
+  }
+
+  @override
+  String get monitorControllersTitle => 'Surveiller les Manettes de Jeu';
+
+  @override
+  String get monitorControllersDescription =>
+      'Détecter les manettes Xbox/XInput';
+
+  @override
+  String get monitorHIDTitle => 'Surveiller les Périphériques HID';
+
+  @override
+  String get monitorHIDDescription =>
+      'Détecter volants, tablettes, périphériques personnalisés';
+
+  @override
+  String get setIdleTimeoutTitle => 'Définir le Délai d\'Inactivité';
+
+  @override
+  String get idleTimeoutDialogDescription =>
+      'Choisissez combien de temps attendre avant de vous considérer inactif :';
+
+  @override
+  String get seconds30 => '30 secondes';
+
+  @override
+  String get minute1 => '1 minute';
+
+  @override
+  String get minutes2 => '2 minutes';
+
+  @override
+  String get minutes5 => '5 minutes';
+
+  @override
+  String get minutes10 => '10 minutes';
+
+  @override
+  String get customOption => 'Personnalisé';
+
+  @override
+  String get customDurationTitle => 'Durée Personnalisée';
+
+  @override
+  String get minutesLabel => 'Minutes';
+
+  @override
+  String get secondsLabel => 'Secondes';
+
+  @override
+  String get minAbbreviation => 'min';
+
+  @override
+  String get secAbbreviation => 'sec';
+
+  @override
+  String totalLabel(String duration) {
+    return 'Total : $duration';
+  }
+
+  @override
+  String minimumError(String value) {
+    return 'Le minimum est $value';
+  }
+
+  @override
+  String maximumError(String value) {
+    return 'Le maximum est $value';
+  }
+
+  @override
+  String rangeInfo(String min, String max) {
+    return 'Plage : $min - $max';
+  }
+
+  @override
+  String get saveButton => 'Enregistrer';
+
+  @override
+  String timeFormatSeconds(int seconds) {
+    return '${seconds}s';
+  }
+
+  @override
+  String get timeFormatMinute => '1 min';
+
+  @override
+  String timeFormatMinutes(int minutes) {
+    return '$minutes min';
+  }
+
+  @override
+  String timeFormatMinutesSeconds(int minutes, int seconds) {
+    return '$minutes min ${seconds}s';
+  }
 }

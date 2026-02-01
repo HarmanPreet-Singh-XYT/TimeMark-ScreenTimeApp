@@ -987,6 +987,15 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "5.15.0"
+  window_focus:
+    dependency: "direct main"
+    description:
+      path: "."
+      ref: master
+      resolved-ref: f4c3151d32f6721bbbbdd00df24a6a41e79edd93
+      url: "https://github.com/HarmanPreet-Singh-XYT/Window_focus"
+    source: git
+    version: "1.2.1"
   window_manager:
     dependency: "direct main"
     description:

@@ -1516,4 +1516,130 @@ class AppLocalizationsZh extends AppLocalizations {
   @override
   String get faqGeneralA7 =>
       '翻译可能存在错误，因为它是由人工智能从英语生成的。如果您想报告问题，可以通过报告错误、联系我们，或者如果您是开发者，可以在 Github 上提交问题。我们也欢迎关于语言的贡献！';
+
+  @override
+  String get activityTrackingSection => '活动追踪';
+
+  @override
+  String get idleDetectionTitle => '空闲检测';
+
+  @override
+  String get idleDetectionDescription => '在不活动时停止追踪';
+
+  @override
+  String get idleTimeoutTitle => '空闲超时';
+
+  @override
+  String idleTimeoutDescription(String timeout) {
+    return '视为空闲前的等待时间（$timeout）';
+  }
+
+  @override
+  String get advancedWarning => '高级功能可能会增加资源使用量。仅在需要时启用。';
+
+  @override
+  String get monitorAudioTitle => '监控系统音频';
+
+  @override
+  String get monitorAudioDescription => '通过音频播放检测活动';
+
+  @override
+  String get audioSensitivityTitle => '音频灵敏度';
+
+  @override
+  String audioSensitivityDescription(String value) {
+    return '检测阈值（$value）';
+  }
+
+  @override
+  String get monitorControllersTitle => '监控游戏控制器';
+
+  @override
+  String get monitorControllersDescription => '检测Xbox/XInput控制器';
+
+  @override
+  String get monitorHIDTitle => '监控HID设备';
+
+  @override
+  String get monitorHIDDescription => '检测方向盘、数位板、自定义设备';
+
+  @override
+  String get setIdleTimeoutTitle => '设置空闲超时';
+
+  @override
+  String get idleTimeoutDialogDescription => '选择在将您视为空闲之前等待多长时间：';
+
+  @override
+  String get seconds30 => '30秒';
+
+  @override
+  String get minute1 => '1分钟';
+
+  @override
+  String get minutes2 => '2分钟';
+
+  @override
+  String get minutes5 => '5分钟';
+
+  @override
+  String get minutes10 => '10分钟';
+
+  @override
+  String get customOption => '自定义';
+
+  @override
+  String get customDurationTitle => '自定义时长';
+
+  @override
+  String get minutesLabel => '分钟';
+
+  @override
+  String get secondsLabel => '秒';
+
+  @override
+  String get minAbbreviation => '分';
+
+  @override
+  String get secAbbreviation => '秒';
+
+  @override
+  String totalLabel(String duration) {
+    return '总计：$duration';
+  }
+
+  @override
+  String minimumError(String value) {
+    return '最小值为$value';
+  }
+
+  @override
+  String maximumError(String value) {
+    return '最大值为$value';
+  }
+
+  @override
+  String rangeInfo(String min, String max) {
+    return '范围：$min - $max';
+  }
+
+  @override
+  String get saveButton => '保存';
+
+  @override
+  String timeFormatSeconds(int seconds) {
+    return '$seconds秒';
+  }
+
+  @override
+  String get timeFormatMinute => '1分钟';
+
+  @override
+  String timeFormatMinutes(int minutes) {
+    return '$minutes分钟';
+  }
+
+  @override
+  String timeFormatMinutesSeconds(int minutes, int seconds) {
+    return '$minutes分$seconds秒';
+  }
 }

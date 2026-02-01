@@ -10,6 +10,7 @@ list(APPEND FLUTTER_PLUGIN_LIST
   share_plus
   tray_manager
   url_launcher_windows
+  window_focus
   window_manager
 )
 

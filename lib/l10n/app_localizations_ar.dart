@@ -1542,4 +1542,133 @@ class AppLocalizationsAr extends AppLocalizations {
   @override
   String get faqGeneralA7 =>
       'قد تكون الترجمة خاطئة لأنها مُولّدة بالذكاء الاصطناعي من الإنجليزية وإذا كنت تريد الإبلاغ فيمكنك الإبلاغ من خلال الإبلاغ عن خطأ أو اتصل بنا، أو إذا كنت مطوراً يمكنك فتح مشكلة على جيت هب. المساهمات المتعلقة باللغة مرحب بها أيضاً!';
+
+  @override
+  String get activityTrackingSection => 'تتبع النشاط';
+
+  @override
+  String get idleDetectionTitle => 'اكتشاف الخمول';
+
+  @override
+  String get idleDetectionDescription => 'إيقاف التتبع عند عدم النشاط';
+
+  @override
+  String get idleTimeoutTitle => 'مهلة الخمول';
+
+  @override
+  String idleTimeoutDescription(String timeout) {
+    return 'الوقت قبل اعتبارك خاملاً ($timeout)';
+  }
+
+  @override
+  String get advancedWarning =>
+      'قد تزيد الميزات المتقدمة من استخدام الموارد. قم بالتمكين فقط إذا لزم الأمر.';
+
+  @override
+  String get monitorAudioTitle => 'مراقبة صوت النظام';
+
+  @override
+  String get monitorAudioDescription => 'اكتشاف النشاط من تشغيل الصوت';
+
+  @override
+  String get audioSensitivityTitle => 'حساسية الصوت';
+
+  @override
+  String audioSensitivityDescription(String value) {
+    return 'عتبة الاكتشاف ($value)';
+  }
+
+  @override
+  String get monitorControllersTitle => 'مراقبة أذرع التحكم';
+
+  @override
+  String get monitorControllersDescription => 'اكتشاف أذرع تحكم Xbox/XInput';
+
+  @override
+  String get monitorHIDTitle => 'مراقبة أجهزة HID';
+
+  @override
+  String get monitorHIDDescription =>
+      'اكتشاف عجلات القيادة والأجهزة اللوحية والأجهزة المخصصة';
+
+  @override
+  String get setIdleTimeoutTitle => 'تعيين مهلة الخمول';
+
+  @override
+  String get idleTimeoutDialogDescription =>
+      'اختر المدة التي يجب الانتظار قبل اعتبارك خاملاً:';
+
+  @override
+  String get seconds30 => '30 ثانية';
+
+  @override
+  String get minute1 => 'دقيقة واحدة';
+
+  @override
+  String get minutes2 => 'دقيقتان';
+
+  @override
+  String get minutes5 => '5 دقائق';
+
+  @override
+  String get minutes10 => '10 دقائق';
+
+  @override
+  String get customOption => 'مخصص';
+
+  @override
+  String get customDurationTitle => 'مدة مخصصة';
+
+  @override
+  String get minutesLabel => 'الدقائق';
+
+  @override
+  String get secondsLabel => 'الثواني';
+
+  @override
+  String get minAbbreviation => 'د';
+
+  @override
+  String get secAbbreviation => 'ث';
+
+  @override
+  String totalLabel(String duration) {
+    return 'الإجمالي: $duration';
+  }
+
+  @override
+  String minimumError(String value) {
+    return 'الحد الأدنى هو $value';
+  }
+
+  @override
+  String maximumError(String value) {
+    return 'الحد الأقصى هو $value';
+  }
+
+  @override
+  String rangeInfo(String min, String max) {
+    return 'النطاق: $min - $max';
+  }
+
+  @override
+  String get saveButton => 'حفظ';
+
+  @override
+  String timeFormatSeconds(int seconds) {
+    return '$secondsث';
+  }
+
+  @override
+  String get timeFormatMinute => '1 د';
+
+  @override
+  String timeFormatMinutes(int minutes) {
+    return '$minutes د';
+  }
+
+  @override
+  String timeFormatMinutesSeconds(int minutes, int seconds) {
+    return '$minutes د $secondsث';
+  }
 }
