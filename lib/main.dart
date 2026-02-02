@@ -756,7 +756,7 @@ class _SidebarHeader extends StatelessWidget {
                     mainAxisSize: MainAxisSize.min,
                     children: [
                       Text(
-                        l10n.sidebarTitle,
+                        l10n.appName,
                         style: TextStyle(
                           fontSize: 16,
                           fontWeight: FontWeight.w700,
@@ -1198,22 +1198,22 @@ class EnhancedTitleBar extends StatelessWidget {
                   child: Row(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      Container(
-                        padding: const EdgeInsets.all(4),
-                        decoration: BoxDecoration(
-                          gradient: AppDesign.primaryGradient,
-                          borderRadius:
-                              BorderRadius.circular(AppDesign.radiusSm),
-                        ),
-                        child: const Icon(
-                          FluentIcons.timer,
-                          size: 12,
-                          color: Colors.white,
-                        ),
-                      ),
-                      const SizedBox(width: AppDesign.spacingSm),
+                      // Container(
+                      //   padding: const EdgeInsets.all(4),
+                      //   decoration: BoxDecoration(
+                      //     gradient: AppDesign.primaryGradient,
+                      //     borderRadius:
+                      //         BorderRadius.circular(AppDesign.radiusSm),
+                      //   ),
+                      //   child: const Icon(
+                      //     FluentIcons.timer,
+                      //     size: 12,
+                      //     color: Colors.white,
+                      //   ),
+                      // ),
+                      // const SizedBox(width: AppDesign.spacingSm),
                       Text(
-                        l10n.appTitle,
+                        l10n.appWindowTitle,
                         style: TextStyle(
                           fontSize: 13,
                           fontWeight: FontWeight.w600,

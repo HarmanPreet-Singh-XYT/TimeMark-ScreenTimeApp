@@ -2,6 +2,8 @@ import 'dart:async';
 import 'dart:math' as math;
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:percent_indicator/percent_indicator.dart';
+import 'package:screentime/sections/UI%20sections/FocusMode/sessionHistory.dart';
+import 'package:screentime/sections/UI%20sections/FocusMode/helper.dart';
 import 'package:screentime/sections/controller/data_controllers/focus_mode_data_controller.dart';
 import 'package:screentime/sections/graphs/focus_mode_history.dart';
 import 'package:screentime/sections/graphs/focus_mode_pie_chart.dart';
@@ -820,7 +822,7 @@ class _MeterState extends State<Meter> with TickerProviderStateMixin {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        _SessionChip(
+        SessionChip(
           label: 'Focus',
           isActive: _currentTimerState == TimerState.work ||
               _currentTimerState == TimerState.idle,
@@ -835,7 +837,7 @@ class _MeterState extends State<Meter> with TickerProviderStateMixin {
           },
         ),
         const SizedBox(width: 8),
-        _SessionChip(
+        SessionChip(
           label: 'Short Break',
           isActive: _currentTimerState == TimerState.shortBreak,
           color: const Color(0xFF4CAF50),
@@ -848,7 +850,7 @@ class _MeterState extends State<Meter> with TickerProviderStateMixin {
           },
         ),
         const SizedBox(width: 8),
-        _SessionChip(
+        SessionChip(
           label: 'Long Break',
           isActive: _currentTimerState == TimerState.longBreak,
           color: const Color(0xFF42A5F5),
@@ -868,14 +870,14 @@ class _MeterState extends State<Meter> with TickerProviderStateMixin {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        _ControlButton(
+        ControlButton(
           icon: FluentIcons.refresh,
           onPressed: _handleReloadPressed,
           tooltip: 'Restart Session',
         ),
         const SizedBox(width: 16),
 
-        _ControlButton(
+        ControlButton(
           icon: FluentIcons.previous,
           onPressed: _resetAllSessions,
           tooltip: 'Reset All',
@@ -885,7 +887,7 @@ class _MeterState extends State<Meter> with TickerProviderStateMixin {
         // Main play/pause button
         ScaleTransition(
           scale: _buttonScaleAnimation,
-          child: _PlayPauseButton(
+          child: PlayPauseButton(
             isRunning: _isRunning,
             color: timerColor,
             onPressed: _handlePlayPausePressed,
@@ -893,14 +895,14 @@ class _MeterState extends State<Meter> with TickerProviderStateMixin {
         ),
 
         const SizedBox(width: 20),
-        _ControlButton(
+        ControlButton(
           icon: FluentIcons.next,
           onPressed: _handleSkipPressed,
           tooltip: 'Skip to Next',
         ),
         const SizedBox(width: 16),
 
-        _ControlButton(
+        ControlButton(
           icon: FluentIcons.settings,
           onPressed: () => _showSettingsDialog(context),
           tooltip: 'Settings',
@@ -1302,368 +1304,6 @@ class _MeterState extends State<Meter> with TickerProviderStateMixin {
           onChanged: onChanged,
         ),
       ],
-    );
-  }
-}
-
-// Session type chip widget with tap functionality
-class _SessionChip extends StatefulWidget {
-  final String label;
-  final bool isActive;
-  final Color color;
-  final VoidCallback? onTap;
-
-  const _SessionChip({
-    required this.label,
-    required this.isActive,
-    required this.color,
-    this.onTap,
-  });
-
-  @override
-  State<_SessionChip> createState() => _SessionChipState();
-}
-
-class _SessionChipState extends State<_SessionChip> {
-  bool _isHovered = false;
-
-  @override
-  Widget build(BuildContext context) {
-    return MouseRegion(
-      onEnter: (_) => setState(() => _isHovered = true),
-      onExit: (_) => setState(() => _isHovered = false),
-      cursor: SystemMouseCursors.click,
-      child: GestureDetector(
-        onTap: widget.onTap,
-        child: AnimatedContainer(
-          duration: const Duration(milliseconds: 200),
-          padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
-          decoration: BoxDecoration(
-            color: widget.isActive
-                ? widget.color.withOpacity(0.15)
-                : _isHovered
-                    ? widget.color.withOpacity(0.05)
-                    : Colors.transparent,
-            borderRadius: BorderRadius.circular(20),
-            border: Border.all(
-              color: widget.isActive
-                  ? widget.color
-                  : _isHovered
-                      ? widget.color.withOpacity(0.5)
-                      : FluentTheme.of(context).inactiveBackgroundColor,
-              width: 1.5,
-            ),
-          ),
-          child: Text(
-            widget.label,
-            style: TextStyle(
-              color: widget.isActive
-                  ? widget.color
-                  : _isHovered
-                      ? widget.color.withOpacity(0.8)
-                      : FluentTheme.of(context)
-                          .typography
-                          .body
-                          ?.color
-                          ?.withOpacity(0.6),
-              fontWeight: widget.isActive ? FontWeight.w600 : FontWeight.w400,
-              fontSize: 12,
-            ),
-          ),
-        ),
-      ),
-    );
-  }
-}
-
-// Control button widget
-class _ControlButton extends StatefulWidget {
-  final IconData icon;
-  final VoidCallback onPressed;
-  final String tooltip;
-
-  const _ControlButton({
-    required this.icon,
-    required this.onPressed,
-    required this.tooltip,
-  });
-
-  @override
-  State<_ControlButton> createState() => _ControlButtonState();
-}
-
-class _ControlButtonState extends State<_ControlButton> {
-  bool _isHovered = false;
-  bool _isPressed = false;
-
-  @override
-  Widget build(BuildContext context) {
-    return Tooltip(
-      message: widget.tooltip,
-      child: MouseRegion(
-        onEnter: (_) => setState(() => _isHovered = true),
-        onExit: (_) => setState(() => _isHovered = false),
-        cursor: SystemMouseCursors.click,
-        child: GestureDetector(
-          onTapDown: (_) => setState(() => _isPressed = true),
-          onTapUp: (_) => setState(() => _isPressed = false),
-          onTapCancel: () => setState(() => _isPressed = false),
-          onTap: widget.onPressed,
-          child: AnimatedContainer(
-            duration: const Duration(milliseconds: 150),
-            width: 44,
-            height: 44,
-            transform: Matrix4.identity()..scale(_isPressed ? 0.92 : 1.0),
-            transformAlignment: Alignment.center,
-            decoration: BoxDecoration(
-              color: _isHovered
-                  ? FluentTheme.of(context).accentColor.withOpacity(0.1)
-                  : FluentTheme.of(context).micaBackgroundColor,
-              shape: BoxShape.circle,
-              border: Border.all(
-                color: _isHovered
-                    ? FluentTheme.of(context).accentColor.withOpacity(0.3)
-                    : FluentTheme.of(context).inactiveBackgroundColor,
-                width: 1,
-              ),
-            ),
-            child: Icon(
-              widget.icon,
-              size: 16,
-              color: _isHovered ? FluentTheme.of(context).accentColor : null,
-            ),
-          ),
-        ),
-      ),
-    );
-  }
-}
-
-// Play/Pause button widget
-class _PlayPauseButton extends StatefulWidget {
-  final bool isRunning;
-  final Color color;
-  final VoidCallback onPressed;
-
-  const _PlayPauseButton({
-    required this.isRunning,
-    required this.color,
-    required this.onPressed,
-  });
-
-  @override
-  State<_PlayPauseButton> createState() => _PlayPauseButtonState();
-}
-
-class _PlayPauseButtonState extends State<_PlayPauseButton> {
-  bool _isHovered = false;
-
-  @override
-  Widget build(BuildContext context) {
-    return MouseRegion(
-      onEnter: (_) => setState(() => _isHovered = true),
-      onExit: (_) => setState(() => _isHovered = false),
-      cursor: SystemMouseCursors.click,
-      child: GestureDetector(
-        onTap: widget.onPressed,
-        child: AnimatedContainer(
-          duration: const Duration(milliseconds: 200),
-          width: 72,
-          height: 72,
-          decoration: BoxDecoration(
-            color: widget.color,
-            shape: BoxShape.circle,
-            boxShadow: [
-              BoxShadow(
-                color: widget.color.withOpacity(_isHovered ? 0.5 : 0.3),
-                blurRadius: _isHovered ? 24 : 16,
-                offset: const Offset(0, 6),
-                spreadRadius: _isHovered ? 2 : 0,
-              ),
-            ],
-          ),
-          child: AnimatedSwitcher(
-            duration: const Duration(milliseconds: 200),
-            child: Icon(
-              widget.isRunning ? FluentIcons.pause : FluentIcons.play_solid,
-              key: ValueKey(widget.isRunning),
-              size: 28,
-              color: Colors.white,
-            ),
-          ),
-        ),
-      ),
-    );
-  }
-}
-
-class SessionHistory extends StatelessWidget {
-  final List<Map<String, dynamic>> data;
-
-  const SessionHistory({super.key, required this.data});
-
-  @override
-  Widget build(BuildContext context) {
-    final l10n = AppLocalizations.of(context)!;
-
-    return Container(
-      constraints: const BoxConstraints(maxHeight: 350),
-      padding: const EdgeInsets.all(16),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          // Header row
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
-            child: Row(
-              children: [
-                Expanded(
-                  flex: 2,
-                  child: Text(
-                    l10n.dateHeader,
-                    style: FluentTheme.of(context).typography.caption?.copyWith(
-                          fontWeight: FontWeight.w600,
-                          color: FluentTheme.of(context)
-                              .typography
-                              .caption
-                              ?.color
-                              ?.withOpacity(0.6),
-                        ),
-                  ),
-                ),
-                Expanded(
-                  child: Text(
-                    l10n.durationHeader,
-                    textAlign: TextAlign.right,
-                    style: FluentTheme.of(context).typography.caption?.copyWith(
-                          fontWeight: FontWeight.w600,
-                          color: FluentTheme.of(context)
-                              .typography
-                              .caption
-                              ?.color
-                              ?.withOpacity(0.6),
-                        ),
-                  ),
-                ),
-              ],
-            ),
-          ),
-          const SizedBox(height: 8),
-
-          // Session list
-          Expanded(
-            child: data.isEmpty
-                ? Center(
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Icon(
-                          FluentIcons.history,
-                          size: 32,
-                          color:
-                              FluentTheme.of(context).inactiveBackgroundColor,
-                        ),
-                        const SizedBox(height: 8),
-                        Text(
-                          'No sessions yet',
-                          style: FluentTheme.of(context)
-                              .typography
-                              .caption
-                              ?.copyWith(
-                                color: FluentTheme.of(context)
-                                    .typography
-                                    .caption
-                                    ?.color
-                                    ?.withOpacity(0.5),
-                              ),
-                        ),
-                      ],
-                    ),
-                  )
-                : ListView.separated(
-                    itemCount: data.length,
-                    separatorBuilder: (_, __) => const SizedBox(height: 4),
-                    itemBuilder: (context, index) {
-                      final session = data[index];
-                      return _SessionRow(
-                        date: session["date"] ?? '',
-                        duration: session["duration"] ?? '',
-                      );
-                    },
-                  ),
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-class _SessionRow extends StatefulWidget {
-  final String date;
-  final String duration;
-
-  const _SessionRow({
-    required this.date,
-    required this.duration,
-  });
-
-  @override
-  State<_SessionRow> createState() => _SessionRowState();
-}
-
-class _SessionRowState extends State<_SessionRow> {
-  bool _isHovered = false;
-
-  @override
-  Widget build(BuildContext context) {
-    return MouseRegion(
-      onEnter: (_) => setState(() => _isHovered = true),
-      onExit: (_) => setState(() => _isHovered = false),
-      child: AnimatedContainer(
-        duration: const Duration(milliseconds: 150),
-        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
-        decoration: BoxDecoration(
-          color: _isHovered
-              ? FluentTheme.of(context).accentColor.withOpacity(0.05)
-              : Colors.transparent,
-          borderRadius: BorderRadius.circular(6),
-        ),
-        child: Row(
-          children: [
-            Container(
-              width: 8,
-              height: 8,
-              decoration: BoxDecoration(
-                color: const Color(0xFFFF5C50).withOpacity(0.6),
-                shape: BoxShape.circle,
-              ),
-            ),
-            const SizedBox(width: 12),
-            Expanded(
-              flex: 2,
-              child: Text(
-                widget.date,
-                style: FluentTheme.of(context).typography.body?.copyWith(
-                      fontWeight: FontWeight.w500,
-                    ),
-              ),
-            ),
-            Expanded(
-              child: Text(
-                widget.duration,
-                textAlign: TextAlign.right,
-                style: FluentTheme.of(context).typography.body?.copyWith(
-                      color: FluentTheme.of(context)
-                          .typography
-                          .body
-                          ?.color
-                          ?.withOpacity(0.7),
-                    ),
-              ),
-            ),
-          ],
-        ),
-      ),
     );
   }
 }
