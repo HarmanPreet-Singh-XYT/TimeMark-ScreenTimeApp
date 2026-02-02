@@ -238,8 +238,6 @@ class SettingsContent extends StatefulWidget {
 }
 
 class _SettingsContentState extends State<SettingsContent> {
-  Future<void>? _launched;
-
   Future<void> launchAppropriateUrl(String url) async {
     if (Platform.isWindows) {
       // Windows-specific implementation
@@ -379,14 +377,10 @@ class _SettingsContentState extends State<SettingsContent> {
                 ),
                 const SizedBox(height: 24),
                 FooterSection(
-                  onContact: () => setState(
-                      () => _launched = launchAppropriateUrl(urlContact)),
-                  onReport: () => setState(
-                      () => _launched = launchAppropriateUrl(urlReport)),
-                  onFeedback: () => setState(
-                      () => _launched = launchAppropriateUrl(urlFeedback)),
-                  onGithub: () =>
-                      setState(() => _launched = launchAppropriateUrl(github)),
+                  onContact: () => launchAppropriateUrl(urlContact),
+                  onReport: () => launchAppropriateUrl(urlReport),
+                  onFeedback: () => launchAppropriateUrl(urlFeedback),
+                  onGithub: () => launchAppropriateUrl(github),
                 ),
                 const SizedBox(height: 16),
               ]),
