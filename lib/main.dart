@@ -21,6 +21,77 @@ import './sections/controller/application_controller.dart';
 import 'package:flutter_single_instance/flutter_single_instance.dart';
 import 'utils/single_instance_ipc.dart';
 import 'package:flutter/services.dart';
+import 'dart:ui' show lerpDouble;
+
+// ============================================================================
+// DESIGN SYSTEM
+// ============================================================================
+
+class AppDesign {
+  // Brand Colors
+  static const Color primaryAccent = Color(0xFF6366F1);
+  static const Color secondaryAccent = Color(0xFF8B5CF6);
+  static const Color successColor = Color(0xFF10B981);
+  static const Color warningColor = Color(0xFFF59E0B);
+  static const Color errorColor = Color(0xFFEF4444);
+
+  // Light Theme
+  static const Color lightBackground = Color(0xFFF8FAFC);
+  static const Color lightSurface = Color(0xFFFFFFFF);
+  static const Color lightSurfaceSecondary = Color(0xFFF1F5F9);
+  static const Color lightBorder = Color(0xFFE2E8F0);
+  static const Color lightTextPrimary = Color(0xFF1E293B);
+  static const Color lightTextSecondary = Color(0xFF64748B);
+
+  // Dark Theme - Obsidian Night
+  static const Color darkBackground = Color(0xFF0D0D12); // Near black
+  static const Color darkSurface = Color(0xFF16161D); // Dark purple-black
+  static const Color darkSurfaceSecondary = Color(0xFF1E1E28); // Soft obsidian
+  static const Color darkBorder = Color(0xFF2D2D3A); // Muted violet-gray
+  static const Color darkTextPrimary = Color(0xFFF0F0F5); // Cool white
+  static const Color darkTextSecondary = Color(0xFF8888A0); // Lavender gray
+
+  // Spacing
+  static const double spacingXs = 4.0;
+  static const double spacingSm = 8.0;
+  static const double spacingMd = 12.0;
+  static const double spacingLg = 16.0;
+  static const double spacingXl = 24.0;
+
+  // Border Radius
+  static const double radiusSm = 6.0;
+  static const double radiusMd = 8.0;
+  static const double radiusLg = 12.0;
+
+  // Animations
+  static const Duration animFast = Duration(milliseconds: 150);
+  static const Duration animMedium = Duration(milliseconds: 250);
+  static const Duration animSlow = Duration(milliseconds: 350);
+
+  // Sidebar
+  static const double sidebarExpandedWidth = 280.0;
+  static const double sidebarCollapsedWidth = 68.0;
+
+  // Gradients
+  static const LinearGradient primaryGradient = LinearGradient(
+    colors: [primaryAccent, secondaryAccent],
+    begin: Alignment.topLeft,
+    end: Alignment.bottomRight,
+  );
+
+  static LinearGradient subtleGradient(bool isDark) => LinearGradient(
+        colors: [
+          primaryAccent.withValues(alpha: isDark ? 0.15 : 0.08),
+          secondaryAccent.withValues(alpha: isDark ? 0.15 : 0.08),
+        ],
+        begin: Alignment.topLeft,
+        end: Alignment.bottomRight,
+      );
+}
+
+// ============================================================================
+// MAIN
+// ============================================================================
 
 const _launchChannel = MethodChannel('timemark/launch');
 
@@ -31,36 +102,33 @@ Future<bool> wasLaunchedAtLoginMacOS() async {
 
 void main(List<String> args) async {
   WidgetsFlutterBinding.ensureInitialized();
-  final bool wasSystemLaunchedWindows = args.contains('--auto-launched');
 
+  final bool wasSystemLaunchedWindows = args.contains('--auto-launched');
   final bool wasSystemLaunchedMacOS = await wasLaunchedAtLoginMacOS();
   final singleInstance = FlutterSingleInstance();
 
-  // SECOND INSTANCE → ask primary to show & exit
   if (!await singleInstance.isFirstInstance()) {
     await SingleInstanceIPC.requestShow();
     exit(0);
   }
+
   await SingleInstanceIPC.startServer();
   await SettingsManager().init();
+
   final bool isMinimizeAtLaunch =
       await SettingsManager().getSetting("launchAsMinimized") ?? false;
   await NotificationController().initialize();
   await windowManager.ensureInitialized();
-  // Get saved theme and locale preferences
+
   final String savedTheme =
       SettingsManager().getSetting("theme.selected") ?? "System";
   String? savedLocale = SettingsManager().getSetting("language.selected");
 
-  // Auto-detect system locale if no saved preference exists
   if (savedLocale == null) {
     savedLocale = _detectSystemLocale();
     if (savedLocale != null) {
-      // Save the detected locale
       SettingsManager().updateSetting("language.selected", savedLocale);
-      debugPrint('🌍 Auto-detected and saved system locale: $savedLocale');
     } else {
-      // Fallback to default
       savedLocale = LanguageOptions.defaultLanguage;
     }
   }
@@ -73,13 +141,10 @@ void main(List<String> args) async {
     case "Light":
       initialTheme = AdaptiveThemeMode.light;
       break;
-    case "System":
     default:
       initialTheme = AdaptiveThemeMode.system;
-      break;
   }
 
-  // Initialize tracker with locale (loads localizations internally)
   final tracker = BackgroundAppTracker();
   await tracker.initializeTracking(locale: savedLocale);
 
@@ -90,9 +155,8 @@ void main(List<String> args) async {
 
   doWhenWindowReady(() async {
     final win = appWindow;
-
     const initialSize = Size(1280, 800);
-    win.minSize = initialSize;
+    win.minSize = const Size(900, 600);
     win.size = initialSize;
     win.alignment = Alignment.center;
     win.title = 'TimeMark - Track Screen Time & App Usage';
@@ -100,53 +164,54 @@ void main(List<String> args) async {
     if (wasSystemLaunchedWindows ||
         wasSystemLaunchedMacOS ||
         isMinimizeAtLaunch) {
-      if (Platform.isMacOS) {
-        await MacOSWindow.hide();
-      } else {
-        win.hide();
-      }
+      Platform.isMacOS ? await MacOSWindow.hide() : win.hide();
     } else {
-      if (Platform.isMacOS) {
-        await MacOSWindow.show();
-      } else {
-        win.show();
-      }
+      Platform.isMacOS ? await MacOSWindow.show() : win.show();
     }
   });
 }
 
-// Global navigator key for accessing context outside widget tree
 final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 
-/// Detects the system locale and returns it if supported, otherwise null
 String? _detectSystemLocale() {
   try {
-    // Get the system locale
-    final String systemLocale =
-        Platform.localeName; // e.g., "en_US", "zh_CN", "es_ES"
-
-    // Extract language code (before underscore)
+    final String systemLocale = Platform.localeName;
     final String languageCode = systemLocale.split('_').first.toLowerCase();
-
-    debugPrint(
-        '🔍 System locale detected: $systemLocale (language: $languageCode)');
-
-    // Check if the language is supported
     final bool isSupported =
         LanguageOptions.available.any((lang) => lang['code'] == languageCode);
-
-    if (isSupported) {
-      debugPrint('✅ Language $languageCode is supported');
-      return languageCode;
-    } else {
-      debugPrint('⚠️ Language $languageCode is not supported, using default');
-      return null;
-    }
+    return isSupported ? languageCode : null;
   } catch (e) {
-    debugPrint('❌ Error detecting system locale: $e');
     return null;
   }
 }
+
+// ============================================================================
+// THEME DATA
+// ============================================================================
+
+FluentThemeData buildLightTheme() {
+  return FluentThemeData(
+    brightness: Brightness.light,
+    accentColor: Colors.purple,
+    scaffoldBackgroundColor: AppDesign.lightBackground,
+    cardColor: AppDesign.lightSurface,
+    micaBackgroundColor: AppDesign.lightSurface,
+  );
+}
+
+FluentThemeData buildDarkTheme() {
+  return FluentThemeData(
+    brightness: Brightness.dark,
+    accentColor: Colors.purple,
+    scaffoldBackgroundColor: AppDesign.darkBackground,
+    cardColor: AppDesign.darkSurface,
+    micaBackgroundColor: AppDesign.darkSurfaceSecondary,
+  );
+}
+
+// ============================================================================
+// MY APP
+// ============================================================================
 
 class MyApp extends StatefulWidget {
   final AdaptiveThemeMode initialTheme;
@@ -166,34 +231,19 @@ class _MyAppState extends State<MyApp>
     with TrayListener, WidgetsBindingObserver {
   bool notificationsEnabled = true;
   final String appVersion = "v${SettingsManager().versionInfo["version"]}";
-  bool focusMode = false;
   int selectedIndex = 0;
   final AppDataStore _dataStore = AppDataStore();
   Locale? _locale;
 
   void changeIndex(int value) {
-    setState(() {
-      selectedIndex = value;
-    });
+    setState(() => selectedIndex = value);
   }
 
   void setLocale(Locale locale) async {
-    setState(() {
-      _locale = locale;
-    });
-
-    // Update settings
+    setState(() => _locale = locale);
     SettingsManager().updateSetting("language.selected", locale.languageCode);
-
-    // Update background tracker with new locale (reloads localizations)
     await BackgroundAppTracker().updateLocale(locale.languageCode);
-
-    // Wait for the widget tree to rebuild with new locale before updating tray
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      _updateTrayMenu();
-    });
-
-    debugPrint('🌍 Locale changed to: ${locale.languageCode}');
+    WidgetsBinding.instance.addPostFrameCallback((_) => _updateTrayMenu());
   }
 
   @override
@@ -203,16 +253,12 @@ class _MyAppState extends State<MyApp>
     _initDataStore();
     _initTray();
     trayManager.addListener(this);
-
-    // Initialize locale from saved preference
     if (widget.savedLocale != null) {
       _locale = Locale(widget.savedLocale!);
     }
   }
 
-  Future<void> _initDataStore() async {
-    await _dataStore.init();
-  }
+  Future<void> _initDataStore() async => await _dataStore.init();
 
   Future<void> _initTray() async {
     await trayManager.setIcon(
@@ -225,25 +271,23 @@ class _MyAppState extends State<MyApp>
   }
 
   Future<void> _updateTrayMenu() async {
-    // Get the current context to access localizations
     final context = navigatorKey.currentContext;
     if (context == null) return;
-
     final l10n = AppLocalizations.of(context)!;
 
     await trayManager.setContextMenu(
       Menu(items: [
         MenuItem(label: l10n.trayShowWindow, onClick: (_) => _showApp()),
         MenuItem.separator(),
-        MenuItem(label: l10n.navReports, onClick: (_) => _openReports()),
-        MenuItem(label: l10n.navAlertsLimits, onClick: (_) => _openAlerts()),
-        MenuItem(
-            label: l10n.navApplications, onClick: (_) => _openApplications()),
+        MenuItem(label: l10n.navReports, onClick: (_) => _openSection(3)),
+        MenuItem(label: l10n.navAlertsLimits, onClick: (_) => _openSection(2)),
+        MenuItem(label: l10n.navApplications, onClick: (_) => _openSection(1)),
         MenuItem.separator(),
         MenuItem(
-            disabled: true,
-            label: l10n.trayVersion(appVersion),
-            checked: false),
+          disabled: true,
+          label: l10n.trayVersion(appVersion),
+          checked: false,
+        ),
         MenuItem.separator(),
         MenuItem(label: l10n.trayExit, onClick: (_) => _exitApp()),
       ]),
@@ -251,109 +295,41 @@ class _MyAppState extends State<MyApp>
   }
 
   void _showApp() {
-    if (Platform.isMacOS) {
-      MacOSWindow.show();
-    } else {
-      appWindow.show();
-    }
+    Platform.isMacOS ? MacOSWindow.show() : appWindow.show();
   }
 
   void _exitApp() {
-    if (Platform.isMacOS) {
-      MacOSWindow.exit();
-    } else {
-      appWindow.close();
-    }
+    Platform.isMacOS ? MacOSWindow.exit() : appWindow.close();
   }
 
-  void _openReports() {
-    if (!appWindow.isVisible) {
-      changeIndex(3);
-      if (Platform.isMacOS) {
-        MacOSWindow.show();
-      } else {
-        appWindow.show();
-      }
-      setState(() {});
-    } else {
-      setState(() {
-        changeIndex(3);
-      });
-    }
-  }
-
-  void _openAlerts() {
-    if (!appWindow.isVisible) {
-      changeIndex(2);
-      if (Platform.isMacOS) {
-        MacOSWindow.show();
-      } else {
-        appWindow.show();
-      }
-      setState(() {});
-    } else {
-      setState(() {
-        changeIndex(2);
-      });
-    }
-  }
-
-  void _openApplications() {
-    if (!appWindow.isVisible) {
-      changeIndex(1);
-      if (Platform.isMacOS) {
-        MacOSWindow.show();
-      } else {
-        appWindow.show();
-      }
-      setState(() {});
-    } else {
-      setState(() {
-        changeIndex(1);
-      });
-    }
+  void _openSection(int index) {
+    changeIndex(index);
+    _showApp();
+    setState(() {});
   }
 
   @override
-  void onTrayIconMouseDown() {
-    if (Platform.isMacOS) {
-      MacOSWindow.show();
-    } else {
-      appWindow.show();
-    }
-  }
-
-  void _toggleNotifications() {
-    setState(() {
-      notificationsEnabled = !notificationsEnabled;
-    });
-    _updateTrayMenu();
-  }
+  void onTrayIconMouseDown() => _showApp();
 
   @override
-  void onTrayIconRightMouseDown() {
-    trayManager.popUpContextMenu();
-  }
+  void onTrayIconRightMouseDown() => trayManager.popUpContextMenu();
 
   @override
   void onTrayMenuItemClick(MenuItem menuItem) {
     final context = navigatorKey.currentContext;
     if (context == null) return;
-
     final l10n = AppLocalizations.of(context)!;
 
     if (menuItem.label == l10n.trayShowWindow) {
-      appWindow.show();
+      _showApp();
     } else if (menuItem.label == l10n.trayExit) {
       _exitApp();
     } else if (menuItem.label == l10n.navReports) {
-      _openReports();
+      _openSection(3);
     } else if (menuItem.label == l10n.navAlertsLimits) {
-      _openAlerts();
+      _openSection(2);
     } else if (menuItem.label == l10n.navApplications) {
-      _openApplications();
-    } else if (menuItem.label!.contains('Notifications')) {
-      _toggleNotifications();
+      _openSection(1);
     }
   }
 
@@ -362,9 +338,7 @@ class _MyAppState extends State<MyApp>
     WidgetsBinding.instance.removeObserver(this);
     BackgroundAppTracker().dispose();
     SingleInstanceIPC.dispose();
-    _dataStore.dispose().then((_) {
-      Hive.close();
-    });
+    _dataStore.dispose().then((_) => Hive.close());
     trayManager.removeListener(this);
     super.dispose();
   }
@@ -377,21 +351,18 @@ class _MyAppState extends State<MyApp>
   @override
   Widget build(BuildContext context) {
     return FluentAdaptiveTheme(
-      light: FluentThemeData.light(),
-      dark: FluentThemeData(
-          brightness: Brightness.dark,
-          cardColor: const Color(0xff202020),
-          scaffoldBackgroundColor: const Color.fromARGB(255, 20, 20, 20)),
+      light: buildLightTheme(),
+      dark: buildDarkTheme(),
       initial: widget.initialTheme,
       builder: (theme, darkTheme) => FluentApp(
-        title: 'Productive ScreenTime',
+        title: 'TimeMark',
         theme: theme,
         darkTheme: darkTheme,
-        navigatorKey: navigatorKey, // Add global navigator key
-        // Localization configuration
+        navigatorKey: navigatorKey,
         localizationsDelegates: AppLocalizations.localizationsDelegates,
         supportedLocales: AppLocalizations.supportedLocales,
         locale: _locale,
+        debugShowCheckedModeBanner: false,
         home: HomePage(
           selectedIndex: selectedIndex,
           changeIndex: changeIndex,
@@ -401,6 +372,10 @@ class _MyAppState extends State<MyApp>
     );
   }
 }
+
+// ============================================================================
+// HOME PAGE WITH CUSTOM COLLAPSIBLE SIDEBAR
+// ============================================================================
 
 class HomePage extends StatefulWidget {
   final int selectedIndex;
@@ -418,155 +393,397 @@ class HomePage extends StatefulWidget {
   State<HomePage> createState() => _HomePageState();
 }
 
-class _HomePageState extends State<HomePage> {
-  PaneDisplayMode displayMode = PaneDisplayMode.compact;
+class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
+  bool _isSidebarExpanded = true;
+  late AnimationController _sidebarAnimController;
+  late Animation<double> _sidebarAnimation;
+
+  @override
+  void initState() {
+    super.initState();
+    _sidebarAnimController = AnimationController(
+      vsync: this,
+      duration: AppDesign.animMedium,
+    );
+    _sidebarAnimation = CurvedAnimation(
+      parent: _sidebarAnimController,
+      curve: Curves.easeInOutCubic,
+    );
+    _sidebarAnimController.value = 1.0; // Start expanded
+  }
+
+  @override
+  void dispose() {
+    _sidebarAnimController.dispose();
+    super.dispose();
+  }
+
+  void _toggleSidebar() {
+    setState(() {
+      _isSidebarExpanded = !_isSidebarExpanded;
+      if (_isSidebarExpanded) {
+        _sidebarAnimController.forward();
+      } else {
+        _sidebarAnimController.reverse();
+      }
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
+    final isDark = FluentTheme.of(context).brightness == Brightness.dark;
     final l10n = AppLocalizations.of(context)!;
-
-    List<NavigationPaneItem> items = [
-      PaneItem(
-        icon: const Icon(FluentIcons.home, size: 20),
-        title: Text(l10n.navOverview,
-            style: const TextStyle(fontWeight: FontWeight.w500)),
-        body: const Overview(),
-      ),
-      PaneItem(
-        icon: const Icon(FluentIcons.app_icon_default_list, size: 20),
-        title: Text(l10n.navApplications,
-            style: const TextStyle(fontWeight: FontWeight.w500)),
-        body: const Applications(),
-      ),
-      PaneItem(
-        icon: const Icon(FluentIcons.alert_settings, size: 20),
-        title: Text(l10n.navAlertsLimits,
-            style: const TextStyle(fontWeight: FontWeight.w500)),
-        body: const AlertsLimits(),
-      ),
-      PaneItem(
-        icon: const Icon(FluentIcons.analytics_report, size: 20),
-        title: Text(l10n.navReports,
-            style: const TextStyle(fontWeight: FontWeight.w500)),
-        body: const Reports(),
-      ),
-      PaneItem(
-        icon: const Icon(FluentIcons.red_eye, size: 20),
-        title: Text(l10n.navFocusMode,
-            style: const TextStyle(fontWeight: FontWeight.w500)),
-        body: const FocusMode(),
-      ),
-      PaneItem(
-        icon: const Icon(FluentIcons.settings, size: 20),
-        title: Text(l10n.navSettings,
-            style: const TextStyle(fontWeight: FontWeight.w500)),
-        body: Settings(setLocale: widget.setLocale),
-      ),
-      PaneItem(
-        icon: const Icon(FluentIcons.chat_bot, size: 20),
-        title: Text(l10n.navHelp,
-            style: const TextStyle(fontWeight: FontWeight.w500)),
-        body: const Help(),
-      ),
-    ];
 
     return Column(
       children: [
-        const TitleBar(),
+        // Title Bar
+        EnhancedTitleBar(
+          onToggleSidebar: _toggleSidebar,
+          isSidebarExpanded: _isSidebarExpanded,
+        ),
+        // Main Content
         Expanded(
-          child: WindowBorder(
-            color: FluentTheme.of(context).micaBackgroundColor,
-            child: NavigationView(
-              pane: NavigationPane(
-                selected: widget.selectedIndex,
-                onChanged: (index) => setState(() => widget.changeIndex(index)),
-                displayMode: displayMode,
-                items: items,
-                header: _buildSidebarHeader(context),
+          child: Row(
+            children: [
+              // Custom Animated Sidebar - USE AnimatedBuilder CORRECTLY
+              AnimatedBuilder(
+                animation: _sidebarAnimation,
+                builder: (context, child) {
+                  final expandProgress = _sidebarAnimation.value;
+                  final width = lerpDouble(
+                    AppDesign.sidebarCollapsedWidth,
+                    AppDesign.sidebarExpandedWidth,
+                    expandProgress,
+                  )!;
+
+                  return SizedBox(
+                    width: width,
+                    child: CustomSidebar(
+                      width: width,
+                      isExpanded: _isSidebarExpanded,
+                      expandProgress: expandProgress,
+                      selectedIndex: widget.selectedIndex,
+                      onItemSelected: widget.changeIndex,
+                      isDark: isDark,
+                      l10n: l10n,
+                    ),
+                  );
+                },
               ),
-            ),
+              // Content Area
+              Expanded(
+                child: _ContentArea(
+                  selectedIndex: widget.selectedIndex,
+                  setLocale: widget.setLocale,
+                  isDark: isDark,
+                ),
+              ),
+            ],
           ),
         ),
       ],
     );
   }
-
-  Widget _buildSidebarHeader(BuildContext context) {
-    final l10n = AppLocalizations.of(context)!;
-
-    return Padding(
-      padding: const EdgeInsets.all(12),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            l10n.sidebarTitle,
-            style: FluentTheme.of(context).typography.title,
-          ),
-          Text(
-            l10n.sidebarSubtitle,
-            style: FluentTheme.of(context).typography.caption?.copyWith(
-                  fontSize: 14,
-                  color: const Color(0xff555555),
-                ),
-          ),
-          const SizedBox(height: 12),
-        ],
-      ),
-    );
-  }
 }
 
-/// Custom Window Title Bar
-class TitleBar extends StatelessWidget {
-  const TitleBar({super.key});
+// ============================================================================
+// ANIMATED BUILDER HELPER (Since AnimatedBuilder doesn't exist)
+// ============================================================================
+
+class AnimatedBuilder extends AnimatedWidget {
+  final Widget Function(BuildContext context, Widget? child) builder;
+  final Widget? child;
+
+  const AnimatedBuilder({
+    super.key,
+    required Animation<double> animation,
+    required this.builder,
+    this.child,
+  }) : super(listenable: animation);
 
   @override
   Widget build(BuildContext context) {
-    final isDarkMode = FluentTheme.of(context).brightness == Brightness.dark;
-    final l10n = AppLocalizations.of(context)!;
-    final backgroundColor = FluentTheme.of(context).micaBackgroundColor;
-    final textColor =
-        isDarkMode ? Colors.white : const Color.fromARGB(255, 20, 20, 20);
-    final isMacOS = Platform.isMacOS;
+    return builder(context, child);
+  }
+}
 
-    return WindowTitleBarBox(
+class AnimatedBuilder2 extends AnimatedWidget {
+  final Widget Function(BuildContext context, Widget? child) builder;
+  final Widget? child;
+
+  const AnimatedBuilder2({
+    super.key,
+    required Animation<double> animation,
+    required this.builder,
+    this.child,
+  }) : super(listenable: animation);
+
+  @override
+  Widget build(BuildContext context) {
+    return builder(context, child);
+  }
+}
+
+// ============================================================================
+// CUSTOM SIDEBAR - FIXED
+// ============================================================================
+
+class CustomSidebar extends StatelessWidget {
+  final double width;
+  final bool isExpanded;
+  final double expandProgress;
+  final int selectedIndex;
+  final Function(int) onItemSelected;
+  final bool isDark;
+  final AppLocalizations l10n;
+
+  const CustomSidebar({
+    super.key,
+    required this.width,
+    required this.isExpanded,
+    required this.expandProgress,
+    required this.selectedIndex,
+    required this.onItemSelected,
+    required this.isDark,
+    required this.l10n,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final navItems = _getNavItems();
+    final isCompact = expandProgress < 0.5;
+
+    return ClipRect(
       child: Container(
-        color: backgroundColor,
-        child: Row(
+        width: width,
+        decoration: BoxDecoration(
+          color:
+              isDark ? AppDesign.darkSurfaceSecondary : AppDesign.lightSurface,
+          border: Border(
+            right: BorderSide(
+              color: isDark ? AppDesign.darkBorder : AppDesign.lightBorder,
+              width: 1,
+            ),
+          ),
+        ),
+        child: Column(
           children: [
-            // macOS: Buttons on LEFT (traffic light style)
-            if (isMacOS) const _MacOSWindowButtons(),
+            // Header
+            _SidebarHeader(
+              expandProgress: expandProgress,
+              isDark: isDark,
+              l10n: l10n,
+              isCompact: isCompact,
+            ),
 
-            // OR use Windows-style buttons on RIGHT for macOS too:
-            // if (isMacOS) const SizedBox(width: 8),
+            SizedBox(
+                height: isCompact ? AppDesign.spacingXs : AppDesign.spacingSm),
 
+            // Navigation Items
             Expanded(
-              child: MoveWindow(
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 10),
-                  child: Align(
-                    alignment:
-                        isMacOS ? Alignment.center : Alignment.centerLeft,
-                    child: Text(
-                      l10n.appTitle,
-                      style: FluentTheme.of(context).typography.body?.copyWith(
-                            fontSize: 14,
-                            fontWeight: FontWeight.w500,
-                            color: textColor,
-                          ),
-                    ),
+              child: ClipRect(
+                child: ListView.builder(
+                  padding: EdgeInsets.symmetric(
+                    horizontal:
+                        isCompact ? AppDesign.spacingXs : AppDesign.spacingMd,
+                    vertical: AppDesign.spacingSm,
                   ),
+                  itemCount: navItems.length,
+                  itemBuilder: (context, index) {
+                    final item = navItems[index];
+
+                    // Handle separator
+                    if (item.isSeparator) {
+                      return Padding(
+                        padding: EdgeInsets.symmetric(
+                          vertical: isCompact
+                              ? AppDesign.spacingSm
+                              : AppDesign.spacingMd,
+                          horizontal: isCompact ? AppDesign.spacingSm : 0,
+                        ),
+                        child: Divider(
+                          style: DividerThemeData(
+                            decoration: BoxDecoration(
+                              color: isDark
+                                  ? AppDesign.darkBorder
+                                  : AppDesign.lightBorder,
+                            ),
+                          ),
+                        ),
+                      );
+                    }
+
+                    // Handle regular nav item
+                    return _SidebarItem(
+                      icon: item.icon!,
+                      label: item.label!,
+                      isSelected: selectedIndex == item.index,
+                      expandProgress: expandProgress,
+                      isDark: isDark,
+                      isCompact: isCompact,
+                      onTap: () => onItemSelected(item.index!),
+                    );
+                  },
                 ),
               ),
             ),
 
-            // Windows: Buttons on RIGHT
-            // macOS: If you want Windows-style buttons on right, use WindowButtons()
-            if (!isMacOS) const WindowButtons(),
+            // Footer - Version
+            _SidebarFooter(
+              expandProgress: expandProgress,
+              isDark: isDark,
+              isCompact: isCompact,
+            ),
+          ],
+        ),
+      ),
+    );
+  }
 
-            // OR for consistent right-side buttons on all platforms:
-            // const WindowButtons(),
+  List<_NavItemData> _getNavItems() {
+    return [
+      _NavItemData(icon: FluentIcons.home, label: l10n.navOverview, index: 0),
+      _NavItemData(
+          icon: FluentIcons.app_icon_default_list,
+          label: l10n.navApplications,
+          index: 1),
+      _NavItemData(
+          icon: FluentIcons.alert_settings,
+          label: l10n.navAlertsLimits,
+          index: 2),
+      _NavItemData(
+          icon: FluentIcons.analytics_report, label: l10n.navReports, index: 3),
+      _NavItemData(
+          icon: FluentIcons.red_eye, label: l10n.navFocusMode, index: 4),
+      _NavItemData.separator(),
+      _NavItemData(
+          icon: FluentIcons.settings, label: l10n.navSettings, index: 5),
+      _NavItemData(icon: FluentIcons.chat_bot, label: l10n.navHelp, index: 6),
+    ];
+  }
+}
+
+// ============================================================================
+// NAV ITEM DATA - FIXED with named parameters
+// ============================================================================
+
+class _NavItemData {
+  final IconData? icon;
+  final String? label;
+  final int? index;
+  final bool isSeparator;
+
+  const _NavItemData({
+    required this.icon,
+    required this.label,
+    required this.index,
+  }) : isSeparator = false;
+
+  const _NavItemData.separator()
+      : icon = null,
+        label = null,
+        index = null,
+        isSeparator = true;
+}
+
+// ============================================================================
+// SIDEBAR HEADER
+// ============================================================================
+
+class _SidebarHeader extends StatelessWidget {
+  final double expandProgress;
+  final bool isDark;
+  final AppLocalizations l10n;
+  final bool isCompact;
+
+  const _SidebarHeader({
+    required this.expandProgress,
+    required this.isDark,
+    required this.l10n,
+    required this.isCompact,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final padding = isCompact ? AppDesign.spacingSm : AppDesign.spacingLg;
+    final margin = isCompact ? AppDesign.spacingXs : AppDesign.spacingMd;
+
+    return ClipRect(
+      child: Container(
+        margin: EdgeInsets.all(margin),
+        padding: EdgeInsets.all(padding),
+        decoration: BoxDecoration(
+          gradient: AppDesign.subtleGradient(isDark),
+          borderRadius: BorderRadius.circular(AppDesign.radiusLg),
+          border: Border.all(
+            color: AppDesign.primaryAccent.withValues(alpha: 0.2),
+            width: 1,
+          ),
+        ),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            // App Icon - Always visible
+            Container(
+              padding: const EdgeInsets.all(AppDesign.spacingSm),
+              decoration: BoxDecoration(
+                gradient: AppDesign.primaryGradient,
+                borderRadius: BorderRadius.circular(AppDesign.radiusMd),
+                boxShadow: [
+                  BoxShadow(
+                    color: AppDesign.primaryAccent.withValues(alpha: 0.3),
+                    blurRadius: 8,
+                    offset: const Offset(0, 2),
+                  ),
+                ],
+              ),
+              child: const Icon(
+                FluentIcons.timer,
+                color: Colors.white,
+                size: 20,
+              ),
+            ),
+
+            // Title & Subtitle (only when expanded enough)
+            if (expandProgress > 0.6) ...[
+              const SizedBox(width: AppDesign.spacingMd),
+              Flexible(
+                child: Opacity(
+                  opacity: ((expandProgress - 0.6) / 0.4).clamp(0.0, 1.0),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Text(
+                        l10n.sidebarTitle,
+                        style: TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.w700,
+                          color: isDark
+                              ? AppDesign.darkTextPrimary
+                              : AppDesign.lightTextPrimary,
+                        ),
+                        overflow: TextOverflow.ellipsis,
+                        maxLines: 1,
+                      ),
+                      const SizedBox(height: 2),
+                      Text(
+                        l10n.sidebarSubtitle,
+                        style: TextStyle(
+                          fontSize: 11,
+                          color: isDark
+                              ? AppDesign.darkTextSecondary
+                              : AppDesign.lightTextSecondary,
+                        ),
+                        overflow: TextOverflow.ellipsis,
+                        maxLines: 1,
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ],
           ],
         ),
       ),
@@ -574,47 +791,632 @@ class TitleBar extends StatelessWidget {
   }
 }
 
-/// Window Buttons (Minimize, Maximize, Close)
-final buttonColors = WindowButtonColors(
-    iconNormal: Colors.purple,
-    mouseOver: Colors.purple,
-    mouseDown: Colors.red,
-    iconMouseOver: Colors.red,
-    iconMouseDown: Colors.purple);
+// ============================================================================
+// SIDEBAR ITEM
+// ============================================================================
 
-final closeButtonColors = WindowButtonColors(
-    mouseOver: const Color(0xFFD32F2F),
-    mouseDown: const Color(0xFFB71C1C),
-    iconNormal: const Color(0xFF805306),
-    iconMouseOver: Colors.white);
+class _SidebarItem extends StatefulWidget {
+  final IconData icon;
+  final String label;
+  final bool isSelected;
+  final double expandProgress;
+  final bool isDark;
+  final bool isCompact;
+  final VoidCallback onTap;
 
-class WindowButtons extends StatelessWidget {
-  const WindowButtons({super.key});
+  const _SidebarItem({
+    required this.icon,
+    required this.label,
+    required this.isSelected,
+    required this.expandProgress,
+    required this.isDark,
+    required this.isCompact,
+    required this.onTap,
+  });
+
+  @override
+  State<_SidebarItem> createState() => _SidebarItemState();
+}
+
+class _SidebarItemState extends State<_SidebarItem> {
+  bool _isHovering = false;
+
+  @override
+  Widget build(BuildContext context) {
+    // Colors
+    Color bgColor = Colors.transparent;
+    Color iconColor = widget.isDark
+        ? AppDesign.darkTextSecondary
+        : AppDesign.lightTextSecondary;
+    Color textColor = iconColor;
+
+    if (widget.isSelected) {
+      bgColor =
+          AppDesign.primaryAccent.withValues(alpha: widget.isDark ? 0.2 : 0.1);
+      iconColor = AppDesign.primaryAccent;
+      textColor = AppDesign.primaryAccent;
+    } else if (_isHovering) {
+      bgColor = widget.isDark
+          ? Colors.white.withValues(alpha: 0.05)
+          : Colors.black.withValues(alpha: 0.03);
+      iconColor = widget.isDark
+          ? AppDesign.darkTextPrimary
+          : AppDesign.lightTextPrimary;
+      textColor = iconColor;
+    }
+
+    Widget itemContent;
+
+    if (widget.isCompact) {
+      // Compact mode - icon only, centered
+      itemContent = Container(
+        width: double.infinity,
+        padding: const EdgeInsets.symmetric(
+          vertical: AppDesign.spacingMd,
+        ),
+        decoration: BoxDecoration(
+          color: bgColor,
+          borderRadius: BorderRadius.circular(AppDesign.radiusMd),
+          border: widget.isSelected
+              ? Border.all(
+                  color: AppDesign.primaryAccent.withValues(alpha: 0.3),
+                  width: 1,
+                )
+              : null,
+        ),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            // Selection indicator bar at top
+            if (widget.isSelected)
+              Container(
+                width: 20,
+                height: 3,
+                margin: const EdgeInsets.only(bottom: AppDesign.spacingXs),
+                decoration: BoxDecoration(
+                  color: AppDesign.primaryAccent,
+                  borderRadius: BorderRadius.circular(2),
+                ),
+              ),
+            // Icon
+            Container(
+              padding: const EdgeInsets.all(AppDesign.spacingSm),
+              decoration: BoxDecoration(
+                color: widget.isSelected
+                    ? AppDesign.primaryAccent.withValues(alpha: 0.1)
+                    : Colors.transparent,
+                borderRadius: BorderRadius.circular(AppDesign.radiusSm),
+              ),
+              child: Icon(
+                widget.icon,
+                size: 20,
+                color: iconColor,
+              ),
+            ),
+          ],
+        ),
+      );
+    } else {
+      // Expanded mode - icon with label
+      itemContent = Container(
+        padding: const EdgeInsets.symmetric(
+          horizontal: AppDesign.spacingMd,
+          vertical: AppDesign.spacingMd,
+        ),
+        decoration: BoxDecoration(
+          color: bgColor,
+          borderRadius: BorderRadius.circular(AppDesign.radiusMd),
+          border: widget.isSelected
+              ? Border.all(
+                  color: AppDesign.primaryAccent.withValues(alpha: 0.3),
+                  width: 1,
+                )
+              : null,
+        ),
+        child: Row(
+          children: [
+            // Selection Indicator
+            AnimatedContainer(
+              duration: AppDesign.animFast,
+              width: 3,
+              height: widget.isSelected ? 20 : 0,
+              margin: const EdgeInsets.only(right: AppDesign.spacingSm),
+              decoration: BoxDecoration(
+                color: AppDesign.primaryAccent,
+                borderRadius: BorderRadius.circular(2),
+              ),
+            ),
+
+            // Icon
+            Container(
+              padding: const EdgeInsets.all(AppDesign.spacingXs),
+              decoration: BoxDecoration(
+                color: widget.isSelected
+                    ? AppDesign.primaryAccent.withValues(alpha: 0.1)
+                    : Colors.transparent,
+                borderRadius: BorderRadius.circular(AppDesign.radiusSm),
+              ),
+              child: Icon(
+                widget.icon,
+                size: 18,
+                color: iconColor,
+              ),
+            ),
+
+            const SizedBox(width: AppDesign.spacingMd),
+
+            // Label
+            Expanded(
+              child: Opacity(
+                opacity: widget.expandProgress.clamp(0.0, 1.0),
+                child: Text(
+                  widget.label,
+                  style: TextStyle(
+                    fontSize: 13,
+                    fontWeight:
+                        widget.isSelected ? FontWeight.w600 : FontWeight.w500,
+                    color: textColor,
+                  ),
+                  overflow: TextOverflow.ellipsis,
+                  maxLines: 1,
+                ),
+              ),
+            ),
+
+            // Selected indicator arrow
+            if (widget.isSelected)
+              Opacity(
+                opacity: widget.expandProgress.clamp(0.0, 1.0),
+                child: Icon(
+                  FluentIcons.chevron_right,
+                  size: 12,
+                  color: AppDesign.primaryAccent,
+                ),
+              ),
+          ],
+        ),
+      );
+    }
+
+    return Tooltip(
+      message: widget.isCompact ? widget.label : '',
+      style: TooltipThemeData(
+        decoration: BoxDecoration(
+          color: widget.isDark ? AppDesign.darkSurface : AppDesign.lightSurface,
+          borderRadius: BorderRadius.circular(AppDesign.radiusSm),
+          border: Border.all(
+            color: widget.isDark ? AppDesign.darkBorder : AppDesign.lightBorder,
+          ),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withValues(alpha: 0.1),
+              blurRadius: 8,
+              offset: const Offset(0, 2),
+            ),
+          ],
+        ),
+        textStyle: TextStyle(
+          color: widget.isDark
+              ? AppDesign.darkTextPrimary
+              : AppDesign.lightTextPrimary,
+          fontSize: 12,
+        ),
+      ),
+      child: MouseRegion(
+        onEnter: (_) => setState(() => _isHovering = true),
+        onExit: (_) => setState(() => _isHovering = false),
+        child: GestureDetector(
+          onTap: widget.onTap,
+          child: Padding(
+            padding: const EdgeInsets.symmetric(vertical: 2),
+            child: itemContent,
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+// ============================================================================
+// SIDEBAR FOOTER
+// ============================================================================
+
+class _SidebarFooter extends StatelessWidget {
+  final double expandProgress;
+  final bool isDark;
+  final bool isCompact;
+
+  const _SidebarFooter({
+    required this.expandProgress,
+    required this.isDark,
+    required this.isCompact,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final version = "v${SettingsManager().versionInfo["version"]}";
+
+    return ClipRect(
+      child: Container(
+        padding: EdgeInsets.all(
+            isCompact ? AppDesign.spacingSm : AppDesign.spacingMd),
+        decoration: BoxDecoration(
+          border: Border(
+            top: BorderSide(
+              color: isDark ? AppDesign.darkBorder : AppDesign.lightBorder,
+              width: 1,
+            ),
+          ),
+        ),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Icon(
+              FluentIcons.info,
+              size: 14,
+              color: isDark
+                  ? AppDesign.darkTextSecondary
+                  : AppDesign.lightTextSecondary,
+            ),
+            if (!isCompact && expandProgress > 0.6) ...[
+              const SizedBox(width: AppDesign.spacingSm),
+              Flexible(
+                child: Opacity(
+                  opacity: ((expandProgress - 0.6) / 0.4).clamp(0.0, 1.0),
+                  child: Text(
+                    version,
+                    style: TextStyle(
+                      fontSize: 11,
+                      color: isDark
+                          ? AppDesign.darkTextSecondary
+                          : AppDesign.lightTextSecondary,
+                    ),
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                ),
+              ),
+            ],
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+// ============================================================================
+// CONTENT AREA
+// ============================================================================
+
+class _ContentArea extends StatelessWidget {
+  final int selectedIndex;
+  final Function(Locale) setLocale;
+  final bool isDark;
+
+  const _ContentArea({
+    required this.selectedIndex,
+    required this.setLocale,
+    required this.isDark,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      color: isDark ? AppDesign.darkBackground : AppDesign.lightBackground,
+      child: AnimatedSwitcher(
+        duration: AppDesign.animMedium,
+        transitionBuilder: (child, animation) {
+          return FadeTransition(
+            opacity: animation,
+            child: SlideTransition(
+              position: Tween<Offset>(
+                begin: const Offset(0.02, 0),
+                end: Offset.zero,
+              ).animate(CurvedAnimation(
+                parent: animation,
+                curve: Curves.easeOutCubic,
+              )),
+              child: child,
+            ),
+          );
+        },
+        child: _getPage(selectedIndex),
+      ),
+    );
+  }
+
+  Widget _getPage(int index) {
+    switch (index) {
+      case 0:
+        return const Overview(key: ValueKey('overview'));
+      case 1:
+        return const Applications(key: ValueKey('applications'));
+      case 2:
+        return const AlertsLimits(key: ValueKey('alerts'));
+      case 3:
+        return const Reports(key: ValueKey('reports'));
+      case 4:
+        return const FocusMode(key: ValueKey('focus'));
+      case 5:
+        return Settings(key: const ValueKey('settings'), setLocale: setLocale);
+      case 6:
+        return const Help(key: ValueKey('help'));
+      default:
+        return const Overview(key: ValueKey('overview'));
+    }
+  }
+}
+
+// ============================================================================
+// ENHANCED TITLE BAR
+// ============================================================================
+
+class EnhancedTitleBar extends StatelessWidget {
+  final VoidCallback onToggleSidebar;
+  final bool isSidebarExpanded;
+
+  const EnhancedTitleBar({
+    super.key,
+    required this.onToggleSidebar,
+    required this.isSidebarExpanded,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final isDark = FluentTheme.of(context).brightness == Brightness.dark;
+    final l10n = AppLocalizations.of(context)!;
+    final isMacOS = Platform.isMacOS;
+
+    return WindowTitleBarBox(
+      child: Container(
+        decoration: BoxDecoration(
+          color: isDark ? const Color(0xFF141827) : AppDesign.lightSurface,
+          border: Border(
+            bottom: BorderSide(
+              color: isDark ? AppDesign.darkBorder : AppDesign.lightBorder,
+              width: 1,
+            ),
+          ),
+        ),
+        child: Row(
+          children: [
+            // macOS traffic light buttons
+            if (isMacOS) const EnhancedMacOSButtons(),
+
+            // Sidebar Toggle Button
+            if (!isMacOS) const SizedBox(width: AppDesign.spacingSm),
+            _SidebarToggleButton(
+              onPressed: onToggleSidebar,
+              isExpanded: isSidebarExpanded,
+              isDark: isDark,
+            ),
+
+            // Draggable area with title
+            Expanded(
+              child: MoveWindow(
+                child: Center(
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Container(
+                        padding: const EdgeInsets.all(4),
+                        decoration: BoxDecoration(
+                          gradient: AppDesign.primaryGradient,
+                          borderRadius:
+                              BorderRadius.circular(AppDesign.radiusSm),
+                        ),
+                        child: const Icon(
+                          FluentIcons.timer,
+                          size: 12,
+                          color: Colors.white,
+                        ),
+                      ),
+                      const SizedBox(width: AppDesign.spacingSm),
+                      Text(
+                        l10n.appTitle,
+                        style: TextStyle(
+                          fontSize: 13,
+                          fontWeight: FontWeight.w600,
+                          color: isDark
+                              ? AppDesign.darkTextPrimary
+                              : AppDesign.lightTextPrimary,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+
+            // Window buttons for Windows
+            if (!isMacOS) EnhancedWindowButtons(isDark: isDark),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+// ============================================================================
+// SIDEBAR TOGGLE BUTTON
+// ============================================================================
+
+class _SidebarToggleButton extends StatefulWidget {
+  final VoidCallback onPressed;
+  final bool isExpanded;
+  final bool isDark;
+
+  const _SidebarToggleButton({
+    required this.onPressed,
+    required this.isExpanded,
+    required this.isDark,
+  });
+
+  @override
+  State<_SidebarToggleButton> createState() => _SidebarToggleButtonState();
+}
+
+class _SidebarToggleButtonState extends State<_SidebarToggleButton> {
+  bool _isHovering = false;
+
+  @override
+  Widget build(BuildContext context) {
+    return MouseRegion(
+      onEnter: (_) => setState(() => _isHovering = true),
+      onExit: (_) => setState(() => _isHovering = false),
+      child: GestureDetector(
+        onTap: widget.onPressed,
+        child: AnimatedContainer(
+          duration: AppDesign.animFast,
+          margin: const EdgeInsets.symmetric(horizontal: AppDesign.spacingSm),
+          padding: const EdgeInsets.all(AppDesign.spacingSm),
+          decoration: BoxDecoration(
+            color: _isHovering
+                ? (widget.isDark
+                    ? Colors.white.withValues(alpha: 0.1)
+                    : Colors.black.withValues(alpha: 0.05))
+                : Colors.transparent,
+            borderRadius: BorderRadius.circular(AppDesign.radiusSm),
+          ),
+          child: AnimatedRotation(
+            turns: widget.isExpanded ? 0 : 0.5,
+            duration: AppDesign.animMedium,
+            child: Icon(
+              FluentIcons.collapse_menu,
+              size: 14,
+              color: widget.isDark
+                  ? AppDesign.darkTextSecondary
+                  : AppDesign.lightTextSecondary,
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+// ============================================================================
+// WINDOW BUTTONS (Windows)
+// ============================================================================
+
+class EnhancedWindowButtons extends StatelessWidget {
+  final bool isDark;
+
+  const EnhancedWindowButtons({super.key, required this.isDark});
 
   @override
   Widget build(BuildContext context) {
     return Row(
       children: [
-        MinimizeWindowButton(colors: buttonColors),
-        MaximizeWindowButton(colors: buttonColors),
-        CloseWindowButton(
-          colors: closeButtonColors,
-          onPressed: () => {appWindow.hide()},
+        _WindowButton(
+          icon: FluentIcons.chrome_minimize,
+          onPressed: () => appWindow.minimize(),
+          isDark: isDark,
+        ),
+        _WindowButton(
+          icon: FluentIcons.square_shape,
+          onPressed: () => appWindow.maximizeOrRestore(),
+          isDark: isDark,
+        ),
+        _WindowButton(
+          icon: FluentIcons.chrome_close,
+          onPressed: () => appWindow.hide(),
+          isDark: isDark,
+          isClose: true,
         ),
       ],
     );
   }
 }
 
-/// macOS Custom Window Buttons
-class _MacOSWindowButtons extends StatefulWidget {
-  const _MacOSWindowButtons();
+class _WindowButton extends StatefulWidget {
+  final IconData icon;
+  final VoidCallback onPressed;
+  final bool isDark;
+  final bool isClose;
+
+  const _WindowButton({
+    required this.icon,
+    required this.onPressed,
+    required this.isDark,
+    this.isClose = false,
+  });
 
   @override
-  State<_MacOSWindowButtons> createState() => _MacOSWindowButtonsState();
+  State<_WindowButton> createState() => _WindowButtonState();
 }
 
-class _MacOSWindowButtonsState extends State<_MacOSWindowButtons> {
+class _WindowButtonState extends State<_WindowButton> {
+  bool _isHovering = false;
+  bool _isPressed = false;
+
+  @override
+  Widget build(BuildContext context) {
+    Color bgColor = Colors.transparent;
+    Color iconColor = widget.isDark
+        ? AppDesign.darkTextSecondary
+        : AppDesign.lightTextSecondary;
+
+    if (_isHovering) {
+      if (widget.isClose) {
+        bgColor = AppDesign.errorColor;
+        iconColor = Colors.white;
+      } else {
+        bgColor = widget.isDark
+            ? Colors.white.withValues(alpha: 0.1)
+            : Colors.black.withValues(alpha: 0.05);
+      }
+    }
+
+    if (_isPressed) {
+      bgColor = widget.isClose
+          ? AppDesign.errorColor.withValues(alpha: 0.8)
+          : (widget.isDark
+              ? Colors.white.withValues(alpha: 0.15)
+              : Colors.black.withValues(alpha: 0.1));
+    }
+
+    return MouseRegion(
+      onEnter: (_) => setState(() => _isHovering = true),
+      onExit: (_) => setState(() {
+        _isHovering = false;
+        _isPressed = false;
+      }),
+      child: GestureDetector(
+        onTapDown: (_) => setState(() => _isPressed = true),
+        onTapUp: (_) => setState(() => _isPressed = false),
+        onTapCancel: () => setState(() => _isPressed = false),
+        onTap: widget.onPressed,
+        child: AnimatedContainer(
+          duration: AppDesign.animFast,
+          width: 46,
+          height: double.infinity,
+          color: bgColor,
+          child: Center(
+            child: Icon(
+              widget.icon,
+              size: 10,
+              color: iconColor,
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+// ============================================================================
+// MACOS BUTTONS
+// ============================================================================
+
+class EnhancedMacOSButtons extends StatefulWidget {
+  const EnhancedMacOSButtons({super.key});
+
+  @override
+  State<EnhancedMacOSButtons> createState() => _EnhancedMacOSButtonsState();
+}
+
+class _EnhancedMacOSButtonsState extends State<EnhancedMacOSButtons> {
   bool _isHoveringGroup = false;
 
   @override
@@ -622,31 +1424,28 @@ class _MacOSWindowButtonsState extends State<_MacOSWindowButtons> {
     return MouseRegion(
       onEnter: (_) => setState(() => _isHoveringGroup = true),
       onExit: (_) => setState(() => _isHoveringGroup = false),
-      child: Padding(
+      child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 12),
         child: Row(
           mainAxisSize: MainAxisSize.min,
           children: [
-            _TrafficLightButton(
-              color: const Color(0xFFFF5F57), // Red - Close
-              hoverColor: const Color(0xFFFF3B30),
-              icon: FluentIcons.chrome_minimize,
+            _MacOSButton(
+              color: const Color(0xFFFF5F57),
+              icon: FluentIcons.chrome_close,
               showIcon: _isHoveringGroup,
               onPressed: () => MacOSWindow.hide(),
             ),
             const SizedBox(width: 8),
-            _TrafficLightButton(
-              color: const Color(0xFFFFBD2E), // Yellow - Minimize
-              hoverColor: const Color(0xFFFF9500),
-              icon: FluentIcons.full_screen,
+            _MacOSButton(
+              color: const Color(0xFFFFBD2E),
+              icon: FluentIcons.chrome_minimize,
               showIcon: _isHoveringGroup,
               onPressed: () => MacOSWindow.minimize(),
             ),
             const SizedBox(width: 8),
-            _TrafficLightButton(
-              color: const Color(0xFF28CA41), // Green - Maximize
-              hoverColor: const Color(0xFF34C759),
-              icon: FluentIcons.chrome_close,
+            _MacOSButton(
+              color: const Color(0xFF28CA41),
+              icon: FluentIcons.full_screen,
               showIcon: _isHoveringGroup,
               onPressed: () => MacOSWindow.maximize(),
             ),
@@ -657,26 +1456,24 @@ class _MacOSWindowButtonsState extends State<_MacOSWindowButtons> {
   }
 }
 
-class _TrafficLightButton extends StatefulWidget {
+class _MacOSButton extends StatefulWidget {
   final Color color;
-  final Color hoverColor;
   final IconData icon;
   final bool showIcon;
   final VoidCallback onPressed;
 
-  const _TrafficLightButton({
+  const _MacOSButton({
     required this.color,
-    required this.hoverColor,
     required this.icon,
     required this.showIcon,
     required this.onPressed,
   });
 
   @override
-  State<_TrafficLightButton> createState() => _TrafficLightButtonState();
+  State<_MacOSButton> createState() => _MacOSButtonState();
 }
 
-class _TrafficLightButtonState extends State<_TrafficLightButton> {
+class _MacOSButtonState extends State<_MacOSButton> {
   bool _isHovering = false;
   bool _isPressed = false;
 
@@ -694,34 +1491,36 @@ class _TrafficLightButtonState extends State<_TrafficLightButton> {
         onTapCancel: () => setState(() => _isPressed = false),
         onTap: widget.onPressed,
         child: AnimatedContainer(
-          duration: const Duration(milliseconds: 100),
+          duration: AppDesign.animFast,
           width: 12,
           height: 12,
           decoration: BoxDecoration(
             color: _isPressed
-                ? widget.hoverColor.withOpacity(0.7)
-                : (_isHovering ? widget.hoverColor : widget.color),
+                ? widget.color.withValues(alpha: 0.7)
+                : (_isHovering
+                    ? widget.color.withValues(alpha: 0.9)
+                    : widget.color),
             shape: BoxShape.circle,
             border: Border.all(
-              color: widget.color.withOpacity(0.2),
+              color: widget.color.withValues(alpha: 0.3),
               width: 0.5,
             ),
             boxShadow: [
               BoxShadow(
-                color: widget.color.withOpacity(0.3),
-                blurRadius: 1,
+                color: widget.color.withValues(alpha: 0.4),
+                blurRadius: _isHovering ? 4 : 2,
                 offset: const Offset(0, 0.5),
               ),
             ],
           ),
           child: AnimatedOpacity(
-            duration: const Duration(milliseconds: 100),
+            duration: AppDesign.animFast,
             opacity: widget.showIcon ? 1.0 : 0.0,
             child: Center(
               child: Icon(
                 widget.icon,
-                size: 8,
-                color: Colors.black.withOpacity(0.5),
+                size: 7,
+                color: Colors.black.withValues(alpha: 0.6),
               ),
             ),
           ),

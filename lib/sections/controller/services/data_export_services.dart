@@ -1,4 +1,3 @@
-
 import 'dart:convert';
 import 'dart:io';
 
@@ -13,11 +12,11 @@ import '../app_data_controller.dart'; // Your existing file
 
 class DataExportService {
   final AppDataStore _dataStore;
-  
+
   // File extension for exports
   static const String exportExtension = '.stbackup'; // screentime backup
   static const String exportMimeType = 'application/octet-stream';
-  
+
   DataExportService(this._dataStore);
 
   /// Export all data to a compressed file
@@ -27,7 +26,7 @@ class DataExportService {
   }) async {
     try {
       onProgress?.call(0.0, 'Preparing export...');
-      
+
       if (!_dataStore.isInitialized) {
         return ExportResult.failure('Data store not initialized');
       }
@@ -35,10 +34,10 @@ class DataExportService {
       // Step 1: Collect all data
       onProgress?.call(0.1, 'Collecting usage data...');
       final appUsageData = await _collectAppUsageData();
-      
+
       onProgress?.call(0.3, 'Collecting focus sessions...');
       final focusSessionData = await _collectFocusSessionData();
-      
+
       onProgress?.call(0.5, 'Collecting app metadata...');
       final metadataData = await _collectMetadataData();
 
@@ -60,15 +59,16 @@ class DataExportService {
       // Step 4: Convert to JSON
       onProgress?.call(0.7, 'Serializing data...');
       final jsonString = jsonEncode(envelope.toJson());
-      
+
       // Step 5: Compress (optional)
       Uint8List fileData;
       String fileName;
-      
+
       if (compress) {
         onProgress?.call(0.8, 'Compressing data...');
         fileData = _compressData(utf8.encode(jsonString));
-        fileName = 'screentime_backup_${_formatDateTime(DateTime.now())}$exportExtension';
+        fileName =
+            'screentime_backup_${_formatDateTime(DateTime.now())}$exportExtension';
       } else {
         fileData = Uint8List.fromList(utf8.encode(jsonString));
         fileName = 'screentime_backup_${_formatDateTime(DateTime.now())}.json';
@@ -79,12 +79,13 @@ class DataExportService {
       final filePath = await _saveToFile(fileData, fileName);
 
       onProgress?.call(1.0, 'Export complete!');
-      
+
       return ExportResult.success(
         filePath: filePath,
         fileName: fileName,
         fileSize: fileData.length,
-        recordCount: appUsageData.length + focusSessionData.length + metadataData.length,
+        recordCount:
+            appUsageData.length + focusSessionData.length + metadataData.length,
       );
     } catch (e, stackTrace) {
       debugPrint('Export error: $e\n$stackTrace');
@@ -100,7 +101,7 @@ class DataExportService {
   }) async {
     try {
       onProgress?.call(0.0, 'Starting import...');
-      
+
       if (!_dataStore.isInitialized) {
         return ImportResult.failure('Data store not initialized');
       }
@@ -121,13 +122,13 @@ class DataExportService {
       if (!await file.exists()) {
         return ImportResult.failure('File not found');
       }
-      
+
       final fileBytes = await file.readAsBytes();
 
       // Step 3: Decompress if needed
       onProgress?.call(0.2, 'Processing file...');
       String jsonString;
-      
+
       if (path.endsWith(exportExtension)) {
         try {
           jsonString = _decompressData(fileBytes);
@@ -158,15 +159,15 @@ class DataExportService {
 
       // Validate checksum
       if (!envelope.validateChecksum()) {
-        return ImportResult.failure('Data integrity check failed. The file may be corrupted.');
+        return ImportResult.failure(
+            'Data integrity check failed. The file may be corrupted.');
       }
 
       // Check version compatibility
       if (!_isVersionCompatible(envelope.version)) {
         return ImportResult.failure(
-          'Incompatible backup version: ${envelope.version}. '
-          'Please update the app to import this backup.'
-        );
+            'Incompatible backup version: ${envelope.version}. '
+            'Please update the app to import this backup.');
       }
 
       // Step 6: Import data based on mode
@@ -241,14 +242,14 @@ class DataExportService {
   /// Collect all app usage data
   Future<List<ExportableAppUsage>> _collectAppUsageData() async {
     final List<ExportableAppUsage> result = [];
-    
+
     for (final appName in _dataStore.allAppNames) {
       // Get usage for last 365 days (or all available)
       final now = DateTime.now();
       final startDate = now.subtract(const Duration(days: 365));
-      
+
       final usageRecords = _dataStore.getAppUsageRange(appName, startDate, now);
-      
+
       for (final record in usageRecords) {
         result.add(ExportableAppUsage(
           appName: appName,
@@ -256,32 +257,33 @@ class DataExportService {
           date: record.date.toIso8601String(),
           timeSpentMicroseconds: record.timeSpent.inMicroseconds,
           openCount: record.openCount,
-          usagePeriods: record.usagePeriods.map((period) => 
-            ExportableTimeRange(
-              startTime: period.startTime.toIso8601String(),
-              endTime: period.endTime.toIso8601String(),
-            )
-          ).toList(),
+          usagePeriods: record.usagePeriods
+              .map((period) => ExportableTimeRange(
+                    startTime: period.startTime.toIso8601String(),
+                    endTime: period.endTime.toIso8601String(),
+                  ))
+              .toList(),
         ));
       }
     }
-    
+
     return result;
   }
 
   /// Collect all focus session data
   Future<List<ExportableFocusSession>> _collectFocusSessionData() async {
     final List<ExportableFocusSession> result = [];
-    
+
     // Get sessions for last 365 days
     final now = DateTime.now();
     final startDate = now.subtract(const Duration(days: 365));
-    
+
     final sessions = _dataStore.getFocusSessionsRange(startDate, now);
-    
+
     for (final session in sessions) {
-      final key = '${_formatDateKey(session.date)}:${session.startTime.millisecondsSinceEpoch}';
-      
+      final key =
+          '${_formatDateKey(session.date)}:${session.startTime.millisecondsSinceEpoch}';
+
       result.add(ExportableFocusSession(
         key: key,
         date: session.date.toIso8601String(),
@@ -293,17 +295,17 @@ class DataExportService {
         totalBreakTimeMicroseconds: session.totalBreakTime.inMicroseconds,
       ));
     }
-    
+
     return result;
   }
 
   /// Collect all app metadata
   Future<List<ExportableAppMetadata>> _collectMetadataData() async {
     final List<ExportableAppMetadata> result = [];
-    
+
     for (final appName in _dataStore.allAppNames) {
       final metadata = _dataStore.getAppMetadata(appName);
-      
+
       if (metadata != null) {
         result.add(ExportableAppMetadata(
           appName: appName,
@@ -316,7 +318,7 @@ class DataExportService {
         ));
       }
     }
-    
+
     return result;
   }
 
@@ -331,7 +333,7 @@ class DataExportService {
 
     for (final item in data) {
       final existing = _dataStore.getAppMetadata(item.appName);
-      
+
       if (existing != null) {
         switch (mode) {
           case ImportMode.replace:
@@ -380,11 +382,13 @@ class DataExportService {
     for (final item in data) {
       final date = DateTime.parse(item.date);
       final existing = _dataStore.getAppUsage(item.appName, date);
-      
-      final usagePeriods = item.usagePeriods.map((p) => TimeRange(
-        startTime: DateTime.parse(p.startTime),
-        endTime: DateTime.parse(p.endTime),
-      )).toList();
+
+      final usagePeriods = item.usagePeriods
+          .map((p) => TimeRange(
+                startTime: DateTime.parse(p.startTime),
+                endTime: DateTime.parse(p.endTime),
+              ))
+          .toList();
 
       if (existing != null) {
         switch (mode) {
@@ -393,7 +397,8 @@ class DataExportService {
             await _dataStore.recordAppUsage(
               item.appName,
               date,
-              Duration(microseconds: item.timeSpentMicroseconds) - existing.timeSpent,
+              Duration(microseconds: item.timeSpentMicroseconds) -
+                  existing.timeSpent,
               item.openCount - existing.openCount,
               usagePeriods,
             );
@@ -401,7 +406,8 @@ class DataExportService {
             break;
           case ImportMode.merge:
             // Merge - add only new time ranges
-            final newPeriods = _filterNewPeriods(usagePeriods, existing.usagePeriods);
+            final newPeriods =
+                _filterNewPeriods(usagePeriods, existing.usagePeriods);
             if (newPeriods.isNotEmpty) {
               await _dataStore.recordAppUsage(
                 item.appName,
@@ -446,12 +452,12 @@ class DataExportService {
     for (final item in data) {
       final date = DateTime.parse(item.date);
       final existingSessions = _dataStore.getFocusSessions(date);
-      
+
       // Check if this session already exists
       final startTime = DateTime.parse(item.startTime);
-      final exists = existingSessions.any((s) => 
-        s.startTime.millisecondsSinceEpoch == startTime.millisecondsSinceEpoch
-      );
+      final exists = existingSessions.any((s) =>
+          s.startTime.millisecondsSinceEpoch ==
+          startTime.millisecondsSinceEpoch);
 
       if (exists) {
         switch (mode) {
@@ -465,7 +471,8 @@ class DataExportService {
               appsBlocked: item.appsBlocked,
               completed: item.completed,
               breakCount: item.breakCount,
-              totalBreakTime: Duration(microseconds: item.totalBreakTimeMicroseconds),
+              totalBreakTime:
+                  Duration(microseconds: item.totalBreakTimeMicroseconds),
             ));
             updated++;
             break;
@@ -482,7 +489,8 @@ class DataExportService {
           appsBlocked: item.appsBlocked,
           completed: item.completed,
           breakCount: item.breakCount,
-          totalBreakTime: Duration(microseconds: item.totalBreakTimeMicroseconds),
+          totalBreakTime:
+              Duration(microseconds: item.totalBreakTimeMicroseconds),
         ));
         imported++;
       }
@@ -498,10 +506,9 @@ class DataExportService {
   ) {
     return imported.where((importedPeriod) {
       return !existing.any((existingPeriod) =>
-        importedPeriod.startTime.isAtSameMomentAs(existingPeriod.startTime) ||
-        (importedPeriod.startTime.isAfter(existingPeriod.startTime) &&
-         importedPeriod.startTime.isBefore(existingPeriod.endTime))
-      );
+          importedPeriod.startTime.isAtSameMomentAs(existingPeriod.startTime) ||
+          (importedPeriod.startTime.isAfter(existingPeriod.startTime) &&
+              importedPeriod.startTime.isBefore(existingPeriod.endTime)));
     }).toList();
   }
 
@@ -519,18 +526,59 @@ class DataExportService {
     return utf8.decode(decompressed);
   }
 
-  /// Save data to a file
+  /// Save data to a file (with save dialog on macOS)
   Future<String> _saveToFile(Uint8List data, String fileName) async {
-    final directory = await getApplicationDocumentsDirectory();
+    if (Platform.isMacOS) {
+      // On macOS, let user choose location via save dialog
+      try {
+        final String? outputPath = await FilePicker.platform.saveFile(
+          dialogTitle: 'Save Backup',
+          fileName: fileName,
+          allowedExtensions: ['stbackup'],
+          type: FileType.custom,
+        );
+
+        if (outputPath == null) {
+          throw Exception('Save cancelled by user');
+        }
+
+        final file = File(outputPath);
+        await file.writeAsBytes(data);
+
+        debugPrint('✅ Backup saved to: ${file.path}');
+        return file.path;
+      } catch (e) {
+        debugPrint('Save dialog error: $e');
+        // Fallback to default location
+        return await _saveToDefaultLocation(data, fileName);
+      }
+    } else {
+      // Windows/Linux: use default location
+      return await _saveToDefaultLocation(data, fileName);
+    }
+  }
+
+  /// Fallback: save to default location
+  Future<String> _saveToDefaultLocation(Uint8List data, String fileName) async {
+    Directory? directory;
+
+    try {
+      directory = await getDownloadsDirectory();
+    } catch (e) {
+      debugPrint('Could not access Downloads: $e');
+    }
+    directory ??= await getApplicationDocumentsDirectory();
+
     final exportDir = Directory('${directory.path}/TimeMark-Backups');
-    
+
     if (!await exportDir.exists()) {
       await exportDir.create(recursive: true);
     }
-    
+
     final file = File('${exportDir.path}/$fileName');
     await file.writeAsBytes(data);
-    
+
+    debugPrint('✅ Backup saved to: ${file.path}');
     return file.path;
   }
 
@@ -541,7 +589,7 @@ class DataExportService {
       allowedExtensions: ['stbackup', 'json'],
       allowMultiple: false,
     );
-    
+
     return result?.files.single.path;
   }
 
@@ -567,7 +615,7 @@ class DataExportService {
   /// Format date for file names
   String _formatDateTime(DateTime date) {
     return '${date.year}${date.month.toString().padLeft(2, '0')}${date.day.toString().padLeft(2, '0')}_'
-           '${date.hour.toString().padLeft(2, '0')}${date.minute.toString().padLeft(2, '0')}';
+        '${date.hour.toString().padLeft(2, '0')}${date.minute.toString().padLeft(2, '0')}';
   }
 
   /// Format date key (same as in AppDataStore)

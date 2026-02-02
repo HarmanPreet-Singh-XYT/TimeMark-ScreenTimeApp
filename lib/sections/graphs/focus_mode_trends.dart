@@ -1,25 +1,17 @@
+// focus_mode_trends.dart
 import 'package:fl_chart/fl_chart.dart';
 import './resources/app_resources.dart';
-import 'package:flutter/material.dart';
+import 'package:fluent_ui/fluent_ui.dart' hide Colors;
+import 'package:flutter/material.dart'
+    show Colors, Material, SegmentedButton, ButtonSegment;
 import 'package:screentime/l10n/app_localizations.dart';
 
 class FocusModeTrends extends StatefulWidget {
   const FocusModeTrends({
     super.key,
     required this.data,
-    Color? gradientColor1,
-    Color? gradientColor2,
-    Color? gradientColor3,
-    Color? indicatorStrokeColor,
-  })  : gradientColor1 = gradientColor1 ?? AppColors.contentColorBlue,
-        gradientColor2 = gradientColor2 ?? AppColors.contentColorPink,
-        gradientColor3 = gradientColor3 ?? AppColors.contentColorRed,
-        indicatorStrokeColor = indicatorStrokeColor ?? AppColors.mainTextColor1;
+  });
 
-  final Color gradientColor1;
-  final Color gradientColor2;
-  final Color gradientColor3;
-  final Color indicatorStrokeColor;
   final Map<String, dynamic> data;
 
   @override
@@ -27,326 +19,490 @@ class FocusModeTrends extends StatefulWidget {
 }
 
 class _FocusModeTrendsState extends State<FocusModeTrends> {
-  List<int> showingTooltipOnSpots = [];
+  int? _touchedIndex;
   String _selectedMetric = 'sessionCounts';
-  
+
+  // Color schemes for different metrics
+  final Map<String, List<Color>> _metricColors = {
+    'sessionCounts': [const Color(0xFF42A5F5), const Color(0xFF1976D2)],
+    'avgDuration': [const Color(0xFF66BB6A), const Color(0xFF388E3C)],
+    'totalFocusTime': [const Color(0xFFFF7043), const Color(0xFFE64A19)],
+  };
+
   List<FlSpot> get allSpots {
-    final List<dynamic> values = widget.data[_selectedMetric];
-    return List.generate(
-      values.length, 
-      (index) => FlSpot(index.toDouble(), values[index].toDouble())
-    );
+    final List<dynamic> values = widget.data[_selectedMetric] ?? [];
+    if (values.isEmpty) return [const FlSpot(0, 0)];
+    return List.generate(values.length,
+        (index) => FlSpot(index.toDouble(), (values[index] as num).toDouble()));
   }
 
-  String getYAxisTitle(BuildContext context) {
-    final l10n = AppLocalizations.of(context)!;
-    switch(_selectedMetric) {
-      case 'sessionCounts':
-        return l10n.chart_yAxis_sessions;
-      case 'avgDuration':
-        return l10n.chart_yAxis_minutes;
-      case 'totalFocusTime':
-        return l10n.chart_yAxis_minutes;
-      default:
-        return l10n.chart_yAxis_value;
-    }
-  }
-
-  Widget bottomTitleWidgets(double value, TitleMeta meta, double chartWidth) {
-    const style = TextStyle(
-      fontWeight: FontWeight.bold,
-      color: AppColors.contentColorPink,
-      fontFamily: 'Digital',
-      fontSize: 14,
-    );
-    
-    final int index = value.toInt();
-    if (index >= 0 && index < (widget.data['periods'] as List).length) {
-      return SideTitleWidget(
-        meta: meta,
-        child: Text(widget.data['periods'][index], style: style),
-      );
-    }
-    return Container();
+  double get maxY {
+    final spots = allSpots;
+    if (spots.isEmpty) return 10;
+    final maxVal = spots.map((s) => s.y).reduce((a, b) => a > b ? a : b);
+    return (maxVal * 1.2).ceilToDouble().clamp(5, double.infinity);
   }
 
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
-    final spots = allSpots;
-    
-    final lineBarsData = [
-      LineChartBarData(
-        showingIndicators: showingTooltipOnSpots,
-        spots: spots,
-        isCurved: true,
-        barWidth: 4,
-        shadow: const Shadow(
-          blurRadius: 8,
-        ),
-        belowBarData: BarAreaData(
-          show: true,
-          gradient: LinearGradient(
-            colors: [
-              widget.gradientColor1.withValues(alpha: .4),
-              widget.gradientColor2.withValues(alpha: .4),
-              widget.gradientColor3.withValues(alpha: .4),
-            ],
-          ),
-        ),
-        dotData: const FlDotData(show: false),
-        gradient: LinearGradient(
-          colors: [
-            widget.gradientColor1,
-            widget.gradientColor2,
-            widget.gradientColor3,
-          ],
-          stops: const [0.1, 0.4, 0.9],
-        ),
-      ),
-    ];
-
-    final tooltipsOnBar = lineBarsData[0];
+    final colors = _metricColors[_selectedMetric]!;
+    final percentageChange = widget.data['percentageChange'] as num? ?? 0;
 
     return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            SegmentedButton<String>(
-              segments: [
-                ButtonSegment(
-                  value: 'sessionCounts',
-                  label: Text(l10n.chart_sessionCount),
-                ),
-                ButtonSegment(
-                  value: 'avgDuration',
-                  label: Text(l10n.chart_avgDuration),
-                ),
-                ButtonSegment(
-                  value: 'totalFocusTime',
-                  label: Text(l10n.chart_totalFocus),
-                ),
-              ],
-              selected: {_selectedMetric},
-              onSelectionChanged: (Set<String> selection) {
-                setState(() {
-                  _selectedMetric = selection.first;
-                  showingTooltipOnSpots = [];
-                });
-              },
-            ),
-          ],
-        ),
+        // Metric selector
+        _buildMetricSelector(context, l10n),
+        const SizedBox(height: 16),
+
+        // Stats row
+        _buildStatsRow(context, l10n, percentageChange, colors[0]),
         const SizedBox(height: 20),
-        widget.data['percentageChange'] != null ? Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 24.0),
-          child: Row(
-            children: [
-              Text(
-                l10n.chart_monthOverMonthChange,
-                style: const TextStyle(fontWeight: FontWeight.bold),
-              ),
-              Text(
-                "${widget.data['percentageChange']}%",
-                style: TextStyle(
-                  color: widget.data['percentageChange'] >= 0 
-                    ? Colors.green 
-                    : Colors.red,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-            ],
-          ),
-        ) : Container(),
+
+        // Chart
         AspectRatio(
-          aspectRatio: 3,
-          child: Padding(
-            padding: const EdgeInsets.symmetric(
-              horizontal: 24.0,
-              vertical: 10,
+          aspectRatio: 2.5,
+          child: LineChart(
+            LineChartData(
+              lineTouchData: _buildTouchData(context, l10n, colors[0]),
+              gridData: _buildGridData(context),
+              titlesData: _buildTitlesData(context),
+              borderData: FlBorderData(show: false),
+              lineBarsData: [_buildLineBarData(colors)],
+              minY: 0,
+              maxY: maxY,
             ),
-            child: LayoutBuilder(builder: (context, constraints) {
-              return LineChart(
-                LineChartData(
-                  showingTooltipIndicators: showingTooltipOnSpots.map((index) {
-                    return ShowingTooltipIndicators([
-                      LineBarSpot(
-                        tooltipsOnBar,
-                        lineBarsData.indexOf(tooltipsOnBar),
-                        tooltipsOnBar.spots[index],
-                      ),
-                    ]);
-                  }).toList(),
-                  lineTouchData: LineTouchData(
-                    enabled: true,
-                    handleBuiltInTouches: false,
-                    touchCallback:
-                        (FlTouchEvent event, LineTouchResponse? response) {
-                      if (response == null || response.lineBarSpots == null) {
-                        return;
-                      }
-                      if (event is FlTapUpEvent) {
-                        final spotIndex = response.lineBarSpots!.first.spotIndex;
-                        setState(() {
-                          if (showingTooltipOnSpots.contains(spotIndex)) {
-                            showingTooltipOnSpots.remove(spotIndex);
-                          } else {
-                            showingTooltipOnSpots.add(spotIndex);
-                          }
-                        });
-                      }
-                    },
-                    mouseCursorResolver:
-                        (FlTouchEvent event, LineTouchResponse? response) {
-                      if (response == null || response.lineBarSpots == null) {
-                        return SystemMouseCursors.basic;
-                      }
-                      return SystemMouseCursors.click;
-                    },
-                    getTouchedSpotIndicator:
-                        (LineChartBarData barData, List<int> spotIndexes) {
-                      return spotIndexes.map((index) {
-                        return TouchedSpotIndicatorData(
-                          const FlLine(
-                            color: Colors.pink,
-                          ),
-                          FlDotData(
-                            show: true,
-                            getDotPainter: (spot, percent, barData, index) =>
-                                FlDotCirclePainter(
-                              radius: 8,
-                              color: lerpGradient(
-                                barData.gradient!.colors,
-                                barData.gradient!.stops!,
-                                percent / 100,
-                              ),
-                              strokeWidth: 2,
-                              strokeColor: widget.indicatorStrokeColor,
-                            ),
-                          ),
-                        );
-                      }).toList();
-                    },
-                    touchTooltipData: LineTouchTooltipData(
-                      getTooltipColor: (touchedSpot) => Colors.pink,
-                      tooltipBorderRadius:BorderRadius.circular(8.0),
-                      getTooltipItems: (List<LineBarSpot> lineBarsSpot) {
-                        return lineBarsSpot.map((lineBarSpot) {
-                          String tooltipText = "";
-                          
-                          switch(_selectedMetric) {
-                            case 'avgDuration':
-                            case 'totalFocusTime':
-                              tooltipText = l10n.time_minutesFormat(lineBarSpot.y.toStringAsFixed(1));
-                              break;
-                            default:
-                              tooltipText = lineBarSpot.y.toStringAsFixed(0);
-                          }
-                          
-                          return LineTooltipItem(
-                            tooltipText,
-                            const TextStyle(
-                              color: Colors.white,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          );
-                        }).toList();
-                      },
-                    ),
-                  ),
-                  lineBarsData: lineBarsData,
-                  minY: 0,
-                  titlesData: FlTitlesData(
-                    leftTitles: AxisTitles(
-                      axisNameWidget: Text(getYAxisTitle(context)),
-                      axisNameSize: 24,
-                      sideTitles: SideTitles(
-                        showTitles: true,
-                        getTitlesWidget: (value, meta) {
-                          return SideTitleWidget(
-                            meta: meta,
-                            child: Text(value.toInt().toString()),
-                          );
-                        },
-                        reservedSize: 30,
-                      ),
-                    ),
-                    bottomTitles: AxisTitles(
-                      sideTitles: SideTitles(
-                        showTitles: true,
-                        interval: 1,
-                        getTitlesWidget: (value, meta) {
-                          return bottomTitleWidgets(
-                            value,
-                            meta,
-                            constraints.maxWidth,
-                          );
-                        },
-                        reservedSize: 30,
-                      ),
-                    ),
-                    rightTitles: const AxisTitles(
-                      sideTitles: SideTitles(
-                        showTitles: false,
-                        reservedSize: 0,
-                      ),
-                    ),
-                    topTitles: AxisTitles(
-                      axisNameWidget: Text(
-                        l10n.chart_focusTrends,
-                        textAlign: TextAlign.left,
-                      ),
-                      axisNameSize: 24,
-                      sideTitles: const SideTitles(
-                        showTitles: true,
-                        reservedSize: 0,
-                      ),
-                    ),
-                  ),
-                  gridData: const FlGridData(show: true),
-                  borderData: FlBorderData(
-                    show: true,
-                    border: Border.all(
-                      color: AppColors.borderColor,
-                    ),
-                  ),
-                ),
-              );
-            }),
+            duration: const Duration(milliseconds: 300),
+            curve: Curves.easeOutCubic,
           ),
         ),
       ],
     );
   }
+
+  Widget _buildMetricSelector(BuildContext context, AppLocalizations l10n) {
+    return Container(
+      decoration: BoxDecoration(
+        color: FluentTheme.of(context).inactiveBackgroundColor.withOpacity(0.3),
+        borderRadius: BorderRadius.circular(8),
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          _MetricTab(
+            label: l10n.chart_sessionCount,
+            isSelected: _selectedMetric == 'sessionCounts',
+            color: _metricColors['sessionCounts']![0],
+            onTap: () => setState(() {
+              _selectedMetric = 'sessionCounts';
+              _touchedIndex = null;
+            }),
+          ),
+          _MetricTab(
+            label: l10n.chart_avgDuration,
+            isSelected: _selectedMetric == 'avgDuration',
+            color: _metricColors['avgDuration']![0],
+            onTap: () => setState(() {
+              _selectedMetric = 'avgDuration';
+              _touchedIndex = null;
+            }),
+          ),
+          _MetricTab(
+            label: l10n.chart_totalFocus,
+            isSelected: _selectedMetric == 'totalFocusTime',
+            color: _metricColors['totalFocusTime']![0],
+            onTap: () => setState(() {
+              _selectedMetric = 'totalFocusTime';
+              _touchedIndex = null;
+            }),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildStatsRow(BuildContext context, AppLocalizations l10n,
+      num percentageChange, Color color) {
+    final spots = allSpots;
+    final currentValue = spots.isNotEmpty ? spots.last.y : 0;
+    final previousValue =
+        spots.length > 1 ? spots[spots.length - 2].y : currentValue;
+
+    String formatValue(double value) {
+      switch (_selectedMetric) {
+        case 'avgDuration':
+        case 'totalFocusTime':
+          return '${value.toStringAsFixed(0)} min';
+        default:
+          return value.toStringAsFixed(0);
+      }
+    }
+
+    return Row(
+      children: [
+        _StatCard(
+          label: 'Current',
+          value: formatValue(currentValue.toDouble()),
+          color: color,
+        ),
+        const SizedBox(width: 12),
+        _StatCard(
+          label: 'Previous',
+          value: formatValue(previousValue.toDouble()),
+          color: Colors.grey,
+        ),
+        const SizedBox(width: 12),
+        _TrendIndicator(
+          percentageChange: percentageChange.toDouble(),
+        ),
+      ],
+    );
+  }
+
+  LineTouchData _buildTouchData(
+      BuildContext context, AppLocalizations l10n, Color color) {
+    return LineTouchData(
+      enabled: true,
+      touchTooltipData: LineTouchTooltipData(
+        tooltipBorderRadius: BorderRadius.circular(8),
+        tooltipPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+        getTooltipColor: (spot) => FluentTheme.of(context).micaBackgroundColor,
+        getTooltipItems: (touchedSpots) {
+          return touchedSpots.map((spot) {
+            final periods = widget.data['periods'] as List? ?? [];
+            final periodLabel =
+                spot.x.toInt() < periods.length ? periods[spot.x.toInt()] : '';
+
+            String valueText;
+            switch (_selectedMetric) {
+              case 'avgDuration':
+              case 'totalFocusTime':
+                valueText = '${spot.y.toStringAsFixed(1)} min';
+                break;
+              default:
+                valueText = spot.y.toStringAsFixed(0);
+            }
+
+            return LineTooltipItem(
+              '$periodLabel\n',
+              TextStyle(
+                color: FluentTheme.of(context)
+                    .typography
+                    .body
+                    ?.color
+                    ?.withOpacity(0.6),
+                fontSize: 11,
+              ),
+              children: [
+                TextSpan(
+                  text: valueText,
+                  style: TextStyle(
+                    color: color,
+                    fontWeight: FontWeight.bold,
+                    fontSize: 14,
+                  ),
+                ),
+              ],
+            );
+          }).toList();
+        },
+      ),
+      touchCallback: (FlTouchEvent event, LineTouchResponse? response) {
+        if (response == null || response.lineBarSpots == null) {
+          setState(() => _touchedIndex = null);
+          return;
+        }
+        if (event is FlTapUpEvent || event is FlPanUpdateEvent) {
+          setState(() {
+            _touchedIndex = response.lineBarSpots!.isNotEmpty
+                ? response.lineBarSpots!.first.spotIndex
+                : null;
+          });
+        }
+      },
+      handleBuiltInTouches: true,
+      getTouchedSpotIndicator: (barData, spotIndexes) {
+        return spotIndexes.map((index) {
+          return TouchedSpotIndicatorData(
+            FlLine(
+              color: color.withOpacity(0.3),
+              strokeWidth: 2,
+              dashArray: [5, 5],
+            ),
+            FlDotData(
+              show: true,
+              getDotPainter: (spot, percent, bar, index) {
+                return FlDotCirclePainter(
+                  radius: 6,
+                  color: color,
+                  strokeWidth: 2,
+                  strokeColor: Colors.white,
+                );
+              },
+            ),
+          );
+        }).toList();
+      },
+    );
+  }
+
+  FlGridData _buildGridData(BuildContext context) {
+    return FlGridData(
+      show: true,
+      drawVerticalLine: false,
+      horizontalInterval: maxY / 4,
+      getDrawingHorizontalLine: (value) => FlLine(
+        color: FluentTheme.of(context).inactiveBackgroundColor.withOpacity(0.4),
+        strokeWidth: 1,
+        dashArray: [5, 5],
+      ),
+    );
+  }
+
+  FlTitlesData _buildTitlesData(BuildContext context) {
+    final periods = widget.data['periods'] as List? ?? [];
+
+    return FlTitlesData(
+      bottomTitles: AxisTitles(
+        sideTitles: SideTitles(
+          showTitles: true,
+          reservedSize: 32,
+          interval: 1,
+          getTitlesWidget: (value, meta) {
+            final index = value.toInt();
+            if (index < 0 || index >= periods.length) {
+              return const SizedBox.shrink();
+            }
+
+            return SideTitleWidget(
+              meta: meta,
+              space: 8,
+              child: Text(
+                periods[index].toString(),
+                style: TextStyle(
+                  color: FluentTheme.of(context)
+                      .typography
+                      .body
+                      ?.color
+                      ?.withOpacity(0.5),
+                  fontSize: 11,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+            );
+          },
+        ),
+      ),
+      leftTitles: AxisTitles(
+        sideTitles: SideTitles(
+          showTitles: true,
+          reservedSize: 40,
+          getTitlesWidget: (value, meta) {
+            if (value == 0) return const SizedBox.shrink();
+            return SideTitleWidget(
+              meta: meta,
+              child: Text(
+                value.toInt().toString(),
+                style: TextStyle(
+                  color: FluentTheme.of(context)
+                      .typography
+                      .body
+                      ?.color
+                      ?.withOpacity(0.4),
+                  fontSize: 10,
+                ),
+              ),
+            );
+          },
+        ),
+      ),
+      topTitles: const AxisTitles(sideTitles: SideTitles(showTitles: false)),
+      rightTitles: const AxisTitles(sideTitles: SideTitles(showTitles: false)),
+    );
+  }
+
+  LineChartBarData _buildLineBarData(List<Color> colors) {
+    return LineChartBarData(
+      spots: allSpots,
+      isCurved: true,
+      curveSmoothness: 0.3,
+      preventCurveOverShooting: true,
+      barWidth: 3,
+      isStrokeCapRound: true,
+      gradient: LinearGradient(colors: colors),
+      dotData: FlDotData(
+        show: true,
+        getDotPainter: (spot, percent, barData, index) {
+          final isHighlighted = index == _touchedIndex;
+          return FlDotCirclePainter(
+            radius: isHighlighted ? 6 : 4,
+            color: colors[0],
+            strokeWidth: 2,
+            strokeColor: Colors.white,
+          );
+        },
+      ),
+      belowBarData: BarAreaData(
+        show: true,
+        gradient: LinearGradient(
+          colors: [
+            colors[0].withOpacity(0.3),
+            colors[1].withOpacity(0.05),
+          ],
+          begin: Alignment.topCenter,
+          end: Alignment.bottomCenter,
+        ),
+      ),
+    );
+  }
 }
 
-Color lerpGradient(List<Color> colors, List<double> stops, double t) {
-  if (colors.isEmpty) {
-    throw ArgumentError('"colors" is empty.');
-  } else if (colors.length == 1) {
-    return colors[0];
-  }
+class _MetricTab extends StatefulWidget {
+  final String label;
+  final bool isSelected;
+  final Color color;
+  final VoidCallback onTap;
 
-  if (stops.length != colors.length) {
-    stops = [];
-    colors.asMap().forEach((index, color) {
-      final percent = 1.0 / (colors.length - 1);
-      stops.add(percent * index);
-    });
-  }
+  const _MetricTab({
+    required this.label,
+    required this.isSelected,
+    required this.color,
+    required this.onTap,
+  });
 
-  for (var s = 0; s < stops.length - 1; s++) {
-    final leftStop = stops[s];
-    final rightStop = stops[s + 1];
-    final leftColor = colors[s];
-    final rightColor = colors[s + 1];
-    if (t <= leftStop) {
-      return leftColor;
-    } else if (t < rightStop) {
-      final sectionT = (t - leftStop) / (rightStop - leftStop);
-      return Color.lerp(leftColor, rightColor, sectionT)!;
-    }
+  @override
+  State<_MetricTab> createState() => _MetricTabState();
+}
+
+class _MetricTabState extends State<_MetricTab> {
+  bool _isHovered = false;
+
+  @override
+  Widget build(BuildContext context) {
+    return MouseRegion(
+      onEnter: (_) => setState(() => _isHovered = true),
+      onExit: (_) => setState(() => _isHovered = false),
+      cursor: SystemMouseCursors.click,
+      child: GestureDetector(
+        onTap: widget.onTap,
+        child: AnimatedContainer(
+          duration: const Duration(milliseconds: 200),
+          padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
+          decoration: BoxDecoration(
+            color: widget.isSelected
+                ? widget.color.withOpacity(0.15)
+                : _isHovered
+                    ? widget.color.withOpacity(0.05)
+                    : Colors.transparent,
+            borderRadius: BorderRadius.circular(6),
+          ),
+          child: Text(
+            widget.label,
+            style: TextStyle(
+              color: widget.isSelected
+                  ? widget.color
+                  : FluentTheme.of(context)
+                      .typography
+                      .body
+                      ?.color
+                      ?.withOpacity(0.6),
+              fontWeight: widget.isSelected ? FontWeight.w600 : FontWeight.w400,
+              fontSize: 12,
+            ),
+          ),
+        ),
+      ),
+    );
   }
-  return colors.last;
+}
+
+class _StatCard extends StatelessWidget {
+  final String label;
+  final String value;
+  final Color color;
+
+  const _StatCard({
+    required this.label,
+    required this.value,
+    required this.color,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+      decoration: BoxDecoration(
+        color: color.withOpacity(0.1),
+        borderRadius: BorderRadius.circular(8),
+        border: Border.all(color: color.withOpacity(0.2)),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            label,
+            style: FluentTheme.of(context).typography.caption?.copyWith(
+                  color: FluentTheme.of(context)
+                      .typography
+                      .caption
+                      ?.color
+                      ?.withOpacity(0.6),
+                  fontSize: 10,
+                ),
+          ),
+          const SizedBox(height: 2),
+          Text(
+            value,
+            style: TextStyle(
+              color: color,
+              fontWeight: FontWeight.bold,
+              fontSize: 14,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _TrendIndicator extends StatelessWidget {
+  final double percentageChange;
+
+  const _TrendIndicator({required this.percentageChange});
+
+  @override
+  Widget build(BuildContext context) {
+    final isPositive = percentageChange >= 0;
+    final color =
+        isPositive ? const Color(0xFF4CAF50) : const Color(0xFFE53935);
+
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+      decoration: BoxDecoration(
+        color: color.withOpacity(0.1),
+        borderRadius: BorderRadius.circular(8),
+        border: Border.all(color: color.withOpacity(0.2)),
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Icon(
+            isPositive ? FluentIcons.up : FluentIcons.down,
+            size: 12,
+            color: color,
+          ),
+          const SizedBox(width: 4),
+          Text(
+            '${percentageChange.abs().toStringAsFixed(1)}%',
+            style: TextStyle(
+              color: color,
+              fontWeight: FontWeight.bold,
+              fontSize: 12,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
 }

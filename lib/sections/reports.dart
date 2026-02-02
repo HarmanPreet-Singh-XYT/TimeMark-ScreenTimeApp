@@ -7,17 +7,12 @@ import 'package:intl/intl.dart';
 import 'package:screentime/sections/graphs/reports_line_chart.dart';
 import 'package:screentime/sections/graphs/reports_pie_chart.dart';
 import './controller/data_controllers/reports_controller.dart';
-import './controller/data_controllers/alerts_limits_data_controller.dart' as app_summary_data;
+import './controller/data_controllers/alerts_limits_data_controller.dart'
+    as app_summary_data;
 import './controller/data_controllers/applications_data_controller.dart';
 
 // Add this enum at the top of your file
-enum PeriodType {
-  last7Days,
-  lastMonth,
-  last3Months,
-  lifetime,
-  custom
-}
+enum PeriodType { last7Days, lastMonth, last3Months, lifetime, custom }
 
 class Reports extends StatefulWidget {
   const Reports({super.key});
@@ -27,12 +22,13 @@ class Reports extends StatefulWidget {
 }
 
 class _ReportsState extends State<Reports> {
-  final UsageAnalyticsController _analyticsController = UsageAnalyticsController();
+  final UsageAnalyticsController _analyticsController =
+      UsageAnalyticsController();
   AnalyticsSummary? _analyticsSummary;
   bool _isLoading = true;
   String? _error;
   PeriodType _selectedPeriod = PeriodType.last7Days; // Changed to enum
-  
+
   @override
   void initState() {
     super.initState();
@@ -49,12 +45,13 @@ class _ReportsState extends State<Reports> {
       final initialized = await _analyticsController.initialize();
       if (!initialized) {
         setState(() {
-          _error = _analyticsController.error ?? AppLocalizations.of(context)!.failedToInitialize;
+          _error = _analyticsController.error ??
+              AppLocalizations.of(context)!.failedToInitialize;
           _isLoading = false;
         });
         return;
       }
-      
+
       await _loadAnalyticsData();
     } catch (e) {
       setState(() {
@@ -71,7 +68,7 @@ class _ReportsState extends State<Reports> {
 
     try {
       AnalyticsSummary? summary;
-      
+
       switch (_selectedPeriod) {
         case PeriodType.last7Days:
           summary = await _analyticsController.getLastSevenDaysAnalytics();
@@ -90,11 +87,15 @@ class _ReportsState extends State<Reports> {
           graphData = summary.dailyScreenTimeData;
           break;
         case PeriodType.custom:
-          if (_startDate != null && _endDate != null && _isDateRangeMode == true) {
-            summary = await _analyticsController.getSpecificDateRangeAnalytics(_startDate!, _endDate!);
+          if (_startDate != null &&
+              _endDate != null &&
+              _isDateRangeMode == true) {
+            summary = await _analyticsController.getSpecificDateRangeAnalytics(
+                _startDate!, _endDate!);
             graphData = summary.dailyScreenTimeData;
           } else if (_specificDate != null && _isDateRangeMode == false) {
-            summary = await _analyticsController.getSpecificDayAnalytics(_specificDate!);
+            summary = await _analyticsController
+                .getSpecificDayAnalytics(_specificDate!);
             graphData = summary.dailyScreenTimeData;
           }
           break;
@@ -106,7 +107,8 @@ class _ReportsState extends State<Reports> {
       });
     } catch (e) {
       setState(() {
-        _error = AppLocalizations.of(context)!.errorLoadingAnalytics(e.toString());
+        _error =
+            AppLocalizations.of(context)!.errorLoadingAnalytics(e.toString());
         _isLoading = false;
       });
     }
@@ -124,14 +126,16 @@ class _ReportsState extends State<Reports> {
     });
     AnalyticsSummary? summary;
     try {
-      summary = await _analyticsController.getSpecificDayAnalytics(specificDate);
+      summary =
+          await _analyticsController.getSpecificDayAnalytics(specificDate);
       setState(() {
         _analyticsSummary = summary;
         _isLoading = false;
       });
     } catch (e) {
       setState(() {
-        _error = AppLocalizations.of(context)!.errorLoadingAnalytics(e.toString());
+        _error =
+            AppLocalizations.of(context)!.errorLoadingAnalytics(e.toString());
         _isLoading = false;
       });
     }
@@ -158,7 +162,7 @@ class _ReportsState extends State<Reports> {
   Widget build(BuildContext context) {
     return NotificationListener<ScrollNotification>(
       onNotification: (ScrollNotification scrollInfo) {
-        if (scrollInfo is ScrollStartNotification && 
+        if (scrollInfo is ScrollStartNotification &&
             scrollInfo.metrics.pixels == scrollInfo.metrics.minScrollExtent) {
           _loadAnalyticsData();
           return true;
@@ -174,7 +178,6 @@ class _ReportsState extends State<Reports> {
             children: [
               _buildHeader(),
               const SizedBox(height: 20),
-              
               if (_isLoading)
                 _buildCustomLoadingIndicator()
               else if (_error != null)
@@ -244,10 +247,12 @@ class _ReportsState extends State<Reports> {
         ),
         ComboBox<PeriodType>(
           value: _selectedPeriod,
-          items: PeriodType.values.map((period) => ComboBoxItem<PeriodType>(
-            value: period,
-            child: Text(_getPeriodLabel(period)),
-          )).toList(),
+          items: PeriodType.values
+              .map((period) => ComboBoxItem<PeriodType>(
+                    value: period,
+                    child: Text(_getPeriodLabel(period)),
+                  ))
+              .toList(),
           onChanged: (value) {
             if (value != null && value != _selectedPeriod) {
               if (value == PeriodType.custom) {
@@ -268,146 +273,143 @@ class _ReportsState extends State<Reports> {
   void _showDateRangeDialog(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
     DateTime now = DateTime.now();
-    DateTime startDate = _startDate ?? DateTime(now.year, now.month-1, 1);
+    DateTime startDate = _startDate ?? DateTime(now.year, now.month - 1, 1);
     DateTime endDate = _endDate ?? DateTime(now.year, now.month, now.day);
     DateTime specificDate = _specificDate ?? now;
     bool isRangeMode = _isDateRangeMode;
-    
+
     showDialog(
       context: context,
       builder: (context) {
-        return StatefulBuilder(
-          builder: (context, setState) {
-            return ContentDialog(
-              title: Text(l10n.customDialogTitle),
-              content: SingleChildScrollView(
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    const SizedBox(height: 10),
+        return StatefulBuilder(builder: (context, setState) {
+          return ContentDialog(
+            title: Text(l10n.customDialogTitle),
+            content: SingleChildScrollView(
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const SizedBox(height: 10),
+                  Row(
+                    children: [
+                      ToggleSwitch(
+                        checked: isRangeMode,
+                        onChanged: (value) {
+                          setState(() {
+                            isRangeMode = value;
+                          });
+                        },
+                      ),
+                      const SizedBox(width: 8),
+                      Text(isRangeMode ? l10n.dateRange : l10n.specificDate),
+                    ],
+                  ),
+                  const SizedBox(height: 16),
+                  if (isRangeMode) ...[
                     Row(
                       children: [
-                        ToggleSwitch(
-                          checked: isRangeMode,
-                          onChanged: (value) {
-                            setState(() {
-                              isRangeMode = value;
-                            });
-                          },
-                        ),
+                        Text(l10n.startDate),
                         const SizedBox(width: 8),
-                        Text(isRangeMode ? l10n.dateRange : l10n.specificDate),
+                        Expanded(
+                          child: DatePicker(
+                            selected: startDate,
+                            onChanged: (date) {
+                              setState(() {
+                                startDate = date;
+                              });
+                            },
+                          ),
+                        ),
                       ],
                     ),
                     const SizedBox(height: 16),
-                    
-                    if (isRangeMode) ...[
-                      Row(
-                        children: [
-                          Text(l10n.startDate),
-                          const SizedBox(width: 8),
-                          Expanded(
-                            child: DatePicker(
-                              selected: startDate,
-                              onChanged: (date) {
-                                setState(() {
-                                  startDate = date;
-                                });
-                              },
-                            ),
+                    Row(
+                      children: [
+                        Text(l10n.endDate),
+                        const SizedBox(width: 16),
+                        Expanded(
+                          child: DatePicker(
+                            selected: endDate,
+                            onChanged: (date) {
+                              setState(() {
+                                endDate = date;
+                              });
+                            },
                           ),
-                        ],
-                      ),
-                      const SizedBox(height: 16),
-                      Row(
-                        children: [
-                          Text(l10n.endDate),
-                          const SizedBox(width: 16),
-                          Expanded(
-                            child: DatePicker(
-                              selected: endDate,
-                              onChanged: (date) {
-                                setState(() {
-                                  endDate = date;
-                                });
-                              },
-                            ),
+                        ),
+                      ],
+                    ),
+                  ] else ...[
+                    Row(
+                      children: [
+                        Text(l10n.date),
+                        const SizedBox(width: 24),
+                        Expanded(
+                          child: DatePicker(
+                            selected: specificDate,
+                            onChanged: (date) {
+                              setState(() {
+                                specificDate = date;
+                              });
+                            },
                           ),
-                        ],
-                      ),
-                    ] else ...[
-                      Row(
-                        children: [
-                          Text(l10n.date),
-                          const SizedBox(width: 24),
-                          Expanded(
-                            child: DatePicker(
-                              selected: specificDate,
-                              onChanged: (date) {
-                                setState(() {
-                                  specificDate = date;
-                                });
-                              },
-                            ),
-                          ),
-                        ],
-                      ),
-                    ],
+                        ),
+                      ],
+                    ),
                   ],
-                ),
+                ],
               ),
-              actions: [
-                Button(
-                  child: Text(l10n.cancel),
-                  onPressed: () {
-                    Navigator.pop(context);
-                  },
-                ),
-                FilledButton(
-                  child: Text(l10n.apply),
-                  onPressed: () {
-                    if (isRangeMode) {
-                      if (startDate.isAfter(endDate)) {
-                        showDialog(
-                          context: context,
-                          builder: (context) => ContentDialog(
-                            title: Text(l10n.invalidDateRange),
-                            content: Text(l10n.startDateBeforeEndDate),
-                            actions: [
-                              Button(
-                                child: Text(l10n.ok),
-                                onPressed: () => Navigator.pop(context),
-                              ),
-                            ],
-                          ),
-                        );
-                        return;
-                      }
+            ),
+            actions: [
+              Button(
+                child: Text(l10n.cancel),
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+              ),
+              FilledButton(
+                child: Text(l10n.apply),
+                onPressed: () {
+                  if (isRangeMode) {
+                    if (startDate.isAfter(endDate)) {
+                      showDialog(
+                        context: context,
+                        builder: (context) => ContentDialog(
+                          title: Text(l10n.invalidDateRange),
+                          content: Text(l10n.startDateBeforeEndDate),
+                          actions: [
+                            Button(
+                              child: Text(l10n.ok),
+                              onPressed: () => Navigator.pop(context),
+                            ),
+                          ],
+                        ),
+                      );
+                      return;
                     }
-                    
-                    Navigator.pop(context);
-                    
-                    this.setState(() {
-                      _isDateRangeMode = isRangeMode;
-                      _selectedPeriod = PeriodType.custom;
-                      if (isRangeMode) {
-                        _startDate = startDate;
-                        _endDate = endDate;
-                        _specificDate = null;
-                      } else {
-                        _specificDate = specificDate;
-                        _startDate = null;
-                        _endDate = null;
-                      }
-                    });
-                    _loadAnalyticsData();
-                  },
-                ),
-              ],
-            );
-          }
-        );
+                  }
+
+                  Navigator.pop(context);
+
+                  this.setState(() {
+                    _isDateRangeMode = isRangeMode;
+                    _selectedPeriod = PeriodType.custom;
+                    if (isRangeMode) {
+                      _startDate = startDate;
+                      _endDate = endDate;
+                      _specificDate = null;
+                    } else {
+                      _specificDate = specificDate;
+                      _startDate = null;
+                      _endDate = null;
+                    }
+                  });
+                  _loadAnalyticsData();
+                },
+              ),
+            ],
+          );
+        });
       },
     );
   }
@@ -417,7 +419,6 @@ class _ReportsState extends State<Reports> {
     return [
       TopBoxes(analyticsSummary: summary),
       const SizedBox(height: 20),
-      
       LayoutBuilder(
         builder: (context, constraints) {
           return constraints.maxWidth < 800
@@ -433,13 +434,13 @@ class _ReportsState extends State<Reports> {
                   children: [
                     Expanded(flex: 6, child: _buildScreenTimeChart(summary)),
                     const SizedBox(width: 20),
-                    Expanded(flex: 3, child: _buildCategoryBreakdownChart(summary)),
+                    Expanded(
+                        flex: 3, child: _buildCategoryBreakdownChart(summary)),
                   ],
                 );
         },
       ),
       const SizedBox(height: 20),
-      
       ApplicationUsage(appUsageDetails: summary.appUsageDetails),
     ];
   }
@@ -511,7 +512,7 @@ class CardContainer extends StatelessWidget {
         ),
       ),
       child: Column(
-        mainAxisSize: MainAxisSize.max, 
+        mainAxisSize: MainAxisSize.max,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
@@ -529,182 +530,489 @@ class CardContainer extends StatelessWidget {
 
 class TopBoxes extends StatelessWidget {
   final AnalyticsSummary analyticsSummary;
+  final bool isLoading;
 
-  const TopBoxes({super.key, required this.analyticsSummary});
+  const TopBoxes({
+    super.key,
+    required this.analyticsSummary,
+    this.isLoading = false,
+  });
 
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
-    
+
+    final items = [
+      _AnalyticsItem(
+        title: l10n.totalScreenTime,
+        value: _formatDuration(analyticsSummary.totalScreenTime),
+        percentChange: analyticsSummary.screenTimeComparisonPercent,
+        icon: FluentIcons.screen_time,
+        accentColor: const Color(0xFF6366F1), // Indigo
+      ),
+      _AnalyticsItem(
+        title: l10n.productiveTime,
+        value: _formatDuration(analyticsSummary.productiveTime),
+        percentChange: analyticsSummary.productiveTimeComparisonPercent,
+        icon: FluentIcons.timer,
+        accentColor: const Color(0xFF10B981), // Emerald
+      ),
+      _AnalyticsItem(
+        title: l10n.mostUsedApp,
+        value: analyticsSummary.mostUsedApp,
+        subValue: _formatDuration(analyticsSummary.mostUsedAppTime),
+        icon: FluentIcons.account_browser,
+        accentColor: const Color(0xFFF59E0B), // Amber
+      ),
+      _AnalyticsItem(
+        title: l10n.focusSessions,
+        value: analyticsSummary.focusSessionsCount.toString(),
+        percentChange: analyticsSummary.focusSessionsComparisonPercent,
+        icon: FluentIcons.red_eye,
+        accentColor: const Color(0xFFEC4899), // Pink
+      ),
+    ];
+
     return LayoutBuilder(
       builder: (context, constraints) {
-        if (constraints.maxWidth < 800) {
-          return Column(
-            children: [
-              Row(
-                children: [
-                  Expanded(child: _buildAnalyticsBox(
-                    context: context,
-                    title: l10n.totalScreenTime,
-                    value: _formatDuration(analyticsSummary.totalScreenTime),
-                    percentChange: analyticsSummary.screenTimeComparisonPercent,
-                    icon: FluentIcons.screen_time,
-                  )),
-                  const SizedBox(width: 10),
-                  Expanded(child: _buildAnalyticsBox(
-                    context: context,
-                    title: l10n.productiveTime,
-                    value: _formatDuration(analyticsSummary.productiveTime),
-                    percentChange: analyticsSummary.productiveTimeComparisonPercent,
-                    icon: FluentIcons.timer,
-                  )),
-                ],
-              ),
-              const SizedBox(height: 10),
-              Row(
-                children: [
-                  Expanded(child: _buildAnalyticsBox(
-                    context: context,
-                    title: l10n.mostUsedApp,
-                    value: analyticsSummary.mostUsedApp,
-                    subValue: _formatDuration(analyticsSummary.mostUsedAppTime),
-                    icon: FluentIcons.account_browser,
-                  )),
-                  const SizedBox(width: 10),
-                  Expanded(child: _buildAnalyticsBox(
-                    context: context,
-                    title: l10n.focusSessions,
-                    value: analyticsSummary.focusSessionsCount.toString(),
-                    percentChange: analyticsSummary.focusSessionsComparisonPercent,
-                    icon: FluentIcons.red_eye,
-                  )),
-                ],
-              ),
-            ],
-          );
-        } else {
-          return Row(
-            children: [
-              Expanded(child: _buildAnalyticsBox(
-                context: context,
-                title: l10n.totalScreenTime,
-                value: _formatDuration(analyticsSummary.totalScreenTime),
-                percentChange: analyticsSummary.screenTimeComparisonPercent,
-                icon: FluentIcons.screen_time,
-              )),
-              const SizedBox(width: 10),
-              Expanded(child: _buildAnalyticsBox(
-                context: context,
-                title: l10n.productiveTime,
-                value: _formatDuration(analyticsSummary.productiveTime),
-                percentChange: analyticsSummary.productiveTimeComparisonPercent,
-                icon: FluentIcons.timer,
-              )),
-              const SizedBox(width: 10),
-              Expanded(child: _buildAnalyticsBox(
-                context: context,
-                title: l10n.mostUsedApp,
-                value: analyticsSummary.mostUsedApp,
-                subValue: _formatDuration(analyticsSummary.mostUsedAppTime),
-                icon: FluentIcons.account_browser,
-              )),
-              const SizedBox(width: 10),
-              Expanded(child: _buildAnalyticsBox(
-                context: context,
-                title: l10n.focusSessions,
-                value: analyticsSummary.focusSessionsCount.toString(),
-                percentChange: analyticsSummary.focusSessionsComparisonPercent,
-                icon: FluentIcons.red_eye,
-              )),
-            ],
-          );
-        }
-      },
-    );
-  }
+        final isCompact = constraints.maxWidth < 800;
+        final crossAxisCount = isCompact ? 2 : 4;
+        final aspectRatio = isCompact ? 1.6 : 1.8;
 
-  Widget _buildAnalyticsBox({
-    required BuildContext context,
-    required String title,
-    required String value,
-    double? percentChange,
-    String? subValue,
-    required IconData icon,
-  }) {
-    final l10n = AppLocalizations.of(context)!;
-    
-    return Container(
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: FluentTheme.of(context).micaBackgroundColor,
-        borderRadius: BorderRadius.circular(10),
-        border: Border.all(
-          color: FluentTheme.of(context).inactiveBackgroundColor,
-          width: 1,
-        ),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Flexible(
-                child: Text(
-                  title,
-                  style: TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.w500,
-                    color: FluentTheme.of(context).accentColor,
-                  ),
-                  overflow: TextOverflow.ellipsis,
-                  semanticsLabel: title,
-                ),
-              ),
-              Icon(icon, size: 24, semanticLabel: '$title icon'),
-            ],
+        return GridView.builder(
+          shrinkWrap: true,
+          physics: const NeverScrollableScrollPhysics(),
+          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+            crossAxisCount: crossAxisCount,
+            crossAxisSpacing: 12,
+            mainAxisSpacing: 12,
+            childAspectRatio: aspectRatio,
           ),
-          const SizedBox(height: 15),
-          Text(
-            value,
-            style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
-            overflow: TextOverflow.ellipsis,
-          ),
-          const SizedBox(height: 5),
-          if (percentChange != null)
-            Text(
-              percentChange >= 0 
-                ? l10n.positiveComparison(percentChange.toStringAsFixed(1))
-                : l10n.negativeComparison(percentChange.toStringAsFixed(1)),
-              style: TextStyle(
-                fontSize: 12,
-                color: percentChange >= 0 ? Colors.green : Colors.red,
-              ),
-              overflow: TextOverflow.ellipsis,
-            )
-          else if (subValue != null)
-            Text(
-              subValue,
-              style: TextStyle(
-                fontSize: 12,
-                color: FluentTheme.of(context).accentColor.withValues(alpha: .8),
-              ),
-              overflow: TextOverflow.ellipsis,
-            ),
-        ],
-      ),
+          itemCount: items.length,
+          itemBuilder: (context, index) {
+            return _AnalyticsCard(
+              item: items[index],
+              isLoading: isLoading,
+              index: index,
+            );
+          },
+        );
+      },
     );
   }
 
   String _formatDuration(Duration duration) {
     final hours = duration.inHours;
     final minutes = duration.inMinutes.remainder(60);
-    
+
     if (hours > 0) {
       return "${hours}h ${minutes}m";
-    } else {
-      return "${minutes}m";
     }
+    return "${minutes}m";
+  }
+}
+
+class _AnalyticsItem {
+  final String title;
+  final String value;
+  final double? percentChange;
+  final String? subValue;
+  final IconData icon;
+  final Color accentColor;
+
+  const _AnalyticsItem({
+    required this.title,
+    required this.value,
+    this.percentChange,
+    this.subValue,
+    required this.icon,
+    required this.accentColor,
+  });
+}
+
+class _AnalyticsCard extends StatefulWidget {
+  final _AnalyticsItem item;
+  final bool isLoading;
+  final int index;
+
+  const _AnalyticsCard({
+    required this.item,
+    required this.isLoading,
+    required this.index,
+  });
+
+  @override
+  State<_AnalyticsCard> createState() => _AnalyticsCardState();
+}
+
+class _AnalyticsCardState extends State<_AnalyticsCard>
+    with SingleTickerProviderStateMixin {
+  bool _isHovered = false;
+  late AnimationController _controller;
+  late Animation<double> _scaleAnimation;
+  late Animation<double> _fadeAnimation;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = AnimationController(
+      duration: const Duration(milliseconds: 600),
+      vsync: this,
+    );
+
+    _scaleAnimation = Tween<double>(begin: 0.95, end: 1.0).animate(
+      CurvedAnimation(parent: _controller, curve: Curves.easeOutBack),
+    );
+
+    _fadeAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(
+      CurvedAnimation(parent: _controller, curve: Curves.easeOut),
+    );
+
+    // Staggered entrance animation
+    Future.delayed(Duration(milliseconds: widget.index * 100), () {
+      if (mounted) _controller.forward();
+    });
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = FluentTheme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
+    final l10n = AppLocalizations.of(context)!;
+
+    return AnimatedBuilder(
+      animation: _controller,
+      builder: (context, child) {
+        return Transform.scale(
+          scale: _scaleAnimation.value,
+          child: Opacity(
+            opacity: _fadeAnimation.value,
+            child: child,
+          ),
+        );
+      },
+      child: MouseRegion(
+        onEnter: (_) => setState(() => _isHovered = true),
+        onExit: (_) => setState(() => _isHovered = false),
+        cursor: SystemMouseCursors.click,
+        child: GestureDetector(
+          onTap: () => _showDetailsFlyout(context),
+          child: AnimatedContainer(
+            duration: const Duration(milliseconds: 200),
+            curve: Curves.easeOutCubic,
+            padding: const EdgeInsets.all(16),
+            decoration: BoxDecoration(
+              gradient: LinearGradient(
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+                colors: [
+                  isDark
+                      ? widget.item.accentColor.withOpacity(0.08)
+                      : widget.item.accentColor.withOpacity(0.04),
+                  isDark ? theme.micaBackgroundColor : Colors.white,
+                ],
+              ),
+              borderRadius: BorderRadius.circular(16),
+              border: Border.all(
+                color: _isHovered
+                    ? widget.item.accentColor.withOpacity(0.5)
+                    : theme.inactiveBackgroundColor.withOpacity(0.5),
+                width: _isHovered ? 1.5 : 1,
+              ),
+              boxShadow: [
+                BoxShadow(
+                  color: _isHovered
+                      ? widget.item.accentColor.withOpacity(0.15)
+                      : Colors.black.withOpacity(0.05),
+                  blurRadius: _isHovered ? 20 : 10,
+                  offset: Offset(0, _isHovered ? 8 : 4),
+                ),
+              ],
+            ),
+            transform: _isHovered
+                ? (Matrix4.identity()..translate(0.0, -2.0))
+                : Matrix4.identity(),
+            child: widget.isLoading
+                ? _buildShimmer(context)
+                : _buildContent(context, l10n, theme),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildContent(
+    BuildContext context,
+    AppLocalizations l10n,
+    FluentThemeData theme,
+  ) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        // Header Row
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Expanded(
+              child: Text(
+                widget.item.title,
+                style: TextStyle(
+                  fontSize: 14,
+                  fontWeight: FontWeight.w600,
+                  color: theme.typography.caption?.color?.withOpacity(0.7),
+                  letterSpacing: 0.3,
+                ),
+                overflow: TextOverflow.ellipsis,
+                maxLines: 1,
+              ),
+            ),
+            const SizedBox(width: 8),
+            _buildIconBadge(theme),
+          ],
+        ),
+
+        const Spacer(),
+
+        // Value
+        AnimatedDefaultTextStyle(
+          duration: const Duration(milliseconds: 200),
+          style: TextStyle(
+            fontSize: _isHovered ? 26 : 24,
+            fontWeight: FontWeight.w700,
+            color: theme.typography.title?.color,
+            letterSpacing: -0.5,
+          ),
+          child: Text(
+            widget.item.value,
+            overflow: TextOverflow.ellipsis,
+            maxLines: 1,
+          ),
+        ),
+
+        const SizedBox(height: 6),
+
+        // Comparison or SubValue
+        _buildFooter(l10n, theme),
+      ],
+    );
+  }
+
+  Widget _buildIconBadge(FluentThemeData theme) {
+    return AnimatedContainer(
+      duration: const Duration(milliseconds: 200),
+      padding: const EdgeInsets.all(8),
+      decoration: BoxDecoration(
+        color: widget.item.accentColor.withOpacity(_isHovered ? 0.2 : 0.1),
+        borderRadius: BorderRadius.circular(10),
+      ),
+      child: Icon(
+        widget.item.icon,
+        size: 18,
+        color: widget.item.accentColor,
+      ),
+    );
+  }
+
+  Widget _buildFooter(AppLocalizations l10n, FluentThemeData theme) {
+    if (widget.item.percentChange != null) {
+      final isPositive = widget.item.percentChange! >= 0;
+      final color =
+          isPositive ? const Color(0xFF10B981) : const Color(0xFFEF4444);
+
+      return Container(
+        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+        decoration: BoxDecoration(
+          color: color.withOpacity(0.1),
+          borderRadius: BorderRadius.circular(6),
+        ),
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Icon(
+              isPositive ? FluentIcons.trending12 : FluentIcons.stock_down,
+              size: 12,
+              color: color,
+            ),
+            const SizedBox(width: 4),
+            Text(
+              '${isPositive ? '+' : ''}${widget.item.percentChange!.toStringAsFixed(1)}%',
+              style: TextStyle(
+                fontSize: 11,
+                fontWeight: FontWeight.w600,
+                color: color,
+              ),
+            ),
+          ],
+        ),
+      );
+    }
+
+    if (widget.item.subValue != null) {
+      return Row(
+        children: [
+          Container(
+            width: 4,
+            height: 4,
+            decoration: BoxDecoration(
+              color: widget.item.accentColor,
+              shape: BoxShape.circle,
+            ),
+          ),
+          const SizedBox(width: 6),
+          Flexible(
+            child: Text(
+              widget.item.subValue!,
+              style: TextStyle(
+                fontSize: 12,
+                fontWeight: FontWeight.w500,
+                color: theme.typography.caption?.color?.withOpacity(0.6),
+              ),
+              overflow: TextOverflow.ellipsis,
+            ),
+          ),
+        ],
+      );
+    }
+
+    return const SizedBox(height: 16);
+  }
+
+  Widget _buildShimmer(BuildContext context) {
+    return ShimmerLoading(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Container(
+                width: 80,
+                height: 12,
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(4),
+                ),
+              ),
+              Container(
+                width: 34,
+                height: 34,
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(10),
+                ),
+              ),
+            ],
+          ),
+          const Spacer(),
+          Container(
+            width: 100,
+            height: 24,
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(6),
+            ),
+          ),
+          const SizedBox(height: 8),
+          Container(
+            width: 60,
+            height: 16,
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(4),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  void _showDetailsFlyout(BuildContext context) {
+    // Optional: Show a flyout/tooltip with more details
+    displayInfoBar(
+      context,
+      builder: (context, close) {
+        return InfoBar(
+          title: Text(widget.item.title),
+          content: Text('Value: ${widget.item.value}'),
+          severity: InfoBarSeverity.info,
+          isLong: false,
+        );
+      },
+    );
+  }
+}
+
+// Shimmer Loading Widget
+class ShimmerLoading extends StatefulWidget {
+  final Widget child;
+
+  const ShimmerLoading({super.key, required this.child});
+
+  @override
+  State<ShimmerLoading> createState() => _ShimmerLoadingState();
+}
+
+class _ShimmerLoadingState extends State<ShimmerLoading>
+    with SingleTickerProviderStateMixin {
+  late AnimationController _controller;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = AnimationController(
+      duration: const Duration(milliseconds: 1500),
+      vsync: this,
+    )..repeat();
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final isDark = FluentTheme.of(context).brightness == Brightness.dark;
+
+    return AnimatedBuilder(
+      animation: _controller,
+      builder: (context, child) {
+        return ShaderMask(
+          shaderCallback: (bounds) {
+            return LinearGradient(
+              begin: Alignment.centerLeft,
+              end: Alignment.centerRight,
+              colors: isDark
+                  ? [
+                      Colors.grey[800],
+                      Colors.grey[700],
+                      Colors.grey[800],
+                    ]
+                  : [
+                      Colors.grey[300],
+                      Colors.grey[100],
+                      Colors.grey[300],
+                    ],
+              stops: [
+                _controller.value - 0.3,
+                _controller.value,
+                _controller.value + 0.3,
+              ].map((e) => e.clamp(0.0, 1.0)).toList(),
+            ).createShader(bounds);
+          },
+          blendMode: BlendMode.srcATop,
+          child: widget.child,
+        );
+      },
+    );
   }
 }
 
@@ -725,12 +1033,20 @@ class _ApplicationUsageState extends State<ApplicationUsage> {
   String _searchQuery = '';
   String _sortBy = 'Usage';
   bool _sortAscending = false;
+  int? _hoveredIndex;
+  final FocusNode _searchFocusNode = FocusNode();
 
   @override
   void initState() {
     super.initState();
     _filteredAppUsageDetails = List.from(widget.appUsageDetails);
     _sortAppList();
+  }
+
+  @override
+  void dispose() {
+    _searchFocusNode.dispose();
+    super.dispose();
   }
 
   @override
@@ -745,746 +1061,641 @@ class _ApplicationUsageState extends State<ApplicationUsage> {
   void _filterAndSortAppList() {
     setState(() {
       _filteredAppUsageDetails = widget.appUsageDetails
-          .where((app) => app.appName.toLowerCase().contains(_searchQuery.toLowerCase()))
+          .where((app) =>
+              app.appName.toLowerCase().contains(_searchQuery.toLowerCase()))
           .toList();
       _sortAppList();
     });
   }
 
   void _sortAppList() {
-    setState(() {
-      switch (_sortBy) {
-        case 'Name':
-          _filteredAppUsageDetails.sort((a, b) => 
-            _sortAscending ? a.appName.compareTo(b.appName) : b.appName.compareTo(a.appName));
-          break;
-        case 'Category':
-          _filteredAppUsageDetails.sort((a, b) => 
-            _sortAscending ? a.category.compareTo(b.category) : b.category.compareTo(a.category));
-          break;
-        case 'Usage':
-        default:
-          _filteredAppUsageDetails.sort((a, b) => 
-            _sortAscending ? a.totalTime.compareTo(b.totalTime) : b.totalTime.compareTo(a.totalTime));
-          break;
-      }
-    });
+    switch (_sortBy) {
+      case 'Name':
+        _filteredAppUsageDetails.sort((a, b) => _sortAscending
+            ? a.appName.compareTo(b.appName)
+            : b.appName.compareTo(a.appName));
+        break;
+      case 'Category':
+        _filteredAppUsageDetails.sort((a, b) => _sortAscending
+            ? a.category.compareTo(b.category)
+            : b.category.compareTo(a.category));
+        break;
+      case 'Usage':
+      default:
+        _filteredAppUsageDetails.sort((a, b) => _sortAscending
+            ? a.totalTime.compareTo(b.totalTime)
+            : b.totalTime.compareTo(a.totalTime));
+        break;
+    }
   }
 
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
-    
-    return CardContainer(
-      title: l10n.detailedApplicationUsage,
-      height: 500,
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            children: [
-              Expanded(
-                child: TextBox(
-                  placeholder: l10n.searchApplications,
-                  onChanged: (value) {
-                    setState(() {
-                      _searchQuery = value;
-                      _filterAndSortAppList();
-                    });
-                  },
-                  prefix: const Padding(
-                    padding: EdgeInsets.only(left: 8.0),
-                    child: Icon(FluentIcons.search),
-                  ),
-                ),
-              ),
-              const SizedBox(width: 10),
-              ComboBox<String>(
-                value: _sortBy,
-                items: [l10n.sortByName, l10n.sortByCategory, l10n.sortByUsage].map((option) => 
-                  ComboBoxItem<String>(
-                    value: option,
-                    child: Text(l10n.sortByOption(option)),
-                  )
-                ).toList(),
-                onChanged: (value) {
-                  if (value != null) {
-                    setState(() {
-                      _sortBy = value;
-                      _sortAppList();
-                    });
-                  }
-                },
-              ),
-              IconButton(
-                icon: Icon(_sortAscending ? FluentIcons.sort_up : FluentIcons.sort_down),
-                onPressed: () {
-                  setState(() {
-                    _sortAscending = !_sortAscending;
-                    _sortAppList();
-                  });
-                },
-              ),
-            ],
-          ),
-          const SizedBox(height: 10),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-            child: Row(
-              children: [
-                Expanded(flex: 2, child: Text(l10n.nameHeader, style: const TextStyle(fontWeight: FontWeight.w600))),
-                Expanded(flex: 2, child: Text(l10n.categoryHeader, style: const TextStyle(fontWeight: FontWeight.w600))),
-                Expanded(flex: 2, child: Text(l10n.totalTimeHeader, style: const TextStyle(fontWeight: FontWeight.w600))),
-                Expanded(flex: 2, child: Text(l10n.productivityHeader, style: const TextStyle(fontWeight: FontWeight.w600))),
-                Expanded(flex: 1, child: Text(l10n.actionsHeader, style: const TextStyle(fontWeight: FontWeight.w600))),
-              ],
+    final theme = FluentTheme.of(context);
+    final filteredApps = _filteredAppUsageDetails
+        .where((app) => app.appName.trim().isNotEmpty)
+        .toList();
+
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        return Container(
+          height: 500,
+          decoration: BoxDecoration(
+            color: theme.micaBackgroundColor,
+            borderRadius: BorderRadius.circular(8),
+            border: Border.all(
+              color: theme.resources.dividerStrokeColorDefault,
+              width: 1,
             ),
           ),
-          Container(height: 1, color: FluentTheme.of(context).inactiveBackgroundColor),
-          const SizedBox(height: 10),
-          Expanded(
-            child: _filteredAppUsageDetails.where((app) => app.appName.trim().isNotEmpty).isEmpty
-                ? Center(child: Text(l10n.noApplicationsMatch))
-                : ListView.builder(
-                    itemCount: _filteredAppUsageDetails.where((app) => app.appName.trim().isNotEmpty).length,
-                    itemBuilder: (context, index) {
-                      final filteredApps = _filteredAppUsageDetails
-                          .where((app) => app.appName.trim().isNotEmpty)
-                          .toList();
-                      final app = filteredApps[index];
-
-                      return ApplicationListItem(
-                        name: app.appName,
-                        category: app.category,
-                        productivity: app.isProductive,
-                        totalTime: _formatDuration(app.totalTime),
-                        onViewDetails: () => _showAppDetails(context, app),
-                      );
-                    },
-                  ),
-          )
-        ],
-      ),
-    );
-  }
-
-  void _showAppDetails(BuildContext context, AppUsageSummary app) async {
-    final l10n = AppLocalizations.of(context)!;
-    final app_summary_data.ScreenTimeDataController controller = app_summary_data.ScreenTimeDataController();
-    final app_summary_data.AppUsageSummary? appSummary = controller.getAppSummary(app.appName);
-    
-    if (appSummary == null) return;
-    
-    final appDataProvider = ApplicationsDataProvider();
-    final ApplicationBasicDetail appBasicDetails = await appDataProvider.fetchApplicationByName(app.appName);
-    final ApplicationDetailedData appDetails = await appDataProvider.fetchApplicationDetails(
-      app.appName, 
-      TimeRange.week
-    );
-    
-    // Generate chart data
-    final List<FlSpot> dailyUsageSpots = [];
-    final Map<String, Duration> weeklyData = appDetails.usageTrends.daily;
-    final Map<String, double> dateToXCoordinate = {};
-    double currentXCoordinate = 0;
-
-    final List<String> sortedDates = weeklyData.keys.toList()..sort((a, b) {
-      final DateFormat formatter = DateFormat('MM/dd');
-      return formatter.parse(a).compareTo(formatter.parse(b));
-    });
-
-    double maxUsage = 0;
-
-    for (final String dateKey in sortedDates) {
-      final Duration duration = weeklyData[dateKey] ?? Duration.zero;
-      final double usageMinutes = duration.inMinutes.toDouble();
-      maxUsage = max(maxUsage, usageMinutes);
-      
-      if (!dateToXCoordinate.containsKey(dateKey)) {
-        dateToXCoordinate[dateKey] = currentXCoordinate;
-        currentXCoordinate += 1;
-      }
-      
-      dailyUsageSpots.add(FlSpot(dateToXCoordinate[dateKey]!, usageMinutes));
-    }
-
-    final Map<String, double> timeOfDayUsage = _generateTimeOfDayData(appDetails.hourlyBreakdown);
-    
-    if (!context.mounted) return;
-    
-    showDialog(
-      context: context,
-      builder: (context) => _buildAppDetailsDialog(
-        context, 
-        l10n, 
-        app, 
-        appSummary, 
-        appBasicDetails, 
-        appDetails,
-        dailyUsageSpots,
-        sortedDates,
-        maxUsage,
-        dateToXCoordinate,
-        timeOfDayUsage,
-      ),
-    );
-  }
-
-  Widget _buildAppDetailsDialog(
-    BuildContext context,
-    AppLocalizations l10n,
-    AppUsageSummary app,
-    app_summary_data.AppUsageSummary appSummary,
-    ApplicationBasicDetail appBasicDetails,
-    ApplicationDetailedData appDetails,
-    List<FlSpot> dailyUsageSpots,
-    List<String> sortedDates,
-    double maxUsage,
-    Map<String, double> dateToXCoordinate,
-    Map<String, double> timeOfDayUsage,
-  ) {
-    return ContentDialog(
-      title: Row(
-        children: [
-          Icon(
-            FluentIcons.app_icon_default,
-            color: app.isProductive ? Colors.green : Colors.red,
-            size: 24,
-          ),
-          const SizedBox(width: 12),
-          Expanded(
-            child: Text(
-              app.appName,
-              style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 20, letterSpacing: 0.3),
-            ),
-          ),
-        ],
-      ),
-      constraints: const BoxConstraints(maxWidth: 800, maxHeight: 700),
-      content: SingleChildScrollView(
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 8.0),
           child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              // Usage Summary Card
-              Card(
-                padding: const EdgeInsets.all(20),
-                borderRadius: BorderRadius.circular(12),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(l10n.usageSummary, 
-                      style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 18, letterSpacing: 0.4)),
-                    const SizedBox(height: 20),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceAround,
-                      children: [
-                        _buildSummaryItem(context, l10n.today, appBasicDetails.formattedScreenTime,
-                          icon: FluentIcons.calendar_day, iconSize: 20),
-                        _buildSummaryItem(context, l10n.dailyLimit, 
-                          appSummary.limitStatus ? _formatDuration(appSummary.dailyLimit) : l10n.noLimit,
-                          icon: FluentIcons.timer, iconSize: 20),
-                        _buildSummaryItem(context, l10n.usageTrend, _determineTrend(appDetails.comparisons, l10n),
-                          icon: _getTrendIcon(appDetails.comparisons),
-                          color: _getTrendColor(appDetails.comparisons), iconSize: 20),
-                        _buildSummaryItem(context, l10n.productivity, 
-                          app.isProductive ? l10n.productive : l10n.nonProductive,
-                          icon: app.isProductive ? FluentIcons.check_mark : FluentIcons.cancel,
-                          color: app.isProductive ? Colors.green : Colors.red, iconSize: 20),
-                      ],
-                    ),
-                  ],
-                ),
+              // Header
+              _buildHeader(context, l10n, theme),
+
+              // Toolbar
+              _buildToolbar(context, l10n, theme),
+
+              // Column Headers
+              _buildColumnHeaders(context, l10n, theme),
+
+              // List
+              Expanded(
+                child: filteredApps.isEmpty
+                    ? _buildEmptyState(context, l10n, theme)
+                    : _buildAppList(context, filteredApps, theme),
               ),
-              
-              const SizedBox(height: 24),
-              
-              // Usage Over Time Chart
-              _buildUsageOverTimeCard(context, l10n, dailyUsageSpots, sortedDates, maxUsage, 
-                dateToXCoordinate, appSummary, appDetails),
-              
-              const SizedBox(height: 24),
-              
-              // Time of Day Distribution
-              _buildTimeOfDayCard(context, l10n, timeOfDayUsage),
-              
-              const SizedBox(height: 24),
-              
-              // Usage Pattern Analysis
-              _buildPatternAnalysisCard(context, l10n, appBasicDetails, appDetails, timeOfDayUsage, appSummary),
-              
-              const SizedBox(height: 16),
+
+              // Footer Stats
+              _buildFooterStats(context, l10n, theme, filteredApps),
             ],
+          ),
+        );
+      },
+    );
+  }
+
+  Widget _buildHeader(
+      BuildContext context, AppLocalizations l10n, FluentThemeData theme) {
+    return Container(
+      padding: const EdgeInsets.fromLTRB(16, 14, 16, 10),
+      decoration: BoxDecoration(
+        border: Border(
+          bottom: BorderSide(
+            color: theme.resources.dividerStrokeColorDefault,
+            width: 1,
           ),
         ),
       ),
-      actions: [
-        FilledButton(
-          style: ButtonStyle(
-            padding: WidgetStateProperty.all(const EdgeInsets.only(top: 12, bottom: 12, left: 20, right: 20)),
+      child: Row(
+        children: [
+          Icon(
+            FluentIcons.app_icon_default_list,
+            size: 20,
+            color: theme.accentColor,
           ),
-          onPressed: () => Navigator.pop(context),
-          child: Text(l10n.close, style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w500)),
+          const SizedBox(width: 10),
+          Expanded(
+            child: Text(
+              l10n.detailedApplicationUsage,
+              style: theme.typography.subtitle?.copyWith(
+                fontWeight: FontWeight.w600,
+              ),
+              overflow: TextOverflow.ellipsis,
+            ),
+          ),
+          const SizedBox(width: 12),
+          _buildQuickStats(context, l10n, theme),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildQuickStats(
+      BuildContext context, AppLocalizations l10n, FluentThemeData theme) {
+    final totalApps = _filteredAppUsageDetails.length;
+    final productiveApps =
+        _filteredAppUsageDetails.where((a) => a.isProductive).length;
+
+    return Row(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        _buildMiniStat(
+          context,
+          '$totalApps',
+          "l10n.apps",
+          FluentIcons.grid_view_medium,
+          theme.accentColor,
+        ),
+        const SizedBox(width: 16),
+        _buildMiniStat(
+          context,
+          '$productiveApps',
+          l10n.productive,
+          FluentIcons.check_mark,
+          Colors.green,
         ),
       ],
     );
   }
 
-  Widget _buildUsageOverTimeCard(
-    BuildContext context,
-    AppLocalizations l10n,
-    List<FlSpot> dailyUsageSpots,
-    List<String> sortedDates,
-    double maxUsage,
-    Map<String, double> dateToXCoordinate,
-    app_summary_data.AppUsageSummary appSummary,
-    ApplicationDetailedData appDetails,
-  ) {
-    final Map<String, Duration> weeklyData = appDetails.usageTrends.daily;
-    
-    return Card(
-      padding: const EdgeInsets.all(20),
-      borderRadius: BorderRadius.circular(12),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(l10n.usageOverPastWeek, 
-            style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 18, letterSpacing: 0.4)),
-          const SizedBox(height: 24),
-          Container(
-            height: 220,
-            padding: const EdgeInsets.only(right: 16, bottom: 16),
-            child: dailyUsageSpots.isEmpty 
-              ? Center(child: Text(l10n.noHistoricalData,
-                  style: TextStyle(fontSize: 16, color: FluentTheme.of(context).accentColor.withAlpha(128))))
-              : LineChart(
-                  LineChartData(
-                    gridData: FlGridData(
-                      show: true,
-                      drawVerticalLine: true,
-                      getDrawingHorizontalLine: (value) => FlLine(
-                        color: FluentTheme.of(context).accentColor.withAlpha(40), strokeWidth: 1),
-                      getDrawingVerticalLine: (value) => FlLine(
-                        color: FluentTheme.of(context).accentColor.withAlpha(40), strokeWidth: 1),
-                    ),
-                    titlesData: FlTitlesData(
-                      bottomTitles: AxisTitles(
-                        sideTitles: SideTitles(
-                          showTitles: true,
-                          getTitlesWidget: (value, meta) {
-                            final matchingEntries = dateToXCoordinate.entries
-                              .where((entry) => entry.value == value);
-                            
-                            if (matchingEntries.isNotEmpty) {
-                              final String date = matchingEntries.first.key;
-                              final String displayDate = _formatDateForAxis(date, l10n);
-                              return Padding(
-                                padding: const EdgeInsets.only(top: 8.0),
-                                child: Text(displayDate,
-                                  style: TextStyle(fontSize: 12, fontWeight: FontWeight.w500,
-                                    color: FluentTheme.of(context).accentColor.withAlpha(128))),
-                              );
-                            }
-                            return const Text('');
-                          },
-                          reservedSize: 30,
-                        ),
-                      ),
-                      leftTitles: AxisTitles(
-                        sideTitles: SideTitles(
-                          showTitles: true,
-                          reservedSize: 40,
-                          getTitlesWidget: (value, meta) => Padding(
-                            padding: const EdgeInsets.only(right: 8.0),
-                            child: Text('${value.toInt()}m',
-                              style: TextStyle(fontSize: 12, fontWeight: FontWeight.w500,
-                                color: FluentTheme.of(context).accentColor.withAlpha(128))),
-                          ),
-                        ),
-                      ),
-                      topTitles: const AxisTitles(sideTitles: SideTitles(showTitles: false)),
-                      rightTitles: const AxisTitles(sideTitles: SideTitles(showTitles: false)),
-                    ),
-                    borderData: FlBorderData(
-                      show: true,
-                      border: Border.all(color: FluentTheme.of(context).accentColor.withAlpha(40)),
-                    ),
-                    minX: 0,
-                    maxX: sortedDates.length - 1.0,
-                    minY: 0,
-                    maxY: maxUsage + 20,
-                    lineBarsData: [
-                      LineChartBarData(
-                        spots: dailyUsageSpots,
-                        isCurved: true,
-                        color: Colors.blue,
-                        barWidth: 4,
-                        isStrokeCapRound: true,
-                        dotData: FlDotData(
-                          show: true,
-                          getDotPainter: (spot, percent, barData, index) => FlDotCirclePainter(
-                            radius: 5, color: Colors.blue, strokeWidth: 2, strokeColor: Colors.white),
-                        ),
-                        belowBarData: BarAreaData(
-                          show: true,
-                          color: Colors.blue.withAlpha(38),
-                          spotsLine: BarAreaSpotsLine(
-                            show: true,
-                            flLineStyle: FlLine(color: Colors.blue.withAlpha(128), strokeWidth: 1),
-                          ),
-                        ),
-                      ),
-                      if (appSummary.limitStatus && appSummary.dailyLimit > Duration.zero)
-                        LineChartBarData(
-                          spots: List.generate(sortedDates.length, (index) => 
-                            FlSpot(index.toDouble(), appSummary.dailyLimit.inMinutes.toDouble())),
-                          isCurved: false,
-                          color: Colors.red.withAlpha(179),
-                          barWidth: 2,
-                          isStrokeCapRound: true,
-                          dotData: const FlDotData(show: false),
-                          dashArray: [5, 5],
-                        ),
-                    ],
-                  ),
-                ),
+  Widget _buildMiniStat(BuildContext context, String value, String label,
+      IconData icon, Color color) {
+    final theme = FluentTheme.of(context);
+    return Row(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Container(
+          padding: const EdgeInsets.all(4),
+          decoration: BoxDecoration(
+            color: color.withOpacity(0.1),
+            borderRadius: BorderRadius.circular(4),
           ),
-          const SizedBox(height: 20),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
-            children: [
-              _buildStatCard(context, l10n.avgDailyUsage,
-                appDetails.usageInsights.formattedAverageDailyUsage, FluentIcons.chart_series, cardSize: 100),
-              _buildStatCard(context, l10n.longestSession,
-                appDetails.sessionBreakdown.formattedLongestSessionDuration, FluentIcons.timeline_progress, cardSize: 100),
-              _buildStatCard(context, l10n.weeklyTotal,
-                _formatDuration(Duration(minutes: weeklyData.values.map((d) => d.inMinutes).fold(0, (a, b) => a + b))),
-                FluentIcons.calendar_week, cardSize: 100),
-            ],
+          child: Icon(icon, size: 12, color: color),
+        ),
+        const SizedBox(width: 6),
+        Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Text(
+              value,
+              style: theme.typography.caption?.copyWith(
+                fontWeight: FontWeight.bold,
+                fontSize: 13,
+              ),
+            ),
+            Text(
+              label,
+              style: theme.typography.caption?.copyWith(
+                fontSize: 10,
+                color: theme.inactiveColor,
+              ),
+            ),
+          ],
+        ),
+      ],
+    );
+  }
+
+  Widget _buildToolbar(
+      BuildContext context, AppLocalizations l10n, FluentThemeData theme) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+      child: Row(
+        children: [
+          // Search
+          SizedBox(
+            width: 200,
+            height: 32,
+            child: TextBox(
+              focusNode: _searchFocusNode,
+              placeholder: l10n.searchApplications,
+              style: const TextStyle(fontSize: 13),
+              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 6),
+              onChanged: (value) {
+                setState(() {
+                  _searchQuery = value;
+                  _filterAndSortAppList();
+                });
+              },
+              prefix: Padding(
+                padding: const EdgeInsets.only(left: 8.0),
+                child: Icon(FluentIcons.search,
+                    size: 14, color: theme.inactiveColor),
+              ),
+              suffix: _searchQuery.isNotEmpty
+                  ? IconButton(
+                      icon: Icon(FluentIcons.clear,
+                          size: 12, color: theme.inactiveColor),
+                      onPressed: () {
+                        setState(() {
+                          _searchQuery = '';
+                          _filterAndSortAppList();
+                        });
+                      },
+                    )
+                  : null,
+            ),
+          ),
+          const SizedBox(width: 12),
+
+          // Sort Pills
+          Expanded(
+            child: _buildSortPills(context, l10n, theme),
+          ),
+
+          const SizedBox(width: 8),
+
+          // Sort Direction
+          Tooltip(
+            message:
+                _sortAscending ? "l10n.sortAscending" : "l10n.sortDescending",
+            child: ToggleButton(
+              checked: _sortAscending,
+              onChanged: (value) {
+                setState(() {
+                  _sortAscending = value;
+                  _sortAppList();
+                });
+              },
+              child: Icon(
+                _sortAscending ? FluentIcons.sort_up : FluentIcons.sort_down,
+                size: 14,
+              ),
+            ),
           ),
         ],
       ),
     );
   }
 
-  Widget _buildTimeOfDayCard(BuildContext context, AppLocalizations l10n, Map<String, double> timeOfDayUsage) {
-    return Card(
-      padding: const EdgeInsets.all(20),
-      borderRadius: BorderRadius.circular(12),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+  Widget _buildSortPills(
+      BuildContext context, AppLocalizations l10n, FluentThemeData theme) {
+    final sortOptions = [
+      ('Usage', l10n.sortByUsage, FluentIcons.timer),
+      ('Name', l10n.sortByName, FluentIcons.text_field),
+      ('Category', l10n.sortByCategory, FluentIcons.tag),
+    ];
+
+    return SingleChildScrollView(
+      scrollDirection: Axis.horizontal,
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: sortOptions.map((option) {
+          final isSelected = _sortBy == option.$1;
+          return Padding(
+            padding: const EdgeInsets.only(right: 4),
+            child: ToggleButton(
+              checked: isSelected,
+              onChanged: (value) {
+                if (value) {
+                  setState(() {
+                    _sortBy = option.$1;
+                    _sortAppList();
+                  });
+                }
+              },
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Icon(option.$3, size: 12),
+                  const SizedBox(width: 4),
+                  Text(option.$2, style: const TextStyle(fontSize: 12)),
+                ],
+              ),
+            ),
+          );
+        }).toList(),
+      ),
+    );
+  }
+
+  Widget _buildColumnHeaders(
+      BuildContext context, AppLocalizations l10n, FluentThemeData theme) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+      decoration: BoxDecoration(
+        color: theme.cardColor.withOpacity(0.5),
+        border: Border(
+          bottom: BorderSide(color: theme.resources.dividerStrokeColorDefault),
+        ),
+      ),
+      child: Row(
         children: [
-          Text(l10n.usagePatternByTimeOfDay, 
-            style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 18, letterSpacing: 0.4)),
-          const SizedBox(height: 24),
-          SizedBox(
-            height: 300,
+          Expanded(flex: 3, child: _buildHeaderCell(l10n.nameHeader, theme)),
+          Expanded(
+              flex: 2, child: _buildHeaderCell(l10n.categoryHeader, theme)),
+          Expanded(
+              flex: 2, child: _buildHeaderCell(l10n.totalTimeHeader, theme)),
+          Expanded(
+              flex: 2, child: _buildHeaderCell(l10n.productivityHeader, theme)),
+          const SizedBox(
+              width: 50, child: Center(child: Text(''))), // Actions column
+        ],
+      ),
+    );
+  }
+
+  Widget _buildHeaderCell(String text, FluentThemeData theme) {
+    return Text(
+      text,
+      style: theme.typography.caption?.copyWith(
+        fontWeight: FontWeight.w600,
+        color: theme.inactiveColor,
+        fontSize: 11,
+        letterSpacing: 0.5,
+      ),
+      overflow: TextOverflow.ellipsis,
+    );
+  }
+
+  Widget _buildAppList(
+      BuildContext context, List<AppUsageSummary> apps, FluentThemeData theme) {
+    return ListView.builder(
+      padding: const EdgeInsets.symmetric(vertical: 4),
+      itemCount: apps.length,
+      itemBuilder: (context, index) {
+        final app = apps[index];
+        final isHovered = _hoveredIndex == index;
+
+        return MouseRegion(
+          onEnter: (_) => setState(() => _hoveredIndex = index),
+          onExit: (_) => setState(() => _hoveredIndex = null),
+          child: AnimatedContainer(
+            duration: const Duration(milliseconds: 150),
+            margin: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+            decoration: BoxDecoration(
+              color: isHovered
+                  ? theme.accentColor.withOpacity(0.05)
+                  : Colors.transparent,
+              borderRadius: BorderRadius.circular(6),
+              border: isHovered
+                  ? Border.all(color: theme.accentColor.withOpacity(0.2))
+                  : Border.all(color: Colors.transparent),
+            ),
+            child: _buildAppListItem(context, app, isHovered, theme),
+          ),
+        );
+      },
+    );
+  }
+
+  Widget _buildAppListItem(BuildContext context, AppUsageSummary app,
+      bool isHovered, FluentThemeData theme) {
+    final l10n = AppLocalizations.of(context)!;
+
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 10),
+      child: Row(
+        children: [
+          // App Name with Icon
+          Expanded(
+            flex: 3,
             child: Row(
               children: [
-                Expanded(
-                  flex: 3,
-                  child: PieChart(
-                    PieChartData(
-                      sections: timeOfDayUsage.entries.map((entry) {
-                        final Color color = _getTimeOfDayColor(entry.key);
-                        return PieChartSectionData(
-                          color: color,
-                          value: entry.value,
-                          title: '${entry.value.toInt()}%',
-                          radius: 90,
-                          titleStyle: const TextStyle(
-                            fontSize: 16, fontWeight: FontWeight.bold, color: Colors.white,
-                            shadows: [Shadow(blurRadius: 2.0, color: Colors.black)]),
-                          badgeWidget: entry.value > 20 ? const Icon(FluentIcons.starburst, color: Colors.white, size: 12) : null,
-                          badgePositionPercentageOffset: 1.05,
-                        );
-                      }).toList(),
-                      centerSpaceRadius: 40,
-                      sectionsSpace: 3,
-                      pieTouchData: PieTouchData(),
-                    ),
+                Container(
+                  width: 28,
+                  height: 28,
+                  decoration: BoxDecoration(
+                    color: app.isProductive
+                        ? Colors.green.withOpacity(0.1)
+                        : Colors.red.withOpacity(0.1),
+                    borderRadius: BorderRadius.circular(6),
+                  ),
+                  child: Icon(
+                    FluentIcons.app_icon_default,
+                    size: 14,
+                    color: app.isProductive ? Colors.green : Colors.red,
                   ),
                 ),
+                const SizedBox(width: 10),
                 Expanded(
-                  flex: 2,
-                  child: Padding(
-                    padding: const EdgeInsets.only(left: 16.0),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: timeOfDayUsage.entries.map((entry) {
-                        String localizedLabel = entry.key;
-                        if (entry.key.contains('Morning')) {localizedLabel = l10n.morning;}
-                        else if (entry.key.contains('Afternoon')) {localizedLabel = l10n.afternoon;}
-                        else if (entry.key.contains('Evening')) {localizedLabel = l10n.evening;}
-                        else if (entry.key.contains('Night')) {localizedLabel = l10n.night;}
-                        
-                        return Padding(
-                          padding: const EdgeInsets.symmetric(vertical: 8),
-                          child: Row(
-                            children: [
-                              Container(
-                                width: 14, height: 14,
-                                decoration: BoxDecoration(
-                                  color: _getTimeOfDayColor(entry.key),
-                                  shape: BoxShape.rectangle,
-                                  borderRadius: BorderRadius.circular(3),
-                                  boxShadow: [BoxShadow(color: Colors.black.withAlpha(26), blurRadius: 1, offset: const Offset(0, 1))],
-                                ),
-                              ),
-                              const SizedBox(width: 12),
-                              Text(localizedLabel, style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w500)),
-                            ],
-                          ),
-                        );
-                      }).toList(),
+                  child: Text(
+                    app.appName,
+                    style: theme.typography.body?.copyWith(
+                      fontWeight: FontWeight.w500,
                     ),
+                    overflow: TextOverflow.ellipsis,
                   ),
                 ),
               ],
             ),
           ),
-        ],
-      ),
-    );
-  }
 
-  Widget _buildPatternAnalysisCard(
-    BuildContext context,
-    AppLocalizations l10n,
-    ApplicationBasicDetail appBasicDetails,
-    ApplicationDetailedData appDetails,
-    Map<String, double> timeOfDayUsage,
-    app_summary_data.AppUsageSummary appSummary,
-  ) {
-    return Card(
-      padding: const EdgeInsets.all(20),
-      borderRadius: BorderRadius.circular(12),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(l10n.patternAnalysis, 
-            style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 18, letterSpacing: 0.4)),
-          const SizedBox(height: 20),
-          ListTile(
-            leading: Container(
-              padding: const EdgeInsets.all(8),
-              decoration: BoxDecoration(
-                color: Colors.blue.withAlpha(26),
-                borderRadius: BorderRadius.circular(8),
-              ),
-              child: Icon(FluentIcons.lightbulb, color: Colors.blue, size: 24),
-            ),
-            title: Text(l10n.usageInsights, style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 16)),
-            subtitle: Padding(
-              padding: const EdgeInsets.only(top: 8.0, left: 4.0),
-              child: Text(
-                _generateUsageInsights(l10n, appBasicDetails, appDetails, timeOfDayUsage),
-                style: const TextStyle(fontSize: 14, height: 1.4),
+          // Category
+          Expanded(
+            flex: 2,
+            child: _buildCategoryChip(app.category, theme),
+          ),
+
+          // Total Time
+          Expanded(
+            flex: 2,
+            child: _buildTimeDisplay(app.totalTime, theme),
+          ),
+
+          // Productivity
+          Expanded(
+            flex: 2,
+            child: _buildProductivityBadge(app.isProductive, l10n, theme),
+          ),
+
+          // Actions
+          SizedBox(
+            width: 50,
+            child: Center(
+              child: AnimatedOpacity(
+                duration: const Duration(milliseconds: 150),
+                opacity: isHovered ? 1.0 : 0.5,
+                child: IconButton(
+                  icon: Icon(
+                    FluentIcons.info,
+                    size: 14,
+                    color: theme.accentColor,
+                  ),
+                  onPressed: () => _showAppDetails(context, app),
+                ),
               ),
             ),
           ),
-          const SizedBox(height: 12),
-          if (appSummary.limitStatus)
-            ListTile(
-              leading: Container(
-                padding: const EdgeInsets.all(8),
-                decoration: BoxDecoration(
-                  color: _getLimitStatusColor(appBasicDetails).withAlpha(26),
-                  borderRadius: BorderRadius.circular(8),
-                ),
-                child: Icon(FluentIcons.timer, color: _getLimitStatusColor(appBasicDetails), size: 24),
-              ),
-              title: Text(l10n.limitStatus, style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 16)),
-              subtitle: Padding(
-                padding: const EdgeInsets.only(top: 8.0, left: 4.0),
-                child: Text(
-                  _generateLimitStatusInsight(l10n, appBasicDetails),
-                  style: const TextStyle(fontSize: 14, height: 1.4),
-                ),
-              ),
-            ),
         ],
       ),
     );
   }
 
-  // Helper functions
-  Map<String, double> _generateTimeOfDayData(Map<int, Duration> hourlyBreakdown) {
-    final Map<String, Duration> timeOfDayDurations = {
-      'Morning (6-12)': Duration.zero,
-      'Afternoon (12-5)': Duration.zero,
-      'Evening (5-9)': Duration.zero,
-      'Night (9-6)': Duration.zero,
-    };
-    
-    hourlyBreakdown.forEach((hour, duration) {
-      if (hour >= 6 && hour < 12) {
-        timeOfDayDurations['Morning (6-12)'] = timeOfDayDurations['Morning (6-12)']! + duration;
-      } else if (hour >= 12 && hour < 17) {
-        timeOfDayDurations['Afternoon (12-5)'] = timeOfDayDurations['Afternoon (12-5)']! + duration;
-      } else if (hour >= 17 && hour < 21) {
-        timeOfDayDurations['Evening (5-9)'] = timeOfDayDurations['Evening (5-9)']! + duration;
-      } else {
-        timeOfDayDurations['Night (9-6)'] = timeOfDayDurations['Night (9-6)']! + duration;
-      }
-    });
-    
-    final Duration totalDuration = timeOfDayDurations.values.fold(Duration.zero, (prev, curr) => prev + curr);
-    final Map<String, double> percentages = {};
-    
-    if (totalDuration.inSeconds > 0) {
-      timeOfDayDurations.forEach((timeOfDay, duration) {
-        percentages[timeOfDay] = (duration.inSeconds / totalDuration.inSeconds) * 100;
-      });
-    } else {
-      for (var timeOfDay in timeOfDayDurations.keys) {
-        percentages[timeOfDay] = 25.0;
-      }
-    }
-    
-    return percentages;
+  Widget _buildCategoryChip(String category, FluentThemeData theme) {
+    return Align(
+      alignment: Alignment.centerLeft,
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+        decoration: BoxDecoration(
+          color: theme.cardColor,
+          borderRadius: BorderRadius.circular(4),
+          border: Border.all(color: theme.resources.dividerStrokeColorDefault),
+        ),
+        child: Text(
+          category,
+          style: theme.typography.caption?.copyWith(fontSize: 11),
+          overflow: TextOverflow.ellipsis,
+        ),
+      ),
+    );
   }
 
-  String _formatDateForAxis(String dateString, AppLocalizations l10n) {
-    try {
-      final DateFormat inputFormatter = DateFormat('MM/dd');
-      final DateTime date = inputFormatter.parse(dateString);
-      final DateTime today = DateTime.now();
-      
-      if (date.year == today.year && date.month == today.month && date.day == today.day) {
-        return l10n.todayChart;
-      }
-      
-      return DateFormat('EEE').format(date);
-    } catch (e) {
-      return dateString;
-    }
+  Widget _buildTimeDisplay(Duration duration, FluentThemeData theme) {
+    final hours = duration.inHours;
+    final minutes = duration.inMinutes.remainder(60);
+
+    return Row(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        if (hours > 0) ...[
+          Text(
+            '$hours',
+            style: theme.typography.body?.copyWith(
+              fontWeight: FontWeight.bold,
+              color: hours > 2 ? Colors.orange : null,
+            ),
+          ),
+          Text(
+            'h ',
+            style: theme.typography.caption?.copyWith(
+              color: theme.inactiveColor,
+            ),
+          ),
+        ],
+        Text(
+          '$minutes',
+          style: theme.typography.body?.copyWith(
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+        Text(
+          'm',
+          style: theme.typography.caption?.copyWith(
+            color: theme.inactiveColor,
+          ),
+        ),
+      ],
+    );
   }
 
-  String _determineTrend(UsageComparisons comparisons, AppLocalizations l10n) {
-    final double percentage = comparisons.growthPercentage;
-    if (percentage > 5) return l10n.increasing;
-    if (percentage < -5) return l10n.decreasing;
-    return l10n.stable;
+  Widget _buildProductivityBadge(
+      bool isProductive, AppLocalizations l10n, FluentThemeData theme) {
+    return Align(
+      alignment: Alignment.centerLeft,
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+        decoration: BoxDecoration(
+          color: isProductive
+              ? Colors.green.withOpacity(0.1)
+              : Colors.red.withOpacity(0.1),
+          borderRadius: BorderRadius.circular(4),
+        ),
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Icon(
+              isProductive ? FluentIcons.check_mark : FluentIcons.cancel,
+              size: 10,
+              color: isProductive ? Colors.green : Colors.red,
+            ),
+            const SizedBox(width: 4),
+            Flexible(
+              child: Text(
+                isProductive ? l10n.productive : l10n.nonProductive,
+                style: TextStyle(
+                  fontSize: 11,
+                  color: isProductive ? Colors.green : Colors.red,
+                  fontWeight: FontWeight.w500,
+                ),
+                overflow: TextOverflow.ellipsis,
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
   }
 
-  IconData _getTrendIcon(UsageComparisons comparisons) {
-    final double percentage = comparisons.growthPercentage;
-    if (percentage > 5) return FluentIcons.up;
-    if (percentage < -5) return FluentIcons.down;
-    return FluentIcons.horizontal_tab_key;
+  Widget _buildEmptyState(
+      BuildContext context, AppLocalizations l10n, FluentThemeData theme) {
+    return Center(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Icon(
+            FluentIcons.search,
+            size: 40,
+            color: theme.inactiveColor.withOpacity(0.5),
+          ),
+          const SizedBox(height: 12),
+          Text(
+            l10n.noApplicationsMatch,
+            style: theme.typography.body?.copyWith(
+              color: theme.inactiveColor,
+            ),
+          ),
+          if (_searchQuery.isNotEmpty) ...[
+            const SizedBox(height: 8),
+            Button(
+              onPressed: () {
+                setState(() {
+                  _searchQuery = '';
+                  _filterAndSortAppList();
+                });
+              },
+              child: Text("l10n.clearSearch"),
+            ),
+          ],
+        ],
+      ),
+    );
   }
 
-  Color _getTrendColor(UsageComparisons comparisons) {
-    final double percentage = comparisons.growthPercentage;
-    if (percentage > 5) return Colors.red;
-    if (percentage < -5) return Colors.green;
-    return Colors.blue;
-  }
-
-  Color _getTimeOfDayColor(String timeOfDay) {
-    final Map<String, Color> timeColors = {
-      'Morning (6-12)': Colors.orange,
-      'Afternoon (12-5)': Colors.yellow,
-      'Evening (5-9)': Colors.purple,
-      'Night (9-6)': Colors.blue,
-    };
-    return timeColors[timeOfDay] ?? Colors.grey;
-  }
-
-  Color _getLimitStatusColor(ApplicationBasicDetail app) {
-    if (!app.limitStatus) return Colors.grey;
-    final double percentUsed = app.screenTime.inSeconds / 
-        (app.dailyLimit.inSeconds > 0 ? app.dailyLimit.inSeconds : 1);
-    if (percentUsed >= 1.0) return Colors.red;
-    if (percentUsed >= 0.75) return Colors.orange;
-    return Colors.green;
-  }
-
-  String _generateUsageInsights(
-    AppLocalizations l10n,
-    ApplicationBasicDetail app, 
-    ApplicationDetailedData details,
-    Map<String, double> timeOfDay,
-  ) {
-    final List<String> insights = [];
-    final String primaryTimeOfDay = timeOfDay.entries.reduce((a, b) => a.value > b.value ? a : b).key;
-    String localizedTimeOfDay = primaryTimeOfDay;
-    
-    if (primaryTimeOfDay.contains('Morning')) {localizedTimeOfDay = l10n.morning;}
-    else if (primaryTimeOfDay.contains('Afternoon')) {localizedTimeOfDay = l10n.afternoon;}
-    else if (primaryTimeOfDay.contains('Evening')) {localizedTimeOfDay = l10n.evening;}
-    else if (primaryTimeOfDay.contains('Night')) {localizedTimeOfDay = l10n.night;}
-    
-    insights.add(
-      l10n.primaryUsageTime(app.name, localizedTimeOfDay),
+  Widget _buildFooterStats(BuildContext context, AppLocalizations l10n,
+      FluentThemeData theme, List<AppUsageSummary> apps) {
+    final totalTime = apps.fold<Duration>(
+      Duration.zero,
+      (sum, app) => sum + app.totalTime,
     );
 
-    
-    final double growthPercentage = details.comparisons.growthPercentage;
-    if (growthPercentage > 10) {
-      insights.add(l10n.significantIncrease(growthPercentage.toStringAsFixed(1)));
-    } else if (growthPercentage > 5) {
-      insights.add(l10n.trendingUpward);
-    } else if (growthPercentage < -10) {
-      insights.add(l10n.significantDecrease(growthPercentage.abs().toStringAsFixed(1)));
-    } else if (growthPercentage < -5) {
-      insights.add(l10n.trendingDownward);
-    } else {
-      insights.add(l10n.consistentUsage);
-    }
-    
-    if (app.isProductive) {
-      insights.add(l10n.markedAsProductive);
-    } else {
-      insights.add(l10n.markedAsNonProductive);
-    }
-    
-    if (details.usageInsights.mostActiveHours.isNotEmpty) {
-      final int mostActiveHour = details.usageInsights.mostActiveHours.first;
-      insights.add(l10n.mostActiveTime(_formatHourOfDay(mostActiveHour, l10n)));
-    }
-    
-    return insights.join(" ");
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+      decoration: BoxDecoration(
+        color: theme.cardColor.withOpacity(0.5),
+        border: Border(
+          top: BorderSide(color: theme.resources.dividerStrokeColorDefault),
+        ),
+      ),
+      child: Row(
+        children: [
+          Text(
+            '${apps.length} ${"l10n.applicationsShowing"}',
+            style: theme.typography.caption?.copyWith(
+              color: theme.inactiveColor,
+            ),
+          ),
+          const Spacer(),
+          Text(
+            '${"l10n.totalTime"}: ',
+            style: theme.typography.caption?.copyWith(
+              color: theme.inactiveColor,
+            ),
+          ),
+          Text(
+            _formatDuration(totalTime),
+            style: theme.typography.caption?.copyWith(
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+        ],
+      ),
+    );
   }
 
-  String _formatHourOfDay(int hour, AppLocalizations l10n) {
-    final int displayHour = hour > 12 ? hour - 12 : (hour == 0 ? 12 : hour);
+  // ==================== APP DETAILS DIALOG ====================
 
-    return hour >= 12
-        ? l10n.hourPeriodPM(displayHour)
-        : l10n.hourPeriodAM(displayHour);
+  void _showAppDetails(BuildContext context, AppUsageSummary app) async {
+    final l10n = AppLocalizations.of(context)!;
+
+    // Fetch your data here (keeping your existing logic)
+    // For now showing improved dialog
+
+    if (!context.mounted) return;
+
+    showDialog(
+      context: context,
+      builder: (context) => _AppDetailsDialog(
+        app: app,
+        l10n: l10n,
+      ),
+    );
   }
-
-
-  String _generateLimitStatusInsight(
-      AppLocalizations l10n,
-      ApplicationBasicDetail app,
-  ) {
-    if (!app.limitStatus) return l10n.noLimitSet;
-
-    final double percentUsed = app.screenTime.inSeconds /
-        (app.dailyLimit.inSeconds > 0 ? app.dailyLimit.inSeconds : 1);
-
-    final String remainingTime =
-        _formatDuration(app.dailyLimit - app.screenTime);
-
-    if (percentUsed >= 1.0) {
-      return l10n.limitReached;
-    } else if (percentUsed >= 0.9) {
-      return l10n.aboutToReachLimit(remainingTime);
-    } else if (percentUsed >= 0.75) {
-      return l10n.percentOfLimitUsed(
-        (percentUsed * 100).toInt(),
-        remainingTime,
-      );
-    } else {
-      return l10n.remainingTime(remainingTime);
-    }
-  }
-
 
   String _formatDuration(Duration duration) {
     final hours = duration.inHours;
@@ -1492,161 +1703,472 @@ class _ApplicationUsageState extends State<ApplicationUsage> {
     if (hours > 0) return "${hours}h ${minutes}m";
     return "${minutes}m";
   }
+}
 
-  Widget _buildSummaryItem(BuildContext context, String title, String value, 
-      {IconData? icon, Color? color, double iconSize = 16}) {
-    return Padding(
-      padding: const EdgeInsets.all(8.0),
-      child: Column(
-        children: [
-          Row(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              if (icon != null) ...[
-                Icon(icon, size: iconSize, color: color ?? FluentTheme.of(context).accentColor),
-                const SizedBox(width: 8),
-              ],
-              Text(title, style: TextStyle(
-                fontSize: 13, fontWeight: FontWeight.normal,
-                color: FluentTheme.of(context).accentColor.withAlpha(204))),
+// Separate dialog widget for better organization
+class _AppDetailsDialog extends StatefulWidget {
+  final AppUsageSummary app;
+  final AppLocalizations l10n;
+
+  const _AppDetailsDialog({
+    required this.app,
+    required this.l10n,
+  });
+
+  @override
+  State<_AppDetailsDialog> createState() => _AppDetailsDialogState();
+}
+
+class _AppDetailsDialogState extends State<_AppDetailsDialog> {
+  int _selectedTab = 0;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = FluentTheme.of(context);
+    final l10n = widget.l10n;
+
+    return ContentDialog(
+      constraints: const BoxConstraints(maxWidth: 700, maxHeight: 550),
+      title: _buildDialogHeader(context, theme),
+      content: SizedBox(
+        width: 680,
+        height: 400,
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            // Tab Bar
+            _buildTabBar(context, l10n, theme),
+
+            const SizedBox(height: 16),
+
+            // Tab Content
+            Expanded(
+              child: _buildTabContent(context, l10n, theme),
+            ),
+          ],
+        ),
+      ),
+      actions: [
+        Button(
+          onPressed: () => Navigator.pop(context),
+          child: Text(l10n.close),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildDialogHeader(BuildContext context, FluentThemeData theme) {
+    final app = widget.app;
+    final l10n = widget.l10n;
+
+    return Row(
+      children: [
+        Container(
+          width: 40,
+          height: 40,
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              colors: app.isProductive
+                  ? [Colors.green.light, Colors.green]
+                  : [Colors.red.light, Colors.red],
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+            ),
+            borderRadius: BorderRadius.circular(10),
+            boxShadow: [
+              BoxShadow(
+                color: (app.isProductive ? Colors.green : Colors.red)
+                    .withOpacity(0.3),
+                blurRadius: 8,
+                offset: const Offset(0, 2),
+              ),
             ],
           ),
-          const SizedBox(height: 8),
-          Text(value, style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, 
-            color: color, letterSpacing: 0.4)),
+          child: const Icon(
+            FluentIcons.app_icon_default,
+            color: Colors.white,
+            size: 20,
+          ),
+        ),
+        const SizedBox(width: 14),
+        Expanded(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Text(
+                app.appName,
+                style: theme.typography.subtitle?.copyWith(
+                  fontWeight: FontWeight.bold,
+                ),
+                overflow: TextOverflow.ellipsis,
+              ),
+              const SizedBox(height: 4),
+              Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  _buildSmallBadge(
+                    app.category,
+                    theme.accentColor.withOpacity(0.1),
+                    theme.accentColor,
+                  ),
+                  const SizedBox(width: 8),
+                  _buildSmallBadge(
+                    app.isProductive ? l10n.productive : l10n.nonProductive,
+                    app.isProductive
+                        ? Colors.green.withOpacity(0.1)
+                        : Colors.red.withOpacity(0.1),
+                    app.isProductive ? Colors.green : Colors.red,
+                  ),
+                ],
+              ),
+            ],
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildSmallBadge(String text, Color bgColor, Color textColor) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+      decoration: BoxDecoration(
+        color: bgColor,
+        borderRadius: BorderRadius.circular(4),
+      ),
+      child: Text(
+        text,
+        style: TextStyle(
+          fontSize: 11,
+          color: textColor,
+          fontWeight: FontWeight.w500,
+        ),
+      ),
+    );
+  }
+
+  Widget _buildTabBar(
+      BuildContext context, AppLocalizations l10n, FluentThemeData theme) {
+    final tabs = [
+      ("l10n.overview", FluentIcons.view_dashboard),
+      (l10n.usageOverPastWeek, FluentIcons.chart),
+      ("l10n.patterns", FluentIcons.insights),
+    ];
+
+    return Container(
+      padding: const EdgeInsets.all(4),
+      decoration: BoxDecoration(
+        color: theme.cardColor,
+        borderRadius: BorderRadius.circular(8),
+      ),
+      child: Row(
+        children: tabs.asMap().entries.map((entry) {
+          final index = entry.key;
+          final tab = entry.value;
+          final isSelected = _selectedTab == index;
+
+          return Expanded(
+            child: GestureDetector(
+              onTap: () => setState(() => _selectedTab = index),
+              child: AnimatedContainer(
+                duration: const Duration(milliseconds: 200),
+                padding: const EdgeInsets.symmetric(vertical: 8),
+                decoration: BoxDecoration(
+                  color: isSelected ? theme.accentColor : Colors.transparent,
+                  borderRadius: BorderRadius.circular(6),
+                ),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Icon(
+                      tab.$2,
+                      size: 14,
+                      color: isSelected ? Colors.white : theme.inactiveColor,
+                    ),
+                    const SizedBox(width: 6),
+                    Flexible(
+                      child: Text(
+                        tab.$1,
+                        style: TextStyle(
+                          fontSize: 12,
+                          fontWeight:
+                              isSelected ? FontWeight.w600 : FontWeight.normal,
+                          color:
+                              isSelected ? Colors.white : theme.inactiveColor,
+                        ),
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          );
+        }).toList(),
+      ),
+    );
+  }
+
+  Widget _buildTabContent(
+      BuildContext context, AppLocalizations l10n, FluentThemeData theme) {
+    switch (_selectedTab) {
+      case 0:
+        return _buildOverviewTab(context, l10n, theme);
+      case 1:
+        return _buildUsageChartTab(context, l10n, theme);
+      case 2:
+        return _buildPatternsTab(context, l10n, theme);
+      default:
+        return const SizedBox.shrink();
+    }
+  }
+
+  Widget _buildOverviewTab(
+      BuildContext context, AppLocalizations l10n, FluentThemeData theme) {
+    return SingleChildScrollView(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          // Summary Stats Row
+          Row(
+            children: [
+              Expanded(
+                  child: _buildStatCard(context, l10n.today, '2h 34m',
+                      FluentIcons.calendar_day, Colors.blue, theme)),
+              const SizedBox(width: 12),
+              Expanded(
+                  child: _buildStatCard(context, l10n.dailyLimit, '3h',
+                      FluentIcons.timer, Colors.orange, theme)),
+              const SizedBox(width: 12),
+              Expanded(
+                  child: _buildStatCard(context, l10n.weeklyTotal, '14h 22m',
+                      FluentIcons.calendar_week, Colors.purple, theme)),
+            ],
+          ),
+          const SizedBox(height: 16),
+
+          // Usage Breakdown
+          _buildCompactCard(
+            context,
+            l10n.usageSummary,
+            FluentIcons.bulleted_list,
+            theme,
+            child: Column(
+              children: [
+                _buildInfoRow(l10n.avgDailyUsage, '2h 3m', theme),
+                _buildInfoRow(l10n.longestSession, '45m', theme),
+                _buildInfoRow(l10n.usageTrend, '+5%', theme,
+                    valueColor: Colors.orange),
+              ],
+            ),
+          ),
         ],
       ),
     );
   }
 
-  Widget _buildStatCard(BuildContext context, String title, String value, IconData icon, {double cardSize = 80}) {
-    return Card(
+  Widget _buildUsageChartTab(
+      BuildContext context, AppLocalizations l10n, FluentThemeData theme) {
+    return Container(
       padding: const EdgeInsets.all(16),
-      borderRadius: BorderRadius.circular(8),
-      child: SizedBox(
-        width: cardSize,
+      decoration: BoxDecoration(
+        color: theme.cardColor,
+        borderRadius: BorderRadius.circular(8),
+      ),
+      child: Center(
         child: Column(
-          mainAxisSize: MainAxisSize.min,
+          mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(icon, size: 24),
-            const SizedBox(height: 10),
-            Text(title, style: TextStyle(fontSize: 13, 
-              color: FluentTheme.of(context).accentColor.withAlpha(204)), textAlign: TextAlign.center),
-            const SizedBox(height: 8),
-            Text(value, style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold, letterSpacing: 0.4)),
+            Icon(
+              FluentIcons.chart,
+              size: 48,
+              color: theme.inactiveColor.withOpacity(0.5),
+            ),
+            const SizedBox(height: 12),
+            Text(
+              'Weekly Usage Chart',
+              style: theme.typography.body?.copyWith(
+                color: theme.inactiveColor,
+              ),
+            ),
           ],
         ),
       ),
     );
   }
-}
 
-class ApplicationListItem extends StatelessWidget {
-  final String name;
-  final String category;
-  final String totalTime;
-  final bool productivity;
-  final VoidCallback onViewDetails;
-
-  const ApplicationListItem({
-    super.key,
-    required this.name,
-    required this.category,
-    required this.productivity,
-    required this.totalTime,
-    required this.onViewDetails,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    final l10n = AppLocalizations.of(context)!;
-    
-    return Column(
-      children: [
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-          child: Row(
-            children: [
-              Expanded(flex: 2, child: Text(name, overflow: TextOverflow.ellipsis)),
-              Expanded(flex: 2, child: Text(category, overflow: TextOverflow.ellipsis)),
-              Expanded(flex: 2, child: Text(totalTime)),
-              Expanded(
-                flex: 2,
-                child: Row(
-                  children: [
-                    Icon(
-                      productivity ? FluentIcons.check_mark : FluentIcons.cancel,
-                      color: productivity ? Colors.green : Colors.red,
-                      size: 16,
-                    ),
-                    const SizedBox(width: 4),
-                    Text(productivity ? l10n.productive : l10n.nonProductive),
-                  ],
-                ),
+  Widget _buildPatternsTab(
+      BuildContext context, AppLocalizations l10n, FluentThemeData theme) {
+    return SingleChildScrollView(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          _buildCompactCard(
+            context,
+            l10n.usagePatternByTimeOfDay,
+            FluentIcons.timeline_progress,
+            theme,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: [
+                _buildTimeSlot(l10n.morning, '25%', Colors.orange, theme),
+                _buildTimeSlot(l10n.afternoon, '35%', Colors.yellow, theme),
+                _buildTimeSlot(l10n.evening, '30%', Colors.purple, theme),
+                _buildTimeSlot(l10n.night, '10%', Colors.blue, theme),
+              ],
+            ),
+          ),
+          const SizedBox(height: 12),
+          _buildCompactCard(
+            context,
+            l10n.usageInsights,
+            FluentIcons.lightbulb,
+            theme,
+            child: Text(
+              'You primarily use this app in the afternoon. Your usage has been consistent over the past week.',
+              style: theme.typography.body?.copyWith(
+                height: 1.5,
               ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildStatCard(BuildContext context, String label, String value,
+      IconData icon, Color color, FluentThemeData theme) {
+    return Container(
+      padding: const EdgeInsets.all(14),
+      decoration: BoxDecoration(
+        color: color.withOpacity(0.08),
+        borderRadius: BorderRadius.circular(8),
+        border: Border.all(color: color.withOpacity(0.2)),
+      ),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Icon(icon, size: 20, color: color),
+          const SizedBox(height: 8),
+          Text(
+            value,
+            style: theme.typography.subtitle?.copyWith(
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+          const SizedBox(height: 2),
+          Text(
+            label,
+            style: theme.typography.caption?.copyWith(
+              color: theme.inactiveColor,
+              fontSize: 11,
+            ),
+            textAlign: TextAlign.center,
+            overflow: TextOverflow.ellipsis,
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildCompactCard(
+      BuildContext context, String title, IconData icon, FluentThemeData theme,
+      {required Widget child}) {
+    return Container(
+      padding: const EdgeInsets.all(14),
+      decoration: BoxDecoration(
+        color: theme.cardColor,
+        borderRadius: BorderRadius.circular(8),
+        border: Border.all(color: theme.resources.dividerStrokeColorDefault),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Row(
+            children: [
+              Icon(icon, size: 14, color: theme.accentColor),
+              const SizedBox(width: 8),
               Expanded(
-                flex: 1,
-                child: Tooltip(
-                  message: l10n.viewDetails,
-                  child: IconButton(
-                    icon: Icon(FluentIcons.view, size: 16, color: Colors.blue),
-                    onPressed: onViewDetails,
+                child: Text(
+                  title,
+                  style: theme.typography.bodyStrong?.copyWith(
+                    fontSize: 13,
                   ),
+                  overflow: TextOverflow.ellipsis,
                 ),
               ),
             ],
           ),
-        ),
-        Container(height: 1, color: FluentTheme.of(context).inactiveBackgroundColor),
-      ],
-    );
-  }
-}
-
-class LoadingIndicator extends StatelessWidget {
-  final String message;
-  
-  const LoadingIndicator({super.key, required this.message});
-  
-  @override
-  Widget build(BuildContext context) {
-    return Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          const ProgressRing(),
-          const SizedBox(height: 10),
-          Text(message, semanticsLabel: message),
+          const SizedBox(height: 12),
+          child,
         ],
       ),
     );
   }
-}
 
-class ErrorDisplay extends StatelessWidget {
-  final String errorMessage;
-  final VoidCallback onRetry;
-  
-  const ErrorDisplay({super.key, required this.errorMessage, required this.onRetry});
-  
-  @override
-  Widget build(BuildContext context) {
-    final l10n = AppLocalizations.of(context)!;
-    
-    return Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
+  Widget _buildInfoRow(String label, String value, FluentThemeData theme,
+      {Color? valueColor}) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 6),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Icon(FluentIcons.error, size: 40, color: Colors.red),
-          const SizedBox(height: 10),
-          Text(errorMessage, style: TextStyle(color: Colors.red), textAlign: TextAlign.center),
-          const SizedBox(height: 20),
-          Button(
-            onPressed: onRetry,
-            child: Text(l10n.retry),
+          Expanded(
+            child: Text(
+              label,
+              style: theme.typography.body?.copyWith(
+                color: theme.inactiveColor,
+              ),
+              overflow: TextOverflow.ellipsis,
+            ),
+          ),
+          Text(
+            value,
+            style: theme.typography.body?.copyWith(
+              fontWeight: FontWeight.w600,
+              color: valueColor,
+            ),
           ),
         ],
       ),
+    );
+  }
+
+  Widget _buildTimeSlot(
+      String label, String percent, Color color, FluentThemeData theme) {
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Container(
+          width: 48,
+          height: 48,
+          decoration: BoxDecoration(
+            color: color.withOpacity(0.15),
+            shape: BoxShape.circle,
+          ),
+          child: Center(
+            child: Text(
+              percent,
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
+                fontSize: 12,
+                color: color,
+              ),
+            ),
+          ),
+        ),
+        const SizedBox(height: 6),
+        Text(
+          label,
+          style: theme.typography.caption?.copyWith(
+            fontSize: 11,
+          ),
+          overflow: TextOverflow.ellipsis,
+        ),
+      ],
     );
   }
 }

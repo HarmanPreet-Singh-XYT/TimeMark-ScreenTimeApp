@@ -1,4 +1,5 @@
 import 'package:fluent_ui/fluent_ui.dart';
+import 'package:flutter/material.dart' as mt;
 import 'package:screentime/l10n/app_localizations.dart';
 import 'package:provider/provider.dart';
 import 'package:screentime/sections/controller/app_data_controller.dart';
@@ -8,7 +9,7 @@ import 'UI sections/import_export_dialog.dart';
 import 'controller/settings_data_controller.dart';
 import 'package:url_launcher_platform_interface/url_launcher_platform_interface.dart';
 
-// Create a SettingsProvider to centralize state management
+// ============== SETTINGS PROVIDER (unchanged logic) ==============
 class SettingsProvider extends ChangeNotifier {
   final SettingsManager _settingsManager = SettingsManager();
   final BackgroundAppTracker _tracker = BackgroundAppTracker();
@@ -23,7 +24,6 @@ class SettingsProvider extends ChangeNotifier {
   bool _notificationsScreenTime = false;
   bool _notificationsAppScreenTime = false;
 
-  // Tracking settings - all default to true
   bool _idleDetectionEnabled = true;
   int _idleTimeout = IdleTimeoutOptions.defaultTimeout;
   bool _monitorAudio = true;
@@ -31,7 +31,7 @@ class SettingsProvider extends ChangeNotifier {
   bool _monitorHIDDevices = true;
   double _audioThreshold = 0.001;
 
-  // Getters
+  // All getters remain the same...
   String get theme => _theme;
   String get language => _language;
   bool get launchAtStartupVar => _launchAtStartupVar;
@@ -42,7 +42,6 @@ class SettingsProvider extends ChangeNotifier {
   bool get notificationsAppScreenTime => _notificationsAppScreenTime;
   Map<String, String> get appVersion => version;
 
-  // Tracking getters
   bool get idleDetectionEnabled => _idleDetectionEnabled;
   int get idleTimeout => _idleTimeout;
   bool get monitorAudio => _monitorAudio;
@@ -79,7 +78,6 @@ class SettingsProvider extends ChangeNotifier {
     _reminderFrequency =
         _settingsManager.getSetting("notificationController.reminderFrequency");
 
-    // Load tracking settings with true defaults
     _idleDetectionEnabled =
         _settingsManager.getSetting("tracking.idleDetection") ?? true;
     _idleTimeout = _settingsManager.getSetting("tracking.idleTimeout") ??
@@ -134,8 +132,6 @@ class SettingsProvider extends ChangeNotifier {
         _settingsManager.updateSetting(
             "notificationController.reminderFrequency", value);
         break;
-
-      // Tracking settings
       case 'idleDetectionEnabled':
         _idleDetectionEnabled = value;
         _settingsManager.updateSetting("tracking.idleDetection", value);
@@ -189,7 +185,6 @@ class SettingsProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  // Localized time format
   String formatTimeout(int seconds, AppLocalizations l10n) {
     if (seconds < 60) {
       return l10n.timeFormatSeconds(seconds);
@@ -210,6 +205,7 @@ class SettingsProvider extends ChangeNotifier {
       formatTimeout(_idleTimeout, l10n);
 }
 
+// ============== MAIN SETTINGS WIDGET ==============
 class Settings extends StatelessWidget {
   final Function(Locale) setLocale;
 
@@ -252,15 +248,6 @@ class _SettingsContentState extends State<SettingsContent> {
     }
   }
 
-  Widget _launchStatus(BuildContext context, AsyncSnapshot<void> snapshot) {
-    final l10n = AppLocalizations.of(context)!;
-    if (snapshot.hasError) {
-      return Text(l10n.errorMessage(snapshot.error.toString()));
-    } else {
-      return const Text('');
-    }
-  }
-
   final String urlContact =
       'https://harmanita.com/details/screentime?intent=contact';
   final String urlReport =
@@ -273,107 +260,447 @@ class _SettingsContentState extends State<SettingsContent> {
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
+    final theme = FluentTheme.of(context);
 
-    return SingleChildScrollView(
-      child: Padding(
-        padding:
-            const EdgeInsets.only(left: 20, right: 20, bottom: 20, top: 10),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+    return ScaffoldPage(
+      padding: EdgeInsets.zero,
+      content: CustomScrollView(
+        slivers: [
+          // Sticky Header
+          SliverPersistentHeader(
+            pinned: true,
+            delegate: _StickyHeaderDelegate(
+              child: Container(
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
+                decoration: BoxDecoration(
+                  color: theme.micaBackgroundColor.withOpacity(0.95),
+                  border: Border(
+                    bottom: BorderSide(
+                      color: theme.inactiveBackgroundColor.withOpacity(0.5),
+                      width: 1,
+                    ),
+                  ),
+                ),
+                child: Row(
+                  children: [
+                    Icon(FluentIcons.settings, size: 24),
+                    const SizedBox(width: 12),
+                    Text(l10n.settingsTitle,
+                        style: theme.typography.subtitle?.copyWith(
+                          fontWeight: FontWeight.w600,
+                        )),
+                    const Spacer(),
+                    _QuickActionButton(
+                      icon: FluentIcons.refresh,
+                      tooltip: l10n.resetSettingsTitle2,
+                      onPressed: () => _showSettingsDialog(
+                          context, context.read<SettingsProvider>()),
+                    ),
+                  ],
+                ),
+              ),
+              height: 60,
+            ),
+          ),
+          // Content
+          SliverPadding(
+            padding: const EdgeInsets.all(24),
+            sliver: SliverList(
+              delegate: SliverChildListDelegate([
+                // Two-column layout for larger screens
+                LayoutBuilder(
+                  builder: (context, constraints) {
+                    if (constraints.maxWidth > 900) {
+                      return Row(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Expanded(
+                            child: Column(
+                              children: [
+                                GeneralSection(setLocale: widget.setLocale),
+                                const SizedBox(height: 20),
+                                const NotificationSection(),
+                                const SizedBox(height: 20),
+                                const DataSection(),
+                              ],
+                            ),
+                          ),
+                          const SizedBox(width: 20),
+                          Expanded(
+                            child: Column(
+                              children: [
+                                const TrackingSection(),
+                                const SizedBox(height: 20),
+                                const BackupRestoreSection(),
+                                const SizedBox(height: 20),
+                                const AboutSection(),
+                              ],
+                            ),
+                          ),
+                        ],
+                      );
+                    }
+                    // Single column for smaller screens
+                    return Column(
+                      children: [
+                        GeneralSection(setLocale: widget.setLocale),
+                        const SizedBox(height: 20),
+                        const TrackingSection(),
+                        const SizedBox(height: 20),
+                        const NotificationSection(),
+                        const SizedBox(height: 20),
+                        const DataSection(),
+                        const SizedBox(height: 20),
+                        const BackupRestoreSection(),
+                        const SizedBox(height: 20),
+                        const AboutSection(),
+                      ],
+                    );
+                  },
+                ),
+                const SizedBox(height: 24),
+                _FooterSection(
+                  onContact: () =>
+                      setState(() => _launched = _launchInBrowser(urlContact)),
+                  onReport: () =>
+                      setState(() => _launched = _launchInBrowser(urlReport)),
+                  onFeedback: () =>
+                      setState(() => _launched = _launchInBrowser(urlFeedback)),
+                  onGithub: () =>
+                      setState(() => _launched = _launchInBrowser(github)),
+                ),
+                const SizedBox(height: 16),
+              ]),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Future<void> _showSettingsDialog(
+      BuildContext context, SettingsProvider settings) async {
+    final l10n = AppLocalizations.of(context)!;
+
+    await showDialog<String>(
+      context: context,
+      builder: (context) => ContentDialog(
+        title: Row(
           children: [
-            Header(),
-            const SizedBox(height: 30),
-            GeneralSection(setLocale: widget.setLocale),
-            const SizedBox(height: 30),
-            const TrackingSection(),
-            const SizedBox(height: 30),
-            const NotificationSection(),
-            const SizedBox(height: 30),
-            const DataSection(),
-            const SizedBox(height: 30),
-            const BackupRestoreSection(),
-            const SizedBox(height: 30),
-            const AboutSection(),
-            const SizedBox(height: 20),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Button(
-                  style: ButtonStyle(
-                      padding: WidgetStateProperty.all(const EdgeInsets.only(
-                          top: 8, bottom: 8, left: 14, right: 14))),
-                  child: Row(
-                    children: [
-                      const Icon(FluentIcons.canned_chat, size: 18),
-                      const SizedBox(width: 10),
-                      Text(l10n.contactButton,
-                          style: const TextStyle(fontWeight: FontWeight.w600)),
-                    ],
-                  ),
-                  onPressed: () => setState(() {
-                    _launched = _launchInBrowser(urlContact);
-                  }),
-                ),
-                const SizedBox(width: 25),
-                Button(
-                  style: ButtonStyle(
-                      padding: WidgetStateProperty.all(const EdgeInsets.only(
-                          top: 8, bottom: 8, left: 14, right: 14))),
-                  child: Row(
-                    children: [
-                      const Icon(FluentIcons.bug, size: 18),
-                      const SizedBox(width: 10),
-                      Text(l10n.reportBugButton,
-                          style: const TextStyle(fontWeight: FontWeight.w600)),
-                    ],
-                  ),
-                  onPressed: () => setState(() {
-                    _launched = _launchInBrowser(urlReport);
-                  }),
-                ),
-                const SizedBox(width: 25),
-                Button(
-                  style: ButtonStyle(
-                      padding: WidgetStateProperty.all(
-                          const EdgeInsets.symmetric(
-                              vertical: 8, horizontal: 12))),
-                  child: Row(
-                    children: [
-                      const Icon(FluentIcons.red_eye, size: 20),
-                      const SizedBox(width: 10),
-                      Text(l10n.submitFeedbackButton,
-                          style: const TextStyle(fontWeight: FontWeight.w600)),
-                    ],
-                  ),
-                  onPressed: () => setState(() {
-                    _launched = _launchInBrowser(urlFeedback);
-                  }),
-                ),
-                const SizedBox(width: 25),
-                Button(
-                  style: ButtonStyle(
-                      padding: WidgetStateProperty.all(
-                          const EdgeInsets.symmetric(
-                              vertical: 8, horizontal: 12))),
-                  child: Text(l10n.githubButton,
-                      style: const TextStyle(fontWeight: FontWeight.w600)),
-                  onPressed: () => setState(() {
-                    _launched = _launchInBrowser(github);
-                  }),
-                ),
-              ],
-            ),
-            FutureBuilder<void>(
-              future: _launched,
-              builder: _launchStatus,
-            ),
-            const SizedBox(height: 20)
+            Icon(FluentIcons.warning, color: Colors.orange, size: 20),
+            const SizedBox(width: 10),
+            Text(l10n.resetSettingsDialogTitle),
           ],
+        ),
+        content: Text(l10n.resetSettingsDialogContent),
+        actions: [
+          Button(
+            child: Text(l10n.cancelButton),
+            onPressed: () => Navigator.pop(context),
+          ),
+          FilledButton(
+            style: ButtonStyle(
+              backgroundColor: WidgetStatePropertyAll(Colors.orange),
+            ),
+            child: Text(l10n.resetButtonLabel),
+            onPressed: () {
+              settings.resetSettings();
+              Navigator.pop(context);
+            },
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+// ============== REUSABLE COMPONENTS ==============
+
+class _StickyHeaderDelegate extends SliverPersistentHeaderDelegate {
+  final Widget child;
+  final double height;
+
+  _StickyHeaderDelegate({required this.child, required this.height});
+
+  @override
+  Widget build(
+      BuildContext context, double shrinkOffset, bool overlapsContent) {
+    return child;
+  }
+
+  @override
+  double get maxExtent => height;
+  @override
+  double get minExtent => height;
+  @override
+  bool shouldRebuild(covariant SliverPersistentHeaderDelegate oldDelegate) =>
+      true;
+}
+
+class _QuickActionButton extends StatefulWidget {
+  final IconData icon;
+  final String tooltip;
+  final VoidCallback onPressed;
+
+  const _QuickActionButton({
+    required this.icon,
+    required this.tooltip,
+    required this.onPressed,
+  });
+
+  @override
+  State<_QuickActionButton> createState() => _QuickActionButtonState();
+}
+
+class _QuickActionButtonState extends State<_QuickActionButton> {
+  bool _isHovered = false;
+
+  @override
+  Widget build(BuildContext context) {
+    return Tooltip(
+      message: widget.tooltip,
+      child: MouseRegion(
+        onEnter: (_) => setState(() => _isHovered = true),
+        onExit: (_) => setState(() => _isHovered = false),
+        child: AnimatedContainer(
+          duration: const Duration(milliseconds: 150),
+          padding: const EdgeInsets.all(8),
+          decoration: BoxDecoration(
+            color: _isHovered
+                ? FluentTheme.of(context).inactiveBackgroundColor
+                : Colors.transparent,
+            borderRadius: BorderRadius.circular(6),
+          ),
+          child: GestureDetector(
+            onTap: widget.onPressed,
+            child: Icon(widget.icon, size: 18),
+          ),
         ),
       ),
     );
   }
 }
+
+// ============== SETTINGS CARD ==============
+class SettingsCard extends StatelessWidget {
+  final String title;
+  final IconData icon;
+  final Color? iconColor;
+  final List<Widget> children;
+  final Widget? trailing;
+  final bool isExpanded;
+  final VoidCallback? onExpandToggle;
+
+  const SettingsCard({
+    super.key,
+    required this.title,
+    required this.icon,
+    this.iconColor,
+    required this.children,
+    this.trailing,
+    this.isExpanded = true,
+    this.onExpandToggle,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = FluentTheme.of(context);
+
+    return Container(
+      decoration: BoxDecoration(
+        color: theme.micaBackgroundColor,
+        borderRadius: BorderRadius.circular(8),
+        border: Border.all(
+          color: theme.inactiveBackgroundColor.withOpacity(0.6),
+          width: 1,
+        ),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.03),
+            blurRadius: 8,
+            offset: const Offset(0, 2),
+          ),
+        ],
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          // Header - Replace mt.InkWell with GestureDetector
+          GestureDetector(
+            onTap: onExpandToggle,
+            child: MouseRegion(
+              cursor: onExpandToggle != null
+                  ? SystemMouseCursors.click
+                  : SystemMouseCursors.basic,
+              child: Container(
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+                decoration: BoxDecoration(
+                  border: Border(
+                    bottom: BorderSide(
+                      color: theme.inactiveBackgroundColor.withOpacity(0.4),
+                      width: 1,
+                    ),
+                  ),
+                ),
+                child: Row(
+                  children: [
+                    Container(
+                      padding: const EdgeInsets.all(6),
+                      decoration: BoxDecoration(
+                        color:
+                            (iconColor ?? theme.accentColor).withOpacity(0.1),
+                        borderRadius: BorderRadius.circular(6),
+                      ),
+                      child: Icon(icon,
+                          size: 16, color: iconColor ?? theme.accentColor),
+                    ),
+                    const SizedBox(width: 12),
+                    Text(
+                      title,
+                      style: const TextStyle(
+                        fontSize: 14,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                    const Spacer(),
+                    if (trailing != null) trailing!,
+                    if (onExpandToggle != null) ...[
+                      const SizedBox(width: 8),
+                      AnimatedRotation(
+                        turns: isExpanded ? 0 : -0.25,
+                        duration: const Duration(milliseconds: 200),
+                        child: Icon(FluentIcons.chevron_down, size: 12),
+                      ),
+                    ],
+                  ],
+                ),
+              ),
+            ),
+          ),
+          // Content
+          if (isExpanded)
+            Padding(
+              padding: const EdgeInsets.all(16),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: children,
+              ),
+            ),
+        ],
+      ),
+    );
+  }
+}
+
+// ============== SETTING ROW ==============
+
+class SettingRow extends StatefulWidget {
+  final String title;
+  final String description;
+  final Widget control;
+  final IconData? icon;
+  final bool isSubSetting;
+  final bool showDivider;
+
+  const SettingRow({
+    super.key,
+    required this.title,
+    required this.description,
+    required this.control,
+    this.icon,
+    this.isSubSetting = false,
+    this.showDivider = true,
+  });
+
+  @override
+  State<SettingRow> createState() => _SettingRowState();
+}
+
+class _SettingRowState extends State<SettingRow> {
+  bool _isHovered = false;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = FluentTheme.of(context);
+
+    return Column(
+      children: [
+        MouseRegion(
+          onEnter: (_) => setState(() => _isHovered = true),
+          onExit: (_) => setState(() => _isHovered = false),
+          child: AnimatedContainer(
+            duration: const Duration(milliseconds: 150),
+            padding: EdgeInsets.symmetric(
+              horizontal: widget.isSubSetting ? 12 : 8,
+              vertical: 10,
+            ),
+            margin: EdgeInsets.only(left: widget.isSubSetting ? 20 : 0),
+            decoration: BoxDecoration(
+              color: _isHovered
+                  ? theme.inactiveBackgroundColor.withOpacity(0.3)
+                  : null,
+              borderRadius: BorderRadius.circular(6),
+              border: widget.isSubSetting
+                  ? Border(
+                      left: BorderSide(
+                        color: theme.accentColor.withOpacity(0.3),
+                        width: 2,
+                      ),
+                    )
+                  : null,
+            ),
+            child: Row(
+              children: [
+                if (widget.icon != null) ...[
+                  Icon(widget.icon, size: 16, color: theme.accentColor),
+                  const SizedBox(width: 12),
+                ],
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        widget.title,
+                        style: TextStyle(
+                          fontSize: 13,
+                          fontWeight: FontWeight.w500,
+                          color: widget.isSubSetting ? Colors.grey[100] : null,
+                        ),
+                      ),
+                      const SizedBox(height: 2),
+                      Text(
+                        widget.description,
+                        style: TextStyle(
+                          fontSize: 11,
+                          color: Colors.grey[100],
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                const SizedBox(width: 16),
+                widget.control,
+              ],
+            ),
+          ),
+        ),
+        if (widget.showDivider)
+          Padding(
+            padding: const EdgeInsets.symmetric(vertical: 8.0),
+            child: Container(
+              height: 1,
+              color: theme.inactiveBackgroundColor.withOpacity(0.3),
+            ),
+          ),
+      ],
+    );
+  }
+}
+
+// ============== GENERAL SECTION ==============
 
 class GeneralSection extends StatelessWidget {
   final Function(Locale) setLocale;
@@ -385,63 +712,82 @@ class GeneralSection extends StatelessWidget {
     final l10n = AppLocalizations.of(context)!;
     final settings = context.watch<SettingsProvider>();
 
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
+    // Add safety checks
+    final themeValue = settings.themeOptions.contains(settings.theme)
+        ? settings.theme
+        : (settings.themeOptions.isNotEmpty
+            ? settings.themeOptions.first.toString()
+            : 'System');
+
+    final languageValue = settings.languageOptions
+            .any((lang) => lang['code'] == settings.language)
+        ? settings.language
+        : 'en';
+
+    return SettingsCard(
+      title: l10n.generalSection,
+      icon: FluentIcons.settings,
       children: [
-        Text(l10n.generalSection,
-            style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w600)),
-        const SizedBox(height: 15),
-        Container(
-          height: 180,
-          padding: const EdgeInsets.all(20),
-          width: MediaQuery.of(context).size.width,
-          decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(10),
-              color: FluentTheme.of(context).micaBackgroundColor,
-              border: Border.all(
-                  color: FluentTheme.of(context).inactiveBackgroundColor,
-                  width: 1)),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              OptionSetting(
-                title: l10n.themeTitle,
-                description: l10n.themeDescription,
-                settingType: "theme",
-                changeValue: (key, value) =>
-                    settings.updateSetting(key, value, context),
-                optionsValue: settings.theme,
-                options: settings.themeOptions,
-              ),
-              OptionSetting(
-                title: l10n.languageTitle,
-                description: l10n.languageDescription,
-                settingType: "language",
-                changeValue: (key, value) {
-                  settings.updateSetting(key, value);
-                  // Update the app locale
-                  setLocale(Locale(value));
-                },
-                optionsValue: settings.language,
-                languageOptions: settings.languageOptions,
-              ),
-              OptionSetting(
-                title: l10n.launchMinimizedTitle,
-                description: l10n.launchMinimizedDescription,
-                optionType: "switch",
-                settingType: "launchAsMinimized",
-                changeValue: (key, value) => settings.updateSetting(key, value),
-                isChecked: settings.launchAsMinimized,
-              ),
-            ],
+        SettingRow(
+          title: l10n.themeTitle,
+          description: l10n.themeDescription,
+          control: SizedBox(
+            width: 200,
+            child: ComboBox<String>(
+              value: themeValue,
+              items: settings.themeOptions.map((theme) {
+                return ComboBoxItem<String>(
+                  value: theme.toString(),
+                  child: Text(theme.toString()),
+                );
+              }).toList(),
+              onChanged: (value) {
+                if (value != null) {
+                  settings.updateSetting('theme', value, context);
+                }
+              },
+            ),
           ),
-        )
+        ),
+        SettingRow(
+          title: l10n.languageTitle,
+          description: l10n.languageDescription,
+          control: SizedBox(
+            width: 200,
+            child: ComboBox<String>(
+              value: languageValue,
+              items: settings.languageOptions.map((lang) {
+                return ComboBoxItem<String>(
+                  value: lang['code']!,
+                  child: Text(lang['name']!),
+                );
+              }).toList(),
+              onChanged: (value) {
+                if (value != null) {
+                  settings.updateSetting('language', value);
+                  setLocale(Locale(value));
+                }
+              },
+            ),
+          ),
+        ),
+        SettingRow(
+          title: l10n.launchMinimizedTitle,
+          description: l10n.launchMinimizedDescription,
+          showDivider: false,
+          control: ToggleSwitch(
+            checked: settings.launchAsMinimized,
+            onChanged: (value) =>
+                settings.updateSetting('launchAsMinimized', value),
+          ),
+        ),
       ],
     );
   }
 }
 
-// Tracking settings section with popup dialog for idle timeout
+// ============== TRACKING SECTION ==============
+
 class TrackingSection extends StatefulWidget {
   const TrackingSection({super.key});
 
@@ -456,171 +802,139 @@ class _TrackingSectionState extends State<TrackingSection> {
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
     final settings = context.watch<SettingsProvider>();
+    final theme = FluentTheme.of(context);
 
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
+    return SettingsCard(
+      title: l10n.activityTrackingSection,
+      icon: FluentIcons.view,
+      iconColor: Colors.teal,
+      trailing: _StatusBadge(
+        isActive: settings.idleDetectionEnabled,
+        activeText: 'Active',
+        inactiveText: 'Disabled',
+      ),
       children: [
-        Row(
-          children: [
-            Text(l10n.activityTrackingSection,
-                style:
-                    const TextStyle(fontSize: 16, fontWeight: FontWeight.w600)),
-            const SizedBox(width: 10),
-            IconButton(
-              icon: Icon(
-                  _showAdvanced
-                      ? FluentIcons.chevron_up
-                      : FluentIcons.chevron_down,
-                  size: 14),
-              onPressed: () => setState(() => _showAdvanced = !_showAdvanced),
-            ),
-          ],
+        SettingRow(
+          title: l10n.idleDetectionTitle,
+          description: l10n.idleDetectionDescription,
+          control: ToggleSwitch(
+            checked: settings.idleDetectionEnabled,
+            onChanged: (value) =>
+                settings.updateSetting('idleDetectionEnabled', value),
+          ),
         ),
-        const SizedBox(height: 15),
-        Container(
-          padding: const EdgeInsets.all(20),
-          width: MediaQuery.of(context).size.width,
-          decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(10),
-              color: FluentTheme.of(context).micaBackgroundColor,
-              border: Border.all(
-                  color: FluentTheme.of(context).inactiveBackgroundColor,
-                  width: 1)),
-          child: Column(
-            children: [
-              // Idle Detection
-              OptionSetting(
-                title: l10n.idleDetectionTitle,
-                description: l10n.idleDetectionDescription,
-                optionType: "switch",
-                settingType: "idleDetectionEnabled",
-                changeValue: (key, value) => settings.updateSetting(key, value),
-                isChecked: settings.idleDetectionEnabled,
+        if (settings.idleDetectionEnabled) ...[
+          SettingRow(
+            title: l10n.idleTimeoutTitle,
+            description: l10n
+                .idleTimeoutDescription(settings.getFormattedIdleTimeout(l10n)),
+            control: _TimeoutButton(
+              value: settings.getFormattedIdleTimeout(l10n),
+              onPressed: () => _showIdleTimeoutDialog(context, settings, l10n),
+            ),
+          ),
+        ],
+        // Advanced Toggle
+        Padding(
+          padding: const EdgeInsets.symmetric(vertical: 8),
+          child: GestureDetector(
+            onTap: () => setState(() => _showAdvanced = !_showAdvanced),
+            child: MouseRegion(
+              cursor: SystemMouseCursors.click,
+              child: Container(
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                decoration: BoxDecoration(
+                  color: theme.inactiveBackgroundColor.withOpacity(0.2),
+                  borderRadius: BorderRadius.circular(6),
+                ),
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Icon(FluentIcons.developer_tools, size: 14),
+                    const SizedBox(width: 8),
+                    Text(
+                      'Advanced Options',
+                      style:
+                          TextStyle(fontSize: 12, fontWeight: FontWeight.w500),
+                    ),
+                    const SizedBox(width: 8),
+                    AnimatedRotation(
+                      turns: _showAdvanced ? 0.5 : 0,
+                      duration: const Duration(milliseconds: 200),
+                      child: Icon(FluentIcons.chevron_down, size: 10),
+                    ),
+                  ],
+                ),
               ),
-
-              if (settings.idleDetectionEnabled) ...[
-                const SizedBox(height: 15),
-                // Idle Timeout with popup dialog button
-                _buildIdleTimeoutSetting(context, settings, l10n),
-              ],
-
-              // Advanced options (collapsible)
-              if (_showAdvanced) ...[
-                const SizedBox(height: 20),
-                Container(
-                  padding: const EdgeInsets.all(12),
-                  decoration: BoxDecoration(
-                    color: Colors.orange.withOpacity(0.05),
-                    borderRadius: BorderRadius.circular(6),
-                    border: Border.all(color: Colors.orange.withOpacity(0.3)),
-                  ),
-                  child: Row(
-                    children: [
-                      Icon(FluentIcons.warning, size: 16, color: Colors.orange),
-                      const SizedBox(width: 8),
-                      Expanded(
-                        child: Text(
-                          l10n.advancedWarning,
-                          style:
-                              TextStyle(fontSize: 11, color: Colors.grey[120]),
-                        ),
-                      ),
-                    ],
-                  ),
+            ),
+          ),
+        ),
+        AnimatedCrossFade(
+          firstChild: Column(
+            children: [
+              _WarningBanner(
+                message: l10n.advancedWarning,
+                icon: FluentIcons.warning,
+                color: Colors.orange,
+              ),
+              const SizedBox(height: 12),
+              SettingRow(
+                title: l10n.monitorAudioTitle,
+                description: l10n.monitorAudioDescription,
+                isSubSetting: true,
+                control: ToggleSwitch(
+                  checked: settings.monitorAudio,
+                  onChanged: (value) =>
+                      settings.updateSetting('monitorAudio', value),
                 ),
-                const SizedBox(height: 15),
-                OptionSetting(
-                  title: l10n.monitorAudioTitle,
-                  description: l10n.monitorAudioDescription,
-                  optionType: "switch",
-                  settingType: "monitorAudio",
-                  changeValue: (key, value) =>
-                      settings.updateSetting(key, value),
-                  isChecked: settings.monitorAudio,
-                ),
-                if (settings.monitorAudio) ...[
-                  const SizedBox(height: 12),
-                  Padding(
-                    padding: const EdgeInsets.only(left: 20),
-                    child: OptionSetting(
-                      title: l10n.audioSensitivityTitle,
-                      description: l10n.audioSensitivityDescription(
-                          settings.audioThreshold.toStringAsFixed(4)),
-                      optionType: "slider",
-                      settingType: "audioThreshold",
-                      changeValue: (key, value) =>
-                          settings.updateSetting(key, value),
-                      sliderValue: settings.audioThreshold,
-                      sliderMin: 0.0001,
-                      sliderMax: 0.1,
-                      sliderDivisions: 100,
+              ),
+              if (settings.monitorAudio)
+                SettingRow(
+                  title: l10n.audioSensitivityTitle,
+                  description: l10n.audioSensitivityDescription(
+                      settings.audioThreshold.toStringAsFixed(4)),
+                  isSubSetting: true,
+                  control: SizedBox(
+                    width: 150,
+                    child: Slider(
+                      value: settings.audioThreshold,
+                      min: 0.0001,
+                      max: 0.1,
+                      divisions: 100,
+                      onChanged: (value) =>
+                          settings.updateSetting('audioThreshold', value),
                     ),
                   ),
-                ],
-                const SizedBox(height: 15),
-                OptionSetting(
-                  title: l10n.monitorControllersTitle,
-                  description: l10n.monitorControllersDescription,
-                  optionType: "switch",
-                  settingType: "monitorControllers",
-                  changeValue: (key, value) =>
-                      settings.updateSetting(key, value),
-                  isChecked: settings.monitorControllers,
                 ),
-                const SizedBox(height: 15),
-                OptionSetting(
-                  title: l10n.monitorHIDTitle,
-                  description: l10n.monitorHIDDescription,
-                  optionType: "switch",
-                  settingType: "monitorHIDDevices",
-                  changeValue: (key, value) =>
-                      settings.updateSetting(key, value),
-                  isChecked: settings.monitorHIDDevices,
+              SettingRow(
+                title: l10n.monitorControllersTitle,
+                description: l10n.monitorControllersDescription,
+                isSubSetting: true,
+                control: ToggleSwitch(
+                  checked: settings.monitorControllers,
+                  onChanged: (value) =>
+                      settings.updateSetting('monitorControllers', value),
                 ),
-              ],
-            ],
-          ),
-        ),
-      ],
-    );
-  }
-
-  Widget _buildIdleTimeoutSetting(
-      BuildContext context, SettingsProvider settings, AppLocalizations l10n) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        Expanded(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(l10n.idleTimeoutTitle,
-                  style: const TextStyle(fontWeight: FontWeight.bold)),
-              Text(
-                l10n.idleTimeoutDescription(
-                    settings.getFormattedIdleTimeout(l10n)),
-                style: const TextStyle(fontSize: 12, color: Color(0xff555555)),
+              ),
+              SettingRow(
+                title: l10n.monitorHIDTitle,
+                description: l10n.monitorHIDDescription,
+                isSubSetting: true,
+                showDivider: false,
+                control: ToggleSwitch(
+                  checked: settings.monitorHIDDevices,
+                  onChanged: (value) =>
+                      settings.updateSetting('monitorHIDDevices', value),
+                ),
               ),
             ],
           ),
-        ),
-        const SizedBox(width: 12),
-        Button(
-          style: ButtonStyle(
-            padding: WidgetStatePropertyAll(
-              const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-            ),
-          ),
-          onPressed: () => _showIdleTimeoutDialog(context, settings, l10n),
-          child: Row(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Text(settings.getFormattedIdleTimeout(l10n),
-                  style: const TextStyle(fontWeight: FontWeight.w600)),
-              const SizedBox(width: 8),
-              const Icon(FluentIcons.edit, size: 14),
-            ],
-          ),
+          secondChild: const SizedBox.shrink(),
+          crossFadeState: _showAdvanced
+              ? CrossFadeState.showFirst
+              : CrossFadeState.showSecond,
+          duration: const Duration(milliseconds: 200),
         ),
       ],
     );
@@ -643,7 +957,162 @@ class _TrackingSectionState extends State<TrackingSection> {
   }
 }
 
-// Idle Timeout Dialog
+// ============== HELPER WIDGETS ==============
+
+class _StatusBadge extends StatelessWidget {
+  final bool isActive;
+  final String activeText;
+  final String inactiveText;
+
+  const _StatusBadge({
+    required this.isActive,
+    required this.activeText,
+    required this.inactiveText,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+      decoration: BoxDecoration(
+        color: isActive
+            ? Colors.green.withOpacity(0.1)
+            : Colors.grey.withOpacity(0.1),
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(
+          color: isActive
+              ? Colors.green.withOpacity(0.3)
+              : Colors.grey.withOpacity(0.3),
+        ),
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Container(
+            width: 6,
+            height: 6,
+            decoration: BoxDecoration(
+              color: isActive ? Colors.green : Colors.grey,
+              shape: BoxShape.circle,
+            ),
+          ),
+          const SizedBox(width: 6),
+          Text(
+            isActive ? activeText : inactiveText,
+            style: TextStyle(
+              fontSize: 10,
+              fontWeight: FontWeight.w500,
+              color: isActive ? Colors.green : Colors.grey,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _TimeoutButton extends StatefulWidget {
+  final String value;
+  final VoidCallback onPressed;
+
+  const _TimeoutButton({
+    required this.value,
+    required this.onPressed,
+  });
+
+  @override
+  State<_TimeoutButton> createState() => _TimeoutButtonState();
+}
+
+class _TimeoutButtonState extends State<_TimeoutButton> {
+  bool _isHovered = false;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = FluentTheme.of(context);
+
+    return MouseRegion(
+      onEnter: (_) => setState(() => _isHovered = true),
+      onExit: (_) => setState(() => _isHovered = false),
+      child: GestureDetector(
+        onTap: widget.onPressed,
+        child: AnimatedContainer(
+          duration: const Duration(milliseconds: 150),
+          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+          decoration: BoxDecoration(
+            color: _isHovered
+                ? theme.accentColor.withOpacity(0.1)
+                : theme.inactiveBackgroundColor.withOpacity(0.3),
+            borderRadius: BorderRadius.circular(6),
+            border: Border.all(
+              color: _isHovered
+                  ? theme.accentColor.withOpacity(0.5)
+                  : theme.inactiveBackgroundColor,
+            ),
+          ),
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Text(
+                widget.value,
+                style: TextStyle(
+                  fontSize: 12,
+                  fontWeight: FontWeight.w600,
+                  color: _isHovered ? theme.accentColor : null,
+                ),
+              ),
+              const SizedBox(width: 6),
+              Icon(
+                FluentIcons.edit,
+                size: 12,
+                color: _isHovered ? theme.accentColor : Colors.grey,
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class _WarningBanner extends StatelessWidget {
+  final String message;
+  final IconData icon;
+  final Color color;
+
+  const _WarningBanner({
+    required this.message,
+    required this.icon,
+    required this.color,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.all(10),
+      decoration: BoxDecoration(
+        color: color.withOpacity(0.05),
+        borderRadius: BorderRadius.circular(6),
+        border: Border.all(color: color.withOpacity(0.2)),
+      ),
+      child: Row(
+        children: [
+          Icon(icon, size: 14, color: color),
+          const SizedBox(width: 8),
+          Expanded(
+            child: Text(
+              message,
+              style: TextStyle(fontSize: 11, color: color.withOpacity(0.8)),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+// ============== IDLE TIMEOUT DIALOG ==============
+
 class IdleTimeoutDialog extends StatefulWidget {
   final int currentValue;
   final List<Map<String, dynamic>> presets;
@@ -672,7 +1141,6 @@ class _IdleTimeoutDialogState extends State<IdleTimeoutDialog> {
     super.initState();
     _selectedValue = widget.currentValue;
 
-    // Check if current value matches any preset
     bool matchesPreset = widget.presets.any(
       (preset) =>
           preset['value'] == widget.currentValue && preset['value'] != -1,
@@ -766,154 +1234,155 @@ class _IdleTimeoutDialogState extends State<IdleTimeoutDialog> {
 
   @override
   Widget build(BuildContext context) {
+    final theme = FluentTheme.of(context);
+
     return ContentDialog(
-      title: Text(widget.l10n.setIdleTimeoutTitle),
+      constraints: const BoxConstraints(maxWidth: 420),
+      title: Row(
+        children: [
+          Container(
+            padding: const EdgeInsets.all(8),
+            decoration: BoxDecoration(
+              color: theme.accentColor.withOpacity(0.1),
+              borderRadius: BorderRadius.circular(8),
+            ),
+            child: Icon(FluentIcons.timer, size: 18, color: theme.accentColor),
+          ),
+          const SizedBox(width: 12),
+          Text(widget.l10n.setIdleTimeoutTitle),
+        ],
+      ),
       content: Column(
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
             widget.l10n.idleTimeoutDialogDescription,
-            style: const TextStyle(fontSize: 13),
+            style: TextStyle(fontSize: 12, color: Colors.grey[100]),
           ),
           const SizedBox(height: 20),
 
-          // Preset options
-          Wrap(
-            spacing: 8,
-            runSpacing: 8,
+          // Preset Grid
+          GridView.count(
+            crossAxisCount: 3,
+            shrinkWrap: true,
+            mainAxisSpacing: 8,
+            crossAxisSpacing: 8,
+            childAspectRatio: 2.5,
+            physics: const NeverScrollableScrollPhysics(),
             children: widget.presets.map((preset) {
               final isSelected =
                   !_isCustom && _selectedValue == preset['value'];
               final isCustomOption = preset['value'] == -1;
               final isCustomSelected = _isCustom && isCustomOption;
 
-              return Button(
-                style: ButtonStyle(
-                  backgroundColor: WidgetStatePropertyAll(
-                    (isSelected || isCustomSelected)
-                        ? FluentTheme.of(context).accentColor.withOpacity(0.2)
-                        : null,
-                  ),
-                  // border: WidgetStatePropertyAll(
-                  //   BorderSide(
-                  //     color: (isSelected || isCustomSelected)
-                  //         ? FluentTheme.of(context).accentColor
-                  //         : FluentTheme.of(context).inactiveBackgroundColor,
-                  //     width: (isSelected || isCustomSelected) ? 2 : 1,
-                  //   ),
-                  // ),
-                  padding: WidgetStatePropertyAll(
-                    const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
-                  ),
-                ),
+              return _PresetButton(
+                label: _getPresetLabel(preset),
+                isSelected: isSelected || isCustomSelected,
                 onPressed: () => _selectPreset(preset['value']),
-                child: Text(
-                  _getPresetLabel(preset),
-                  style: TextStyle(
-                    fontWeight: (isSelected || isCustomSelected)
-                        ? FontWeight.bold
-                        : FontWeight.normal,
-                  ),
-                ),
               );
             }).toList(),
           ),
 
-          // Custom input section
-          if (_isCustom) ...[
-            const SizedBox(height: 20),
-            Container(
-              padding: const EdgeInsets.all(16),
-              decoration: BoxDecoration(
-                color: FluentTheme.of(context)
-                    .inactiveBackgroundColor
-                    .withOpacity(0.3),
-                borderRadius: BorderRadius.circular(8),
-                border: Border.all(
-                  color: FluentTheme.of(context).inactiveBackgroundColor,
-                ),
-              ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    widget.l10n.customDurationTitle,
-                    style: const TextStyle(fontWeight: FontWeight.bold),
-                  ),
-                  const SizedBox(height: 12),
-                  Row(
-                    children: [
-                      Expanded(
-                        child: TextBox(
-                          controller: _minutesController,
-                          placeholder: widget.l10n.minutesLabel,
-                          keyboardType: TextInputType.number,
-                          onChanged: (_) => _validateCustomInput(),
-                        ),
-                      ),
-                      const SizedBox(width: 8),
-                      Text(widget.l10n.minAbbreviation),
-                      const SizedBox(width: 16),
-                      Expanded(
-                        child: TextBox(
-                          controller: _secondsController,
-                          placeholder: widget.l10n.secondsLabel,
-                          keyboardType: TextInputType.number,
-                          onChanged: (_) => _validateCustomInput(),
-                        ),
-                      ),
-                      const SizedBox(width: 8),
-                      Text(widget.l10n.secAbbreviation),
-                    ],
-                  ),
-                  if (_errorMessage != null) ...[
-                    const SizedBox(height: 8),
-                    Text(
-                      _errorMessage!,
-                      style: TextStyle(
-                        color: Colors.red,
-                        fontSize: 12,
-                      ),
-                    ),
-                  ] else ...[
-                    const SizedBox(height: 8),
-                    Text(
-                      widget.l10n.totalLabel(_formatTimeout(_selectedValue)),
-                      style: const TextStyle(
-                        fontSize: 12,
-                        color: Color(0xff555555),
-                      ),
-                    ),
-                  ],
-                ],
-              ),
-            ),
-          ],
-
-          const SizedBox(height: 16),
-          Container(
-            padding: const EdgeInsets.all(12),
-            decoration: BoxDecoration(
-              color: Colors.blue.withOpacity(0.05),
-              borderRadius: BorderRadius.circular(6),
-              border: Border.all(color: Colors.blue.withOpacity(0.3)),
-            ),
-            child: Row(
+          // Custom Input
+          AnimatedCrossFade(
+            firstChild: Column(
               children: [
-                Icon(FluentIcons.info, size: 16, color: Colors.blue),
-                const SizedBox(width: 8),
-                Expanded(
-                  child: Text(
-                    widget.l10n.rangeInfo(
-                      _formatTimeout(IdleTimeoutOptions.minTimeout),
-                      _formatTimeout(IdleTimeoutOptions.maxTimeout),
+                const SizedBox(height: 16),
+                Container(
+                  padding: const EdgeInsets.all(12),
+                  decoration: BoxDecoration(
+                    color: theme.inactiveBackgroundColor.withOpacity(0.2),
+                    borderRadius: BorderRadius.circular(8),
+                    border: Border.all(
+                      color: theme.accentColor.withOpacity(0.3),
                     ),
-                    style: TextStyle(fontSize: 11, color: Colors.grey[120]),
+                  ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        widget.l10n.customDurationTitle,
+                        style: const TextStyle(
+                          fontSize: 12,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                      const SizedBox(height: 10),
+                      Row(
+                        children: [
+                          Expanded(
+                            child: TextBox(
+                              controller: _minutesController,
+                              placeholder: '0',
+                              keyboardType: TextInputType.number,
+                              onChanged: (_) => _validateCustomInput(),
+                            ),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 8),
+                            child: Text(
+                              widget.l10n.minAbbreviation,
+                              style: TextStyle(
+                                  fontSize: 11, color: Colors.grey[100]),
+                            ),
+                          ),
+                          Expanded(
+                            child: TextBox(
+                              controller: _secondsController,
+                              placeholder: '0',
+                              keyboardType: TextInputType.number,
+                              onChanged: (_) => _validateCustomInput(),
+                            ),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.only(left: 8),
+                            child: Text(
+                              widget.l10n.secAbbreviation,
+                              style: TextStyle(
+                                  fontSize: 11, color: Colors.grey[100]),
+                            ),
+                          ),
+                        ],
+                      ),
+                      if (_errorMessage != null) ...[
+                        const SizedBox(height: 8),
+                        Text(
+                          _errorMessage!,
+                          style: TextStyle(fontSize: 11, color: Colors.red),
+                        ),
+                      ] else ...[
+                        const SizedBox(height: 8),
+                        Text(
+                          widget.l10n
+                              .totalLabel(_formatTimeout(_selectedValue)),
+                          style: TextStyle(
+                            fontSize: 11,
+                            color: theme.accentColor,
+                            fontWeight: FontWeight.w500,
+                          ),
+                        ),
+                      ],
+                    ],
                   ),
                 ),
               ],
             ),
+            secondChild: const SizedBox.shrink(),
+            crossFadeState: _isCustom
+                ? CrossFadeState.showFirst
+                : CrossFadeState.showSecond,
+            duration: const Duration(milliseconds: 200),
+          ),
+
+          const SizedBox(height: 16),
+          _WarningBanner(
+            message: widget.l10n.rangeInfo(
+              _formatTimeout(IdleTimeoutOptions.minTimeout),
+              _formatTimeout(IdleTimeoutOptions.maxTimeout),
+            ),
+            icon: FluentIcons.info,
+            color: Colors.blue,
           ),
         ],
       ),
@@ -933,6 +1402,70 @@ class _IdleTimeoutDialogState extends State<IdleTimeoutDialog> {
   }
 }
 
+class _PresetButton extends StatefulWidget {
+  final String label;
+  final bool isSelected;
+  final VoidCallback onPressed;
+
+  const _PresetButton({
+    required this.label,
+    required this.isSelected,
+    required this.onPressed,
+  });
+
+  @override
+  State<_PresetButton> createState() => _PresetButtonState();
+}
+
+class _PresetButtonState extends State<_PresetButton> {
+  bool _isHovered = false;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = FluentTheme.of(context);
+
+    return MouseRegion(
+      onEnter: (_) => setState(() => _isHovered = true),
+      onExit: (_) => setState(() => _isHovered = false),
+      child: GestureDetector(
+        onTap: widget.onPressed,
+        child: AnimatedContainer(
+          duration: const Duration(milliseconds: 150),
+          decoration: BoxDecoration(
+            color: widget.isSelected
+                ? theme.accentColor.withOpacity(0.15)
+                : _isHovered
+                    ? theme.inactiveBackgroundColor.withOpacity(0.5)
+                    : theme.inactiveBackgroundColor.withOpacity(0.2),
+            borderRadius: BorderRadius.circular(6),
+            border: Border.all(
+              color: widget.isSelected
+                  ? theme.accentColor
+                  : _isHovered
+                      ? theme.inactiveBackgroundColor
+                      : Colors.transparent,
+              width: widget.isSelected ? 2 : 1,
+            ),
+          ),
+          child: Center(
+            child: Text(
+              widget.label,
+              style: TextStyle(
+                fontSize: 12,
+                fontWeight:
+                    widget.isSelected ? FontWeight.w600 : FontWeight.normal,
+                color: widget.isSelected ? theme.accentColor : null,
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+// ============== NOTIFICATION SECTION ==============
+
 class NotificationSection extends StatelessWidget {
   const NotificationSection({super.key});
 
@@ -941,74 +1474,83 @@ class NotificationSection extends StatelessWidget {
     final l10n = AppLocalizations.of(context)!;
     final settings = context.watch<SettingsProvider>();
 
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
+    return SettingsCard(
+      title: l10n.notificationsSection,
+      icon: FluentIcons.ringer,
+      iconColor: Colors.purple,
+      trailing: _StatusBadge(
+        isActive: settings.notificationsEnabled,
+        activeText: 'On',
+        inactiveText: 'Off',
+      ),
       children: [
-        Text(l10n.notificationsSection,
-            style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w600)),
-        const SizedBox(height: 15),
-        Container(
-          height: 300,
-          padding: const EdgeInsets.all(20),
-          width: MediaQuery.of(context).size.width,
-          decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(10),
-              color: FluentTheme.of(context).micaBackgroundColor,
-              border: Border.all(
-                  color: FluentTheme.of(context).inactiveBackgroundColor,
-                  width: 1)),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              OptionSetting(
-                title: l10n.notificationsTitle,
-                description: l10n.notificationsAllDescription,
-                optionType: "switch",
-                settingType: "notificationsEnabled",
-                changeValue: (key, value) => settings.updateSetting(key, value),
-                isChecked: settings.notificationsEnabled,
-              ),
-              OptionSetting(
-                title: l10n.focusModeNotificationsTitle,
-                description: l10n.focusModeNotificationsDescription,
-                optionType: "switch",
-                settingType: "notificationsFocusMode",
-                changeValue: (key, value) => settings.updateSetting(key, value),
-                isChecked: settings.notificationsFocusMode,
-              ),
-              OptionSetting(
-                title: l10n.screenTimeNotificationsTitle,
-                description: l10n.screenTimeNotificationsDescription,
-                optionType: "switch",
-                settingType: "notificationsScreenTime",
-                changeValue: (key, value) => settings.updateSetting(key, value),
-                isChecked: settings.notificationsScreenTime,
-              ),
-              OptionSetting(
-                title: l10n.appScreenTimeNotificationsTitle,
-                description: l10n.appScreenTimeNotificationsDescription,
-                optionType: "switch",
-                settingType: "notificationsAppScreenTime",
-                changeValue: (key, value) => settings.updateSetting(key, value),
-                isChecked: settings.notificationsAppScreenTime,
-              ),
-              OptionSetting(
-                title: l10n.frequentAlertsTitle,
-                description: l10n.frequentAlertsDescription,
-                optionType: "options",
-                settingType: "reminderFrequency",
-                changeValue: (key, value) =>
-                    settings.updateSetting(key, int.parse(value)),
-                optionsValue: settings.getReminderFrequency().toString(),
-                options: const [1, 5, 15, 30, 60],
-              ),
-            ],
+        SettingRow(
+          title: l10n.notificationsTitle,
+          description: l10n.notificationsAllDescription,
+          control: ToggleSwitch(
+            checked: settings.notificationsEnabled,
+            onChanged: (value) =>
+                settings.updateSetting('notificationsEnabled', value),
           ),
-        )
+        ),
+        if (settings.notificationsEnabled) ...[
+          SettingRow(
+            title: l10n.focusModeNotificationsTitle,
+            description: l10n.focusModeNotificationsDescription,
+            isSubSetting: true,
+            control: ToggleSwitch(
+              checked: settings.notificationsFocusMode,
+              onChanged: (value) =>
+                  settings.updateSetting('notificationsFocusMode', value),
+            ),
+          ),
+          SettingRow(
+            title: l10n.screenTimeNotificationsTitle,
+            description: l10n.screenTimeNotificationsDescription,
+            isSubSetting: true,
+            control: ToggleSwitch(
+              checked: settings.notificationsScreenTime,
+              onChanged: (value) =>
+                  settings.updateSetting('notificationsScreenTime', value),
+            ),
+          ),
+          SettingRow(
+            title: l10n.appScreenTimeNotificationsTitle,
+            description: l10n.appScreenTimeNotificationsDescription,
+            isSubSetting: true,
+            control: ToggleSwitch(
+              checked: settings.notificationsAppScreenTime,
+              onChanged: (value) =>
+                  settings.updateSetting('notificationsAppScreenTime', value),
+            ),
+          ),
+          SettingRow(
+            title: l10n.frequentAlertsTitle,
+            description: l10n.frequentAlertsDescription,
+            isSubSetting: true,
+            showDivider: false,
+            control: ComboBox<String>(
+              value: settings.getReminderFrequency().toString(),
+              items: [1, 5, 15, 30, 60].map((val) {
+                return ComboBoxItem<String>(
+                  value: val.toString(),
+                  child: Text('$val min'),
+                );
+              }).toList(),
+              onChanged: (value) {
+                if (value != null) {
+                  settings.updateSetting('reminderFrequency', int.parse(value));
+                }
+              },
+            ),
+          ),
+        ],
       ],
     );
   }
 }
+
+// ============== DATA SECTION ==============
 
 class DataSection extends StatelessWidget {
   const DataSection({super.key});
@@ -1018,44 +1560,31 @@ class DataSection extends StatelessWidget {
     final l10n = AppLocalizations.of(context)!;
     final settings = Provider.of<SettingsProvider>(context);
 
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
+    return SettingsCard(
+      title: l10n.dataSection,
+      icon: FluentIcons.database,
+      iconColor: Colors.red,
       children: [
-        Text(l10n.dataSection,
-            style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w600)),
-        const SizedBox(height: 15),
-        Container(
-          height: 120,
-          padding: const EdgeInsets.all(20),
-          width: MediaQuery.of(context).size.width,
-          decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(10),
-              color: FluentTheme.of(context).micaBackgroundColor,
-              border: Border.all(
-                  color: FluentTheme.of(context).inactiveBackgroundColor,
-                  width: 1)),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              OptionSetting(
-                title: l10n.clearDataTitle,
-                description: l10n.clearDataDescription,
-                optionType: "button",
-                buttonType: "data",
-                settingType: "clearData",
-                onButtonPressed: () => _showDataDialog(context, settings),
-              ),
-              OptionSetting(
-                title: l10n.resetSettingsTitle2,
-                description: l10n.resetSettingsDescription,
-                optionType: "button",
-                buttonType: "settings",
-                settingType: "resetSettings",
-                onButtonPressed: () => _showSettingsDialog(context, settings),
-              ),
-            ],
+        SettingRow(
+          title: l10n.clearDataTitle,
+          description: l10n.clearDataDescription,
+          control: _DangerButton(
+            label: l10n.clearDataButtonLabel,
+            icon: FluentIcons.delete,
+            onPressed: () => _showDataDialog(context, settings),
           ),
-        )
+        ),
+        SettingRow(
+          title: l10n.resetSettingsTitle2,
+          description: l10n.resetSettingsDescription,
+          showDivider: false,
+          control: _DangerButton(
+            label: l10n.resetButtonLabel,
+            icon: FluentIcons.refresh,
+            isWarning: true,
+            onPressed: () => _showSettingsDialog(context, settings),
+          ),
+        ),
       ],
     );
   }
@@ -1067,19 +1596,28 @@ class DataSection extends StatelessWidget {
     await showDialog<String>(
       context: context,
       builder: (context) => ContentDialog(
-        title: Text(l10n.clearDataDialogTitle),
+        title: Row(
+          children: [
+            Icon(FluentIcons.warning, color: Colors.red, size: 20),
+            const SizedBox(width: 10),
+            Text(l10n.clearDataDialogTitle),
+          ],
+        ),
         content: Text(l10n.clearDataDialogContent),
         actions: [
           Button(
+            child: Text(l10n.cancelButton),
+            onPressed: () => Navigator.pop(context),
+          ),
+          FilledButton(
+            style: ButtonStyle(
+              backgroundColor: WidgetStatePropertyAll(Colors.red),
+            ),
             child: Text(l10n.clearDataButtonLabel),
             onPressed: () {
               settings.clearData();
-              Navigator.pop(context, 'User cleared data');
+              Navigator.pop(context);
             },
-          ),
-          FilledButton(
-            child: Text(l10n.cancelButton),
-            onPressed: () => Navigator.pop(context, 'User canceled dialog'),
           ),
         ],
       ),
@@ -1093,25 +1631,96 @@ class DataSection extends StatelessWidget {
     await showDialog<String>(
       context: context,
       builder: (context) => ContentDialog(
-        title: Text(l10n.resetSettingsDialogTitle),
+        title: Row(
+          children: [
+            Icon(FluentIcons.warning, color: Colors.orange, size: 20),
+            const SizedBox(width: 10),
+            Text(l10n.resetSettingsDialogTitle),
+          ],
+        ),
         content: Text(l10n.resetSettingsDialogContent),
         actions: [
           Button(
+            child: Text(l10n.cancelButton),
+            onPressed: () => Navigator.pop(context),
+          ),
+          FilledButton(
+            style: ButtonStyle(
+              backgroundColor: WidgetStatePropertyAll(Colors.orange),
+            ),
             child: Text(l10n.resetButtonLabel),
             onPressed: () {
               settings.resetSettings();
-              Navigator.pop(context, 'User reset settings');
+              Navigator.pop(context);
             },
-          ),
-          FilledButton(
-            child: Text(l10n.cancelButton),
-            onPressed: () => Navigator.pop(context, 'User canceled dialog'),
           ),
         ],
       ),
     );
   }
 }
+
+class _DangerButton extends StatefulWidget {
+  final String label;
+  final IconData icon;
+  final bool isWarning;
+  final VoidCallback onPressed;
+
+  const _DangerButton({
+    required this.label,
+    required this.icon,
+    this.isWarning = false,
+    required this.onPressed,
+  });
+
+  @override
+  State<_DangerButton> createState() => _DangerButtonState();
+}
+
+class _DangerButtonState extends State<_DangerButton> {
+  bool _isHovered = false;
+
+  @override
+  Widget build(BuildContext context) {
+    final color = widget.isWarning ? Colors.orange : Colors.red;
+
+    return MouseRegion(
+      onEnter: (_) => setState(() => _isHovered = true),
+      onExit: (_) => setState(() => _isHovered = false),
+      child: GestureDetector(
+        onTap: widget.onPressed,
+        child: AnimatedContainer(
+          duration: const Duration(milliseconds: 150),
+          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+          decoration: BoxDecoration(
+            color: _isHovered ? color.withOpacity(0.1) : Colors.transparent,
+            borderRadius: BorderRadius.circular(6),
+            border: Border.all(
+              color: _isHovered ? color : color.withOpacity(0.5),
+            ),
+          ),
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Icon(widget.icon, size: 12, color: color),
+              const SizedBox(width: 6),
+              Text(
+                widget.label,
+                style: TextStyle(
+                  fontSize: 11,
+                  fontWeight: FontWeight.w600,
+                  color: color,
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+// ============== ABOUT SECTION ==============
 
 class AboutSection extends StatelessWidget {
   const AboutSection({super.key});
@@ -1121,224 +1730,627 @@ class AboutSection extends StatelessWidget {
     final l10n = AppLocalizations.of(context)!;
     final settings = Provider.of<SettingsProvider>(context);
     final version = settings.appVersion;
+    final theme = FluentTheme.of(context);
 
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
+    return SettingsCard(
+      title: l10n.versionSection,
+      icon: FluentIcons.info,
+      iconColor: Colors.grey,
       children: [
-        Text(l10n.versionSection,
-            style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w600)),
-        const SizedBox(height: 15),
         Container(
-          height: 77,
-          padding: const EdgeInsets.all(20),
-          width: MediaQuery.of(context).size.width,
+          padding: const EdgeInsets.all(12),
           decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(10),
-              color: FluentTheme.of(context).micaBackgroundColor,
-              border: Border.all(
-                  color: FluentTheme.of(context).inactiveBackgroundColor,
-                  width: 1)),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            gradient: LinearGradient(
+              colors: [
+                theme.accentColor.withOpacity(0.05),
+                theme.accentColor.withOpacity(0.02),
+              ],
+            ),
+            borderRadius: BorderRadius.circular(8),
+            border: Border.all(
+              color: theme.accentColor.withOpacity(0.1),
+            ),
+          ),
+          child: Row(
             children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              Container(
+                padding: const EdgeInsets.all(10),
+                decoration: BoxDecoration(
+                  color: theme.accentColor.withOpacity(0.1),
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                child:
+                    Icon(FluentIcons.timer, size: 24, color: theme.accentColor),
+              ),
+              const SizedBox(width: 16),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'TimeMark',
+                      style: TextStyle(
+                        fontSize: 14,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                    const SizedBox(height: 2),
+                    Text(
+                      l10n.versionDescription,
+                      style: TextStyle(fontSize: 11, color: Colors.grey[100]),
+                    ),
+                  ],
+                ),
+              ),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.end,
                 children: [
-                  Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(l10n.versionTitle,
-                            style:
-                                const TextStyle(fontWeight: FontWeight.bold)),
-                        Text(l10n.versionDescription,
-                            style: const TextStyle(
-                                fontSize: 12, color: Color(0xff555555))),
-                      ]),
-                  Column(
-                    children: [
-                      Text("${version["version"]}",
-                          style: const TextStyle(fontWeight: FontWeight.bold)),
-                      Text("${version["type"]}",
-                          style: const TextStyle(
-                              fontSize: 12, color: Color(0xff555555))),
-                    ],
-                  )
+                  Container(
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                    decoration: BoxDecoration(
+                      color: theme.accentColor.withOpacity(0.1),
+                      borderRadius: BorderRadius.circular(4),
+                    ),
+                    child: Text(
+                      'v${version["version"]}',
+                      style: TextStyle(
+                        fontSize: 12,
+                        fontWeight: FontWeight.w600,
+                        color: theme.accentColor,
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 4),
+                  Text(
+                    '${version["type"]}',
+                    style: TextStyle(fontSize: 10, color: Colors.grey[100]),
+                  ),
                 ],
-              )
+              ),
             ],
           ),
-        )
+        ),
       ],
     );
   }
 }
 
-class OptionSetting extends StatelessWidget {
-  final String title;
-  final String description;
-  final String optionType;
-  final String buttonType;
-  final bool isChecked;
-  final String settingType;
-  final void Function(String type, dynamic value)? changeValue;
-  final String optionsValue;
-  final List<dynamic> options;
-  final List<Map<String, String>> languageOptions;
-  final VoidCallback? onButtonPressed;
+// ============== FOOTER SECTION ==============
 
-  // Slider properties
-  final double sliderValue;
-  final double sliderMin;
-  final double sliderMax;
-  final int? sliderDivisions;
+class _FooterSection extends StatelessWidget {
+  final VoidCallback onContact;
+  final VoidCallback onReport;
+  final VoidCallback onFeedback;
+  final VoidCallback onGithub;
 
-  const OptionSetting({
-    super.key,
-    required this.title,
-    required this.description,
-    this.optionType = "options",
-    this.buttonType = "",
-    this.isChecked = false,
-    this.changeValue,
-    required this.settingType,
-    this.optionsValue = "",
-    this.options = const [],
-    this.languageOptions = const [],
-    this.onButtonPressed,
-    this.sliderValue = 0.0,
-    this.sliderMin = 0.0,
-    this.sliderMax = 100.0,
-    this.sliderDivisions,
+  const _FooterSection({
+    required this.onContact,
+    required this.onReport,
+    required this.onFeedback,
+    required this.onGithub,
   });
 
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
+    final theme = FluentTheme.of(context);
 
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        Expanded(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(title, style: const TextStyle(fontWeight: FontWeight.bold)),
-              Text(description,
-                  style:
-                      const TextStyle(fontSize: 12, color: Color(0xff555555))),
-            ],
+    return Container(
+      padding: const EdgeInsets.symmetric(vertical: 16),
+      decoration: BoxDecoration(
+        border: Border(
+          top: BorderSide(
+            color: theme.inactiveBackgroundColor.withOpacity(0.5),
           ),
         ),
-        const SizedBox(width: 12),
-        _buildOptionWidget(l10n, buttonType, isChecked, optionsValue, options,
-            languageOptions),
-      ],
+      ),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          _FooterButton(
+            icon: FluentIcons.chat,
+            label: l10n.contactButton,
+            onPressed: onContact,
+          ),
+          const SizedBox(width: 12),
+          _FooterButton(
+            icon: FluentIcons.bug,
+            label: l10n.reportBugButton,
+            onPressed: onReport,
+          ),
+          const SizedBox(width: 12),
+          _FooterButton(
+            icon: FluentIcons.feedback,
+            label: l10n.submitFeedbackButton,
+            onPressed: onFeedback,
+          ),
+          const SizedBox(width: 12),
+          _FooterButton(
+            icon: FluentIcons.open_source,
+            label: l10n.githubButton,
+            onPressed: onGithub,
+            isPrimary: true,
+          ),
+        ],
+      ),
     );
-  }
-
-  Widget _buildOptionWidget(
-    AppLocalizations l10n,
-    String buttonType,
-    bool isChecked,
-    String optionsValue,
-    List<dynamic> options,
-    List<Map<String, String>> languageOptions,
-  ) {
-    switch (optionType) {
-      case "switch":
-        return ToggleSwitch(
-          checked: isChecked,
-          onChanged: (value) {
-            if (changeValue != null) {
-              changeValue!(settingType, value);
-            }
-          },
-        );
-      case "button":
-        return Button(
-          style: const ButtonStyle(
-            padding: WidgetStatePropertyAll(
-                EdgeInsets.symmetric(horizontal: 20, vertical: 8)),
-          ),
-          onPressed: onButtonPressed,
-          child: Text(
-            buttonType == "data"
-                ? l10n.clearDataButtonLabel
-                : l10n.resetButtonLabel,
-            style: const TextStyle(fontWeight: FontWeight.w600),
-          ),
-        );
-      case "slider":
-        return SizedBox(
-          width: 200,
-          child: Slider(
-            value: sliderValue,
-            min: sliderMin,
-            max: sliderMax,
-            divisions: sliderDivisions,
-            onChanged: (value) {
-              if (changeValue != null) {
-                // For audio threshold, pass the double value directly
-                if (settingType == "audioThreshold") {
-                  changeValue!(settingType, value);
-                } else {
-                  changeValue!(settingType, value.toInt());
-                }
-              }
-            },
-          ),
-        );
-      default:
-        // Handle language options separately
-        if (settingType == "language" && languageOptions.isNotEmpty) {
-          return ComboBox<String>(
-            value: optionsValue,
-            items: languageOptions.map((lang) {
-              return ComboBoxItem<String>(
-                value: lang['code']!,
-                child: Text(lang['name']!),
-              );
-            }).toList(),
-            onChanged: (value) {
-              if (value != null && changeValue != null) {
-                changeValue!(settingType, value);
-              }
-            },
-          );
-        }
-
-        // Handle regular options
-        return ComboBox<String>(
-          value: optionsValue,
-          items: options.map((content) {
-            return ComboBoxItem<String>(
-              value: content.toString(),
-              child: Text(content.toString()),
-            );
-          }).toList(),
-          onChanged: (value) {
-            if (value != null && changeValue != null) {
-              changeValue!(settingType, value);
-            }
-          },
-        );
-    }
   }
 }
 
-class Header extends StatelessWidget {
-  const Header({super.key});
+class _FooterButton extends StatefulWidget {
+  final IconData icon;
+  final String label;
+  final VoidCallback onPressed;
+  final bool isPrimary;
+
+  const _FooterButton({
+    required this.icon,
+    required this.label,
+    required this.onPressed,
+    this.isPrimary = false,
+  });
+
+  @override
+  State<_FooterButton> createState() => _FooterButtonState();
+}
+
+class _FooterButtonState extends State<_FooterButton> {
+  bool _isHovered = false;
 
   @override
   Widget build(BuildContext context) {
-    final l10n = AppLocalizations.of(context)!;
+    final theme = FluentTheme.of(context);
 
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        Text(l10n.settingsTitle,
-            style: FluentTheme.of(context).typography.subtitle),
-      ],
+    return MouseRegion(
+      onEnter: (_) => setState(() => _isHovered = true),
+      onExit: (_) => setState(() => _isHovered = false),
+      child: GestureDetector(
+        onTap: widget.onPressed,
+        child: AnimatedContainer(
+          duration: const Duration(milliseconds: 150),
+          padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
+          decoration: BoxDecoration(
+            color: widget.isPrimary
+                ? (_isHovered
+                    ? theme.accentColor.withOpacity(0.15)
+                    : theme.accentColor.withOpacity(0.08))
+                : (_isHovered
+                    ? theme.inactiveBackgroundColor.withOpacity(0.6)
+                    : theme.inactiveBackgroundColor.withOpacity(0.3)),
+            borderRadius: BorderRadius.circular(6),
+            border: Border.all(
+              color: widget.isPrimary
+                  ? (_isHovered
+                      ? theme.accentColor.withOpacity(0.5)
+                      : theme.accentColor.withOpacity(0.2))
+                  : (_isHovered
+                      ? theme.inactiveBackgroundColor
+                      : Colors.transparent),
+            ),
+          ),
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Icon(
+                widget.icon,
+                size: 14,
+                color: widget.isPrimary
+                    ? theme.accentColor
+                    : (_isHovered ? null : Colors.grey[100]),
+              ),
+              const SizedBox(width: 8),
+              Text(
+                widget.label,
+                style: TextStyle(
+                  fontSize: 12,
+                  fontWeight: FontWeight.w500,
+                  color: widget.isPrimary
+                      ? theme.accentColor
+                      : (_isHovered ? null : Colors.grey[100]),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+// ============== ANIMATED TOGGLE CARD ==============
+// Use this for expandable sections with animation
+
+class AnimatedToggleCard extends StatefulWidget {
+  final String title;
+  final IconData icon;
+  final Color? iconColor;
+  final List<Widget> children;
+  final Widget? trailing;
+  final bool initiallyExpanded;
+
+  const AnimatedToggleCard({
+    super.key,
+    required this.title,
+    required this.icon,
+    this.iconColor,
+    required this.children,
+    this.trailing,
+    this.initiallyExpanded = true,
+  });
+
+  @override
+  State<AnimatedToggleCard> createState() => _AnimatedToggleCardState();
+}
+
+class _AnimatedToggleCardState extends State<AnimatedToggleCard>
+    with SingleTickerProviderStateMixin {
+  late bool _isExpanded;
+  late AnimationController _controller;
+  late Animation<double> _expandAnimation;
+  late Animation<double> _rotationAnimation;
+
+  @override
+  void initState() {
+    super.initState();
+    _isExpanded = widget.initiallyExpanded;
+    _controller = AnimationController(
+      duration: const Duration(milliseconds: 250),
+      vsync: this,
+    );
+    _expandAnimation = CurvedAnimation(
+      parent: _controller,
+      curve: Curves.easeInOut,
+    );
+    _rotationAnimation = Tween<double>(begin: 0, end: 0.5).animate(
+      CurvedAnimation(parent: _controller, curve: Curves.easeInOut),
+    );
+
+    if (_isExpanded) {
+      _controller.value = 1.0;
+    }
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  void _toggleExpanded() {
+    setState(() {
+      _isExpanded = !_isExpanded;
+      if (_isExpanded) {
+        _controller.forward();
+      } else {
+        _controller.reverse();
+      }
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = FluentTheme.of(context);
+
+    return Container(
+      decoration: BoxDecoration(
+        color: theme.micaBackgroundColor,
+        borderRadius: BorderRadius.circular(8),
+        border: Border.all(
+          color: theme.inactiveBackgroundColor.withOpacity(0.6),
+          width: 1,
+        ),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.03),
+            blurRadius: 8,
+            offset: const Offset(0, 2),
+          ),
+        ],
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          // Header
+          mt.Material(
+            color: Colors.transparent,
+            child: mt.InkWell(
+              onTap: _toggleExpanded,
+              borderRadius: BorderRadius.vertical(
+                top: const Radius.circular(8),
+                bottom: Radius.circular(_isExpanded ? 0 : 8),
+              ),
+              child: Container(
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+                decoration: BoxDecoration(
+                  border: _isExpanded
+                      ? Border(
+                          bottom: BorderSide(
+                            color:
+                                theme.inactiveBackgroundColor.withOpacity(0.4),
+                            width: 1,
+                          ),
+                        )
+                      : null,
+                ),
+                child: Row(
+                  children: [
+                    Container(
+                      padding: const EdgeInsets.all(6),
+                      decoration: BoxDecoration(
+                        color: (widget.iconColor ?? theme.accentColor)
+                            .withOpacity(0.1),
+                        borderRadius: BorderRadius.circular(6),
+                      ),
+                      child: Icon(
+                        widget.icon,
+                        size: 16,
+                        color: widget.iconColor ?? theme.accentColor,
+                      ),
+                    ),
+                    const SizedBox(width: 12),
+                    Text(
+                      widget.title,
+                      style: const TextStyle(
+                        fontSize: 14,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                    const Spacer(),
+                    if (widget.trailing != null) widget.trailing!,
+                    const SizedBox(width: 8),
+                    RotationTransition(
+                      turns: _rotationAnimation,
+                      child: Icon(FluentIcons.chevron_down, size: 12),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ),
+          // Content
+          SizeTransition(
+            sizeFactor: _expandAnimation,
+            child: Padding(
+              padding: const EdgeInsets.all(16),
+              child: Column(
+                children: widget.children,
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+// ============== COMPACT SETTING TILE ==============
+// Alternative compact design for dense settings
+
+class CompactSettingTile extends StatefulWidget {
+  final String title;
+  final String? subtitle;
+  final Widget control;
+  final IconData? leadingIcon;
+  final Color? iconColor;
+
+  const CompactSettingTile({
+    super.key,
+    required this.title,
+    this.subtitle,
+    required this.control,
+    this.leadingIcon,
+    this.iconColor,
+  });
+
+  @override
+  State<CompactSettingTile> createState() => _CompactSettingTileState();
+}
+
+class _CompactSettingTileState extends State<CompactSettingTile> {
+  bool _isHovered = false;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = FluentTheme.of(context);
+
+    return MouseRegion(
+      onEnter: (_) => setState(() => _isHovered = true),
+      onExit: (_) => setState(() => _isHovered = false),
+      child: AnimatedContainer(
+        duration: const Duration(milliseconds: 150),
+        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+        decoration: BoxDecoration(
+          color: _isHovered
+              ? theme.inactiveBackgroundColor.withOpacity(0.3)
+              : Colors.transparent,
+          borderRadius: BorderRadius.circular(6),
+        ),
+        child: Row(
+          children: [
+            if (widget.leadingIcon != null) ...[
+              Icon(
+                widget.leadingIcon,
+                size: 16,
+                color: widget.iconColor ?? theme.accentColor,
+              ),
+              const SizedBox(width: 12),
+            ],
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    widget.title,
+                    style: const TextStyle(
+                      fontSize: 13,
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
+                  if (widget.subtitle != null) ...[
+                    const SizedBox(height: 2),
+                    Text(
+                      widget.subtitle!,
+                      style: TextStyle(
+                        fontSize: 11,
+                        color: Colors.grey[100],
+                      ),
+                    ),
+                  ],
+                ],
+              ),
+            ),
+            const SizedBox(width: 12),
+            widget.control,
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+// ============== INFO TOOLTIP WIDGET ==============
+
+class InfoTooltip extends StatelessWidget {
+  final String message;
+
+  const InfoTooltip({super.key, required this.message});
+
+  @override
+  Widget build(BuildContext context) {
+    return Tooltip(
+      message: message,
+      child: MouseRegion(
+        cursor: SystemMouseCursors.help,
+        child: Icon(
+          FluentIcons.info,
+          size: 14,
+          color: Colors.grey[100],
+        ),
+      ),
+    );
+  }
+}
+
+// ============== SEGMENTED OPTION SELECTOR ==============
+
+class SegmentedSelector<T> extends StatelessWidget {
+  final List<T> options;
+  final T selected;
+  final String Function(T) labelBuilder;
+  final void Function(T) onChanged;
+
+  const SegmentedSelector({
+    super.key,
+    required this.options,
+    required this.selected,
+    required this.labelBuilder,
+    required this.onChanged,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = FluentTheme.of(context);
+
+    return Container(
+      decoration: BoxDecoration(
+        color: theme.inactiveBackgroundColor.withOpacity(0.3),
+        borderRadius: BorderRadius.circular(6),
+      ),
+      padding: const EdgeInsets.all(3),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: options.map((option) {
+          final isSelected = option == selected;
+          return GestureDetector(
+            onTap: () => onChanged(option),
+            child: AnimatedContainer(
+              duration: const Duration(milliseconds: 150),
+              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+              decoration: BoxDecoration(
+                color:
+                    isSelected ? theme.micaBackgroundColor : Colors.transparent,
+                borderRadius: BorderRadius.circular(4),
+                boxShadow: isSelected
+                    ? [
+                        BoxShadow(
+                          color: Colors.black.withOpacity(0.1),
+                          blurRadius: 4,
+                          offset: const Offset(0, 1),
+                        ),
+                      ]
+                    : null,
+              ),
+              child: Text(
+                labelBuilder(option),
+                style: TextStyle(
+                  fontSize: 11,
+                  fontWeight: isSelected ? FontWeight.w600 : FontWeight.normal,
+                  color: isSelected ? theme.accentColor : Colors.grey[100],
+                ),
+              ),
+            ),
+          );
+        }).toList(),
+      ),
+    );
+  }
+}
+
+// ============== PROGRESS INDICATOR BUTTON ==============
+
+class ProgressButton extends StatefulWidget {
+  final String label;
+  final IconData icon;
+  final Future<void> Function() onPressed;
+
+  const ProgressButton({
+    super.key,
+    required this.label,
+    required this.icon,
+    required this.onPressed,
+  });
+
+  @override
+  State<ProgressButton> createState() => _ProgressButtonState();
+}
+
+class _ProgressButtonState extends State<ProgressButton> {
+  bool _isLoading = false;
+
+  Future<void> _handlePress() async {
+    if (_isLoading) return;
+
+    setState(() => _isLoading = true);
+    try {
+      await widget.onPressed();
+    } finally {
+      if (mounted) {
+        setState(() => _isLoading = false);
+      }
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Button(
+      onPressed: _isLoading ? null : _handlePress,
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          if (_isLoading)
+            const SizedBox(
+              width: 12,
+              height: 12,
+              child: ProgressRing(strokeWidth: 2),
+            )
+          else
+            Icon(widget.icon, size: 12),
+          const SizedBox(width: 8),
+          Text(widget.label, style: const TextStyle(fontSize: 11)),
+        ],
+      ),
     );
   }
 }

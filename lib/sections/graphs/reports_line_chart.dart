@@ -1,14 +1,14 @@
 import 'package:fl_chart/fl_chart.dart';
 import 'package:screentime/sections/controller/data_controllers/reports_controller.dart';
-import './resources/app_resources.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:screentime/l10n/app_localizations.dart';
 
 enum ChartType { main, alternate }
+
 enum DateDisplayMode { dayOfWeek, dayMonth, monthYear }
 
-class LineChartWidget extends StatelessWidget {
+class LineChartWidget extends StatefulWidget {
   final ChartType chartType;
   final List<DailyScreenTime>? dailyScreenTimeData;
   final String periodType;
@@ -17,7 +17,7 @@ class LineChartWidget extends StatelessWidget {
   final Function(DateTime) onDateSelected;
 
   const LineChartWidget({
-    super.key, 
+    super.key,
     required this.chartType,
     this.dailyScreenTimeData,
     this.periodType = 'Custom Range',
@@ -27,400 +27,663 @@ class LineChartWidget extends StatelessWidget {
   });
 
   @override
+  State<LineChartWidget> createState() => _LineChartWidgetState();
+}
+
+class _LineChartWidgetState extends State<LineChartWidget>
+    with SingleTickerProviderStateMixin {
+  int _touchedIndex = -1;
+  late AnimationController _animationController;
+  late Animation<double> _animation;
+
+  // Modern color palette
+  static const Color _primaryColor = Color(0xFF34D399);
+  static const Color _primaryColorLight = Color(0xFF6EE7B7);
+  static const Color _secondaryColor = Color(0xFF60A5FA);
+  static const Color _accentColor = Color(0xFFA78BFA);
+  static const Color _gridColor = Color(0xFFE5E7EB);
+  static const Color _textColor = Color(0xFF6B7280);
+  static const Color _tooltipBg = Color(0xFF1F2937);
+
+  @override
+  void initState() {
+    super.initState();
+    _animationController = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 1200),
+    );
+    _animation = CurvedAnimation(
+      parent: _animationController,
+      curve: Curves.easeOutQuart,
+    );
+    _animationController.forward();
+  }
+
+  @override
+  void didUpdateWidget(LineChartWidget oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (oldWidget.dailyScreenTimeData != widget.dailyScreenTimeData) {
+      _animationController.reset();
+      _animationController.forward();
+    }
+  }
+
+  @override
+  void dispose() {
+    _animationController.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    return LineChart(
-      getChartData(chartType, context),
-      duration: const Duration(milliseconds: 250),
+    return AnimatedBuilder(
+      animation: _animation,
+      builder: (context, child) {
+        return LineChart(
+          _getChartData(context),
+          duration: const Duration(milliseconds: 300),
+        );
+      },
     );
   }
 
-  LineChartData getChartData(ChartType type, BuildContext context) {
-    // Calculate max Y value for the chart based on daily screen time data
-    double maxY = 6.0; // Default value
-    
-    if (dailyScreenTimeData != null && dailyScreenTimeData!.isNotEmpty) {
-      final maxScreenTimeHours = dailyScreenTimeData!
-          .map((data) => data.screenTime.inMinutes / 60.0)
+  LineChartData _getChartData(BuildContext context) {
+    final data = widget.dailyScreenTimeData;
+
+    // Calculate dynamic Y axis range
+    double maxY = 6.0;
+    if (data != null && data.isNotEmpty) {
+      final maxHours = data
+          .map((d) => d.screenTime.inMinutes / 60.0)
           .reduce((a, b) => a > b ? a : b);
-      
-      // Round up to the nearest hour and add 1 for better visualization
-      maxY = (maxScreenTimeHours.ceil() + 1).toDouble();
+      maxY = ((maxHours / 2).ceil() * 2 + 2).toDouble(); // Round to even number
+      maxY = maxY.clamp(4.0, 24.0);
     }
 
-    // Set minX to 0.5 to give some padding at the start
-    const double minX = 0.5;
-    
-    // Set maxX based on the data length with some padding at the end
-    final double maxX = dailyScreenTimeData != null && dailyScreenTimeData!.isNotEmpty
-        ? (dailyScreenTimeData!.length + 0.5).toDouble()
-        : 7.5; // Default to 7 days if no data
+    // Calculate X axis range
+    const double minX = 0.0;
+    final double maxX = (data?.length ?? 7).toDouble();
 
     return LineChartData(
-      lineTouchData: type == ChartType.main ? lineTouchData1(context) : lineTouchData2,
-      gridData: gridData,
-      titlesData: type == ChartType.main ? titlesData1(context) : titlesData2(context),
-      borderData: borderData,
-      lineBarsData: type == ChartType.main ? lineBarsData1 : lineBarsData2,
+      lineTouchData: _buildTouchData(context),
+      gridData: _buildGridData(maxY),
+      titlesData: _buildTitlesData(context, maxY),
+      borderData: _buildBorderData(),
+      lineBarsData: _buildLineBarsData(),
       minX: minX,
       maxX: maxX,
-      maxY: type == ChartType.main ? maxY : 6,
+      maxY: maxY,
       minY: 0,
+      backgroundColor: Colors.transparent,
+      clipData: const FlClipData.all(),
     );
   }
 
-  // Determine the best date display format based on the date range
-  DateDisplayMode _getDateDisplayMode() {
-    if (dailyScreenTimeData == null || dailyScreenTimeData!.isEmpty) {
-      return DateDisplayMode.dayOfWeek;
-    }
-
-    // Calculate total days in the data
-    final int totalDays = dailyScreenTimeData!.length;
-    
-    if (totalDays <= 14) {
-      return DateDisplayMode.dayOfWeek; // Show day names for shorter periods
-    } else if (totalDays <= 90) {
-      return DateDisplayMode.dayMonth; // Show day/month for medium periods
-    } else {
-      return DateDisplayMode.monthYear; // Show month/year for longer periods
-    }
-  }
-
-  // Format a date according to the display mode
-  String _formatDate(DateTime date, DateDisplayMode mode, BuildContext context) {
+  LineTouchData _buildTouchData(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
-    
-    switch (mode) {
-      case DateDisplayMode.dayOfWeek:
-        // Use localized short day names
-        final List<String> dayNames = [
-          l10n.day_mondayShort,
-          l10n.day_tuesdayShort,
-          l10n.day_wednesdayShort,
-          l10n.day_thursdayShort,
-          l10n.day_fridayShort,
-          l10n.day_saturdayShort,
-          l10n.day_sundayShort,
-        ];
-        return dayNames[date.weekday - 1];
-      case DateDisplayMode.dayMonth:
-        // Day and month in short format (locale-aware)
-        return DateFormat('d/M').format(date);
-      case DateDisplayMode.monthYear:
-        // Month abbreviation (locale-aware)
-        return DateFormat('MMM', l10n.localeName).format(date);
-    }
-  }
 
-  LineTouchData lineTouchData1(BuildContext context) {
-    final l10n = AppLocalizations.of(context)!;
-    
     return LineTouchData(
+      enabled: true,
       handleBuiltInTouches: true,
-      touchCallback: (FlTouchEvent event, LineTouchResponse? touchResponse) {
-        // Handle tap event to trigger onDateSelected callback
-        if (event is FlTapUpEvent && touchResponse != null && touchResponse.lineBarSpots != null && 
-            touchResponse.lineBarSpots!.isNotEmpty) {
-          final spot = touchResponse.lineBarSpots!.first;
-          final spotIndex = spot.x.toInt() - 1; // Convert to 0-based index
-          
-          if (dailyScreenTimeData != null && 
-              spotIndex >= 0 && 
-              spotIndex < dailyScreenTimeData!.length) {
-            // Get the date for the tapped spot and call the callback
-            final date = dailyScreenTimeData![spotIndex].date;
-            onDateSelected(date);
+      touchCallback: (FlTouchEvent event, LineTouchResponse? response) {
+        if (event is FlTapUpEvent &&
+            response?.lineBarSpots != null &&
+            response!.lineBarSpots!.isNotEmpty) {
+          final spot = response.lineBarSpots!.first;
+          final index = spot.x.toInt();
+
+          if (widget.dailyScreenTimeData != null &&
+              index >= 0 &&
+              index < widget.dailyScreenTimeData!.length) {
+            final date = widget.dailyScreenTimeData![index].date;
+            widget.onDateSelected(date);
           }
+        }
+
+        // Update touched index for visual feedback
+        if (event is FlPointerHoverEvent || event is FlLongPressStart) {
+          if (response?.lineBarSpots != null &&
+              response!.lineBarSpots!.isNotEmpty) {
+            setState(() {
+              _touchedIndex = response.lineBarSpots!.first.x.toInt();
+            });
+          }
+        } else if (event is FlPointerExitEvent || event is FlLongPressEnd) {
+          setState(() {
+            _touchedIndex = -1;
+          });
         }
       },
       touchTooltipData: LineTouchTooltipData(
-        getTooltipItems: (List<LineBarSpot> touchedSpots) {
-          return touchedSpots.map((spot) {
-            if (dailyScreenTimeData != null && 
-                spot.x.toInt() > 0 && 
-                spot.x.toInt() <= dailyScreenTimeData!.length) {
-              final screenTime = dailyScreenTimeData![spot.x.toInt() - 1].screenTime;
-              final hours = screenTime.inHours;
-              final minutes = screenTime.inMinutes.remainder(60);
-              
-              // Include the date in the tooltip
-              final date = dailyScreenTimeData![spot.x.toInt() - 1].date;
-              final dateStr = DateFormat('MMM d, yyyy', l10n.localeName).format(date);
-              
-              return LineTooltipItem(
-                l10n.tooltip_dateScreenTime(dateStr, hours, minutes),
-                const TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
-              );
-            }
-            return LineTooltipItem(
-              l10n.tooltip_hoursFormat(spot.y.toStringAsFixed(1)),
-              const TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
-            );
-          }).toList();
-        },
-        getTooltipColor: (touchedSpot) => Colors.blueGrey.withValues(alpha: .8),
+        tooltipPadding:
+            const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+        tooltipMargin: 16,
+        getTooltipColor: (_) => _tooltipBg,
+        getTooltipItems: (spots) => _buildTooltipItems(spots, context, l10n),
+      ),
+      getTouchedSpotIndicator: (barData, spotIndexes) {
+        return spotIndexes.map((index) {
+          return TouchedSpotIndicatorData(
+            FlLine(
+              color: _primaryColor.withOpacity(0.3),
+              strokeWidth: 2,
+              dashArray: [5, 5],
+            ),
+            FlDotData(
+              show: true,
+              getDotPainter: (spot, percent, bar, index) {
+                return FlDotCirclePainter(
+                  radius: 8,
+                  color: Colors.white,
+                  strokeWidth: 3,
+                  strokeColor: _primaryColor,
+                );
+              },
+            ),
+          );
+        }).toList();
+      },
+    );
+  }
+
+  List<LineTooltipItem?> _buildTooltipItems(
+    List<LineBarSpot> spots,
+    BuildContext context,
+    AppLocalizations l10n,
+  ) {
+    return spots.map((spot) {
+      final data = widget.dailyScreenTimeData;
+      if (data != null && spot.x.toInt() >= 0 && spot.x.toInt() < data.length) {
+        final item = data[spot.x.toInt()];
+        final hours = item.screenTime.inHours;
+        final minutes = item.screenTime.inMinutes.remainder(60);
+        final dateStr = DateFormat('EEE, MMM d').format(item.date);
+
+        return LineTooltipItem(
+          '',
+          const TextStyle(),
+          children: [
+            TextSpan(
+              text: dateStr,
+              style: TextStyle(
+                color: Colors.white.withOpacity(0.7),
+                fontSize: 12,
+                fontWeight: FontWeight.w500,
+              ),
+            ),
+            const TextSpan(text: '\n'),
+            TextSpan(
+              text: hours > 0 ? '${hours}h ${minutes}m' : '${minutes}m',
+              style: const TextStyle(
+                color: Colors.white,
+                fontSize: 18,
+                fontWeight: FontWeight.bold,
+                height: 1.5,
+              ),
+            ),
+          ],
+        );
+      }
+      return null;
+    }).toList();
+  }
+
+  FlGridData _buildGridData(double maxY) {
+    return FlGridData(
+      show: true,
+      drawVerticalLine: false,
+      horizontalInterval: maxY > 12 ? 4 : 2,
+      getDrawingHorizontalLine: (value) {
+        return FlLine(
+          color: _gridColor.withOpacity(0.5),
+          strokeWidth: 1,
+          dashArray: value == 0 ? null : [5, 5],
+        );
+      },
+    );
+  }
+
+  FlTitlesData _buildTitlesData(BuildContext context, double maxY) {
+    return FlTitlesData(
+      bottomTitles: AxisTitles(
+        sideTitles: _buildBottomTitles(context),
+      ),
+      leftTitles: AxisTitles(
+        sideTitles: _buildLeftTitles(context, maxY),
+      ),
+      rightTitles: const AxisTitles(sideTitles: SideTitles(showTitles: false)),
+      topTitles: const AxisTitles(sideTitles: SideTitles(showTitles: false)),
+    );
+  }
+
+  SideTitles _buildLeftTitles(BuildContext context, double maxY) {
+    return SideTitles(
+      showTitles: true,
+      reservedSize: 44,
+      interval: maxY > 12 ? 4 : 2,
+      getTitlesWidget: (value, meta) {
+        if (value == 0 || value == meta.max) return const SizedBox.shrink();
+
+        return Padding(
+          padding: const EdgeInsets.only(right: 8),
+          child: Text(
+            '${value.toInt()}h',
+            style: const TextStyle(
+              color: _textColor,
+              fontSize: 12,
+              fontWeight: FontWeight.w500,
+            ),
+            textAlign: TextAlign.right,
+          ),
+        );
+      },
+    );
+  }
+
+  SideTitles _buildBottomTitles(BuildContext context) {
+    final data = widget.dailyScreenTimeData;
+    final dataLength = data?.length ?? 7;
+
+    // Calculate optimal interval
+    double interval = 1;
+    if (dataLength > 60) {
+      interval = (dataLength / 6).ceilToDouble();
+    } else if (dataLength > 30) {
+      interval = 7;
+    } else if (dataLength > 14) {
+      interval = 3;
+    } else if (dataLength > 7) {
+      interval = 2;
+    }
+
+    return SideTitles(
+      showTitles: true,
+      reservedSize: 32,
+      interval: interval,
+      getTitlesWidget: (value, meta) {
+        return _buildBottomTitleWidget(value, meta, context);
+      },
+    );
+  }
+
+  Widget _buildBottomTitleWidget(
+    double value,
+    TitleMeta meta,
+    BuildContext context,
+  ) {
+    final data = widget.dailyScreenTimeData;
+    final index = value.toInt();
+
+    if (data == null || index < 0 || index >= data.length) {
+      return const SizedBox.shrink();
+    }
+
+    // Skip first and last to avoid overlap
+    if (value == meta.min || value == meta.max) {
+      return const SizedBox.shrink();
+    }
+
+    final date = data[index].date;
+    final displayMode = _getDateDisplayMode();
+    final text = _formatDate(date, displayMode, context);
+
+    final isTouched = _touchedIndex == index;
+
+    return Padding(
+      padding: const EdgeInsets.only(top: 8),
+      child: AnimatedDefaultTextStyle(
+        duration: const Duration(milliseconds: 200),
+        style: TextStyle(
+          color: isTouched ? _primaryColor : _textColor,
+          fontSize: 11,
+          fontWeight: isTouched ? FontWeight.w600 : FontWeight.w500,
+        ),
+        child: Text(text),
       ),
     );
   }
 
-  LineTouchData get lineTouchData2 => const LineTouchData(enabled: false);
+  DateDisplayMode _getDateDisplayMode() {
+    final dataLength = widget.dailyScreenTimeData?.length ?? 7;
 
-  FlTitlesData titlesData1(BuildContext context) => FlTitlesData(
-        bottomTitles: AxisTitles(sideTitles: bottomTitles(context)),
-        rightTitles: const AxisTitles(sideTitles: SideTitles(showTitles: false)),
-        topTitles: const AxisTitles(sideTitles: SideTitles(showTitles: false)),
-        leftTitles: AxisTitles(sideTitles: leftTitles(context)),
-      );
+    if (dataLength <= 14) {
+      return DateDisplayMode.dayOfWeek;
+    } else if (dataLength <= 90) {
+      return DateDisplayMode.dayMonth;
+    }
+    return DateDisplayMode.monthYear;
+  }
 
-  FlTitlesData titlesData2(BuildContext context) => titlesData1(context);
-
-  List<LineChartBarData> get lineBarsData1 {
-    if (dailyScreenTimeData != null && dailyScreenTimeData!.isNotEmpty) {
-      return [
-        LineChartBarData(
-          isCurved: true,
-          color: AppColors.contentColorGreen,
-          barWidth: 8,
-          isStrokeCapRound: true,
-          dotData: FlDotData(
-            show: true,
-            getDotPainter: (spot, percent, barData, index) {
-              // Enhance dot visualization to make them more tappable
-              return FlDotCirclePainter(
-                radius: 4,
-                strokeWidth: 2,
-                strokeColor: AppColors.contentColorGreen,
-                color: Colors.white,
-              );
-            },
-          ),
-          belowBarData: BarAreaData(
-            show: true,
-            color: AppColors.contentColorGreen.withValues(alpha: .2),
-          ),
-          spots: _getSpots(),
-        ),
-      ];
-    } else {
-      return [
-        lineChartBarData1_1,
-        lineChartBarData1_3,
-      ];
+  String _formatDate(
+      DateTime date, DateDisplayMode mode, BuildContext context) {
+    switch (mode) {
+      case DateDisplayMode.dayOfWeek:
+        return DateFormat('EEE').format(date);
+      case DateDisplayMode.dayMonth:
+        return DateFormat('d/M').format(date);
+      case DateDisplayMode.monthYear:
+        return DateFormat('MMM').format(date);
     }
   }
 
-  List<FlSpot> _getSpots() {
-    if (dailyScreenTimeData == null || dailyScreenTimeData!.isEmpty) {
-      return const [
-        FlSpot(1, 1),
-        FlSpot(3, 1.5),
-        FlSpot(5, 1.4),
-        FlSpot(7, 3.4),
-      ];
+  FlBorderData _buildBorderData() {
+    return FlBorderData(
+      show: true,
+      border: Border(
+        bottom: BorderSide(
+          color: _gridColor,
+          width: 1,
+        ),
+        left: BorderSide(
+          color: _gridColor,
+          width: 1,
+        ),
+        right: BorderSide.none,
+        top: BorderSide.none,
+      ),
+    );
+  }
+
+  List<LineChartBarData> _buildLineBarsData() {
+    final data = widget.dailyScreenTimeData;
+
+    if (data == null || data.isEmpty) {
+      return [_buildPlaceholderLine()];
     }
 
-    return dailyScreenTimeData!.asMap().entries.map((entry) {
-      // Convert index to 1-based X value and minutes to hours for Y value
-      final index = entry.key;
-      final data = entry.value;
-      final hourValue = data.screenTime.inMinutes / 60.0;
-      
-      return FlSpot((index + 1).toDouble(), hourValue);
+    return [
+      _buildMainLine(data),
+      if (widget.chartType == ChartType.alternate) _buildAverageLine(data),
+    ];
+  }
+
+  LineChartBarData _buildMainLine(List<DailyScreenTime> data) {
+    final spots = data.asMap().entries.map((entry) {
+      final hours = entry.value.screenTime.inMinutes / 60.0;
+      // Apply animation
+      final animatedY = hours * _animation.value;
+      return FlSpot(entry.key.toDouble(), animatedY);
     }).toList();
-  }
 
-  List<LineChartBarData> get lineBarsData2 => [
-        lineChartBarData2_1,
-        lineChartBarData2_2,
-      ];
-
-  SideTitles leftTitles(BuildContext context) {
-    
-    return SideTitles(
-      getTitlesWidget: (value, meta) => leftTitleWidgets(value, meta, context),
-      showTitles: true,
-      interval: 1,
-      reservedSize: 40,
-    );
-  }
-
-  Widget leftTitleWidgets(double value, TitleMeta meta, BuildContext context) {
-    final l10n = AppLocalizations.of(context)!;
-    const style = TextStyle(fontWeight: FontWeight.bold, fontSize: 14);
-    
-    if (value == 0) return Container();
-    
-    final isInteger = value == value.roundToDouble();
-    if (isInteger) {
-      return SideTitleWidget(
-        meta: meta, 
-        child: Text(l10n.time_hours(value.toInt()), style: style),
-      );
-    }
-    
-    return Container();
-  }
-
-  SideTitles bottomTitles(BuildContext context) {
-    // Calculate an appropriate interval based on the data length
-    double interval = 1.0;  // Default for 7 days
-    
-    if (dailyScreenTimeData != null) {
-      final int dataLength = dailyScreenTimeData!.length;
-      
-      // Dynamic interval calculation
-      if (dataLength > 365) {        // For yearly data
-        interval = (dataLength / 12).ceilToDouble();  // ~Monthly labels
-      } else if (dataLength > 180) { // For ~6 months data
-        interval = (dataLength / 6).ceilToDouble();   // ~6 labels
-      } else if (dataLength > 90) {  // For ~3 months data
-        interval = 30.0;             // ~Monthly labels
-      } else if (dataLength > 30) {  // For ~1 month data
-        interval = 7.0;              // Weekly intervals
-      } else if (dataLength > 14) {  // For 2-4 weeks
-        interval = 4.0;              // Every 4 days
-      } else if (dataLength > 7) {   // For 1-2 weeks
-        interval = 2.0;              // Every other day
-      }
-    }
-    
-    return SideTitles(
-      showTitles: true,
-      reservedSize: 40,  // Increased for longer labels
-      interval: interval,
-      getTitlesWidget: (value, meta) => bottomTitleWidgets(value, meta, context),
-    );
-  }
-
-  Widget bottomTitleWidgets(double value, TitleMeta meta, BuildContext context) {
-    final l10n = AppLocalizations.of(context)!;
-    const style = TextStyle(fontWeight: FontWeight.bold, fontSize: 12);
-    String? text;
-    
-    if (dailyScreenTimeData != null && 
-        value >= 1 && 
-        value <= dailyScreenTimeData!.length &&
-        value == value.roundToDouble()) {
-      
-      // Get the date for this data point
-      final date = dailyScreenTimeData![value.toInt() - 1].date;
-      final displayMode = _getDateDisplayMode();
-      
-      // Format the date based on the determined display mode
-      text = _formatDate(date, displayMode, context);
-      
-      // For monthYear mode, only show year on January or first data point
-      if (displayMode == DateDisplayMode.monthYear) {
-        if (date.month == 1 || value == 1) {
-          text = '$text ${date.year}';
-        }
-      }
-    } else {
-      // Fallback for sample data using localized day names
-      switch (value.toInt()) {
-        case 2:
-          text = l10n.day_mondayShort;
-          break;
-        case 4:
-          text = l10n.day_wednesdayShort;
-          break;
-        case 6:
-          text = l10n.day_fridayShort;
-          break;
-      }
-    }
-
-    if (text == null) return Container();
-    
-    // Calculate rotation angle based on text length and data density
-    double angle = 0;
-    if (dailyScreenTimeData != null) {
-      if (dailyScreenTimeData!.length > 30) {
-        angle = 0.5; // More rotation for dense data
-      } else if (dailyScreenTimeData!.length > 14) {
-        angle = 0.3; // Slight angle
-      }
-    }
-    
-    return SideTitleWidget(
-      meta: meta, 
-      angle: angle,
-      space: 10, 
-      child: Text(text, style: style),
-    );
-  }
-
-  FlGridData get gridData => FlGridData(
-    show: true,
-    drawVerticalLine: false,
-    horizontalInterval: 1,
-    getDrawingHorizontalLine: (value) {
-      return FlLine(
-        color: Colors.grey.withValues(alpha: .2),
-        strokeWidth: 1,
-      );
-    },
-  );
-
-  FlBorderData get borderData => FlBorderData(
+    return LineChartBarData(
+      spots: spots,
+      isCurved: true,
+      curveSmoothness: 0.35,
+      preventCurveOverShooting: true,
+      color: _primaryColor,
+      barWidth: 3,
+      isStrokeCapRound: true,
+      shadow: Shadow(
+        color: _primaryColor.withOpacity(0.3),
+        blurRadius: 8,
+        offset: const Offset(0, 4),
+      ),
+      dotData: FlDotData(
         show: true,
-        border: Border(
-          bottom: BorderSide(color: AppColors.primary.withValues(alpha: .2), width: 4),
-          left: const BorderSide(color: Colors.transparent),
-          right: const BorderSide(color: Colors.transparent),
-          top: const BorderSide(color: Colors.transparent),
+        getDotPainter: (spot, percent, barData, index) {
+          final isTouched = index == _touchedIndex;
+          return FlDotCirclePainter(
+            radius: isTouched ? 6 : 4,
+            color: Colors.white,
+            strokeWidth: isTouched ? 3 : 2,
+            strokeColor: _primaryColor,
+          );
+        },
+      ),
+      belowBarData: BarAreaData(
+        show: true,
+        gradient: LinearGradient(
+          begin: Alignment.topCenter,
+          end: Alignment.bottomCenter,
+          colors: [
+            _primaryColor.withOpacity(0.3 * _animation.value),
+            _primaryColor.withOpacity(0.05 * _animation.value),
+            _primaryColor.withOpacity(0.0),
+          ],
+          stops: const [0.0, 0.5, 1.0],
         ),
-      );
+      ),
+    );
+  }
 
-  LineChartBarData get lineChartBarData1_1 => LineChartBarData(
-        isCurved: true,
-        color: AppColors.contentColorGreen,
-        barWidth: 8,
-        isStrokeCapRound: true,
-        dotData: const FlDotData(show: false),
-        belowBarData: BarAreaData(show: false),
-        spots: const [
-          FlSpot(1, 1),
-          FlSpot(3, 1.5),
-          FlSpot(5, 1.4),
-          FlSpot(7, 3.4),
-        ],
-      );
+  LineChartBarData _buildAverageLine(List<DailyScreenTime> data) {
+    // Calculate average
+    final totalMinutes = data.fold<int>(
+      0,
+      (sum, item) => sum + item.screenTime.inMinutes,
+    );
+    final avgHours = totalMinutes / data.length / 60.0;
 
-  LineChartBarData get lineChartBarData1_3 => LineChartBarData(
-        isCurved: true,
-        color: AppColors.contentColorCyan,
-        barWidth: 8,
-        isStrokeCapRound: true,
-        dotData: const FlDotData(show: false),
-        belowBarData: BarAreaData(show: false),
-        spots: const [
-          FlSpot(1, 2.8),
-          FlSpot(3, 1.9),
-          FlSpot(5, 3),
-          FlSpot(7, 2.5),
-        ],
-      );
+    final spots = List.generate(
+      data.length,
+      (index) => FlSpot(index.toDouble(), avgHours * _animation.value),
+    );
 
-  LineChartBarData get lineChartBarData2_1 => lineChartBarData1_1.copyWith(
-        color: AppColors.contentColorGreen.withValues(alpha: .5),
-        barWidth: 4,
-      );
+    return LineChartBarData(
+      spots: spots,
+      isCurved: false,
+      color: _secondaryColor.withOpacity(0.6),
+      barWidth: 2,
+      dashArray: [8, 4],
+      dotData: const FlDotData(show: false),
+      belowBarData: BarAreaData(show: false),
+    );
+  }
 
-  LineChartBarData get lineChartBarData2_2 => LineChartBarData(
-        isCurved: true,
-        color: AppColors.contentColorPink.withValues(alpha: .5),
-        barWidth: 4,
-        dotData: const FlDotData(show: false),
-        belowBarData: BarAreaData(
-          show: true, 
-          color: AppColors.contentColorPink.withValues(alpha: .2)
+  LineChartBarData _buildPlaceholderLine() {
+    return LineChartBarData(
+      spots: const [
+        FlSpot(0, 2),
+        FlSpot(1, 3),
+        FlSpot(2, 2.5),
+        FlSpot(3, 4),
+        FlSpot(4, 3.5),
+        FlSpot(5, 4.5),
+        FlSpot(6, 3),
+      ],
+      isCurved: true,
+      curveSmoothness: 0.35,
+      color: _gridColor,
+      barWidth: 3,
+      dotData: const FlDotData(show: false),
+      belowBarData: BarAreaData(
+        show: true,
+        color: _gridColor.withOpacity(0.2),
+      ),
+    );
+  }
+}
+
+// Optional: Add a wrapper widget for extra controls and information
+class EnhancedLineChart extends StatefulWidget {
+  final List<DailyScreenTime>? dailyScreenTimeData;
+  final String periodType;
+  final Function(DateTime) onDateSelected;
+  final bool showControls;
+
+  const EnhancedLineChart({
+    super.key,
+    this.dailyScreenTimeData,
+    required this.periodType,
+    required this.onDateSelected,
+    this.showControls = true,
+  });
+
+  @override
+  State<EnhancedLineChart> createState() => _EnhancedLineChartState();
+}
+
+class _EnhancedLineChartState extends State<EnhancedLineChart> {
+  bool _showAverage = false;
+  bool _showDataPoints = true;
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        if (widget.showControls) _buildControls(),
+        Expanded(
+          child: Padding(
+            padding: const EdgeInsets.only(right: 16, top: 16),
+            child: LineChartWidget(
+              chartType: _showAverage ? ChartType.alternate : ChartType.main,
+              dailyScreenTimeData: widget.dailyScreenTimeData,
+              periodType: widget.periodType,
+              onDateSelected: widget.onDateSelected,
+            ),
+          ),
         ),
-        spots: const [
-          FlSpot(1, 1),
-          FlSpot(3, 2.8),
-          FlSpot(5, 1.2),
-          FlSpot(7, 2.8),
+        if (widget.dailyScreenTimeData != null &&
+            widget.dailyScreenTimeData!.isNotEmpty)
+          _buildSummary(),
+      ],
+    );
+  }
+
+  Widget _buildControls() {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 8),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.end,
+        children: [
+          _buildToggleChip(
+            label: 'Average',
+            isSelected: _showAverage,
+            onTap: () => setState(() => _showAverage = !_showAverage),
+            color: const Color(0xFF60A5FA),
+          ),
         ],
-      );
+      ),
+    );
+  }
+
+  Widget _buildToggleChip({
+    required String label,
+    required bool isSelected,
+    required VoidCallback onTap,
+    required Color color,
+  }) {
+    return GestureDetector(
+      onTap: onTap,
+      child: AnimatedContainer(
+        duration: const Duration(milliseconds: 200),
+        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+        decoration: BoxDecoration(
+          color: isSelected ? color.withOpacity(0.1) : Colors.transparent,
+          borderRadius: BorderRadius.circular(16),
+          border: Border.all(
+            color: isSelected ? color : Colors.grey.withOpacity(0.3),
+            width: 1,
+          ),
+        ),
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Container(
+              width: 8,
+              height: 8,
+              decoration: BoxDecoration(
+                color: isSelected ? color : Colors.grey.withOpacity(0.5),
+                shape: BoxShape.circle,
+              ),
+            ),
+            const SizedBox(width: 6),
+            Text(
+              label,
+              style: TextStyle(
+                fontSize: 12,
+                fontWeight: FontWeight.w500,
+                color: isSelected ? color : Colors.grey,
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildSummary() {
+    final data = widget.dailyScreenTimeData!;
+
+    // Calculate statistics
+    final totalMinutes = data.fold<int>(
+      0,
+      (sum, item) => sum + item.screenTime.inMinutes,
+    );
+    final avgMinutes = totalMinutes ~/ data.length;
+    final maxMinutes =
+        data.map((d) => d.screenTime.inMinutes).reduce((a, b) => a > b ? a : b);
+    final minMinutes =
+        data.map((d) => d.screenTime.inMinutes).reduce((a, b) => a < b ? a : b);
+
+    return Padding(
+      padding: const EdgeInsets.only(top: 16),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        children: [
+          _buildStatItem(
+            label: 'Average',
+            value: _formatMinutes(avgMinutes),
+            color: const Color(0xFF60A5FA),
+          ),
+          _buildDivider(),
+          _buildStatItem(
+            label: 'Peak',
+            value: _formatMinutes(maxMinutes),
+            color: const Color(0xFFF87171),
+          ),
+          _buildDivider(),
+          _buildStatItem(
+            label: 'Lowest',
+            value: _formatMinutes(minMinutes),
+            color: const Color(0xFF34D399),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildStatItem({
+    required String label,
+    required String value,
+    required Color color,
+  }) {
+    return Column(
+      children: [
+        Text(
+          value,
+          style: TextStyle(
+            fontSize: 16,
+            fontWeight: FontWeight.bold,
+            color: color,
+          ),
+        ),
+        const SizedBox(height: 2),
+        Text(
+          label,
+          style: TextStyle(
+            fontSize: 11,
+            color: Colors.grey.shade600,
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildDivider() {
+    return Container(
+      height: 24,
+      width: 1,
+      color: Colors.grey.withOpacity(0.2),
+    );
+  }
+
+  String _formatMinutes(int minutes) {
+    final hours = minutes ~/ 60;
+    final mins = minutes % 60;
+    if (hours > 0) {
+      return '${hours}h ${mins}m';
+    }
+    return '${mins}m';
+  }
 }

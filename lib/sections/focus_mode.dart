@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:math' as math;
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:percent_indicator/percent_indicator.dart';
 import 'package:screentime/sections/controller/data_controllers/focus_mode_data_controller.dart';
@@ -10,7 +11,6 @@ import './controller/focus_mode_controller.dart';
 import 'package:intl/intl.dart';
 import 'package:screentime/l10n/app_localizations.dart';
 
-
 class FocusMode extends StatefulWidget {
   const FocusMode({super.key});
 
@@ -18,30 +18,24 @@ class FocusMode extends StatefulWidget {
   State<FocusMode> createState() => _FocusModeState();
 }
 
-class _FocusModeState extends State<FocusMode> {
-  // Analytics service instance
+class _FocusModeState extends State<FocusMode>
+    with SingleTickerProviderStateMixin {
   final FocusAnalyticsService _analyticsService = FocusAnalyticsService();
-  
+
   // State variables
   double workPercentage = 0;
   double shortBreakPercentage = 0;
   double longBreakPercentage = 0;
-  
-  // Session history data
   List<Map<String, dynamic>> sessionHistory = [];
-  
-  // Session count by day
   Map<String, int> sessionCountByDay = {
-      'Monday': 0,
-      'Tuesday': 0,
-      'Wednesday': 0,
-      'Thursday': 0,
-      'Friday': 0,
-      'Saturday': 0,
-      'Sunday': 0,
-    };
-  
-  // Focus trends data
+    'Monday': 0,
+    'Tuesday': 0,
+    'Wednesday': 0,
+    'Thursday': 0,
+    'Friday': 0,
+    'Saturday': 0,
+    'Sunday': 0,
+  };
   Map<String, dynamic> focusTrends = {
     'periods': [],
     'sessionCounts': [],
@@ -49,81 +43,80 @@ class _FocusModeState extends State<FocusMode> {
     'totalFocusTime': [],
     'percentageChange': 0,
   };
-  
-  // Weekly summary
   Map<String, dynamic> weeklySummary = {};
-  
-  // Loading state
   bool isLoading = true;
+
+  // Animation controller for smooth transitions
+  late AnimationController _animationController;
+  late Animation<double> _fadeAnimation;
 
   @override
   void initState() {
     super.initState();
+    _animationController = AnimationController(
+      duration: const Duration(milliseconds: 600),
+      vsync: this,
+    );
+    _fadeAnimation = CurvedAnimation(
+      parent: _animationController,
+      curve: Curves.easeOutCubic,
+    );
     _loadData();
   }
-  
-  // Load all the necessary data
+
+  @override
+  void dispose() {
+    _animationController.dispose();
+    super.dispose();
+  }
+
   Future<void> _loadData() async {
-    setState(() {
-      isLoading = true;
-    });
-    
+    setState(() => isLoading = true);
+
     try {
-      // Set date range for analytics
       final DateTime now = DateTime.now();
-      final DateTime startDate = DateTime(now.year, now.month - 1, now.day); // Last month
+      final DateTime startDate = DateTime(now.year, now.month - 1, now.day);
       final DateTime endDate = now;
-      
-      // Get time distribution data
+
       final timeDistribution = _analyticsService.getTimeDistribution(
         startDate: startDate,
         endDate: endDate,
       );
-      
-      // Get session history
       final history = _analyticsService.getSessionHistory(
         startDate: startDate,
         endDate: endDate,
       );
-      
-      // Get session count by day
       final countByDay = _analyticsService.getSessionCountByDay(
         startDate: startDate,
         endDate: endDate,
       );
-      
-      // Get focus trends
       final trends = _analyticsService.getFocusTrends(months: 3);
-      
-      // Get weekly summary
       final summary = _analyticsService.getWeeklySummary();
-      
-      // Update state with loaded data
+
       setState(() {
         workPercentage = timeDistribution['workPercentage'] ?? 0;
         shortBreakPercentage = timeDistribution['shortBreakPercentage'] ?? 0;
         longBreakPercentage = timeDistribution['longBreakPercentage'] ?? 0;
         sessionHistory = history;
-        sessionCountByDay = getLatestDataByWeekday(countByDay);
+        sessionCountByDay = _getLatestDataByWeekday(countByDay);
         focusTrends = trends;
         weeklySummary = summary;
         isLoading = false;
       });
+      _animationController.forward();
     } catch (e) {
       debugPrint("Error loading focus mode data: $e");
       setState(() {
-        // Set default values in case of error
         workPercentage = 5;
         shortBreakPercentage = 6;
         longBreakPercentage = 8;
         isLoading = false;
       });
+      _animationController.forward();
     }
   }
-  
-  // Filter session counts by day of week
-  Map<String, int> getLatestDataByWeekday(Map<String, int> sessionCountByDay) {
-    // Initialize result map with days of the week
+
+  Map<String, int> _getLatestDataByWeekday(Map<String, int> sessionCountByDay) {
     final Map<String, int> latestByWeekday = {
       'Monday': 0,
       'Tuesday': 0,
@@ -133,23 +126,15 @@ class _FocusModeState extends State<FocusMode> {
       'Saturday': 0,
       'Sunday': 0,
     };
-    
-    // Initialize a map to track the latest date found for each day of the week
     final Map<String, DateTime> latestDateByWeekday = {};
-    
-    // Process each entry in the session count map
+
     sessionCountByDay.forEach((dateStr, count) {
       try {
-        // Parse the date string
         final DateTime date = DateFormat('yyyy-MM-dd').parse(dateStr);
-        
-        // Get the weekday name
-        final String weekday = DateFormat('EEEE').format(date); // Full weekday name
-        
-        // Check if this is the first occurrence or a more recent date for this weekday
-        if (!latestDateByWeekday.containsKey(weekday) || 
+        final String weekday = DateFormat('EEEE').format(date);
+
+        if (!latestDateByWeekday.containsKey(weekday) ||
             date.isAfter(latestDateByWeekday[weekday]!)) {
-          // Update the latest date and count for this weekday
           latestDateByWeekday[weekday] = date;
           latestByWeekday[weekday] = count;
         }
@@ -157,128 +142,342 @@ class _FocusModeState extends State<FocusMode> {
         debugPrint('Error parsing date: $dateStr - $e');
       }
     });
-    
+
     return latestByWeekday;
   }
-
 
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
-    
-    return SingleChildScrollView(
-        child: Padding(
-          padding: const EdgeInsets.only(left: 20, right: 20, bottom: 20,top: 10),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              const Header(),
-              const SizedBox(height: 30),
-              const Meter(),
-              const SizedBox(height: 40),
-              Container(
-                width: MediaQuery.of(context).size.width * 1,
-                padding:const EdgeInsets.all(20),
-                decoration: BoxDecoration(
-                  color: FluentTheme.of(context).micaBackgroundColor,
-                  borderRadius: BorderRadius.circular(10),
-                  border: Border.all(color: FluentTheme.of(context).inactiveBackgroundColor,width: 1)
+
+    if (isLoading) {
+      return const Center(
+        child: ProgressRing(),
+      );
+    }
+
+    return FadeTransition(
+      opacity: _fadeAnimation,
+      child: SingleChildScrollView(
+        padding: const EdgeInsets.all(24),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            // Header with title
+            _buildHeader(context, l10n),
+            const SizedBox(height: 24),
+
+            // Main content area - Timer + Quick Stats side by side
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                // Timer Section
+                Expanded(
+                  flex: 3,
+                  child: _AnimatedCard(
+                    child: const Meter(),
+                  ),
                 ),
-                child:Column(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(l10n.historySection, style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w600)),
-                    FocusModeHistoryChart(data:sessionCountByDay)
-                  ]
-                ),
-              ),
-              const SizedBox(height: 20),
-              Container(
-                width: MediaQuery.of(context).size.width * 1,
-                padding:const EdgeInsets.all(20),
-                decoration: BoxDecoration(
-                  color: FluentTheme.of(context).micaBackgroundColor,
-                  borderRadius: BorderRadius.circular(10),
-                  border: Border.all(color: FluentTheme.of(context).inactiveBackgroundColor,width: 1)
-                ),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(l10n.trendsSection, style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w600)),
-                    FocusModeTrends(data:focusTrends)
-                  ]
-                ),
-              ),
-              const SizedBox(height: 20),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Expanded(
-                    flex: 5,
-                    child: Container(
-                      padding: const EdgeInsets.all(20),
-                      width: MediaQuery.of(context).size.width * 0.35,
-                      decoration: BoxDecoration(
-                        color: FluentTheme.of(context).micaBackgroundColor,
-                        borderRadius: BorderRadius.circular(10),
-                        border: Border.all(color: FluentTheme.of(context).inactiveBackgroundColor,width: 1)
-                      ),
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(l10n.timeDistributionSection, style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w600)),
-                          FocusModePieChart(dataMap: {
+                const SizedBox(width: 20),
+
+                // Quick Stats Section
+                Expanded(
+                  flex: 2,
+                  child: Column(
+                    children: [
+                      _buildQuickStatCard(
+                        context,
+                        l10n.timeDistributionSection,
+                        FocusModePieChart(
+                          dataMap: {
                             l10n.workSession: workPercentage,
                             l10n.shortBreak: shortBreakPercentage,
                             l10n.longBreak: longBreakPercentage,
-                          },colorList:const [
-                            Color.fromRGBO(41, 164, 72, 1),
-                            Color.fromRGBO(207, 52, 50, 1),
-                            Color.fromRGBO(71, 169, 211, 1),
-                          ],)
-                        ]
+                          },
+                          colorList: const [
+                            Color(0xFF4CAF50),
+                            Color(0xFFFF7043),
+                            Color(0xFF42A5F5),
+                          ],
+                        ),
                       ),
-                    ),
+                      const SizedBox(height: 16),
+                      _buildWeeklySummaryCard(context, l10n),
+                    ],
                   ),
-                  const SizedBox(width: 20,),
-                  Expanded(
-                    flex: 5,
-                    child: Container(
-                      height: 360,
-                      width: MediaQuery.of(context).size.width * 0.35,
-                      decoration: BoxDecoration(
-                        color: FluentTheme.of(context).micaBackgroundColor,
-                        borderRadius: BorderRadius.circular(10),
-                        border: Border.all(color: FluentTheme.of(context).inactiveBackgroundColor,width: 1)
-                      ),
-                      child:SessionHistory(data:sessionHistory),
-                    ),
-                  ),
-                ],
+                ),
+              ],
+            ),
+            const SizedBox(height: 20),
+
+            // Analytics Section
+            _buildSectionTitle(context, l10n.historySection, FluentIcons.chart),
+            const SizedBox(height: 12),
+            _AnimatedCard(
+              child: Padding(
+                padding: const EdgeInsets.all(20),
+                child: FocusModeHistoryChart(data: sessionCountByDay),
               ),
-              const SizedBox(height: 10)
-            ],
+            ),
+            const SizedBox(height: 20),
+
+            // Trends and Session History Row
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Expanded(
+                  flex: 3,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      _buildSectionTitle(
+                          context, l10n.trendsSection, FluentIcons.trending12),
+                      const SizedBox(height: 12),
+                      _AnimatedCard(
+                        child: Padding(
+                          padding: const EdgeInsets.all(20),
+                          child: FocusModeTrends(data: focusTrends),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                const SizedBox(width: 20),
+                Expanded(
+                  flex: 2,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      _buildSectionTitle(context, l10n.sessionHistorySection,
+                          FluentIcons.history),
+                      const SizedBox(height: 12),
+                      _AnimatedCard(
+                        child: SessionHistory(data: sessionHistory),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: 20),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildHeader(BuildContext context, AppLocalizations l10n) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        Row(
+          children: [
+            Container(
+              padding: const EdgeInsets.all(10),
+              decoration: BoxDecoration(
+                color: const Color(0xFFFF5C50).withOpacity(0.1),
+                borderRadius: BorderRadius.circular(12),
+              ),
+              child: const Icon(
+                FluentIcons.timer,
+                color: Color(0xFFFF5C50),
+                size: 24,
+              ),
+            ),
+            const SizedBox(width: 16),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  l10n.focusModeTitle,
+                  style: FluentTheme.of(context).typography.subtitle?.copyWith(
+                        fontWeight: FontWeight.w600,
+                      ),
+                ),
+                const SizedBox(height: 2),
+                Text(
+                  'Stay focused, be productive',
+                  style: FluentTheme.of(context).typography.caption?.copyWith(
+                        color: FluentTheme.of(context)
+                            .typography
+                            .caption
+                            ?.color
+                            ?.withOpacity(0.7),
+                      ),
+                ),
+              ],
+            ),
+          ],
+        ),
+        IconButton(
+          icon: const Icon(FluentIcons.refresh, size: 18),
+          onPressed: _loadData,
+        ),
+      ],
+    );
+  }
+
+  Widget _buildSectionTitle(BuildContext context, String title, IconData icon) {
+    return Row(
+      children: [
+        Icon(icon, size: 16, color: FluentTheme.of(context).accentColor),
+        const SizedBox(width: 8),
+        Text(
+          title,
+          style: FluentTheme.of(context).typography.bodyStrong?.copyWith(
+                fontWeight: FontWeight.w600,
+              ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildQuickStatCard(
+      BuildContext context, String title, Widget content) {
+    return _AnimatedCard(
+      child: Padding(
+        padding: const EdgeInsets.all(16),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              title,
+              style: FluentTheme.of(context).typography.bodyStrong?.copyWith(
+                    fontWeight: FontWeight.w600,
+                  ),
+            ),
+            const SizedBox(height: 12),
+            content,
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildWeeklySummaryCard(BuildContext context, AppLocalizations l10n) {
+    final totalSessions = weeklySummary['totalSessions'] ?? 0;
+    final totalMinutes = weeklySummary['totalMinutes'] ?? 0;
+    final avgSessionLength = weeklySummary['avgSessionLength'] ?? 0;
+
+    return _AnimatedCard(
+      child: Padding(
+        padding: const EdgeInsets.all(16),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              'This Week',
+              style: FluentTheme.of(context).typography.bodyStrong?.copyWith(
+                    fontWeight: FontWeight.w600,
+                  ),
+            ),
+            const SizedBox(height: 16),
+            _buildStatRow(
+                context, 'Sessions', '$totalSessions', FluentIcons.check_mark),
+            const SizedBox(height: 12),
+            _buildStatRow(
+                context, 'Total Time', '${totalMinutes}m', FluentIcons.clock),
+            const SizedBox(height: 12),
+            _buildStatRow(context, 'Avg Length', '${avgSessionLength}m',
+                FluentIcons.calculator),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildStatRow(
+      BuildContext context, String label, String value, IconData icon) {
+    return Row(
+      children: [
+        Container(
+          padding: const EdgeInsets.all(6),
+          decoration: BoxDecoration(
+            color: FluentTheme.of(context).accentColor.withOpacity(0.1),
+            borderRadius: BorderRadius.circular(6),
+          ),
+          child:
+              Icon(icon, size: 14, color: FluentTheme.of(context).accentColor),
+        ),
+        const SizedBox(width: 12),
+        Expanded(
+          child: Text(
+            label,
+            style: FluentTheme.of(context).typography.body,
           ),
         ),
-      );
+        Text(
+          value,
+          style: FluentTheme.of(context).typography.bodyStrong?.copyWith(
+                fontWeight: FontWeight.w600,
+              ),
+        ),
+      ],
+    );
+  }
+}
+
+// Animated card wrapper with hover effects
+class _AnimatedCard extends StatefulWidget {
+  final Widget child;
+  final EdgeInsets? padding;
+
+  const _AnimatedCard({
+    required this.child,
+    this.padding,
+  });
+
+  @override
+  State<_AnimatedCard> createState() => _AnimatedCardState();
+}
+
+class _AnimatedCardState extends State<_AnimatedCard> {
+  bool _isHovered = false;
+
+  @override
+  Widget build(BuildContext context) {
+    return MouseRegion(
+      onEnter: (_) => setState(() => _isHovered = true),
+      onExit: (_) => setState(() => _isHovered = false),
+      child: AnimatedContainer(
+        duration: const Duration(milliseconds: 200),
+        curve: Curves.easeOutCubic,
+        decoration: BoxDecoration(
+          color: FluentTheme.of(context).micaBackgroundColor,
+          borderRadius: BorderRadius.circular(12),
+          border: Border.all(
+            color: _isHovered
+                ? FluentTheme.of(context).accentColor.withOpacity(0.3)
+                : FluentTheme.of(context).inactiveBackgroundColor,
+            width: 1,
+          ),
+          boxShadow: _isHovered
+              ? [
+                  BoxShadow(
+                    color:
+                        FluentTheme.of(context).accentColor.withOpacity(0.08),
+                    blurRadius: 20,
+                    offset: const Offset(0, 4),
+                  ),
+                ]
+              : [],
+        ),
+        child: widget.child,
+      ),
+    );
   }
 }
 
 class Meter extends StatefulWidget {
-  const Meter({
-    super.key,
-  });
+  const Meter({super.key});
 
   @override
   State<Meter> createState() => _MeterState();
 }
 
-class _MeterState extends State<Meter> {
+class _MeterState extends State<Meter> with TickerProviderStateMixin {
   SettingsManager settingsManager = SettingsManager();
-  // Move variables to class level
+
   double workDuration = 25;
   double shortBreak = 5;
   double longBreak = 15;
@@ -287,18 +486,60 @@ class _MeterState extends State<Meter> {
   bool enableSounds = true;
   String selectedMode = "Custom";
 
-  // Timer service
   late PomodoroTimerService _timerService;
-
-  // Timer display variables
   String _displayTime = "25:00";
   double _percentComplete = 1.0;
   bool _isRunning = false;
   TimerState _currentTimerState = TimerState.idle;
-  
-  // Timer for UI updates
   Timer? _uiUpdateTimer;
 
+  // Track completed sessions locally
+  int _completedWorkSessions = 0;
+
+  // Animation controllers
+  late AnimationController _pulseController;
+  late Animation<double> _pulseAnimation;
+  late AnimationController _buttonScaleController;
+  late Animation<double> _buttonScaleAnimation;
+
+  @override
+  void initState() {
+    super.initState();
+    _loadSettings();
+    _initializeTimerService();
+    _startUiUpdateTimer();
+    _initAnimations();
+  }
+
+  void _loadSettings() {
+    workDuration = settingsManager.getSetting("focusModeSettings.workDuration");
+    shortBreak = settingsManager.getSetting("focusModeSettings.shortBreak");
+    longBreak = settingsManager.getSetting("focusModeSettings.longBreak");
+    autoStart = settingsManager.getSetting("focusModeSettings.autoStart");
+    blockDistractions =
+        settingsManager.getSetting("focusModeSettings.blockDistractions");
+    enableSounds = settingsManager
+        .getSetting("focusModeSettings.enableSoundsNotifications");
+    selectedMode = settingsManager.getSetting("focusModeSettings.selectedMode");
+  }
+
+  void _initAnimations() {
+    _pulseController = AnimationController(
+      duration: const Duration(milliseconds: 1500),
+      vsync: this,
+    );
+    _pulseAnimation = Tween<double>(begin: 1.0, end: 1.02).animate(
+      CurvedAnimation(parent: _pulseController, curve: Curves.easeInOut),
+    );
+
+    _buttonScaleController = AnimationController(
+      duration: const Duration(milliseconds: 150),
+      vsync: this,
+    );
+    _buttonScaleAnimation = Tween<double>(begin: 1.0, end: 0.95).animate(
+      CurvedAnimation(parent: _buttonScaleController, curve: Curves.easeInOut),
+    );
+  }
 
   void _initializeTimerService() {
     _timerService = PomodoroTimerService(
@@ -312,28 +553,31 @@ class _MeterState extends State<Meter> {
       onLongBreakStart: _onLongBreakStart,
       onTimerComplete: _onTimerComplete,
     );
-    
-    // Initialize display time
     _updateDisplayTime();
   }
-  
+
   void _startUiUpdateTimer() {
     _uiUpdateTimer = Timer.periodic(const Duration(seconds: 1), (_) {
       if (mounted) {
         setState(() {
           _updateDisplayTime();
+          // Handle pulse animation
+          if (_isRunning && !_pulseController.isAnimating) {
+            _pulseController.repeat(reverse: true);
+          } else if (!_isRunning && _pulseController.isAnimating) {
+            _pulseController.stop();
+            _pulseController.reset();
+          }
         });
       }
     });
   }
-  
+
   void _updateDisplayTime() {
     int minutes = _timerService.minutesRemaining;
     int seconds = _timerService.secondsInCurrentMinute;
-    
-    // Calculate percentage based on timer state
+
     double totalSeconds;
-    
     switch (_timerService.currentState) {
       case TimerState.work:
         totalSeconds = workDuration * 60;
@@ -345,56 +589,48 @@ class _MeterState extends State<Meter> {
         totalSeconds = longBreak * 60;
         break;
       case TimerState.idle:
-        // Default to work duration when idle
         totalSeconds = workDuration * 60;
         break;
     }
-    
-    
-    // Update state variables for UI
-    _displayTime = "${minutes.toString().padLeft(2, '0')}:${seconds.toString().padLeft(2, '0')}";
-    _percentComplete = _timerService.secondsRemaining > 0 ? 
-        (_timerService.secondsRemaining / totalSeconds) : 1.0;
+
+    _displayTime =
+        "${minutes.toString().padLeft(2, '0')}:${seconds.toString().padLeft(2, '0')}";
+    _percentComplete = _timerService.secondsRemaining > 0
+        ? (_timerService.secondsRemaining / totalSeconds)
+        : 1.0;
     _isRunning = _timerService.isRunning;
     _currentTimerState = _timerService.currentState;
   }
-  
-  // Timer callbacks
+
   void _onWorkSessionStart() {
-    if (enableSounds) {
-      // Play work session start sound or show notification
-      debugPrint('Work session started');
-    }
-    
-    if (blockDistractions) {
-      // Implement distraction blocking
-      debugPrint('Blocking distractions');
-    }
+    if (enableSounds) debugPrint('Work session started');
+    if (blockDistractions) debugPrint('Blocking distractions');
   }
-  
+
   void _onShortBreakStart() {
-    if (enableSounds) {
-      // Play short break start sound or show notification
-      debugPrint('Short break started');
-    }
+    if (enableSounds) debugPrint('Short break started');
+    // Increment completed sessions when transitioning to break
+    setState(() {
+      _completedWorkSessions++;
+    });
   }
-  
+
   void _onLongBreakStart() {
-    if (enableSounds) {
-      // Play long break start sound or show notification
-      debugPrint('Long break started');
-    }
+    if (enableSounds) debugPrint('Long break started');
+    // Increment completed sessions when transitioning to long break
+    setState(() {
+      _completedWorkSessions++;
+    });
   }
-  
+
   void _onTimerComplete() {
-    if (enableSounds) {
-      // Play timer completion sound or show notification
-      debugPrint('Timer completed');
-    }
+    if (enableSounds) debugPrint('Timer completed');
   }
-  
-  // UI action handlers
+
   void _handlePlayPausePressed() {
+    _buttonScaleController
+        .forward()
+        .then((_) => _buttonScaleController.reverse());
     setState(() {
       if (_isRunning) {
         _timerService.pauseTimer();
@@ -407,7 +643,7 @@ class _MeterState extends State<Meter> {
       }
     });
   }
-  
+
   void _handleReloadPressed() {
     setState(() {
       _timerService.resetTimer();
@@ -416,147 +652,343 @@ class _MeterState extends State<Meter> {
       }
     });
   }
-  
-  void resetTimerSettings(){
-    _timerService.resetTimer();
+
+  void _handleSkipPressed() {
+    setState(() {
+      // Skip to next session
+      if (_currentTimerState == TimerState.work) {
+        // If in work session, increment count and start break
+        _completedWorkSessions++;
+        if (_completedWorkSessions % 4 == 0) {
+          _timerService.startLongBreak();
+        } else {
+          _timerService.startShortBreak();
+        }
+      } else {
+        // If in break, start new work session
+        _timerService.startWorkSession();
+      }
+    });
   }
 
+  void _resetAllSessions() {
+    setState(() {
+      _completedWorkSessions = 0;
+      _timerService.resetTimer();
+    });
+  }
 
   Color _getTimerColor() {
     switch (_currentTimerState) {
       case TimerState.work:
-        return const Color(0xffFF5C50); // Red for work
+        return const Color(0xFFFF5C50);
       case TimerState.shortBreak:
       case TimerState.longBreak:
-        return const Color(0xff50C878); // Green for breaks
+        return const Color(0xFF4CAF50);
       case TimerState.idle:
-        return const Color(0xffFF5C50); // Default red
+        return const Color(0xFFFF5C50);
     }
   }
-  
+
+  String _getStatusText(AppLocalizations l10n) {
+    switch (_currentTimerState) {
+      case TimerState.work:
+        return _isRunning ? 'Focus Time' : 'Paused';
+      case TimerState.shortBreak:
+        return _isRunning ? 'Short Break' : 'Paused';
+      case TimerState.longBreak:
+        return _isRunning ? 'Long Break' : 'Paused';
+      case TimerState.idle:
+        return 'Ready to Focus';
+    }
+  }
+
   @override
   void dispose() {
     _timerService.dispose();
     _uiUpdateTimer?.cancel();
+    _pulseController.dispose();
+    _buttonScaleController.dispose();
     super.dispose();
   }
 
   @override
-  void initState() {
-    super.initState();
-    workDuration = settingsManager.getSetting("focusModeSettings.workDuration");
-    shortBreak = settingsManager.getSetting("focusModeSettings.shortBreak");
-    longBreak = settingsManager.getSetting("focusModeSettings.longBreak");
-    autoStart = settingsManager.getSetting("focusModeSettings.autoStart");
-    blockDistractions = settingsManager.getSetting("focusModeSettings.blockDistractions");
-    enableSounds = settingsManager.getSetting("focusModeSettings.enableSoundsNotifications");
-    selectedMode = settingsManager.getSetting("focusModeSettings.selectedMode");
-
-    // Initialize timer service
-    _initializeTimerService();
-    
-    // Start UI update timer for showing seconds
-    _startUiUpdateTimer();
-  }
-  
-  @override
   Widget build(BuildContext context) {
-    return Column(
+    final l10n = AppLocalizations.of(context)!;
+    final timerColor = _getTimerColor();
+
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 32, horizontal: 24),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          // Session Type Indicator
+          _buildSessionTypeChips(l10n),
+          const SizedBox(height: 32),
+
+          // Timer Display
+          AnimatedBuilder(
+            animation: _pulseAnimation,
+            builder: (context, child) {
+              return Transform.scale(
+                scale: _isRunning ? _pulseAnimation.value : 1.0,
+                child: child,
+              );
+            },
+            child: Stack(
+              alignment: Alignment.center,
+              children: [
+                // Outer glow effect when running
+                if (_isRunning)
+                  AnimatedContainer(
+                    duration: const Duration(milliseconds: 300),
+                    width: 260,
+                    height: 260,
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      boxShadow: [
+                        BoxShadow(
+                          color: timerColor.withOpacity(0.15),
+                          blurRadius: 40,
+                          spreadRadius: 5,
+                        ),
+                      ],
+                    ),
+                  ),
+                CircularPercentIndicator(
+                  radius: 120.0,
+                  lineWidth: 12.0,
+                  animation: true,
+                  animationDuration: 300,
+                  backgroundColor: FluentTheme.of(context)
+                      .inactiveBackgroundColor
+                      .withOpacity(0.3),
+                  percent: _percentComplete.clamp(0.0, 1.0),
+                  center: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(
+                        _displayTime,
+                        style: TextStyle(
+                          fontWeight: FontWeight.w300,
+                          fontSize: 52.0,
+                          fontFeatures: const [FontFeature.tabularFigures()],
+                          color: timerColor,
+                        ),
+                      ),
+                      const SizedBox(height: 4),
+                      AnimatedSwitcher(
+                        duration: const Duration(milliseconds: 200),
+                        child: Text(
+                          _getStatusText(l10n),
+                          key: ValueKey(_getStatusText(l10n)),
+                          style: FluentTheme.of(context)
+                              .typography
+                              .caption
+                              ?.copyWith(
+                                color: FluentTheme.of(context)
+                                    .typography
+                                    .caption
+                                    ?.color
+                                    ?.withOpacity(0.6),
+                                fontWeight: FontWeight.w500,
+                              ),
+                        ),
+                      ),
+                    ],
+                  ),
+                  circularStrokeCap: CircularStrokeCap.round,
+                  progressColor: timerColor,
+                ),
+              ],
+            ),
+          ),
+          const SizedBox(height: 36),
+
+          // Control Buttons
+          _buildControlButtons(context, timerColor),
+          const SizedBox(height: 24),
+
+          // Session counter
+          _buildSessionCounter(context),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildSessionTypeChips(AppLocalizations l10n) {
+    return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        CircularPercentIndicator(
-          radius: 120.0,
-          lineWidth: 25.0,
-          animation: true,
-          backgroundColor: FluentTheme.of(context).micaBackgroundColor,
-          
-          percent: _percentComplete,
-          center:Text(
-            _displayTime,
-            style:
-                const TextStyle(fontWeight: FontWeight.bold, fontSize: 48.0),
-          ),
-          circularStrokeCap: CircularStrokeCap.round,
-          progressColor: _getTimerColor(),
+        _SessionChip(
+          label: 'Focus',
+          isActive: _currentTimerState == TimerState.work ||
+              _currentTimerState == TimerState.idle,
+          color: const Color(0xFFFF5C50),
+          onTap: () {
+            if (_currentTimerState != TimerState.work &&
+                _currentTimerState != TimerState.idle) {
+              setState(() {
+                _timerService.startWorkSession();
+              });
+            }
+          },
         ),
-        const SizedBox(height: 25),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Container(
-              width: 50,
-              height: 50,
-              decoration: BoxDecoration(
-                border: Border.all(color: FluentTheme.of(context).inactiveBackgroundColor,width: 1),
-                borderRadius: BorderRadius.circular(100)
-              ),
-              child: Button(
-                onPressed: () => _handleReloadPressed(),
-                style: ButtonStyle(
-                  shape: WidgetStateProperty.all(const CircleBorder()),
-                  backgroundColor: WidgetStateProperty.all(FluentTheme.of(context).micaBackgroundColor),
-                ),
-                child: const Icon(FluentIcons.sync, size: 26,opticalSize: 16,),
-              ),
-            ),
-    
-            const SizedBox(width: 50),
-    
-            SizedBox(
-              width: 70,
-              height: 70,
-              child: Button(
-                onPressed: () => _handlePlayPausePressed(),
-                style: ButtonStyle(
-                  shape: WidgetStateProperty.all(const CircleBorder()),
-                  backgroundColor: WidgetStateProperty.all(_getTimerColor()),
-                ),
-                child: Container(
-                  padding:const EdgeInsets.all(10),
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(100)
-                  ),
-                  child: Icon(_isRunning ? FluentIcons.pause : FluentIcons.play_solid, size: 24,color: const Color(0xffFF5C50),)
-                ),
-              ),
-            ),
-    
-            const SizedBox(width: 50),
-    
-            Container(
-              width: 50,
-              height: 50,
-              decoration: BoxDecoration(
-                border: Border.all(color: FluentTheme.of(context).inactiveBackgroundColor,width: 1),
-                borderRadius: BorderRadius.circular(100)
-              ),
-              child: Button(
-                onPressed: () => showSettingsDialog(context),
-                style: ButtonStyle(
-                  shape: WidgetStateProperty.all(const CircleBorder()),
-                  backgroundColor: WidgetStateProperty.all(FluentTheme.of(context).micaBackgroundColor),
-                ),
-                child: const Icon(FluentIcons.settings, size: 26,opticalSize: 16,),
-              ),
-            ),
-          ],
-        )
+        const SizedBox(width: 8),
+        _SessionChip(
+          label: 'Short Break',
+          isActive: _currentTimerState == TimerState.shortBreak,
+          color: const Color(0xFF4CAF50),
+          onTap: () {
+            if (_currentTimerState != TimerState.shortBreak) {
+              setState(() {
+                _timerService.startShortBreak();
+              });
+            }
+          },
+        ),
+        const SizedBox(width: 8),
+        _SessionChip(
+          label: 'Long Break',
+          isActive: _currentTimerState == TimerState.longBreak,
+          color: const Color(0xFF42A5F5),
+          onTap: () {
+            if (_currentTimerState != TimerState.longBreak) {
+              setState(() {
+                _timerService.startLongBreak();
+              });
+            }
+          },
+        ),
       ],
     );
   }
 
-  // Save settings and apply them to the main widget state
-  void _saveSettings(double newWorkDuration, double newShortBreak, double newLongBreak, 
-                    bool newAutoStart, bool newBlockDistractions, bool newEnableSounds, 
-                    String newSelectedMode) {
-    settingsManager.updateSetting("focusModeSettings.workDuration", newWorkDuration);
-    settingsManager.updateSetting("focusModeSettings.shortBreak", newShortBreak);
+  Widget _buildControlButtons(BuildContext context, Color timerColor) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        _ControlButton(
+          icon: FluentIcons.refresh,
+          onPressed: _handleReloadPressed,
+          tooltip: 'Restart Session',
+        ),
+        const SizedBox(width: 16),
+
+        _ControlButton(
+          icon: FluentIcons.previous,
+          onPressed: _resetAllSessions,
+          tooltip: 'Reset All',
+        ),
+        const SizedBox(width: 20),
+
+        // Main play/pause button
+        ScaleTransition(
+          scale: _buttonScaleAnimation,
+          child: _PlayPauseButton(
+            isRunning: _isRunning,
+            color: timerColor,
+            onPressed: _handlePlayPausePressed,
+          ),
+        ),
+
+        const SizedBox(width: 20),
+        _ControlButton(
+          icon: FluentIcons.next,
+          onPressed: _handleSkipPressed,
+          tooltip: 'Skip to Next',
+        ),
+        const SizedBox(width: 16),
+
+        _ControlButton(
+          icon: FluentIcons.settings,
+          onPressed: () => _showSettingsDialog(context),
+          tooltip: 'Settings',
+        ),
+      ],
+    );
+  }
+
+  Widget _buildSessionCounter(BuildContext context) {
+    // Show 4 dots representing sessions until long break
+    final sessionsUntilLongBreak = 4;
+    final currentCycleProgress =
+        _completedWorkSessions % sessionsUntilLongBreak;
+
+    return Column(
+      children: [
+        Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: List.generate(sessionsUntilLongBreak, (index) {
+            final isCompleted = index < currentCycleProgress;
+            final isCurrent = index == currentCycleProgress &&
+                (_currentTimerState == TimerState.work ||
+                    _currentTimerState == TimerState.idle);
+
+            return Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 6),
+              child: AnimatedContainer(
+                duration: const Duration(milliseconds: 300),
+                curve: Curves.easeOutCubic,
+                width: isCurrent ? 24 : 10,
+                height: 10,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(5),
+                  color: isCompleted
+                      ? const Color(0xFFFF5C50)
+                      : isCurrent
+                          ? const Color(0xFFFF5C50).withOpacity(0.5)
+                          : FluentTheme.of(context).inactiveBackgroundColor,
+                  boxShadow: isCompleted || isCurrent
+                      ? [
+                          BoxShadow(
+                            color: const Color(0xFFFF5C50).withOpacity(0.3),
+                            blurRadius: 4,
+                            spreadRadius: 0,
+                          ),
+                        ]
+                      : null,
+                ),
+              ),
+            );
+          }),
+        ),
+        const SizedBox(height: 8),
+        Text(
+          '$_completedWorkSessions sessions completed',
+          style: FluentTheme.of(context).typography.caption?.copyWith(
+                color: FluentTheme.of(context)
+                    .typography
+                    .caption
+                    ?.color
+                    ?.withOpacity(0.5),
+              ),
+        ),
+      ],
+    );
+  }
+
+  void _saveSettings(
+      double newWorkDuration,
+      double newShortBreak,
+      double newLongBreak,
+      bool newAutoStart,
+      bool newBlockDistractions,
+      bool newEnableSounds,
+      String newSelectedMode) {
+    settingsManager.updateSetting(
+        "focusModeSettings.workDuration", newWorkDuration);
+    settingsManager.updateSetting(
+        "focusModeSettings.shortBreak", newShortBreak);
     settingsManager.updateSetting("focusModeSettings.longBreak", newLongBreak);
     settingsManager.updateSetting("focusModeSettings.autoStart", newAutoStart);
-    settingsManager.updateSetting("focusModeSettings.blockDistractions", newBlockDistractions);
-    settingsManager.updateSetting("focusModeSettings.enableSoundsNotifications", newEnableSounds);
-    settingsManager.updateSetting("focusModeSettings.selectedMode", newSelectedMode);
+    settingsManager.updateSetting(
+        "focusModeSettings.blockDistractions", newBlockDistractions);
+    settingsManager.updateSetting(
+        "focusModeSettings.enableSoundsNotifications", newEnableSounds);
+    settingsManager.updateSetting(
+        "focusModeSettings.selectedMode", newSelectedMode);
+
     setState(() {
       workDuration = newWorkDuration;
       shortBreak = newShortBreak;
@@ -566,28 +998,22 @@ class _MeterState extends State<Meter> {
       enableSounds = newEnableSounds;
       selectedMode = newSelectedMode;
 
-      // Update timer service with new settings
       _timerService.updateConfig(
-        workDuration: newWorkDuration.toInt(),
-        shortBreakDuration: newShortBreak.toInt(),
-        longBreakDuration: newLongBreak.toInt(),
-        autoStart: newAutoStart,
-        enableNotifications: newEnableSounds
-      );
-      
-      // Reset the timer if it's not running
+          workDuration: newWorkDuration.toInt(),
+          shortBreakDuration: newShortBreak.toInt(),
+          longBreakDuration: newLongBreak.toInt(),
+          autoStart: newAutoStart,
+          enableNotifications: newEnableSounds);
+
       if (!_timerService.isRunning) {
         _timerService.resetTimer();
-      }else{
-        resetTimerSettings();
       }
     });
   }
 
-  void showSettingsDialog(BuildContext context) async {
+  void _showSettingsDialog(BuildContext context) async {
     final l10n = AppLocalizations.of(context)!;
-    
-    // Create local variables that will be used in the dialog
+
     double dialogWorkDuration = workDuration;
     double dialogShortBreak = shortBreak;
     double dialogLongBreak = longBreak;
@@ -601,93 +1027,169 @@ class _MeterState extends State<Meter> {
       builder: (context) => StatefulBuilder(
         builder: (context, setDialogState) {
           return ContentDialog(
-            title: Text(l10n.focusModeSettingsTitle),
-            content: Column(
-              mainAxisSize: MainAxisSize.min,
+            constraints: const BoxConstraints(maxWidth: 420),
+            title: Row(
               children: [
-                // Focus Mode Selection
-                ComboBox<String>(
-                  value: dialogSelectedMode,
-                  items: [
-                    l10n.modeCustom,
-                    l10n.modeDeepWork,
-                    l10n.modeQuickTasks,
-                    l10n.modeReading
-                  ].map((mode) {
-                    return ComboBoxItem<String>(
-                      value: mode,
-                      child: Text(mode),
-                    );
-                  }).toList(),
-                  onChanged: (value) {
-                    if (value != null) {
-                      setDialogState(() {
-                        dialogSelectedMode = value;
-                        if (value == l10n.modeDeepWork) {
-                          dialogWorkDuration = 60;
-                          dialogShortBreak = 10;
-                        } else if (value == l10n.modeQuickTasks) {
-                          dialogWorkDuration = 25;
-                          dialogShortBreak = 5;
-                        } else if (value == l10n.modeReading) {
-                          dialogWorkDuration = 45;
-                          dialogShortBreak = 10;
-                        }
-                      });
-                    }
-                  },
+                Container(
+                  padding: const EdgeInsets.all(8),
+                  decoration: BoxDecoration(
+                    color: FluentTheme.of(context).accentColor.withOpacity(0.1),
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                  child: Icon(
+                    FluentIcons.settings,
+                    size: 18,
+                    color: FluentTheme.of(context).accentColor,
+                  ),
                 ),
-                const SizedBox(height: 15),
-                // Work Duration Slider
-                Text(l10n.workDurationLabel(dialogWorkDuration.toInt())),
-                const SizedBox(height: 10),
-                Slider(
-                  value: dialogWorkDuration,
-                  min: 15,
-                  max: 120,
-                  divisions: 21,
-                  onChanged: (value) => setDialogState(() => dialogWorkDuration = value),
-                ),
-                const SizedBox(height: 15),
-                // Short Break Duration Slider
-                Text(l10n.shortBreakLabel(dialogShortBreak.toInt())),
-                const SizedBox(height: 10),
-                Slider(
-                  value: dialogShortBreak,
-                  min: 1,
-                  max: 15,
-                  divisions: 14,
-                  onChanged: (value) => setDialogState(() => dialogShortBreak = value),
-                ),
-                const SizedBox(height: 15),
-                // Long Break Duration Slider
-                Text(l10n.longBreakLabel(dialogLongBreak.toInt())),
-                const SizedBox(height: 10),
-                Slider(
-                  value: dialogLongBreak,
-                  min: 5,
-                  max: 60,
-                  divisions: 11,
-                  onChanged: (value) => setDialogState(() => dialogLongBreak = value),
-                ),
-                const SizedBox(height: 20),
-                // Toggle Options
-                Checkbox(
-                  checked: dialogAutoStart,
-                  onChanged: (value) => setDialogState(() => dialogAutoStart = value!),
-                  content: Text(l10n.autoStartNextSession),
-                ),
-                const SizedBox(height: 10),
-                Checkbox(
-                  checked: dialogEnableSounds,
-                  onChanged: (value) => setDialogState(() => dialogEnableSounds = value!),
-                  content: Text(l10n.enableNotifications),
-                ),
+                const SizedBox(width: 12),
+                Text(l10n.focusModeSettingsTitle),
               ],
+            ),
+            content: SingleChildScrollView(
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  // Mode Selection
+                  Text(
+                    'Focus Mode Preset',
+                    style: FluentTheme.of(context).typography.bodyStrong,
+                  ),
+                  const SizedBox(height: 8),
+                  SizedBox(
+                    width: double.infinity,
+                    child: ComboBox<String>(
+                      value: dialogSelectedMode,
+                      isExpanded: true,
+                      items: [
+                        l10n.modeCustom,
+                        l10n.modeDeepWork,
+                        l10n.modeQuickTasks,
+                        l10n.modeReading
+                      ].map((mode) {
+                        return ComboBoxItem<String>(
+                          value: mode,
+                          child: Text(mode),
+                        );
+                      }).toList(),
+                      onChanged: (value) {
+                        if (value != null) {
+                          setDialogState(() {
+                            dialogSelectedMode = value;
+                            if (value == l10n.modeDeepWork) {
+                              dialogWorkDuration = 60;
+                              dialogShortBreak = 10;
+                              dialogLongBreak = 30;
+                            } else if (value == l10n.modeQuickTasks) {
+                              dialogWorkDuration = 25;
+                              dialogShortBreak = 5;
+                              dialogLongBreak = 15;
+                            } else if (value == l10n.modeReading) {
+                              dialogWorkDuration = 45;
+                              dialogShortBreak = 10;
+                              dialogLongBreak = 20;
+                            }
+                          });
+                        }
+                      },
+                    ),
+                  ),
+                  const SizedBox(height: 20),
+
+                  // Duration Settings
+                  _buildSliderSetting(
+                    context,
+                    label: 'Focus Duration',
+                    value: dialogWorkDuration,
+                    displayValue: '${dialogWorkDuration.toInt()} min',
+                    min: 15,
+                    max: 120,
+                    divisions: 21,
+                    color: const Color(0xFFFF5C50),
+                    onChanged: (value) => setDialogState(() {
+                      dialogWorkDuration = value;
+                      dialogSelectedMode = l10n.modeCustom;
+                    }),
+                  ),
+                  const SizedBox(height: 16),
+
+                  _buildSliderSetting(
+                    context,
+                    label: 'Short Break',
+                    value: dialogShortBreak,
+                    displayValue: '${dialogShortBreak.toInt()} min',
+                    min: 1,
+                    max: 15,
+                    divisions: 14,
+                    color: const Color(0xFF4CAF50),
+                    onChanged: (value) => setDialogState(() {
+                      dialogShortBreak = value;
+                      dialogSelectedMode = l10n.modeCustom;
+                    }),
+                  ),
+                  const SizedBox(height: 16),
+
+                  _buildSliderSetting(
+                    context,
+                    label: 'Long Break',
+                    value: dialogLongBreak,
+                    displayValue: '${dialogLongBreak.toInt()} min',
+                    min: 5,
+                    max: 60,
+                    divisions: 11,
+                    color: const Color(0xFF42A5F5),
+                    onChanged: (value) => setDialogState(() {
+                      dialogLongBreak = value;
+                      dialogSelectedMode = l10n.modeCustom;
+                    }),
+                  ),
+                  const SizedBox(height: 20),
+
+                  // Toggle Options
+                  Container(
+                    padding: const EdgeInsets.all(12),
+                    decoration: BoxDecoration(
+                      color: FluentTheme.of(context)
+                          .inactiveBackgroundColor
+                          .withOpacity(0.3),
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                    child: Column(
+                      children: [
+                        _buildToggleOption(
+                          context,
+                          label: l10n.autoStartNextSession,
+                          value: dialogAutoStart,
+                          icon: FluentIcons.play,
+                          onChanged: (value) =>
+                              setDialogState(() => dialogAutoStart = value!),
+                        ),
+                        const SizedBox(height: 12),
+                        _buildToggleOption(
+                          context,
+                          label: l10n.enableNotifications,
+                          value: dialogEnableSounds,
+                          icon: FluentIcons.ringer,
+                          onChanged: (value) =>
+                              setDialogState(() => dialogEnableSounds = value!),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
             ),
             actions: [
               Button(
-                child: Text(l10n.resetAll),
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    const Icon(FluentIcons.refresh, size: 12),
+                    const SizedBox(width: 6),
+                    Text(l10n.resetAll),
+                  ],
+                ),
                 onPressed: () {
                   setDialogState(() {
                     dialogWorkDuration = 25;
@@ -701,18 +1203,23 @@ class _MeterState extends State<Meter> {
                 },
               ),
               FilledButton(
-                child: Text(l10n.save),
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    const Icon(FluentIcons.save, size: 12),
+                    const SizedBox(width: 6),
+                    Text(l10n.save),
+                  ],
+                ),
                 onPressed: () {
-                  // Save settings to the class variables
                   _saveSettings(
-                    dialogWorkDuration,
-                    dialogShortBreak,
-                    dialogLongBreak,
-                    dialogAutoStart,
-                    dialogBlockDistractions,
-                    dialogEnableSounds,
-                    dialogSelectedMode
-                  );
+                      dialogWorkDuration,
+                      dialogShortBreak,
+                      dialogLongBreak,
+                      dialogAutoStart,
+                      dialogBlockDistractions,
+                      dialogEnableSounds,
+                      dialogSelectedMode);
                   Navigator.pop(context, l10n.saved);
                 },
               ),
@@ -722,114 +1229,441 @@ class _MeterState extends State<Meter> {
       ),
     );
   }
+
+  Widget _buildSliderSetting(
+    BuildContext context, {
+    required String label,
+    required double value,
+    required String displayValue,
+    required double min,
+    required double max,
+    required int divisions,
+    required Color color,
+    required ValueChanged<double> onChanged,
+  }) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Text(label, style: FluentTheme.of(context).typography.body),
+            Container(
+              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+              decoration: BoxDecoration(
+                color: color.withOpacity(0.1),
+                borderRadius: BorderRadius.circular(6),
+              ),
+              child: Text(
+                displayValue,
+                style: TextStyle(
+                  color: color,
+                  fontWeight: FontWeight.w600,
+                  fontSize: 12,
+                ),
+              ),
+            ),
+          ],
+        ),
+        const SizedBox(height: 8),
+        SliderTheme(
+          data: SliderThemeData(
+            thumbColor: WidgetStateProperty.all(color),
+            activeColor: WidgetStateProperty.all(color),
+          ),
+          child: Slider(
+            value: value,
+            min: min,
+            max: max,
+            divisions: divisions,
+            onChanged: onChanged,
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildToggleOption(
+    BuildContext context, {
+    required String label,
+    required bool value,
+    required IconData icon,
+    required ValueChanged<bool?> onChanged,
+  }) {
+    return Row(
+      children: [
+        Icon(icon, size: 16, color: FluentTheme.of(context).accentColor),
+        const SizedBox(width: 12),
+        Expanded(
+          child: Text(label, style: FluentTheme.of(context).typography.body),
+        ),
+        ToggleSwitch(
+          checked: value,
+          onChanged: onChanged,
+        ),
+      ],
+    );
+  }
 }
 
-class Header extends StatelessWidget {
-  const Header({
-    super.key,
+// Session type chip widget with tap functionality
+class _SessionChip extends StatefulWidget {
+  final String label;
+  final bool isActive;
+  final Color color;
+  final VoidCallback? onTap;
+
+  const _SessionChip({
+    required this.label,
+    required this.isActive,
+    required this.color,
+    this.onTap,
   });
 
   @override
+  State<_SessionChip> createState() => _SessionChipState();
+}
+
+class _SessionChipState extends State<_SessionChip> {
+  bool _isHovered = false;
+
+  @override
   Widget build(BuildContext context) {
-    final l10n = AppLocalizations.of(context)!;
-    
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        Text(l10n.focusModeTitle, style: FluentTheme.of(context).typography.subtitle),
-      ],
+    return MouseRegion(
+      onEnter: (_) => setState(() => _isHovered = true),
+      onExit: (_) => setState(() => _isHovered = false),
+      cursor: SystemMouseCursors.click,
+      child: GestureDetector(
+        onTap: widget.onTap,
+        child: AnimatedContainer(
+          duration: const Duration(milliseconds: 200),
+          padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
+          decoration: BoxDecoration(
+            color: widget.isActive
+                ? widget.color.withOpacity(0.15)
+                : _isHovered
+                    ? widget.color.withOpacity(0.05)
+                    : Colors.transparent,
+            borderRadius: BorderRadius.circular(20),
+            border: Border.all(
+              color: widget.isActive
+                  ? widget.color
+                  : _isHovered
+                      ? widget.color.withOpacity(0.5)
+                      : FluentTheme.of(context).inactiveBackgroundColor,
+              width: 1.5,
+            ),
+          ),
+          child: Text(
+            widget.label,
+            style: TextStyle(
+              color: widget.isActive
+                  ? widget.color
+                  : _isHovered
+                      ? widget.color.withOpacity(0.8)
+                      : FluentTheme.of(context)
+                          .typography
+                          .body
+                          ?.color
+                          ?.withOpacity(0.6),
+              fontWeight: widget.isActive ? FontWeight.w600 : FontWeight.w400,
+              fontSize: 12,
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+// Control button widget
+class _ControlButton extends StatefulWidget {
+  final IconData icon;
+  final VoidCallback onPressed;
+  final String tooltip;
+
+  const _ControlButton({
+    required this.icon,
+    required this.onPressed,
+    required this.tooltip,
+  });
+
+  @override
+  State<_ControlButton> createState() => _ControlButtonState();
+}
+
+class _ControlButtonState extends State<_ControlButton> {
+  bool _isHovered = false;
+  bool _isPressed = false;
+
+  @override
+  Widget build(BuildContext context) {
+    return Tooltip(
+      message: widget.tooltip,
+      child: MouseRegion(
+        onEnter: (_) => setState(() => _isHovered = true),
+        onExit: (_) => setState(() => _isHovered = false),
+        cursor: SystemMouseCursors.click,
+        child: GestureDetector(
+          onTapDown: (_) => setState(() => _isPressed = true),
+          onTapUp: (_) => setState(() => _isPressed = false),
+          onTapCancel: () => setState(() => _isPressed = false),
+          onTap: widget.onPressed,
+          child: AnimatedContainer(
+            duration: const Duration(milliseconds: 150),
+            width: 44,
+            height: 44,
+            transform: Matrix4.identity()..scale(_isPressed ? 0.92 : 1.0),
+            transformAlignment: Alignment.center,
+            decoration: BoxDecoration(
+              color: _isHovered
+                  ? FluentTheme.of(context).accentColor.withOpacity(0.1)
+                  : FluentTheme.of(context).micaBackgroundColor,
+              shape: BoxShape.circle,
+              border: Border.all(
+                color: _isHovered
+                    ? FluentTheme.of(context).accentColor.withOpacity(0.3)
+                    : FluentTheme.of(context).inactiveBackgroundColor,
+                width: 1,
+              ),
+            ),
+            child: Icon(
+              widget.icon,
+              size: 16,
+              color: _isHovered ? FluentTheme.of(context).accentColor : null,
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+// Play/Pause button widget
+class _PlayPauseButton extends StatefulWidget {
+  final bool isRunning;
+  final Color color;
+  final VoidCallback onPressed;
+
+  const _PlayPauseButton({
+    required this.isRunning,
+    required this.color,
+    required this.onPressed,
+  });
+
+  @override
+  State<_PlayPauseButton> createState() => _PlayPauseButtonState();
+}
+
+class _PlayPauseButtonState extends State<_PlayPauseButton> {
+  bool _isHovered = false;
+
+  @override
+  Widget build(BuildContext context) {
+    return MouseRegion(
+      onEnter: (_) => setState(() => _isHovered = true),
+      onExit: (_) => setState(() => _isHovered = false),
+      cursor: SystemMouseCursors.click,
+      child: GestureDetector(
+        onTap: widget.onPressed,
+        child: AnimatedContainer(
+          duration: const Duration(milliseconds: 200),
+          width: 72,
+          height: 72,
+          decoration: BoxDecoration(
+            color: widget.color,
+            shape: BoxShape.circle,
+            boxShadow: [
+              BoxShadow(
+                color: widget.color.withOpacity(_isHovered ? 0.5 : 0.3),
+                blurRadius: _isHovered ? 24 : 16,
+                offset: const Offset(0, 6),
+                spreadRadius: _isHovered ? 2 : 0,
+              ),
+            ],
+          ),
+          child: AnimatedSwitcher(
+            duration: const Duration(milliseconds: 200),
+            child: Icon(
+              widget.isRunning ? FluentIcons.pause : FluentIcons.play_solid,
+              key: ValueKey(widget.isRunning),
+              size: 28,
+              color: Colors.white,
+            ),
+          ),
+        ),
+      ),
     );
   }
 }
 
 class SessionHistory extends StatelessWidget {
   final List<Map<String, dynamic>> data;
-  const SessionHistory({
-    super.key,
-    required this.data
-    });
-    
+
+  const SessionHistory({super.key, required this.data});
+
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
-    
+
     return Container(
-      constraints:const BoxConstraints(
-        minHeight: 200,
-        maxHeight: 400
-      ),
-      
-      padding: const EdgeInsets.only(top: 15, bottom: 15, left: 20, right: 20),
-      width: MediaQuery.of(context).size.width,
-      decoration: BoxDecoration(
-        color: FluentTheme.of(context).micaBackgroundColor,
-        borderRadius: BorderRadius.circular(10),
-      ),
+      constraints: const BoxConstraints(maxHeight: 350),
+      padding: const EdgeInsets.all(16),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(
-            l10n.sessionHistorySection,
-            style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
-          ),
-          const SizedBox(height: 10),
+          // Header row
           Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
             child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                SizedBox(width: 200, child: Text(l10n.dateHeader, style: const TextStyle(fontWeight: FontWeight.w700))),
-                SizedBox(width: 100, child: Text(l10n.durationHeader, style: const TextStyle(fontWeight: FontWeight.w700))),
+                Expanded(
+                  flex: 2,
+                  child: Text(
+                    l10n.dateHeader,
+                    style: FluentTheme.of(context).typography.caption?.copyWith(
+                          fontWeight: FontWeight.w600,
+                          color: FluentTheme.of(context)
+                              .typography
+                              .caption
+                              ?.color
+                              ?.withOpacity(0.6),
+                        ),
+                  ),
+                ),
+                Expanded(
+                  child: Text(
+                    l10n.durationHeader,
+                    textAlign: TextAlign.right,
+                    style: FluentTheme.of(context).typography.caption?.copyWith(
+                          fontWeight: FontWeight.w600,
+                          color: FluentTheme.of(context)
+                              .typography
+                              .caption
+                              ?.color
+                              ?.withOpacity(0.6),
+                        ),
+                  ),
+                ),
               ],
             ),
           ),
-          Container(height: 1, color: FluentTheme.of(context).inactiveBackgroundColor),
-          const SizedBox(height: 10),
-          // Wrap List of Sessions in Expanded and SingleChildScrollView
+          const SizedBox(height: 8),
+
+          // Session list
           Expanded(
-            child: SingleChildScrollView(
-              child: Column(
-                children: data.map((session) {
-                  return Session(
-                    date: "${session["date"]}",
-                    duration: session["duration"]!,
-                  );
-                }).toList(),
-              ),
-            ),
-          )
+            child: data.isEmpty
+                ? Center(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Icon(
+                          FluentIcons.history,
+                          size: 32,
+                          color:
+                              FluentTheme.of(context).inactiveBackgroundColor,
+                        ),
+                        const SizedBox(height: 8),
+                        Text(
+                          'No sessions yet',
+                          style: FluentTheme.of(context)
+                              .typography
+                              .caption
+                              ?.copyWith(
+                                color: FluentTheme.of(context)
+                                    .typography
+                                    .caption
+                                    ?.color
+                                    ?.withOpacity(0.5),
+                              ),
+                        ),
+                      ],
+                    ),
+                  )
+                : ListView.separated(
+                    itemCount: data.length,
+                    separatorBuilder: (_, __) => const SizedBox(height: 4),
+                    itemBuilder: (context, index) {
+                      final session = data[index];
+                      return _SessionRow(
+                        date: session["date"] ?? '',
+                        duration: session["duration"] ?? '',
+                      );
+                    },
+                  ),
+          ),
         ],
       ),
     );
   }
 }
 
-
-class Session extends StatelessWidget {
+class _SessionRow extends StatefulWidget {
   final String date;
   final String duration;
-  const Session({
-    super.key,
+
+  const _SessionRow({
     required this.date,
     required this.duration,
   });
 
   @override
+  State<_SessionRow> createState() => _SessionRowState();
+}
+
+class _SessionRowState extends State<_SessionRow> {
+  bool _isHovered = false;
+
+  @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 20,vertical: 10),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              SizedBox(width: 200,height: 20,child: Text(date,style:const TextStyle(fontWeight: FontWeight.w500),)),
-              SizedBox(width: 100,height: 20,child: Text(duration,style:const TextStyle(fontWeight: FontWeight.w500),)),
-            ],
-          ),
+    return MouseRegion(
+      onEnter: (_) => setState(() => _isHovered = true),
+      onExit: (_) => setState(() => _isHovered = false),
+      child: AnimatedContainer(
+        duration: const Duration(milliseconds: 150),
+        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+        decoration: BoxDecoration(
+          color: _isHovered
+              ? FluentTheme.of(context).accentColor.withOpacity(0.05)
+              : Colors.transparent,
+          borderRadius: BorderRadius.circular(6),
         ),
-        Container(height: 1, color: FluentTheme.of(context).inactiveBackgroundColor),
-      ],
+        child: Row(
+          children: [
+            Container(
+              width: 8,
+              height: 8,
+              decoration: BoxDecoration(
+                color: const Color(0xFFFF5C50).withOpacity(0.6),
+                shape: BoxShape.circle,
+              ),
+            ),
+            const SizedBox(width: 12),
+            Expanded(
+              flex: 2,
+              child: Text(
+                widget.date,
+                style: FluentTheme.of(context).typography.body?.copyWith(
+                      fontWeight: FontWeight.w500,
+                    ),
+              ),
+            ),
+            Expanded(
+              child: Text(
+                widget.duration,
+                textAlign: TextAlign.right,
+                style: FluentTheme.of(context).typography.body?.copyWith(
+                      color: FluentTheme.of(context)
+                          .typography
+                          .body
+                          ?.color
+                          ?.withOpacity(0.7),
+                    ),
+              ),
+            ),
+          ],
+        ),
+      ),
     );
   }
 }
