@@ -13,6 +13,7 @@ class OverallLimitCard extends StatelessWidget {
   final Function(double) onMinutesChanged;
 
   const OverallLimitCard({
+    super.key,
     required this.enabled,
     required this.hours,
     required this.minutes,
@@ -43,7 +44,7 @@ class OverallLimitCard extends StatelessWidget {
               Container(
                 padding: const EdgeInsets.all(8),
                 decoration: BoxDecoration(
-                  color: statusColor.withOpacity(0.15),
+                  color: statusColor.withValues(alpha: 0.15),
                   borderRadius: BorderRadius.circular(8),
                 ),
                 child:
@@ -70,9 +71,9 @@ class OverallLimitCard extends StatelessWidget {
             Container(
               padding: const EdgeInsets.all(16),
               decoration: BoxDecoration(
-                color: statusColor.withOpacity(0.08),
+                color: statusColor.withValues(alpha: 0.08),
                 borderRadius: BorderRadius.circular(12),
-                border: Border.all(color: statusColor.withOpacity(0.15)),
+                border: Border.all(color: statusColor.withValues(alpha: 0.15)),
               ),
               child: Column(
                 mainAxisSize: MainAxisSize.min,

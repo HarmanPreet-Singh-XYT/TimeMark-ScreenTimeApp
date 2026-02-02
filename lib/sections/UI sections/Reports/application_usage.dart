@@ -197,7 +197,7 @@ class _ApplicationUsageState extends State<ApplicationUsage> {
         Container(
           padding: const EdgeInsets.all(4),
           decoration: BoxDecoration(
-            color: color.withOpacity(0.1),
+            color: color.withValues(alpha: 0.1),
             borderRadius: BorderRadius.circular(4),
           ),
           child: Icon(icon, size: 12, color: color),
@@ -345,7 +345,7 @@ class _ApplicationUsageState extends State<ApplicationUsage> {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
       decoration: BoxDecoration(
-        color: theme.cardColor.withOpacity(0.5),
+        color: theme.cardColor.withValues(alpha: 0.5),
         border: Border(
           bottom: BorderSide(color: theme.resources.dividerStrokeColorDefault),
         ),
@@ -396,11 +396,11 @@ class _ApplicationUsageState extends State<ApplicationUsage> {
             margin: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
             decoration: BoxDecoration(
               color: isHovered
-                  ? theme.accentColor.withOpacity(0.05)
+                  ? theme.accentColor.withValues(alpha: 0.05)
                   : Colors.transparent,
               borderRadius: BorderRadius.circular(6),
               border: isHovered
-                  ? Border.all(color: theme.accentColor.withOpacity(0.2))
+                  ? Border.all(color: theme.accentColor.withValues(alpha: 0.2))
                   : Border.all(color: Colors.transparent),
             ),
             child: _buildAppListItem(context, app, isHovered, theme),
@@ -428,8 +428,8 @@ class _ApplicationUsageState extends State<ApplicationUsage> {
                   height: 28,
                   decoration: BoxDecoration(
                     color: app.isProductive
-                        ? Colors.green.withOpacity(0.1)
-                        : Colors.red.withOpacity(0.1),
+                        ? Colors.green.withValues(alpha: 0.1)
+                        : Colors.red.withValues(alpha: 0.1),
                     borderRadius: BorderRadius.circular(6),
                   ),
                   child: Icon(
@@ -558,8 +558,8 @@ class _ApplicationUsageState extends State<ApplicationUsage> {
         padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
         decoration: BoxDecoration(
           color: isProductive
-              ? Colors.green.withOpacity(0.1)
-              : Colors.red.withOpacity(0.1),
+              ? Colors.green.withValues(alpha: 0.1)
+              : Colors.red.withValues(alpha: 0.1),
           borderRadius: BorderRadius.circular(4),
         ),
         child: Row(
@@ -598,7 +598,7 @@ class _ApplicationUsageState extends State<ApplicationUsage> {
           Icon(
             FluentIcons.search,
             size: 40,
-            color: theme.inactiveColor.withOpacity(0.5),
+            color: theme.inactiveColor.withValues(alpha: 0.5),
           ),
           const SizedBox(height: 12),
           Text(
@@ -634,7 +634,7 @@ class _ApplicationUsageState extends State<ApplicationUsage> {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
       decoration: BoxDecoration(
-        color: theme.cardColor.withOpacity(0.5),
+        color: theme.cardColor.withValues(alpha: 0.5),
         border: Border(
           top: BorderSide(color: theme.resources.dividerStrokeColorDefault),
         ),
@@ -668,8 +668,6 @@ class _ApplicationUsageState extends State<ApplicationUsage> {
   // ==================== APP DETAILS DIALOG ====================
 
   void _showAppDetails(BuildContext context, AppUsageSummary app) async {
-    final l10n = AppLocalizations.of(context)!;
-
     // Fetch your data here (keeping your existing logic)
     // For now showing improved dialog
 

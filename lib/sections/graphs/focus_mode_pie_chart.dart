@@ -1,8 +1,7 @@
 // focus_mode_pie_chart.dart
-import 'dart:math' as math;
 import 'package:fl_chart/fl_chart.dart';
 import 'package:fluent_ui/fluent_ui.dart' hide Colors;
-import 'package:flutter/material.dart' show Colors, Material;
+import 'package:flutter/material.dart' show Colors;
 
 class FocusModePieChart extends StatefulWidget {
   final Map<String, double> dataMap;
@@ -57,8 +56,8 @@ class _FocusModePieChartState extends State<FocusModePieChart> {
                 centerSpaceRadius: 40,
                 sections: _buildSections(total),
               ),
-              swapAnimationDuration: const Duration(milliseconds: 300),
-              swapAnimationCurve: Curves.easeOutCubic,
+              duration: const Duration(milliseconds: 300),
+              curve: Curves.easeOutCubic,
             ),
           ),
         ),
@@ -96,7 +95,7 @@ class _FocusModePieChartState extends State<FocusModePieChart> {
                       .typography
                       .caption
                       ?.color
-                      ?.withOpacity(0.5),
+                      ?.withValues(alpha: 0.5),
                 ),
           ),
         ],
@@ -137,7 +136,7 @@ class _FocusModePieChartState extends State<FocusModePieChart> {
         shape: BoxShape.circle,
         boxShadow: [
           BoxShadow(
-            color: color.withOpacity(0.4),
+            color: color.withValues(alpha: 0.4),
             blurRadius: 8,
             spreadRadius: 2,
           ),
@@ -170,10 +169,13 @@ class _FocusModePieChartState extends State<FocusModePieChart> {
             duration: const Duration(milliseconds: 200),
             padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
             decoration: BoxDecoration(
-              color: isTouched ? color.withOpacity(0.1) : Colors.transparent,
+              color:
+                  isTouched ? color.withValues(alpha: 0.1) : Colors.transparent,
               borderRadius: BorderRadius.circular(8),
               border: Border.all(
-                color: isTouched ? color.withOpacity(0.3) : Colors.transparent,
+                color: isTouched
+                    ? color.withValues(alpha: 0.3)
+                    : Colors.transparent,
               ),
             ),
             child: Row(
@@ -188,7 +190,8 @@ class _FocusModePieChartState extends State<FocusModePieChart> {
                     boxShadow: isTouched
                         ? [
                             BoxShadow(
-                                color: color.withOpacity(0.4), blurRadius: 4)
+                                color: color.withValues(alpha: 0.4),
+                                blurRadius: 4)
                           ]
                         : null,
                   ),

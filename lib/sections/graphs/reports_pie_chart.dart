@@ -1,4 +1,3 @@
-import 'dart:math' as math;
 import 'package:flutter/material.dart';
 import 'package:fl_chart/fl_chart.dart';
 
@@ -67,7 +66,7 @@ class _ReportsPieChartState extends State<ReportsPieChart> {
               decoration: BoxDecoration(
                 color: isSelected
                     ? widget.colorList[index % widget.colorList.length]
-                        .withOpacity(0.1)
+                        .withValues(alpha: 0.1)
                     : Colors.transparent,
                 borderRadius: BorderRadius.circular(4),
               ),

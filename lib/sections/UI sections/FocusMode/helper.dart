@@ -7,6 +7,7 @@ class ControlButton extends StatefulWidget {
   final String tooltip;
 
   const ControlButton({
+    super.key,
     required this.icon,
     required this.onPressed,
     required this.tooltip,
@@ -37,16 +38,22 @@ class _ControlButtonState extends State<ControlButton> {
             duration: const Duration(milliseconds: 150),
             width: 44,
             height: 44,
-            transform: Matrix4.identity()..scale(_isPressed ? 0.92 : 1.0),
+            transform: Matrix4.identity()
+              ..scaleByDouble(
+                _isPressed ? 0.92 : 1.0, // x
+                _isPressed ? 0.92 : 1.0, // y
+                1.0, // z
+                1.0, // w
+              ),
             transformAlignment: Alignment.center,
             decoration: BoxDecoration(
               color: _isHovered
-                  ? FluentTheme.of(context).accentColor.withOpacity(0.1)
+                  ? FluentTheme.of(context).accentColor.withValues(alpha: 0.1)
                   : FluentTheme.of(context).micaBackgroundColor,
               shape: BoxShape.circle,
               border: Border.all(
                 color: _isHovered
-                    ? FluentTheme.of(context).accentColor.withOpacity(0.3)
+                    ? FluentTheme.of(context).accentColor.withValues(alpha: 0.3)
                     : FluentTheme.of(context).inactiveBackgroundColor,
                 width: 1,
               ),
@@ -70,6 +77,7 @@ class PlayPauseButton extends StatefulWidget {
   final VoidCallback onPressed;
 
   const PlayPauseButton({
+    super.key,
     required this.isRunning,
     required this.color,
     required this.onPressed,
@@ -99,7 +107,7 @@ class _PlayPauseButtonState extends State<PlayPauseButton> {
             shape: BoxShape.circle,
             boxShadow: [
               BoxShadow(
-                color: widget.color.withOpacity(_isHovered ? 0.5 : 0.3),
+                color: widget.color.withValues(alpha: _isHovered ? 0.5 : 0.3),
                 blurRadius: _isHovered ? 24 : 16,
                 offset: const Offset(0, 6),
                 spreadRadius: _isHovered ? 2 : 0,
@@ -129,6 +137,7 @@ class SessionChip extends StatefulWidget {
   final VoidCallback? onTap;
 
   const SessionChip({
+    super.key,
     required this.label,
     required this.isActive,
     required this.color,
@@ -155,16 +164,16 @@ class _SessionChipState extends State<SessionChip> {
           padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
           decoration: BoxDecoration(
             color: widget.isActive
-                ? widget.color.withOpacity(0.15)
+                ? widget.color.withValues(alpha: 0.15)
                 : _isHovered
-                    ? widget.color.withOpacity(0.05)
+                    ? widget.color.withValues(alpha: 0.05)
                     : Colors.transparent,
             borderRadius: BorderRadius.circular(20),
             border: Border.all(
               color: widget.isActive
                   ? widget.color
                   : _isHovered
-                      ? widget.color.withOpacity(0.5)
+                      ? widget.color.withValues(alpha: 0.5)
                       : FluentTheme.of(context).inactiveBackgroundColor,
               width: 1.5,
             ),
@@ -175,12 +184,12 @@ class _SessionChipState extends State<SessionChip> {
               color: widget.isActive
                   ? widget.color
                   : _isHovered
-                      ? widget.color.withOpacity(0.8)
+                      ? widget.color.withValues(alpha: 0.8)
                       : FluentTheme.of(context)
                           .typography
                           .body
                           ?.color
-                          ?.withOpacity(0.6),
+                          ?.withValues(alpha: 0.6),
               fontWeight: widget.isActive ? FontWeight.w600 : FontWeight.w400,
               fontSize: 12,
             ),

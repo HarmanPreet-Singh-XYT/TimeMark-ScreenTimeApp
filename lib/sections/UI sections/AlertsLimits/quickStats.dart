@@ -8,6 +8,7 @@ class QuickStatsRow extends StatelessWidget {
   final bool isMedium;
 
   const QuickStatsRow({
+    super.key,
     required this.totalScreenTime,
     required this.appsWithLimits,
     required this.appsNearLimit,
@@ -98,10 +99,12 @@ class _StatChip extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
       decoration: BoxDecoration(
-        color: isDark ? color.withOpacity(0.15) : lightBg,
+        color: isDark ? color.withValues(alpha: 0.15) : lightBg,
         borderRadius: BorderRadius.circular(12),
         border: Border.all(
-          color: isDark ? color.withOpacity(0.3) : color.withOpacity(0.15),
+          color: isDark
+              ? color.withValues(alpha: 0.3)
+              : color.withValues(alpha: 0.15),
         ),
       ),
       child: Row(
@@ -109,7 +112,9 @@ class _StatChip extends StatelessWidget {
           Container(
             padding: const EdgeInsets.all(10),
             decoration: BoxDecoration(
-              color: isDark ? color.withOpacity(0.2) : color.withOpacity(0.1),
+              color: isDark
+                  ? color.withValues(alpha: 0.2)
+                  : color.withValues(alpha: 0.1),
               borderRadius: BorderRadius.circular(10),
             ),
             child: Icon(icon, size: 18, color: color),
@@ -133,7 +138,7 @@ class _StatChip extends StatelessWidget {
                   style: TextStyle(
                     fontSize: 12,
                     color: isDark
-                        ? Colors.white.withOpacity(0.6)
+                        ? Colors.white.withValues(alpha: 0.6)
                         : const Color(0xFF6B7280),
                     fontWeight: FontWeight.w500,
                   ),

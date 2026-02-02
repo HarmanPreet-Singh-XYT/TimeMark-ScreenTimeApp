@@ -159,7 +159,7 @@ class _HelpState extends State<Help> {
     return Container(
       padding: const EdgeInsets.fromLTRB(24, 20, 24, 16),
       decoration: BoxDecoration(
-        color: theme.micaBackgroundColor.withOpacity(0.5),
+        color: theme.micaBackgroundColor.withValues(alpha: 0.5),
         border: Border(
           bottom: BorderSide(
             color: theme.resources.dividerStrokeColorDefault,
@@ -176,7 +176,7 @@ class _HelpState extends State<Help> {
               Container(
                 padding: const EdgeInsets.all(10),
                 decoration: BoxDecoration(
-                  color: theme.accentColor.withOpacity(0.1),
+                  color: theme.accentColor.withValues(alpha: 0.1),
                   borderRadius: BorderRadius.circular(8),
                 ),
                 child: Icon(
@@ -271,14 +271,14 @@ class _HelpState extends State<Help> {
                       const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
                   decoration: BoxDecoration(
                     color: isSelected
-                        ? theme.accentColor.withOpacity(0.15)
-                        : states.isHovering
+                        ? theme.accentColor.withValues(alpha: 0.15)
+                        : states.isHovered
                             ? theme.resources.subtleFillColorSecondary
                             : theme.resources.subtleFillColorTransparent,
                     borderRadius: BorderRadius.circular(16),
                     border: Border.all(
                       color: isSelected
-                          ? theme.accentColor.withOpacity(0.5)
+                          ? theme.accentColor.withValues(alpha: 0.5)
                           : theme.resources.dividerStrokeColorDefault,
                       width: 1,
                     ),
@@ -343,7 +343,7 @@ class _HelpState extends State<Help> {
                 padding:
                     const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
                 decoration: BoxDecoration(
-                  color: states.isHovering
+                  color: states.isHovered
                       ? theme.resources.subtleFillColorSecondary
                       : theme.resources.subtleFillColorTransparent,
                   borderRadius: BorderRadius.circular(6),
@@ -353,7 +353,7 @@ class _HelpState extends State<Help> {
                     Container(
                       padding: const EdgeInsets.all(6),
                       decoration: BoxDecoration(
-                        color: theme.accentColor.withOpacity(0.1),
+                        color: theme.accentColor.withValues(alpha: 0.1),
                         borderRadius: BorderRadius.circular(6),
                       ),
                       child: Icon(
@@ -494,8 +494,9 @@ class _FAQItemState extends State<FAQItem> {
           decoration: BoxDecoration(
             color: _isExpanded
                 ? theme.resources.subtleFillColorSecondary
-                : states.isHovering
-                    ? theme.resources.subtleFillColorSecondary.withOpacity(0.5)
+                : states.isHovered
+                    ? theme.resources.subtleFillColorSecondary
+                        .withValues(alpha: 0.5)
                     : theme.resources.subtleFillColorTransparent,
             borderRadius: BorderRadius.circular(6),
             border: Border.all(
@@ -516,7 +517,7 @@ class _FAQItemState extends State<FAQItem> {
                     Icon(
                       FluentIcons.status_circle_question_mark,
                       size: 14,
-                      color: theme.accentColor.withOpacity(0.7),
+                      color: theme.accentColor.withValues(alpha: 0.7),
                     ),
                     const SizedBox(width: 10),
                     Expanded(
@@ -599,7 +600,7 @@ class _FAQItemState extends State<FAQItem> {
       matches.add(TextSpan(
         text: text.substring(index, index + query.length),
         style: TextStyle(
-          backgroundColor: theme.accentColor.withOpacity(0.3),
+          backgroundColor: theme.accentColor.withValues(alpha: 0.3),
           fontWeight: FontWeight.w600,
         ),
       ));

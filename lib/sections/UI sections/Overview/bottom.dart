@@ -11,7 +11,6 @@ class ApplicationLimitsList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
-    final theme = FluentTheme.of(context);
 
     final filteredData = data
         .where((app) =>
@@ -28,7 +27,7 @@ class ApplicationLimitsList extends StatelessWidget {
               Container(
                 padding: const EdgeInsets.all(5),
                 decoration: BoxDecoration(
-                  color: const Color(0xffF97316).withOpacity(0.15),
+                  color: const Color(0xffF97316).withValues(alpha: 0.15),
                   borderRadius: BorderRadius.circular(6),
                 ),
                 child: const Icon(
@@ -122,7 +121,7 @@ class _LimitItem extends StatelessWidget {
                 animationDuration: 1000,
                 lineHeight: 5,
                 percent: (percentOfLimit / 100).clamp(0.0, 1.0),
-                backgroundColor: color.withOpacity(0.15),
+                backgroundColor: color.withValues(alpha: 0.15),
                 progressColor: color,
                 padding: EdgeInsets.zero,
                 barRadius: const Radius.circular(3),
@@ -193,14 +192,14 @@ class _ProgressCardState extends State<ProgressCard> {
           borderRadius: BorderRadius.circular(12),
           border: Border.all(
             color: _isHovered
-                ? widget.color.withOpacity(0.4)
+                ? widget.color.withValues(alpha: 0.4)
                 : theme.resources.cardStrokeColorDefault,
             width: 1,
           ),
           boxShadow: _isHovered
               ? [
                   BoxShadow(
-                    color: widget.color.withOpacity(0.1),
+                    color: widget.color.withValues(alpha: 0.1),
                     blurRadius: 12,
                     offset: const Offset(0, 4),
                   ),
@@ -276,7 +275,7 @@ class _ProgressCardState extends State<ProgressCard> {
                 ),
                 circularStrokeCap: CircularStrokeCap.round,
                 progressColor: widget.color,
-                backgroundColor: widget.color.withOpacity(0.12),
+                backgroundColor: widget.color.withValues(alpha: 0.12),
               ),
             );
           },

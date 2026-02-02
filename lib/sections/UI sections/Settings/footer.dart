@@ -10,6 +10,7 @@ class FooterSection extends StatelessWidget {
   final VoidCallback onGithub;
 
   const FooterSection({
+    super.key,
     required this.onContact,
     required this.onReport,
     required this.onFeedback,
@@ -26,7 +27,7 @@ class FooterSection extends StatelessWidget {
       decoration: BoxDecoration(
         border: Border(
           top: BorderSide(
-            color: theme.inactiveBackgroundColor.withOpacity(0.5),
+            color: theme.inactiveBackgroundColor.withValues(alpha: 0.5),
           ),
         ),
       ),
@@ -98,17 +99,17 @@ class _FooterButtonState extends State<_FooterButton> {
           decoration: BoxDecoration(
             color: widget.isPrimary
                 ? (_isHovered
-                    ? theme.accentColor.withOpacity(0.15)
-                    : theme.accentColor.withOpacity(0.08))
+                    ? theme.accentColor.withValues(alpha: 0.15)
+                    : theme.accentColor.withValues(alpha: 0.08))
                 : (_isHovered
-                    ? theme.inactiveBackgroundColor.withOpacity(0.6)
-                    : theme.inactiveBackgroundColor.withOpacity(0.3)),
+                    ? theme.inactiveBackgroundColor.withValues(alpha: 0.6)
+                    : theme.inactiveBackgroundColor.withValues(alpha: 0.3)),
             borderRadius: BorderRadius.circular(6),
             border: Border.all(
               color: widget.isPrimary
                   ? (_isHovered
-                      ? theme.accentColor.withOpacity(0.5)
-                      : theme.accentColor.withOpacity(0.2))
+                      ? theme.accentColor.withValues(alpha: 0.5)
+                      : theme.accentColor.withValues(alpha: 0.2))
                   : (_isHovered
                       ? theme.inactiveBackgroundColor
                       : Colors.transparent),

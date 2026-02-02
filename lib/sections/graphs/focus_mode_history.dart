@@ -1,9 +1,6 @@
 // focus_mode_history.dart
-import './resources/app_resources.dart';
-import './resources/color_extensions.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:fluent_ui/fluent_ui.dart' hide Colors;
-import 'package:flutter/material.dart' show Colors, Material;
 import 'package:screentime/l10n/app_localizations.dart';
 
 class FocusModeHistoryChart extends StatefulWidget {
@@ -118,7 +115,7 @@ class FocusModeHistoryChartState extends State<FocusModeHistoryChart> {
                 getDrawingHorizontalLine: (value) => FlLine(
                   color: FluentTheme.of(context)
                       .inactiveBackgroundColor
-                      .withOpacity(0.5),
+                      .withValues(alpha: 0.5),
                   strokeWidth: 1,
                   dashArray: [5, 5],
                 ),
@@ -126,8 +123,8 @@ class FocusModeHistoryChartState extends State<FocusModeHistoryChart> {
               alignment: BarChartAlignment.spaceAround,
               maxY: (maxValue * 1.2).ceilToDouble().clamp(5, double.infinity),
             ),
-            swapAnimationDuration: const Duration(milliseconds: 300),
-            swapAnimationCurve: Curves.easeOutCubic,
+            duration: const Duration(milliseconds: 300),
+            curve: Curves.easeOutCubic,
           ),
         ),
       ],
@@ -143,9 +140,9 @@ class FocusModeHistoryChartState extends State<FocusModeHistoryChart> {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
       decoration: BoxDecoration(
-        color: color.withOpacity(0.1),
+        color: color.withValues(alpha: 0.1),
         borderRadius: BorderRadius.circular(8),
-        border: Border.all(color: color.withOpacity(0.2)),
+        border: Border.all(color: color.withValues(alpha: 0.2)),
       ),
       child: Row(
         mainAxisSize: MainAxisSize.min,
@@ -169,7 +166,7 @@ class FocusModeHistoryChartState extends State<FocusModeHistoryChart> {
                           .typography
                           .caption
                           ?.color
-                          ?.withOpacity(0.6),
+                          ?.withValues(alpha: 0.6),
                       fontSize: 10,
                     ),
               ),
@@ -250,7 +247,7 @@ class FocusModeHistoryChartState extends State<FocusModeHistoryChart> {
                               .typography
                               .body
                               ?.color
-                              ?.withOpacity(0.6),
+                              ?.withValues(alpha: 0.6),
                       fontWeight: isToday ? FontWeight.bold : FontWeight.w500,
                       fontSize: 12,
                     ),
@@ -286,7 +283,7 @@ class FocusModeHistoryChartState extends State<FocusModeHistoryChart> {
                       .typography
                       .body
                       ?.color
-                      ?.withOpacity(0.4),
+                      ?.withValues(alpha: 0.4),
                   fontSize: 10,
                 ),
               ),
@@ -344,8 +341,8 @@ class FocusModeHistoryChartState extends State<FocusModeHistoryChart> {
                   : isTouched
                       ? [const Color(0xFF42A5F5), const Color(0xFF90CAF9)]
                       : [
-                          const Color(0xFF42A5F5).withOpacity(0.7),
-                          const Color(0xFF90CAF9).withOpacity(0.7)
+                          const Color(0xFF42A5F5).withValues(alpha: 0.7),
+                          const Color(0xFF90CAF9).withValues(alpha: 0.7)
                         ],
               begin: Alignment.bottomCenter,
               end: Alignment.topCenter,
@@ -355,7 +352,7 @@ class FocusModeHistoryChartState extends State<FocusModeHistoryChart> {
               toY: maxValue * 1.2,
               color: FluentTheme.of(context)
                   .inactiveBackgroundColor
-                  .withOpacity(0.2),
+                  .withValues(alpha: 0.2),
             ),
           ),
         ],

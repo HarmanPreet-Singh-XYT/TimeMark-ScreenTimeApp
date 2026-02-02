@@ -8,6 +8,7 @@ class AppRow extends StatefulWidget {
   final bool isLast;
 
   const AppRow({
+    super.key,
     required this.app,
     required this.onEdit,
     this.isLast = false,
@@ -38,7 +39,7 @@ class AppRowState extends State<AppRow> {
             padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
             decoration: BoxDecoration(
               color: _isHovered
-                  ? theme.accentColor.withOpacity(0.04)
+                  ? theme.accentColor.withValues(alpha: 0.04)
                   : Colors.transparent,
             ),
             child: Row(
@@ -52,7 +53,7 @@ class AppRowState extends State<AppRow> {
                       //   width: 32,
                       //   height: 32,
                       //   decoration: BoxDecoration(
-                      //     color: statusColor.withOpacity(0.1),
+                      //     color: statusColor.withValues(alpha:0.1),
                       //     borderRadius: BorderRadius.circular(6),
                       //   ),
                       //   child: Center(
@@ -120,7 +121,8 @@ class AppRowState extends State<AppRow> {
                       widget.app.category,
                       style: TextStyle(
                         fontSize: 12,
-                        color: theme.typography.body?.color?.withOpacity(0.7),
+                        color: theme.typography.body?.color
+                            ?.withValues(alpha: 0.7),
                       ),
                       overflow: TextOverflow.ellipsis,
                     ),
@@ -187,7 +189,7 @@ class AppRowState extends State<AppRow> {
                             style: TextStyle(
                               fontSize: 10,
                               color: theme.typography.caption?.color
-                                  ?.withOpacity(0.6),
+                                  ?.withValues(alpha: 0.6),
                             ),
                           ),
                         ],
@@ -220,7 +222,7 @@ class AppRowState extends State<AppRow> {
           Container(
             height: 1,
             margin: const EdgeInsets.symmetric(horizontal: 20),
-            color: theme.inactiveBackgroundColor.withOpacity(0.3),
+            color: theme.inactiveBackgroundColor.withValues(alpha: 0.3),
           ),
       ],
     );

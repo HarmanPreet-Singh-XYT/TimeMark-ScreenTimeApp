@@ -146,10 +146,11 @@ class _DangerButtonState extends State<_DangerButton> {
           duration: const Duration(milliseconds: 150),
           padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
           decoration: BoxDecoration(
-            color: _isHovered ? color.withOpacity(0.1) : Colors.transparent,
+            color:
+                _isHovered ? color.withValues(alpha: 0.1) : Colors.transparent,
             borderRadius: BorderRadius.circular(6),
             border: Border.all(
-              color: _isHovered ? color : color.withOpacity(0.5),
+              color: _isHovered ? color : color.withValues(alpha: 0.5),
             ),
           ),
           child: Row(

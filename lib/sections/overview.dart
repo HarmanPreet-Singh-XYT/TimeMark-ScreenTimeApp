@@ -1,5 +1,4 @@
 import 'package:fluent_ui/fluent_ui.dart';
-import 'package:percent_indicator/percent_indicator.dart';
 import 'package:screentime/l10n/app_localizations.dart';
 import './controller/data_controllers/overview_data_controller.dart';
 import 'UI sections/Overview/bottom.dart';
@@ -211,7 +210,7 @@ class _OverviewState extends State<Overview> with TickerProviderStateMixin {
             Container(
               padding: const EdgeInsets.all(16),
               decoration: BoxDecoration(
-                color: Colors.warningPrimaryColor.withOpacity(0.1),
+                color: Colors.warningPrimaryColor.withValues(alpha: 0.1),
                 borderRadius: BorderRadius.circular(12),
               ),
               child: const Icon(
@@ -252,7 +251,8 @@ class _OverviewState extends State<Overview> with TickerProviderStateMixin {
             Container(
               padding: const EdgeInsets.all(20),
               decoration: BoxDecoration(
-                color: FluentTheme.of(context).accentColor.withOpacity(0.1),
+                color:
+                    FluentTheme.of(context).accentColor.withValues(alpha: 0.1),
                 borderRadius: BorderRadius.circular(16),
               ),
               child: Icon(

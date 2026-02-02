@@ -187,30 +187,30 @@ class _AnalyticsCardState extends State<_AnalyticsCard>
                 end: Alignment.bottomRight,
                 colors: [
                   isDark
-                      ? widget.item.accentColor.withOpacity(0.08)
-                      : widget.item.accentColor.withOpacity(0.04),
+                      ? widget.item.accentColor.withValues(alpha: 0.08)
+                      : widget.item.accentColor.withValues(alpha: 0.04),
                   isDark ? theme.micaBackgroundColor : Colors.white,
                 ],
               ),
               borderRadius: BorderRadius.circular(16),
               border: Border.all(
                 color: _isHovered
-                    ? widget.item.accentColor.withOpacity(0.5)
-                    : theme.inactiveBackgroundColor.withOpacity(0.5),
+                    ? widget.item.accentColor.withValues(alpha: 0.5)
+                    : theme.inactiveBackgroundColor.withValues(alpha: 0.5),
                 width: _isHovered ? 1.5 : 1,
               ),
               boxShadow: [
                 BoxShadow(
                   color: _isHovered
-                      ? widget.item.accentColor.withOpacity(0.15)
-                      : Colors.black.withOpacity(0.05),
+                      ? widget.item.accentColor.withValues(alpha: 0.15)
+                      : Colors.black.withValues(alpha: 0.05),
                   blurRadius: _isHovered ? 20 : 10,
                   offset: Offset(0, _isHovered ? 8 : 4),
                 ),
               ],
             ),
             transform: _isHovered
-                ? (Matrix4.identity()..translate(0.0, -2.0))
+                ? (Matrix4.identity()..translateByDouble(0.0, -2.0, 0.0, 1.0))
                 : Matrix4.identity(),
             child: widget.isLoading
                 ? _buildShimmer(context)
@@ -240,7 +240,8 @@ class _AnalyticsCardState extends State<_AnalyticsCard>
                 style: TextStyle(
                   fontSize: 14,
                   fontWeight: FontWeight.w600,
-                  color: theme.typography.caption?.color?.withOpacity(0.7),
+                  color:
+                      theme.typography.caption?.color?.withValues(alpha: 0.7),
                   letterSpacing: 0.3,
                 ),
                 overflow: TextOverflow.ellipsis,
@@ -283,7 +284,8 @@ class _AnalyticsCardState extends State<_AnalyticsCard>
       duration: const Duration(milliseconds: 200),
       padding: const EdgeInsets.all(8),
       decoration: BoxDecoration(
-        color: widget.item.accentColor.withOpacity(_isHovered ? 0.2 : 0.1),
+        color:
+            widget.item.accentColor.withValues(alpha: _isHovered ? 0.2 : 0.1),
         borderRadius: BorderRadius.circular(10),
       ),
       child: Icon(
@@ -303,7 +305,7 @@ class _AnalyticsCardState extends State<_AnalyticsCard>
       return Container(
         padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
         decoration: BoxDecoration(
-          color: color.withOpacity(0.1),
+          color: color.withValues(alpha: 0.1),
           borderRadius: BorderRadius.circular(6),
         ),
         child: Row(
@@ -346,7 +348,7 @@ class _AnalyticsCardState extends State<_AnalyticsCard>
               style: TextStyle(
                 fontSize: 12,
                 fontWeight: FontWeight.w500,
-                color: theme.typography.caption?.color?.withOpacity(0.6),
+                color: theme.typography.caption?.color?.withValues(alpha: 0.6),
               ),
               overflow: TextOverflow.ellipsis,
             ),

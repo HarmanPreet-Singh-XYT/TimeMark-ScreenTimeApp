@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:screentime/l10n/app_localizations.dart';
 import 'package:provider/provider.dart';
@@ -13,6 +15,7 @@ import 'package:screentime/sections/UI sections/Settings/notification.dart';
 import 'package:screentime/sections/UI sections/Settings/footer.dart';
 import 'package:screentime/sections/UI sections/Settings/data.dart';
 import 'package:screentime/sections/UI sections/Settings/about.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 // ============== SETTINGS PROVIDER (unchanged logic) ==============
 class SettingsProvider extends ChangeNotifier {
@@ -237,19 +240,28 @@ class SettingsContent extends StatefulWidget {
 class _SettingsContentState extends State<SettingsContent> {
   Future<void>? _launched;
 
-  Future<void> _launchInBrowser(String url) async {
-    if (await UrlLauncherPlatform.instance.canLaunch(url)) {
-      await UrlLauncherPlatform.instance.launch(
-        url,
-        useSafariVC: false,
-        useWebView: false,
-        enableJavaScript: false,
-        enableDomStorage: false,
-        universalLinksOnly: false,
-        headers: <String, String>{},
-      );
+  Future<void> launchAppropriateUrl(String url) async {
+    if (Platform.isWindows) {
+      // Windows-specific implementation
+      if (await UrlLauncherPlatform.instance.canLaunch(url)) {
+        await UrlLauncherPlatform.instance.launch(
+          url,
+          useSafariVC: false,
+          useWebView: false,
+          enableJavaScript: false,
+          enableDomStorage: false,
+          universalLinksOnly: false,
+          headers: <String, String>{},
+        );
+      } else {
+        throw Exception('Could not launch $url on Windows');
+      }
     } else {
-      throw Exception('Could not launch $url');
+      // Other platforms
+      final Uri uri = Uri.parse(url);
+      if (!await launchUrl(uri)) {
+        throw Exception('Could not launch $url');
+      }
     }
   }
 
@@ -279,10 +291,11 @@ class _SettingsContentState extends State<SettingsContent> {
                 padding:
                     const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
                 decoration: BoxDecoration(
-                  color: theme.micaBackgroundColor.withOpacity(0.95),
+                  color: theme.micaBackgroundColor.withValues(alpha: 0.95),
                   border: Border(
                     bottom: BorderSide(
-                      color: theme.inactiveBackgroundColor.withOpacity(0.5),
+                      color:
+                          theme.inactiveBackgroundColor.withValues(alpha: 0.5),
                       width: 1,
                     ),
                   ),
@@ -366,14 +379,14 @@ class _SettingsContentState extends State<SettingsContent> {
                 ),
                 const SizedBox(height: 24),
                 FooterSection(
-                  onContact: () =>
-                      setState(() => _launched = _launchInBrowser(urlContact)),
-                  onReport: () =>
-                      setState(() => _launched = _launchInBrowser(urlReport)),
-                  onFeedback: () =>
-                      setState(() => _launched = _launchInBrowser(urlFeedback)),
+                  onContact: () => setState(
+                      () => _launched = launchAppropriateUrl(urlContact)),
+                  onReport: () => setState(
+                      () => _launched = launchAppropriateUrl(urlReport)),
+                  onFeedback: () => setState(
+                      () => _launched = launchAppropriateUrl(urlFeedback)),
                   onGithub: () =>
-                      setState(() => _launched = _launchInBrowser(github)),
+                      setState(() => _launched = launchAppropriateUrl(github)),
                 ),
                 const SizedBox(height: 16),
               ]),
@@ -552,7 +565,7 @@ class _IdleTimeoutDialogState extends State<IdleTimeoutDialog> {
           Container(
             padding: const EdgeInsets.all(8),
             decoration: BoxDecoration(
-              color: theme.accentColor.withOpacity(0.1),
+              color: theme.accentColor.withValues(alpha: 0.1),
               borderRadius: BorderRadius.circular(8),
             ),
             child: Icon(FluentIcons.timer, size: 18, color: theme.accentColor),
@@ -601,10 +614,10 @@ class _IdleTimeoutDialogState extends State<IdleTimeoutDialog> {
                 Container(
                   padding: const EdgeInsets.all(12),
                   decoration: BoxDecoration(
-                    color: theme.inactiveBackgroundColor.withOpacity(0.2),
+                    color: theme.inactiveBackgroundColor.withValues(alpha: 0.2),
                     borderRadius: BorderRadius.circular(8),
                     border: Border.all(
-                      color: theme.accentColor.withOpacity(0.3),
+                      color: theme.accentColor.withValues(alpha: 0.3),
                     ),
                   ),
                   child: Column(
@@ -742,10 +755,10 @@ class _PresetButtonState extends State<_PresetButton> {
           duration: const Duration(milliseconds: 150),
           decoration: BoxDecoration(
             color: widget.isSelected
-                ? theme.accentColor.withOpacity(0.15)
+                ? theme.accentColor.withValues(alpha: 0.15)
                 : _isHovered
-                    ? theme.inactiveBackgroundColor.withOpacity(0.5)
-                    : theme.inactiveBackgroundColor.withOpacity(0.2),
+                    ? theme.inactiveBackgroundColor.withValues(alpha: 0.5)
+                    : theme.inactiveBackgroundColor.withValues(alpha: 0.2),
             borderRadius: BorderRadius.circular(6),
             border: Border.all(
               color: widget.isSelected

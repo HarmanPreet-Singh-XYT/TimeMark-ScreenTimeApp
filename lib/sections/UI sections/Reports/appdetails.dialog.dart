@@ -130,6 +130,7 @@ class AppDetailsDialog extends StatefulWidget {
   final Map<String, double> timeOfDayUsage;
 
   const AppDetailsDialog({
+    super.key,
     required this.app,
     required this.l10n,
     required this.appSummary,
@@ -206,7 +207,7 @@ class AppDetailsDialogState extends State<AppDetailsDialog> {
             boxShadow: [
               BoxShadow(
                 color: (app.isProductive ? Colors.green : Colors.red)
-                    .withOpacity(0.3),
+                    .withValues(alpha: 0.3),
                 blurRadius: 8,
                 offset: const Offset(0, 2),
               ),
@@ -237,15 +238,15 @@ class AppDetailsDialogState extends State<AppDetailsDialog> {
                 children: [
                   _buildSmallBadge(
                     app.category,
-                    theme.accentColor.withOpacity(0.1),
+                    theme.accentColor.withValues(alpha: 0.1),
                     theme.accentColor,
                   ),
                   const SizedBox(width: 8),
                   _buildSmallBadge(
                     app.isProductive ? l10n.productive : l10n.nonProductive,
                     app.isProductive
-                        ? Colors.green.withOpacity(0.1)
-                        : Colors.red.withOpacity(0.1),
+                        ? Colors.green.withValues(alpha: 0.1)
+                        : Colors.red.withValues(alpha: 0.1),
                     app.isProductive ? Colors.green : Colors.red,
                   ),
                 ],
@@ -460,7 +461,7 @@ class AppDetailsDialogState extends State<AppDetailsDialog> {
                         l10n.noHistoricalData,
                         style: TextStyle(
                           fontSize: 16,
-                          color: theme.accentColor.withOpacity(0.5),
+                          color: theme.accentColor.withValues(alpha: 0.5),
                         ),
                       ),
                     )
@@ -470,11 +471,11 @@ class AppDetailsDialogState extends State<AppDetailsDialog> {
                           show: true,
                           drawVerticalLine: true,
                           getDrawingHorizontalLine: (value) => FlLine(
-                            color: theme.accentColor.withOpacity(0.15),
+                            color: theme.accentColor.withValues(alpha: 0.15),
                             strokeWidth: 1,
                           ),
                           getDrawingVerticalLine: (value) => FlLine(
-                            color: theme.accentColor.withOpacity(0.15),
+                            color: theme.accentColor.withValues(alpha: 0.15),
                             strokeWidth: 1,
                           ),
                         ),
@@ -533,7 +534,7 @@ class AppDetailsDialogState extends State<AppDetailsDialog> {
                         borderData: FlBorderData(
                           show: true,
                           border: Border.all(
-                              color: theme.accentColor.withOpacity(0.15)),
+                              color: theme.accentColor.withValues(alpha: 0.15)),
                         ),
                         minX: 0,
                         maxX: sortedDates.length - 1.0,
@@ -558,7 +559,7 @@ class AppDetailsDialogState extends State<AppDetailsDialog> {
                             ),
                             belowBarData: BarAreaData(
                               show: true,
-                              color: Colors.blue.withOpacity(0.15),
+                              color: Colors.blue.withValues(alpha: 0.15),
                             ),
                           ),
                           if (appSummary.limitStatus &&
@@ -572,7 +573,7 @@ class AppDetailsDialogState extends State<AppDetailsDialog> {
                                 ),
                               ),
                               isCurved: false,
-                              color: Colors.red.withOpacity(0.7),
+                              color: Colors.red.withValues(alpha: 0.7),
                               barWidth: 2,
                               isStrokeCapRound: true,
                               dotData: const FlDotData(show: false),
@@ -702,9 +703,9 @@ class AppDetailsDialogState extends State<AppDetailsDialog> {
     return Container(
       padding: const EdgeInsets.all(14),
       decoration: BoxDecoration(
-        color: color.withOpacity(0.08),
+        color: color.withValues(alpha: 0.08),
         borderRadius: BorderRadius.circular(8),
-        border: Border.all(color: color.withOpacity(0.2)),
+        border: Border.all(color: color.withValues(alpha: 0.2)),
       ),
       child: Column(
         mainAxisSize: MainAxisSize.min,

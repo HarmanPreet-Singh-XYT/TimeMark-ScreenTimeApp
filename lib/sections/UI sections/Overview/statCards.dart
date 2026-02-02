@@ -11,6 +11,7 @@ class StatsCards extends StatelessWidget {
   final String focusSessions;
 
   const StatsCards({
+    super.key,
     required this.totalScreenTime,
     required this.totalProductiveTime,
     required this.mostUsedApp,
@@ -151,7 +152,7 @@ class _StatCardState extends State<_StatCard> {
           boxShadow: [
             BoxShadow(
               color: widget.gradient.colors.first
-                  .withOpacity(_isHovered ? 0.4 : 0.2),
+                  .withValues(alpha: _isHovered ? 0.4 : 0.2),
               blurRadius: _isHovered ? 16 : 8,
               offset: Offset(0, _isHovered ? 6 : 4),
             ),
@@ -168,14 +169,14 @@ class _StatCardState extends State<_StatCard> {
                   Icon(
                     widget.icon,
                     size: 14,
-                    color: Colors.white.withOpacity(0.8),
+                    color: Colors.white.withValues(alpha: 0.8),
                   ),
                   const SizedBox(width: 6),
                   Expanded(
                     child: Text(
                       widget.title,
                       style: TextStyle(
-                        color: Colors.white.withOpacity(0.9),
+                        color: Colors.white.withValues(alpha: 0.9),
                         fontSize: 12,
                         fontWeight: FontWeight.w500,
                       ),

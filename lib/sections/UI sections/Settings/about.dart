@@ -25,13 +25,13 @@ class AboutSection extends StatelessWidget {
           decoration: BoxDecoration(
             gradient: LinearGradient(
               colors: [
-                theme.accentColor.withOpacity(0.05),
-                theme.accentColor.withOpacity(0.02),
+                theme.accentColor.withValues(alpha: 0.05),
+                theme.accentColor.withValues(alpha: 0.02),
               ],
             ),
             borderRadius: BorderRadius.circular(8),
             border: Border.all(
-              color: theme.accentColor.withOpacity(0.1),
+              color: theme.accentColor.withValues(alpha: 0.1),
             ),
           ),
           child: Row(
@@ -39,7 +39,7 @@ class AboutSection extends StatelessWidget {
               Container(
                 padding: const EdgeInsets.all(10),
                 decoration: BoxDecoration(
-                  color: theme.accentColor.withOpacity(0.1),
+                  color: theme.accentColor.withValues(alpha: 0.1),
                   borderRadius: BorderRadius.circular(8),
                 ),
                 child:
@@ -72,7 +72,7 @@ class AboutSection extends StatelessWidget {
                     padding:
                         const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                     decoration: BoxDecoration(
-                      color: theme.accentColor.withOpacity(0.1),
+                      color: theme.accentColor.withValues(alpha: 0.1),
                       borderRadius: BorderRadius.circular(4),
                     ),
                     child: Text(

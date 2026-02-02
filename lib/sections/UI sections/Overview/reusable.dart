@@ -4,7 +4,7 @@ class EmptyState extends StatelessWidget {
   final IconData icon;
   final String message;
 
-  const EmptyState({required this.icon, required this.message});
+  const EmptyState({super.key, required this.icon, required this.message});
 
   @override
   Widget build(BuildContext context) {
@@ -14,7 +14,8 @@ class EmptyState extends StatelessWidget {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Icon(icon, size: 32, color: theme.inactiveColor.withOpacity(0.5)),
+          Icon(icon,
+              size: 32, color: theme.inactiveColor.withValues(alpha: 0.5)),
           const SizedBox(height: 12),
           Text(
             message,

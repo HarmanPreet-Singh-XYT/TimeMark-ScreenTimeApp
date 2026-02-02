@@ -11,6 +11,7 @@ class NotificationSettingsCard extends StatelessWidget {
   final Function(String, bool) onChanged;
 
   const NotificationSettingsCard({
+    super.key,
     required this.frequentAlerts,
     required this.systemAlerts,
     required this.soundAlerts,
@@ -33,7 +34,7 @@ class NotificationSettingsCard extends StatelessWidget {
               Container(
                 padding: const EdgeInsets.all(8),
                 decoration: BoxDecoration(
-                  color: theme.accentColor.withOpacity(0.1),
+                  color: theme.accentColor.withValues(alpha: 0.1),
                   borderRadius: BorderRadius.circular(8),
                 ),
                 child: Icon(FluentIcons.ringer,

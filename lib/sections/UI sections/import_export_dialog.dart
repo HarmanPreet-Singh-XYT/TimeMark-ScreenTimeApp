@@ -83,12 +83,12 @@ class SettingsCard extends StatelessWidget {
         color: theme.micaBackgroundColor,
         borderRadius: BorderRadius.circular(8),
         border: Border.all(
-          color: theme.inactiveBackgroundColor.withOpacity(0.6),
+          color: theme.inactiveBackgroundColor.withValues(alpha: 0.6),
           width: 1,
         ),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.03),
+            color: Colors.black.withValues(alpha: 0.03),
             blurRadius: 8,
             offset: const Offset(0, 2),
           ),
@@ -111,7 +111,8 @@ class SettingsCard extends StatelessWidget {
                 decoration: BoxDecoration(
                   border: Border(
                     bottom: BorderSide(
-                      color: theme.inactiveBackgroundColor.withOpacity(0.4),
+                      color:
+                          theme.inactiveBackgroundColor.withValues(alpha: 0.4),
                       width: 1,
                     ),
                   ),
@@ -121,8 +122,8 @@ class SettingsCard extends StatelessWidget {
                     Container(
                       padding: const EdgeInsets.all(6),
                       decoration: BoxDecoration(
-                        color:
-                            (iconColor ?? theme.accentColor).withOpacity(0.1),
+                        color: (iconColor ?? theme.accentColor)
+                            .withValues(alpha: 0.1),
                         borderRadius: BorderRadius.circular(6),
                       ),
                       child: Icon(icon,
@@ -211,13 +212,13 @@ class _SettingRowState extends State<SettingRow> {
             margin: EdgeInsets.only(left: widget.isSubSetting ? 20 : 0),
             decoration: BoxDecoration(
               color: _isHovered
-                  ? theme.inactiveBackgroundColor.withOpacity(0.3)
+                  ? theme.inactiveBackgroundColor.withValues(alpha: 0.3)
                   : null,
               borderRadius: BorderRadius.circular(6),
               border: widget.isSubSetting
                   ? Border(
                       left: BorderSide(
-                        color: theme.accentColor.withOpacity(0.3),
+                        color: theme.accentColor.withValues(alpha: 0.3),
                         width: 2,
                       ),
                     )
@@ -263,7 +264,7 @@ class _SettingRowState extends State<SettingRow> {
             style: DividerThemeData(
               thickness: 1,
               decoration: BoxDecoration(
-                color: theme.inactiveBackgroundColor.withOpacity(0.3),
+                color: theme.inactiveBackgroundColor.withValues(alpha: 0.3),
               ),
             ),
           ),
@@ -334,9 +335,9 @@ class _LastBackupIndicator extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
       decoration: BoxDecoration(
-        color: Colors.blue.withOpacity(0.1),
+        color: Colors.blue.withValues(alpha: 0.1),
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: Colors.blue.withOpacity(0.3)),
+        border: Border.all(color: Colors.blue.withValues(alpha: 0.3)),
       ),
       child: Row(
         mainAxisSize: MainAxisSize.min,
@@ -390,13 +391,13 @@ class _BackupActionButtonState extends State<_BackupActionButton> {
           padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 7),
           decoration: BoxDecoration(
             color: _isHovered
-                ? widget.color.withOpacity(0.15)
-                : widget.color.withOpacity(0.08),
+                ? widget.color.withValues(alpha: 0.15)
+                : widget.color.withValues(alpha: 0.08),
             borderRadius: BorderRadius.circular(6),
             border: Border.all(
               color: _isHovered
-                  ? widget.color.withOpacity(0.6)
-                  : widget.color.withOpacity(0.3),
+                  ? widget.color.withValues(alpha: 0.6)
+                  : widget.color.withValues(alpha: 0.3),
             ),
           ),
           child: Row(
@@ -446,7 +447,7 @@ class _BackupRestoreDialogState extends State<BackupRestoreDialog>
   String? _resultMessage;
   bool? _isSuccess;
   int? _currentStep;
-  int _totalSteps = 4;
+  final int _totalSteps = 4;
 
   @override
   void initState() {
@@ -594,7 +595,6 @@ class _BackupRestoreDialogState extends State<BackupRestoreDialog>
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
-    final theme = FluentTheme.of(context);
 
     return FadeTransition(
       opacity: _fadeAnimation,
@@ -605,7 +605,7 @@ class _BackupRestoreDialogState extends State<BackupRestoreDialog>
             Container(
               padding: const EdgeInsets.all(8),
               decoration: BoxDecoration(
-                color: Colors.blue.withOpacity(0.1),
+                color: Colors.blue.withValues(alpha: 0.1),
                 borderRadius: BorderRadius.circular(8),
               ),
               child: Icon(
@@ -713,10 +713,10 @@ class _ProcessingIndicator extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
-        color: theme.inactiveBackgroundColor.withOpacity(0.2),
+        color: theme.inactiveBackgroundColor.withValues(alpha: 0.2),
         borderRadius: BorderRadius.circular(12),
         border: Border.all(
-          color: theme.accentColor.withOpacity(0.2),
+          color: theme.accentColor.withValues(alpha: 0.2),
         ),
       ),
       child: Column(
@@ -736,7 +736,8 @@ class _ProcessingIndicator extends StatelessWidget {
                     decoration: BoxDecoration(
                       color: isCompleted
                           ? theme.accentColor
-                          : theme.inactiveBackgroundColor.withOpacity(0.5),
+                          : theme.inactiveBackgroundColor
+                              .withValues(alpha: 0.5),
                       shape: BoxShape.circle,
                       border: isCurrent
                           ? Border.all(color: theme.accentColor, width: 2)
@@ -744,7 +745,7 @@ class _ProcessingIndicator extends StatelessWidget {
                       boxShadow: isCurrent
                           ? [
                               BoxShadow(
-                                color: theme.accentColor.withOpacity(0.3),
+                                color: theme.accentColor.withValues(alpha: 0.3),
                                 blurRadius: 8,
                               )
                             ]
@@ -773,7 +774,8 @@ class _ProcessingIndicator extends StatelessWidget {
                       decoration: BoxDecoration(
                         color: isCompleted
                             ? theme.accentColor
-                            : theme.inactiveBackgroundColor.withOpacity(0.5),
+                            : theme.inactiveBackgroundColor
+                                .withValues(alpha: 0.5),
                         borderRadius: BorderRadius.circular(1),
                       ),
                     ),
@@ -788,7 +790,8 @@ class _ProcessingIndicator extends StatelessWidget {
             borderRadius: BorderRadius.circular(4),
             child: mt.LinearProgressIndicator(
               value: progress,
-              backgroundColor: theme.inactiveBackgroundColor.withOpacity(0.3),
+              backgroundColor:
+                  theme.inactiveBackgroundColor.withValues(alpha: 0.3),
               valueColor: AlwaysStoppedAnimation<Color>(theme.accentColor),
               minHeight: 6,
             ),
@@ -887,9 +890,9 @@ class _AnimatedResultBoxState extends State<_AnimatedResultBox>
         child: Container(
           padding: const EdgeInsets.all(16),
           decoration: BoxDecoration(
-            color: color.withOpacity(0.08),
+            color: color.withValues(alpha: 0.08),
             borderRadius: BorderRadius.circular(12),
-            border: Border.all(color: color.withOpacity(0.3)),
+            border: Border.all(color: color.withValues(alpha: 0.3)),
           ),
           child: Row(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -897,7 +900,7 @@ class _AnimatedResultBoxState extends State<_AnimatedResultBox>
               Container(
                 padding: const EdgeInsets.all(8),
                 decoration: BoxDecoration(
-                  color: color.withOpacity(0.15),
+                  color: color.withValues(alpha: 0.15),
                   shape: BoxShape.circle,
                 ),
                 child: Icon(
@@ -981,19 +984,19 @@ class _ActionCardState extends State<_ActionCard> {
           padding: const EdgeInsets.all(16),
           decoration: BoxDecoration(
             color: _isHovered
-                ? widget.color.withOpacity(0.08)
+                ? widget.color.withValues(alpha: 0.08)
                 : theme.micaBackgroundColor,
             borderRadius: BorderRadius.circular(12),
             border: Border.all(
               color: _isHovered
-                  ? widget.color.withOpacity(0.5)
-                  : theme.inactiveBackgroundColor.withOpacity(0.6),
+                  ? widget.color.withValues(alpha: 0.5)
+                  : theme.inactiveBackgroundColor.withValues(alpha: 0.6),
               width: _isHovered ? 1.5 : 1,
             ),
             boxShadow: _isHovered
                 ? [
                     BoxShadow(
-                      color: widget.color.withOpacity(0.1),
+                      color: widget.color.withValues(alpha: 0.1),
                       blurRadius: 12,
                       offset: const Offset(0, 4),
                     )
@@ -1007,7 +1010,8 @@ class _ActionCardState extends State<_ActionCard> {
                 duration: const Duration(milliseconds: 200),
                 padding: const EdgeInsets.all(12),
                 decoration: BoxDecoration(
-                  color: widget.color.withOpacity(_isHovered ? 0.15 : 0.1),
+                  color:
+                      widget.color.withValues(alpha: _isHovered ? 0.15 : 0.1),
                   borderRadius: BorderRadius.circular(10),
                 ),
                 child: Icon(
@@ -1051,8 +1055,8 @@ class _ActionCardState extends State<_ActionCard> {
                             vertical: 3,
                           ),
                           decoration: BoxDecoration(
-                            color:
-                                theme.inactiveBackgroundColor.withOpacity(0.4),
+                            color: theme.inactiveBackgroundColor
+                                .withValues(alpha: 0.4),
                             borderRadius: BorderRadius.circular(4),
                           ),
                           child: Text(
@@ -1075,7 +1079,7 @@ class _ActionCardState extends State<_ActionCard> {
                 padding: const EdgeInsets.all(8),
                 decoration: BoxDecoration(
                   color: _isHovered
-                      ? widget.color.withOpacity(0.1)
+                      ? widget.color.withValues(alpha: 0.1)
                       : Colors.transparent,
                   borderRadius: BorderRadius.circular(6),
                 ),
@@ -1101,7 +1105,6 @@ class _RefinedImportModeDialog extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
-    final theme = FluentTheme.of(context);
 
     return ContentDialog(
       constraints: const BoxConstraints(maxWidth: 440),
@@ -1110,7 +1113,7 @@ class _RefinedImportModeDialog extends StatelessWidget {
           Container(
             padding: const EdgeInsets.all(8),
             decoration: BoxDecoration(
-              color: Colors.green.withOpacity(0.1),
+              color: Colors.green.withValues(alpha: 0.1),
               borderRadius: BorderRadius.circular(8),
             ),
             child:
@@ -1208,15 +1211,15 @@ class _ImportModeCardState extends State<_ImportModeCard> {
           padding: const EdgeInsets.all(14),
           decoration: BoxDecoration(
             color: _isHovered
-                ? widget.color.withOpacity(0.08)
-                : theme.inactiveBackgroundColor.withOpacity(0.2),
+                ? widget.color.withValues(alpha: 0.08)
+                : theme.inactiveBackgroundColor.withValues(alpha: 0.2),
             borderRadius: BorderRadius.circular(10),
             border: Border.all(
               color: _isHovered
-                  ? widget.color.withOpacity(0.5)
+                  ? widget.color.withValues(alpha: 0.5)
                   : (widget.isRecommended
-                      ? widget.color.withOpacity(0.3)
-                      : theme.inactiveBackgroundColor.withOpacity(0.5)),
+                      ? widget.color.withValues(alpha: 0.3)
+                      : theme.inactiveBackgroundColor.withValues(alpha: 0.5)),
               width: widget.isRecommended ? 1.5 : 1,
             ),
           ),
@@ -1225,7 +1228,7 @@ class _ImportModeCardState extends State<_ImportModeCard> {
               Container(
                 padding: const EdgeInsets.all(10),
                 decoration: BoxDecoration(
-                  color: widget.color.withOpacity(0.1),
+                  color: widget.color.withValues(alpha: 0.1),
                   borderRadius: BorderRadius.circular(8),
                 ),
                 child: Icon(widget.icon, size: 20, color: widget.color),
@@ -1252,7 +1255,7 @@ class _ImportModeCardState extends State<_ImportModeCard> {
                             vertical: 2,
                           ),
                           decoration: BoxDecoration(
-                            color: widget.color.withOpacity(0.15),
+                            color: widget.color.withValues(alpha: 0.15),
                             borderRadius: BorderRadius.circular(4),
                           ),
                           child: Text(
@@ -1305,7 +1308,7 @@ class _ReplaceConfirmDialog extends StatelessWidget {
           Container(
             padding: const EdgeInsets.all(8),
             decoration: BoxDecoration(
-              color: Colors.red.withOpacity(0.1),
+              color: Colors.red.withValues(alpha: 0.1),
               borderRadius: BorderRadius.circular(8),
             ),
             child: Icon(FluentIcons.warning, size: 18, color: Colors.red),
@@ -1320,9 +1323,9 @@ class _ReplaceConfirmDialog extends StatelessWidget {
           Container(
             padding: const EdgeInsets.all(12),
             decoration: BoxDecoration(
-              color: Colors.red.withOpacity(0.05),
+              color: Colors.red.withValues(alpha: 0.05),
               borderRadius: BorderRadius.circular(8),
-              border: Border.all(color: Colors.red.withOpacity(0.2)),
+              border: Border.all(color: Colors.red.withValues(alpha: 0.2)),
             ),
             child: Row(
               children: [
@@ -1383,7 +1386,7 @@ class _ShareDialog extends StatelessWidget {
           Container(
             padding: const EdgeInsets.all(8),
             decoration: BoxDecoration(
-              color: Colors.green.withOpacity(0.1),
+              color: Colors.green.withValues(alpha: 0.1),
               borderRadius: BorderRadius.circular(8),
             ),
             child: Icon(FluentIcons.completed_solid,
@@ -1399,7 +1402,7 @@ class _ShareDialog extends StatelessWidget {
           Container(
             padding: const EdgeInsets.all(16),
             decoration: BoxDecoration(
-              color: theme.inactiveBackgroundColor.withOpacity(0.2),
+              color: theme.inactiveBackgroundColor.withValues(alpha: 0.2),
               borderRadius: BorderRadius.circular(8),
             ),
             child: Row(

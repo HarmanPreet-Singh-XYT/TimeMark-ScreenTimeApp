@@ -187,9 +187,6 @@ class _AlertsLimitsState extends State<AlertsLimits> {
 
   @override
   Widget build(BuildContext context) {
-    final l10n = AppLocalizations.of(context)!;
-    final theme = FluentTheme.of(context);
-
     if (isLoading) {
       return const Center(child: ProgressRing());
     }
@@ -394,9 +391,9 @@ class _ErrorCard extends StatelessWidget {
       padding: const EdgeInsets.all(24),
       constraints: const BoxConstraints(maxWidth: 400),
       decoration: BoxDecoration(
-        color: Colors.red.withOpacity(0.05),
+        color: Colors.red.withValues(alpha: 0.05),
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: Colors.red.withOpacity(0.2)),
+        border: Border.all(color: Colors.red.withValues(alpha: 0.2)),
       ),
       child: Column(
         mainAxisSize: MainAxisSize.min,
@@ -453,7 +450,8 @@ class _Header extends StatelessWidget {
               Text(
                 'Manage your screen time limits and notifications',
                 style: theme.typography.caption?.copyWith(
-                  color: theme.typography.caption?.color?.withOpacity(0.7),
+                  color:
+                      theme.typography.caption?.color?.withValues(alpha: 0.7),
                 ),
               ),
             ],
@@ -466,7 +464,7 @@ class _Header extends StatelessWidget {
             icon: Container(
               padding: const EdgeInsets.all(8),
               decoration: BoxDecoration(
-                color: theme.accentColor.withOpacity(0.1),
+                color: theme.accentColor.withValues(alpha: 0.1),
                 borderRadius: BorderRadius.circular(8),
               ),
               child:

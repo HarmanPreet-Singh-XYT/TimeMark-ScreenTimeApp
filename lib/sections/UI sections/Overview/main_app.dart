@@ -6,7 +6,7 @@ import './reusable.dart';
 class TopApplicationsList extends StatelessWidget {
   final List<dynamic> data;
 
-  const TopApplicationsList({required this.data});
+  const TopApplicationsList({super.key, required this.data});
 
   @override
   Widget build(BuildContext context) {
@@ -32,7 +32,7 @@ class TopApplicationsList extends StatelessWidget {
               Container(
                 padding: const EdgeInsets.all(6),
                 decoration: BoxDecoration(
-                  color: const Color(0xff3B82F6).withOpacity(0.15),
+                  color: const Color(0xff3B82F6).withValues(alpha: 0.15),
                   borderRadius: BorderRadius.circular(6),
                 ),
                 child: const Icon(
@@ -97,7 +97,7 @@ class TopApplicationsList extends StatelessWidget {
 class CategoryBreakdownList extends StatelessWidget {
   final List<dynamic> data;
 
-  const CategoryBreakdownList({required this.data});
+  const CategoryBreakdownList({super.key, required this.data});
 
   @override
   Widget build(BuildContext context) {
@@ -119,7 +119,7 @@ class CategoryBreakdownList extends StatelessWidget {
               Container(
                 padding: const EdgeInsets.all(6),
                 decoration: BoxDecoration(
-                  color: const Color(0xff22C55E).withOpacity(0.15),
+                  color: const Color(0xff22C55E).withValues(alpha: 0.15),
                   borderRadius: BorderRadius.circular(6),
                 ),
                 child: const Icon(
@@ -240,7 +240,7 @@ class _ApplicationItemState extends State<_ApplicationItem> {
             //   width: 36,
             //   height: 36,
             //   decoration: BoxDecoration(
-            //     color: widget.color.withOpacity(0.12),
+            //     color: widget.color.withValues(alpha:0.12),
             //     borderRadius: BorderRadius.circular(8),
             //   ),
             //   child: Center(
@@ -293,7 +293,7 @@ class _ApplicationItemState extends State<_ApplicationItem> {
                       animationDuration: 800 + (widget.index * 100),
                       lineHeight: 6,
                       percent: (widget.percentage / 100).clamp(0.0, 1.0),
-                      backgroundColor: widget.color.withOpacity(0.12),
+                      backgroundColor: widget.color.withValues(alpha: 0.12),
                       progressColor: widget.color,
                       padding: EdgeInsets.zero,
                       barRadius: const Radius.circular(4),
@@ -405,7 +405,7 @@ class _CategoryItemState extends State<_CategoryItem> {
                       animationDuration: 800 + (widget.index * 150),
                       lineHeight: 8,
                       percent: (widget.percentage / 100).clamp(0.0, 1.0),
-                      backgroundColor: widget.color.withOpacity(0.12),
+                      backgroundColor: widget.color.withValues(alpha: 0.12),
                       progressColor: widget.color,
                       padding: EdgeInsets.zero,
                       barRadius: const Radius.circular(4),

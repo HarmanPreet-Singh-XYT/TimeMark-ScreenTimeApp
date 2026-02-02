@@ -29,6 +29,7 @@ class QuickActionButton extends StatefulWidget {
   final VoidCallback onPressed;
 
   const QuickActionButton({
+    super.key,
     required this.icon,
     required this.tooltip,
     required this.onPressed,
@@ -97,12 +98,12 @@ class SettingsCard extends StatelessWidget {
         color: theme.micaBackgroundColor,
         borderRadius: BorderRadius.circular(8),
         border: Border.all(
-          color: theme.inactiveBackgroundColor.withOpacity(0.6),
+          color: theme.inactiveBackgroundColor.withValues(alpha: 0.6),
           width: 1,
         ),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.03),
+            color: Colors.black.withValues(alpha: 0.03),
             blurRadius: 8,
             offset: const Offset(0, 2),
           ),
@@ -125,7 +126,8 @@ class SettingsCard extends StatelessWidget {
                 decoration: BoxDecoration(
                   border: Border(
                     bottom: BorderSide(
-                      color: theme.inactiveBackgroundColor.withOpacity(0.4),
+                      color:
+                          theme.inactiveBackgroundColor.withValues(alpha: 0.4),
                       width: 1,
                     ),
                   ),
@@ -135,8 +137,8 @@ class SettingsCard extends StatelessWidget {
                     Container(
                       padding: const EdgeInsets.all(6),
                       decoration: BoxDecoration(
-                        color:
-                            (iconColor ?? theme.accentColor).withOpacity(0.1),
+                        color: (iconColor ?? theme.accentColor)
+                            .withValues(alpha: 0.1),
                         borderRadius: BorderRadius.circular(6),
                       ),
                       child: Icon(icon,
@@ -225,13 +227,13 @@ class _SettingRowState extends State<SettingRow> {
             margin: EdgeInsets.only(left: widget.isSubSetting ? 20 : 0),
             decoration: BoxDecoration(
               color: _isHovered
-                  ? theme.inactiveBackgroundColor.withOpacity(0.3)
+                  ? theme.inactiveBackgroundColor.withValues(alpha: 0.3)
                   : null,
               borderRadius: BorderRadius.circular(6),
               border: widget.isSubSetting
                   ? Border(
                       left: BorderSide(
-                        color: theme.accentColor.withOpacity(0.3),
+                        color: theme.accentColor.withValues(alpha: 0.3),
                         width: 2,
                       ),
                     )
@@ -277,7 +279,7 @@ class _SettingRowState extends State<SettingRow> {
             padding: const EdgeInsets.symmetric(vertical: 8.0),
             child: Container(
               height: 1,
-              color: theme.inactiveBackgroundColor.withOpacity(0.3),
+              color: theme.inactiveBackgroundColor.withValues(alpha: 0.3),
             ),
           ),
       ],
@@ -293,6 +295,7 @@ class StatusBadge extends StatelessWidget {
   final String inactiveText;
 
   const StatusBadge({
+    super.key,
     required this.isActive,
     required this.activeText,
     required this.inactiveText,
@@ -304,13 +307,13 @@ class StatusBadge extends StatelessWidget {
       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
       decoration: BoxDecoration(
         color: isActive
-            ? Colors.green.withOpacity(0.1)
-            : Colors.grey.withOpacity(0.1),
+            ? Colors.green.withValues(alpha: 0.1)
+            : Colors.grey.withValues(alpha: 0.1),
         borderRadius: BorderRadius.circular(12),
         border: Border.all(
           color: isActive
-              ? Colors.green.withOpacity(0.3)
-              : Colors.grey.withOpacity(0.3),
+              ? Colors.green.withValues(alpha: 0.3)
+              : Colors.grey.withValues(alpha: 0.3),
         ),
       ),
       child: Row(
@@ -344,6 +347,7 @@ class TimeoutButton extends StatefulWidget {
   final VoidCallback onPressed;
 
   const TimeoutButton({
+    super.key,
     required this.value,
     required this.onPressed,
   });
@@ -369,12 +373,12 @@ class TimeoutButtonState extends State<TimeoutButton> {
           padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
           decoration: BoxDecoration(
             color: _isHovered
-                ? theme.accentColor.withOpacity(0.1)
-                : theme.inactiveBackgroundColor.withOpacity(0.3),
+                ? theme.accentColor.withValues(alpha: 0.1)
+                : theme.inactiveBackgroundColor.withValues(alpha: 0.3),
             borderRadius: BorderRadius.circular(6),
             border: Border.all(
               color: _isHovered
-                  ? theme.accentColor.withOpacity(0.5)
+                  ? theme.accentColor.withValues(alpha: 0.5)
                   : theme.inactiveBackgroundColor,
             ),
           ),
@@ -409,6 +413,7 @@ class WarningBanner extends StatelessWidget {
   final Color color;
 
   const WarningBanner({
+    super.key,
     required this.message,
     required this.icon,
     required this.color,
@@ -419,9 +424,9 @@ class WarningBanner extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(10),
       decoration: BoxDecoration(
-        color: color.withOpacity(0.05),
+        color: color.withValues(alpha: 0.05),
         borderRadius: BorderRadius.circular(6),
-        border: Border.all(color: color.withOpacity(0.2)),
+        border: Border.all(color: color.withValues(alpha: 0.2)),
       ),
       child: Row(
         children: [
@@ -430,7 +435,8 @@ class WarningBanner extends StatelessWidget {
           Expanded(
             child: Text(
               message,
-              style: TextStyle(fontSize: 11, color: color.withOpacity(0.8)),
+              style:
+                  TextStyle(fontSize: 11, color: color.withValues(alpha: 0.8)),
             ),
           ),
         ],
@@ -518,12 +524,12 @@ class _AnimatedToggleCardState extends State<AnimatedToggleCard>
         color: theme.micaBackgroundColor,
         borderRadius: BorderRadius.circular(8),
         border: Border.all(
-          color: theme.inactiveBackgroundColor.withOpacity(0.6),
+          color: theme.inactiveBackgroundColor.withValues(alpha: 0.6),
           width: 1,
         ),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.03),
+            color: Colors.black.withValues(alpha: 0.03),
             blurRadius: 8,
             offset: const Offset(0, 2),
           ),
@@ -548,8 +554,8 @@ class _AnimatedToggleCardState extends State<AnimatedToggleCard>
                   border: _isExpanded
                       ? Border(
                           bottom: BorderSide(
-                            color:
-                                theme.inactiveBackgroundColor.withOpacity(0.4),
+                            color: theme.inactiveBackgroundColor
+                                .withValues(alpha: 0.4),
                             width: 1,
                           ),
                         )
@@ -561,7 +567,7 @@ class _AnimatedToggleCardState extends State<AnimatedToggleCard>
                       padding: const EdgeInsets.all(6),
                       decoration: BoxDecoration(
                         color: (widget.iconColor ?? theme.accentColor)
-                            .withOpacity(0.1),
+                            .withValues(alpha: 0.1),
                         borderRadius: BorderRadius.circular(6),
                       ),
                       child: Icon(
@@ -644,7 +650,7 @@ class _CompactSettingTileState extends State<CompactSettingTile> {
         padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
         decoration: BoxDecoration(
           color: _isHovered
-              ? theme.inactiveBackgroundColor.withOpacity(0.3)
+              ? theme.inactiveBackgroundColor.withValues(alpha: 0.3)
               : Colors.transparent,
           borderRadius: BorderRadius.circular(6),
         ),
@@ -736,7 +742,7 @@ class SegmentedSelector<T> extends StatelessWidget {
 
     return Container(
       decoration: BoxDecoration(
-        color: theme.inactiveBackgroundColor.withOpacity(0.3),
+        color: theme.inactiveBackgroundColor.withValues(alpha: 0.3),
         borderRadius: BorderRadius.circular(6),
       ),
       padding: const EdgeInsets.all(3),
@@ -756,7 +762,7 @@ class SegmentedSelector<T> extends StatelessWidget {
                 boxShadow: isSelected
                     ? [
                         BoxShadow(
-                          color: Colors.black.withOpacity(0.1),
+                          color: Colors.black.withValues(alpha: 0.1),
                           blurRadius: 4,
                           offset: const Offset(0, 1),
                         ),

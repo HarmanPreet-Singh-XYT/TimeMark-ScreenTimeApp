@@ -1,9 +1,7 @@
 // focus_mode_trends.dart
 import 'package:fl_chart/fl_chart.dart';
-import './resources/app_resources.dart';
 import 'package:fluent_ui/fluent_ui.dart' hide Colors;
-import 'package:flutter/material.dart'
-    show Colors, Material, SegmentedButton, ButtonSegment;
+import 'package:flutter/material.dart' show Colors;
 import 'package:screentime/l10n/app_localizations.dart';
 
 class FocusModeTrends extends StatefulWidget {
@@ -84,7 +82,9 @@ class _FocusModeTrendsState extends State<FocusModeTrends> {
   Widget _buildMetricSelector(BuildContext context, AppLocalizations l10n) {
     return Container(
       decoration: BoxDecoration(
-        color: FluentTheme.of(context).inactiveBackgroundColor.withOpacity(0.3),
+        color: FluentTheme.of(context)
+            .inactiveBackgroundColor
+            .withValues(alpha: 0.3),
         borderRadius: BorderRadius.circular(8),
       ),
       child: Row(
@@ -191,7 +191,7 @@ class _FocusModeTrendsState extends State<FocusModeTrends> {
                     .typography
                     .body
                     ?.color
-                    ?.withOpacity(0.6),
+                    ?.withValues(alpha: 0.6),
                 fontSize: 11,
               ),
               children: [
@@ -226,7 +226,7 @@ class _FocusModeTrendsState extends State<FocusModeTrends> {
         return spotIndexes.map((index) {
           return TouchedSpotIndicatorData(
             FlLine(
-              color: color.withOpacity(0.3),
+              color: color.withValues(alpha: 0.3),
               strokeWidth: 2,
               dashArray: [5, 5],
             ),
@@ -253,7 +253,9 @@ class _FocusModeTrendsState extends State<FocusModeTrends> {
       drawVerticalLine: false,
       horizontalInterval: maxY / 4,
       getDrawingHorizontalLine: (value) => FlLine(
-        color: FluentTheme.of(context).inactiveBackgroundColor.withOpacity(0.4),
+        color: FluentTheme.of(context)
+            .inactiveBackgroundColor
+            .withValues(alpha: 0.4),
         strokeWidth: 1,
         dashArray: [5, 5],
       ),
@@ -285,7 +287,7 @@ class _FocusModeTrendsState extends State<FocusModeTrends> {
                       .typography
                       .body
                       ?.color
-                      ?.withOpacity(0.5),
+                      ?.withValues(alpha: 0.5),
                   fontSize: 11,
                   fontWeight: FontWeight.w500,
                 ),
@@ -309,7 +311,7 @@ class _FocusModeTrendsState extends State<FocusModeTrends> {
                       .typography
                       .body
                       ?.color
-                      ?.withOpacity(0.4),
+                      ?.withValues(alpha: 0.4),
                   fontSize: 10,
                 ),
               ),
@@ -347,8 +349,8 @@ class _FocusModeTrendsState extends State<FocusModeTrends> {
         show: true,
         gradient: LinearGradient(
           colors: [
-            colors[0].withOpacity(0.3),
-            colors[1].withOpacity(0.05),
+            colors[0].withValues(alpha: 0.3),
+            colors[1].withValues(alpha: 0.05),
           ],
           begin: Alignment.topCenter,
           end: Alignment.bottomCenter,
@@ -391,9 +393,9 @@ class _MetricTabState extends State<_MetricTab> {
           padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
           decoration: BoxDecoration(
             color: widget.isSelected
-                ? widget.color.withOpacity(0.15)
+                ? widget.color.withValues(alpha: 0.15)
                 : _isHovered
-                    ? widget.color.withOpacity(0.05)
+                    ? widget.color.withValues(alpha: 0.05)
                     : Colors.transparent,
             borderRadius: BorderRadius.circular(6),
           ),
@@ -406,7 +408,7 @@ class _MetricTabState extends State<_MetricTab> {
                       .typography
                       .body
                       ?.color
-                      ?.withOpacity(0.6),
+                      ?.withValues(alpha: 0.6),
               fontWeight: widget.isSelected ? FontWeight.w600 : FontWeight.w400,
               fontSize: 12,
             ),
@@ -433,9 +435,9 @@ class _StatCard extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
       decoration: BoxDecoration(
-        color: color.withOpacity(0.1),
+        color: color.withValues(alpha: 0.1),
         borderRadius: BorderRadius.circular(8),
-        border: Border.all(color: color.withOpacity(0.2)),
+        border: Border.all(color: color.withValues(alpha: 0.2)),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -447,7 +449,7 @@ class _StatCard extends StatelessWidget {
                       .typography
                       .caption
                       ?.color
-                      ?.withOpacity(0.6),
+                      ?.withValues(alpha: 0.6),
                   fontSize: 10,
                 ),
           ),
@@ -480,9 +482,9 @@ class _TrendIndicator extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
       decoration: BoxDecoration(
-        color: color.withOpacity(0.1),
+        color: color.withValues(alpha: 0.1),
         borderRadius: BorderRadius.circular(8),
-        border: Border.all(color: color.withOpacity(0.2)),
+        border: Border.all(color: color.withValues(alpha: 0.2)),
       ),
       child: Row(
         mainAxisSize: MainAxisSize.min,

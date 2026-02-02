@@ -209,8 +209,8 @@ class _ApplicationsState extends State<Applications>
                       '${filteredApps.length} ${filteredApps.length == 1 ? 'application' : 'applications'}',
                       style: TextStyle(
                         fontSize: 13,
-                        color:
-                            theme.typography.caption?.color?.withOpacity(0.7),
+                        color: theme.typography.caption?.color
+                            ?.withValues(alpha: 0.7),
                         fontWeight: FontWeight.w500,
                       ),
                     ),
@@ -255,8 +255,8 @@ class _Header extends StatelessWidget {
               decoration: BoxDecoration(
                 gradient: LinearGradient(
                   colors: [
-                    theme.accentColor.withOpacity(0.2),
-                    theme.accentColor.withOpacity(0.1),
+                    theme.accentColor.withValues(alpha: 0.2),
+                    theme.accentColor.withValues(alpha: 0.1),
                   ],
                   begin: Alignment.topLeft,
                   end: Alignment.bottomRight,
@@ -283,7 +283,8 @@ class _Header extends StatelessWidget {
                   'Manage your tracked applications',
                   style: TextStyle(
                     fontSize: 12,
-                    color: theme.typography.caption?.color?.withOpacity(0.6),
+                    color:
+                        theme.typography.caption?.color?.withValues(alpha: 0.6),
                   ),
                 ),
               ],
@@ -310,7 +311,8 @@ class _Header extends StatelessWidget {
                   Icon(
                     FluentIcons.search,
                     size: 14,
-                    color: theme.typography.caption?.color?.withOpacity(0.5),
+                    color:
+                        theme.typography.caption?.color?.withValues(alpha: 0.5),
                   ),
                   const SizedBox(width: 8),
                   Expanded(
@@ -388,12 +390,12 @@ class _FilterBar extends StatelessWidget {
         color: theme.cardColor,
         borderRadius: BorderRadius.circular(12),
         border: Border.all(
-          color: theme.inactiveBackgroundColor.withOpacity(0.5),
+          color: theme.inactiveBackgroundColor.withValues(alpha: 0.5),
           width: 1,
         ),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.03),
+            color: Colors.black.withValues(alpha: 0.03),
             blurRadius: 8,
             offset: const Offset(0, 2),
           ),
@@ -467,14 +469,14 @@ class _FilterChipState extends State<_FilterChip> {
           padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
           decoration: BoxDecoration(
             color: widget.isActive
-                ? widget.activeColor.withOpacity(0.15)
+                ? widget.activeColor.withValues(alpha: 0.15)
                 : _isHovered
-                    ? theme.inactiveBackgroundColor.withOpacity(0.5)
+                    ? theme.inactiveBackgroundColor.withValues(alpha: 0.5)
                     : Colors.transparent,
             borderRadius: BorderRadius.circular(8),
             border: Border.all(
               color: widget.isActive
-                  ? widget.activeColor.withOpacity(0.5)
+                  ? widget.activeColor.withValues(alpha: 0.5)
                   : Colors.transparent,
               width: 1,
             ),
@@ -487,7 +489,7 @@ class _FilterChipState extends State<_FilterChip> {
                 padding: const EdgeInsets.all(4),
                 decoration: BoxDecoration(
                   color: widget.isActive
-                      ? widget.activeColor.withOpacity(0.2)
+                      ? widget.activeColor.withValues(alpha: 0.2)
                       : Colors.transparent,
                   borderRadius: BorderRadius.circular(4),
                 ),
@@ -496,7 +498,7 @@ class _FilterChipState extends State<_FilterChip> {
                   size: 12,
                   color: widget.isActive
                       ? widget.activeColor
-                      : theme.typography.body?.color?.withOpacity(0.6),
+                      : theme.typography.body?.color?.withValues(alpha: 0.6),
                 ),
               ),
               const SizedBox(width: 8),
@@ -552,7 +554,7 @@ class _CategoryDropdown extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 4),
       decoration: BoxDecoration(
-        color: theme.inactiveBackgroundColor.withOpacity(0.3),
+        color: theme.inactiveBackgroundColor.withValues(alpha: 0.3),
         borderRadius: BorderRadius.circular(8),
       ),
       child: DropDownButton(
@@ -626,7 +628,7 @@ class _DataTable extends StatelessWidget {
               style: TextStyle(
                 fontSize: 16,
                 fontWeight: FontWeight.w500,
-                color: theme.typography.body?.color?.withOpacity(0.6),
+                color: theme.typography.body?.color?.withValues(alpha: 0.6),
               ),
             ),
             const SizedBox(height: 8),
@@ -634,7 +636,7 @@ class _DataTable extends StatelessWidget {
               'Try adjusting your filters',
               style: TextStyle(
                 fontSize: 13,
-                color: theme.typography.caption?.color?.withOpacity(0.5),
+                color: theme.typography.caption?.color?.withValues(alpha: 0.5),
               ),
             ),
           ],
@@ -647,12 +649,12 @@ class _DataTable extends StatelessWidget {
         color: theme.cardColor,
         borderRadius: BorderRadius.circular(12),
         border: Border.all(
-          color: theme.inactiveBackgroundColor.withOpacity(0.5),
+          color: theme.inactiveBackgroundColor.withValues(alpha: 0.5),
           width: 1,
         ),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.03),
+            color: Colors.black.withValues(alpha: 0.03),
             blurRadius: 8,
             offset: const Offset(0, 2),
           ),
@@ -666,10 +668,10 @@ class _DataTable extends StatelessWidget {
             Container(
               padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
               decoration: BoxDecoration(
-                color: theme.inactiveBackgroundColor.withOpacity(0.3),
+                color: theme.inactiveBackgroundColor.withValues(alpha: 0.3),
                 border: Border(
                   bottom: BorderSide(
-                    color: theme.inactiveBackgroundColor.withOpacity(0.5),
+                    color: theme.inactiveBackgroundColor.withValues(alpha: 0.5),
                     width: 1,
                   ),
                 ),
@@ -742,7 +744,7 @@ class _TableHeader extends StatelessWidget {
           style: TextStyle(
             fontSize: 12,
             fontWeight: FontWeight.w600,
-            color: theme.typography.body?.color?.withOpacity(0.7),
+            color: theme.typography.body?.color?.withValues(alpha: 0.7),
             letterSpacing: 0.5,
           ),
         ),
@@ -813,7 +815,7 @@ class _ApplicationRowState extends State<_ApplicationRow> {
               Container(
                 padding: const EdgeInsets.all(10),
                 decoration: BoxDecoration(
-                  color: theme.accentColor.withOpacity(0.1),
+                  color: theme.accentColor.withValues(alpha: 0.1),
                   borderRadius: BorderRadius.circular(8),
                 ),
                 child: Icon(
@@ -838,8 +840,8 @@ class _ApplicationRowState extends State<_ApplicationRow> {
                       style: TextStyle(
                         fontSize: 12,
                         fontWeight: FontWeight.normal,
-                        color:
-                            theme.typography.caption?.color?.withOpacity(0.6),
+                        color: theme.typography.caption?.color
+                            ?.withValues(alpha: 0.6),
                       ),
                     ),
                   ],
@@ -975,7 +977,7 @@ class _ApplicationRowState extends State<_ApplicationRow> {
                                       padding: const EdgeInsets.all(12),
                                       decoration: BoxDecoration(
                                         color: const Color(0xFFF59E0B)
-                                            .withOpacity(0.1),
+                                            .withValues(alpha: 0.1),
                                         borderRadius: BorderRadius.circular(8),
                                       ),
                                       child: Row(
@@ -1081,13 +1083,13 @@ class _ApplicationRowState extends State<_ApplicationRow> {
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
         decoration: BoxDecoration(
           color: _isHovered
-              ? theme.inactiveBackgroundColor.withOpacity(0.3)
+              ? theme.inactiveBackgroundColor.withValues(alpha: 0.3)
               : Colors.transparent,
           border: widget.isLast
               ? null
               : Border(
                   bottom: BorderSide(
-                    color: theme.inactiveBackgroundColor.withOpacity(0.3),
+                    color: theme.inactiveBackgroundColor.withValues(alpha: 0.3),
                     width: 1,
                   ),
                 ),
@@ -1103,7 +1105,7 @@ class _ApplicationRowState extends State<_ApplicationRow> {
                   //   width: 32,
                   //   height: 32,
                   //   decoration: BoxDecoration(
-                  //     color: theme.accentColor.withOpacity(0.1),
+                  //     color: theme.accentColor.withValues(alpha:0.1),
                   //     borderRadius: BorderRadius.circular(6),
                   //   ),
                   //   child: Center(
@@ -1139,7 +1141,7 @@ class _ApplicationRowState extends State<_ApplicationRow> {
                 padding:
                     const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
                 decoration: BoxDecoration(
-                  color: theme.inactiveBackgroundColor.withOpacity(0.5),
+                  color: theme.inactiveBackgroundColor.withValues(alpha: 0.5),
                   borderRadius: BorderRadius.circular(12),
                 ),
                 child: Text(
@@ -1147,7 +1149,7 @@ class _ApplicationRowState extends State<_ApplicationRow> {
                   style: TextStyle(
                     fontSize: 11,
                     fontWeight: FontWeight.w500,
-                    color: theme.typography.body?.color?.withOpacity(0.8),
+                    color: theme.typography.body?.color?.withValues(alpha: 0.8),
                   ),
                   overflow: TextOverflow.ellipsis,
                   textAlign: TextAlign.center,
@@ -1163,7 +1165,7 @@ class _ApplicationRowState extends State<_ApplicationRow> {
                   padding:
                       const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
                   decoration: BoxDecoration(
-                    color: theme.accentColor.withOpacity(0.1),
+                    color: theme.accentColor.withValues(alpha: 0.1),
                     borderRadius: BorderRadius.circular(6),
                   ),
                   child: Text(
@@ -1213,7 +1215,7 @@ class _ApplicationRowState extends State<_ApplicationRow> {
                     padding: const EdgeInsets.all(6),
                     decoration: BoxDecoration(
                       color: _isHovered
-                          ? theme.accentColor.withOpacity(0.1)
+                          ? theme.accentColor.withValues(alpha: 0.1)
                           : Colors.transparent,
                       borderRadius: BorderRadius.circular(6),
                     ),
@@ -1222,7 +1224,8 @@ class _ApplicationRowState extends State<_ApplicationRow> {
                       size: 14,
                       color: _isHovered
                           ? theme.accentColor
-                          : theme.typography.body?.color?.withOpacity(0.5),
+                          : theme.typography.body?.color
+                              ?.withValues(alpha: 0.5),
                     ),
                   ),
                   onPressed: () => _showEditDialog(context),
@@ -1274,7 +1277,7 @@ class _CompactToggle extends StatelessWidget {
               borderRadius: BorderRadius.circular(8),
               boxShadow: [
                 BoxShadow(
-                  color: Colors.black.withOpacity(0.1),
+                  color: Colors.black.withValues(alpha: 0.1),
                   blurRadius: 2,
                   offset: const Offset(0, 1),
                 ),
@@ -1310,7 +1313,7 @@ class _DialogSection extends StatelessWidget {
         color: theme.cardColor,
         borderRadius: BorderRadius.circular(10),
         border: Border.all(
-          color: theme.inactiveBackgroundColor.withOpacity(0.5),
+          color: theme.inactiveBackgroundColor.withValues(alpha: 0.5),
           width: 1,
         ),
       ),
@@ -1322,7 +1325,7 @@ class _DialogSection extends StatelessWidget {
               Container(
                 padding: const EdgeInsets.all(6),
                 decoration: BoxDecoration(
-                  color: iconColor.withOpacity(0.15),
+                  color: iconColor.withValues(alpha: 0.15),
                   borderRadius: BorderRadius.circular(6),
                 ),
                 child: Icon(icon, size: 14, color: iconColor),
@@ -1369,8 +1372,8 @@ class _DialogToggle extends StatelessWidget {
       padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
       decoration: BoxDecoration(
         color: value
-            ? activeColor.withOpacity(0.08)
-            : theme.inactiveBackgroundColor.withOpacity(0.2),
+            ? activeColor.withValues(alpha: 0.08)
+            : theme.inactiveBackgroundColor.withValues(alpha: 0.2),
         borderRadius: BorderRadius.circular(8),
       ),
       child: Row(
@@ -1383,7 +1386,7 @@ class _DialogToggle extends StatelessWidget {
                 size: 14,
                 color: value
                     ? activeColor
-                    : theme.typography.body?.color?.withOpacity(0.5),
+                    : theme.typography.body?.color?.withValues(alpha: 0.5),
               ),
               const SizedBox(width: 10),
               Text(

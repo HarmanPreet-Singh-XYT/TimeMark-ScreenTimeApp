@@ -5,7 +5,7 @@ class Card extends StatelessWidget {
   final Widget child;
   final EdgeInsets? padding;
 
-  const Card({required this.child, this.padding});
+  const Card({super.key, required this.child, this.padding});
 
   @override
   Widget build(BuildContext context) {
@@ -35,6 +35,7 @@ class SliderRow extends StatelessWidget {
   final Function(double) onChanged;
 
   const SliderRow({
+    super.key,
     required this.label,
     required this.value,
     required this.max,
@@ -72,7 +73,7 @@ class SliderRow extends StatelessWidget {
           width: 36,
           padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
           decoration: BoxDecoration(
-            color: theme.accentColor.withOpacity(0.1),
+            color: theme.accentColor.withValues(alpha: 0.1),
             borderRadius: BorderRadius.circular(6),
           ),
           child: Text(
@@ -96,6 +97,7 @@ class TimeDisplay extends StatelessWidget {
   final Color color;
 
   const TimeDisplay({
+    super.key,
     required this.value,
     required this.label,
     required this.color,
@@ -118,7 +120,7 @@ class TimeDisplay extends StatelessWidget {
           label,
           style: TextStyle(
             fontSize: 11,
-            color: color.withOpacity(0.7),
+            color: color.withValues(alpha: 0.7),
             fontWeight: FontWeight.w500,
           ),
         ),
@@ -136,6 +138,7 @@ class SettingTile extends StatefulWidget {
   final bool showDivider;
 
   const SettingTile({
+    super.key,
     required this.icon,
     required this.title,
     required this.subtitle,
@@ -166,14 +169,14 @@ class _SettingTileState extends State<SettingTile> {
             padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
             decoration: BoxDecoration(
               color: _isHovered
-                  ? theme.accentColor.withOpacity(0.05)
+                  ? theme.accentColor.withValues(alpha: 0.05)
                   : Colors.transparent,
               borderRadius: BorderRadius.circular(8),
             ),
             child: Row(
               children: [
                 Icon(widget.icon,
-                    size: 16, color: theme.accentColor.withOpacity(0.7)),
+                    size: 16, color: theme.accentColor.withValues(alpha: 0.7)),
                 const SizedBox(width: 12),
                 Expanded(
                   child: Column(
@@ -189,8 +192,8 @@ class _SettingTileState extends State<SettingTile> {
                         widget.subtitle,
                         style: theme.typography.caption?.copyWith(
                           fontSize: 11,
-                          color:
-                              theme.typography.caption?.color?.withOpacity(0.6),
+                          color: theme.typography.caption?.color
+                              ?.withValues(alpha: 0.6),
                         ),
                       ),
                     ],
@@ -209,7 +212,7 @@ class _SettingTileState extends State<SettingTile> {
             padding: const EdgeInsets.symmetric(horizontal: 12),
             child: Container(
               height: 1,
-              color: theme.inactiveBackgroundColor.withOpacity(0.5),
+              color: theme.inactiveBackgroundColor.withValues(alpha: 0.5),
             ),
           ),
       ],

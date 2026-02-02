@@ -62,7 +62,7 @@ class _TrackingSectionState extends State<TrackingSection> {
                 padding:
                     const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
                 decoration: BoxDecoration(
-                  color: theme.inactiveBackgroundColor.withOpacity(0.2),
+                  color: theme.inactiveBackgroundColor.withValues(alpha: 0.2),
                   borderRadius: BorderRadius.circular(6),
                 ),
                 child: Row(

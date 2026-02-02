@@ -38,9 +38,7 @@ class _LineChartWidgetState extends State<LineChartWidget>
 
   // Modern color palette
   static const Color _primaryColor = Color(0xFF34D399);
-  static const Color _primaryColorLight = Color(0xFF6EE7B7);
   static const Color _secondaryColor = Color(0xFF60A5FA);
-  static const Color _accentColor = Color(0xFFA78BFA);
   static const Color _gridColor = Color(0xFFE5E7EB);
   static const Color _textColor = Color(0xFF6B7280);
   static const Color _tooltipBg = Color(0xFF1F2937);
@@ -165,7 +163,7 @@ class _LineChartWidgetState extends State<LineChartWidget>
         return spotIndexes.map((index) {
           return TouchedSpotIndicatorData(
             FlLine(
-              color: _primaryColor.withOpacity(0.3),
+              color: _primaryColor.withValues(alpha: 0.3),
               strokeWidth: 2,
               dashArray: [5, 5],
             ),
@@ -206,7 +204,7 @@ class _LineChartWidgetState extends State<LineChartWidget>
             TextSpan(
               text: dateStr,
               style: TextStyle(
-                color: Colors.white.withOpacity(0.7),
+                color: Colors.white.withValues(alpha: 0.7),
                 fontSize: 12,
                 fontWeight: FontWeight.w500,
               ),
@@ -235,7 +233,7 @@ class _LineChartWidgetState extends State<LineChartWidget>
       horizontalInterval: maxY > 12 ? 4 : 2,
       getDrawingHorizontalLine: (value) {
         return FlLine(
-          color: _gridColor.withOpacity(0.5),
+          color: _gridColor.withValues(alpha: 0.5),
           strokeWidth: 1,
           dashArray: value == 0 ? null : [5, 5],
         );
@@ -414,7 +412,7 @@ class _LineChartWidgetState extends State<LineChartWidget>
       barWidth: 3,
       isStrokeCapRound: true,
       shadow: Shadow(
-        color: _primaryColor.withOpacity(0.3),
+        color: _primaryColor.withValues(alpha: 0.3),
         blurRadius: 8,
         offset: const Offset(0, 4),
       ),
@@ -436,9 +434,9 @@ class _LineChartWidgetState extends State<LineChartWidget>
           begin: Alignment.topCenter,
           end: Alignment.bottomCenter,
           colors: [
-            _primaryColor.withOpacity(0.3 * _animation.value),
-            _primaryColor.withOpacity(0.05 * _animation.value),
-            _primaryColor.withOpacity(0.0),
+            _primaryColor.withValues(alpha: 0.3 * _animation.value),
+            _primaryColor.withValues(alpha: 0.05 * _animation.value),
+            _primaryColor.withValues(alpha: 0.0),
           ],
           stops: const [0.0, 0.5, 1.0],
         ),
@@ -462,7 +460,7 @@ class _LineChartWidgetState extends State<LineChartWidget>
     return LineChartBarData(
       spots: spots,
       isCurved: false,
-      color: _secondaryColor.withOpacity(0.6),
+      color: _secondaryColor.withValues(alpha: 0.6),
       barWidth: 2,
       dashArray: [8, 4],
       dotData: const FlDotData(show: false),
@@ -488,7 +486,7 @@ class _LineChartWidgetState extends State<LineChartWidget>
       dotData: const FlDotData(show: false),
       belowBarData: BarAreaData(
         show: true,
-        color: _gridColor.withOpacity(0.2),
+        color: _gridColor.withValues(alpha: 0.2),
       ),
     );
   }
@@ -515,7 +513,6 @@ class EnhancedLineChart extends StatefulWidget {
 
 class _EnhancedLineChartState extends State<EnhancedLineChart> {
   bool _showAverage = false;
-  bool _showDataPoints = true;
 
   @override
   Widget build(BuildContext context) {
@@ -569,10 +566,10 @@ class _EnhancedLineChartState extends State<EnhancedLineChart> {
         duration: const Duration(milliseconds: 200),
         padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
         decoration: BoxDecoration(
-          color: isSelected ? color.withOpacity(0.1) : Colors.transparent,
+          color: isSelected ? color.withValues(alpha: 0.1) : Colors.transparent,
           borderRadius: BorderRadius.circular(16),
           border: Border.all(
-            color: isSelected ? color : Colors.grey.withOpacity(0.3),
+            color: isSelected ? color : Colors.grey.withValues(alpha: 0.3),
             width: 1,
           ),
         ),
@@ -583,7 +580,7 @@ class _EnhancedLineChartState extends State<EnhancedLineChart> {
               width: 8,
               height: 8,
               decoration: BoxDecoration(
-                color: isSelected ? color : Colors.grey.withOpacity(0.5),
+                color: isSelected ? color : Colors.grey.withValues(alpha: 0.5),
                 shape: BoxShape.circle,
               ),
             ),
@@ -674,7 +671,7 @@ class _EnhancedLineChartState extends State<EnhancedLineChart> {
     return Container(
       height: 24,
       width: 1,
-      color: Colors.grey.withOpacity(0.2),
+      color: Colors.grey.withValues(alpha: 0.2),
     );
   }
 

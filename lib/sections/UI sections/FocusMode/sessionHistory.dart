@@ -31,7 +31,7 @@ class SessionHistory extends StatelessWidget {
                               .typography
                               .caption
                               ?.color
-                              ?.withOpacity(0.6),
+                              ?.withValues(alpha: 0.6),
                         ),
                   ),
                 ),
@@ -45,7 +45,7 @@ class SessionHistory extends StatelessWidget {
                               .typography
                               .caption
                               ?.color
-                              ?.withOpacity(0.6),
+                              ?.withValues(alpha: 0.6),
                         ),
                   ),
                 ),
@@ -78,7 +78,7 @@ class SessionHistory extends StatelessWidget {
                                     .typography
                                     .caption
                                     ?.color
-                                    ?.withOpacity(0.5),
+                                    ?.withValues(alpha: 0.5),
                               ),
                         ),
                       ],
@@ -128,7 +128,7 @@ class _SessionRowState extends State<_SessionRow> {
         padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
         decoration: BoxDecoration(
           color: _isHovered
-              ? FluentTheme.of(context).accentColor.withOpacity(0.05)
+              ? FluentTheme.of(context).accentColor.withValues(alpha: 0.05)
               : Colors.transparent,
           borderRadius: BorderRadius.circular(6),
         ),
@@ -138,7 +138,7 @@ class _SessionRowState extends State<_SessionRow> {
               width: 8,
               height: 8,
               decoration: BoxDecoration(
-                color: const Color(0xFFFF5C50).withOpacity(0.6),
+                color: const Color(0xFFFF5C50).withValues(alpha: 0.6),
                 shape: BoxShape.circle,
               ),
             ),
@@ -161,7 +161,7 @@ class _SessionRowState extends State<_SessionRow> {
                           .typography
                           .body
                           ?.color
-                          ?.withOpacity(0.7),
+                          ?.withValues(alpha: 0.7),
                     ),
               ),
             ),

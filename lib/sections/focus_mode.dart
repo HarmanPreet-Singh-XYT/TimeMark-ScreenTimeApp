@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:math' as math;
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:percent_indicator/percent_indicator.dart';
 import 'package:screentime/sections/UI%20sections/FocusMode/sessionHistory.dart';
@@ -277,7 +276,7 @@ class _FocusModeState extends State<FocusMode>
             Container(
               padding: const EdgeInsets.all(10),
               decoration: BoxDecoration(
-                color: const Color(0xFFFF5C50).withOpacity(0.1),
+                color: const Color(0xFFFF5C50).withValues(alpha: 0.1),
                 borderRadius: BorderRadius.circular(12),
               ),
               child: const Icon(
@@ -304,7 +303,7 @@ class _FocusModeState extends State<FocusMode>
                             .typography
                             .caption
                             ?.color
-                            ?.withOpacity(0.7),
+                            ?.withValues(alpha: 0.7),
                       ),
                 ),
               ],
@@ -395,7 +394,7 @@ class _FocusModeState extends State<FocusMode>
         Container(
           padding: const EdgeInsets.all(6),
           decoration: BoxDecoration(
-            color: FluentTheme.of(context).accentColor.withOpacity(0.1),
+            color: FluentTheme.of(context).accentColor.withValues(alpha: 0.1),
             borderRadius: BorderRadius.circular(6),
           ),
           child:
@@ -422,11 +421,9 @@ class _FocusModeState extends State<FocusMode>
 // Animated card wrapper with hover effects
 class _AnimatedCard extends StatefulWidget {
   final Widget child;
-  final EdgeInsets? padding;
 
   const _AnimatedCard({
     required this.child,
-    this.padding,
   });
 
   @override
@@ -449,15 +446,16 @@ class _AnimatedCardState extends State<_AnimatedCard> {
           borderRadius: BorderRadius.circular(12),
           border: Border.all(
             color: _isHovered
-                ? FluentTheme.of(context).accentColor.withOpacity(0.3)
+                ? FluentTheme.of(context).accentColor.withValues(alpha: 0.3)
                 : FluentTheme.of(context).inactiveBackgroundColor,
             width: 1,
           ),
           boxShadow: _isHovered
               ? [
                   BoxShadow(
-                    color:
-                        FluentTheme.of(context).accentColor.withOpacity(0.08),
+                    color: FluentTheme.of(context)
+                        .accentColor
+                        .withValues(alpha: 0.08),
                     blurRadius: 20,
                     offset: const Offset(0, 4),
                   ),
@@ -750,7 +748,7 @@ class _MeterState extends State<Meter> with TickerProviderStateMixin {
                       shape: BoxShape.circle,
                       boxShadow: [
                         BoxShadow(
-                          color: timerColor.withOpacity(0.15),
+                          color: timerColor.withValues(alpha: 0.15),
                           blurRadius: 40,
                           spreadRadius: 5,
                         ),
@@ -764,7 +762,7 @@ class _MeterState extends State<Meter> with TickerProviderStateMixin {
                   animationDuration: 300,
                   backgroundColor: FluentTheme.of(context)
                       .inactiveBackgroundColor
-                      .withOpacity(0.3),
+                      .withValues(alpha: 0.3),
                   percent: _percentComplete.clamp(0.0, 1.0),
                   center: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
@@ -792,7 +790,7 @@ class _MeterState extends State<Meter> with TickerProviderStateMixin {
                                     .typography
                                     .caption
                                     ?.color
-                                    ?.withOpacity(0.6),
+                                    ?.withValues(alpha: 0.6),
                                 fontWeight: FontWeight.w500,
                               ),
                         ),
@@ -939,12 +937,13 @@ class _MeterState extends State<Meter> with TickerProviderStateMixin {
                   color: isCompleted
                       ? const Color(0xFFFF5C50)
                       : isCurrent
-                          ? const Color(0xFFFF5C50).withOpacity(0.5)
+                          ? const Color(0xFFFF5C50).withValues(alpha: 0.5)
                           : FluentTheme.of(context).inactiveBackgroundColor,
                   boxShadow: isCompleted || isCurrent
                       ? [
                           BoxShadow(
-                            color: const Color(0xFFFF5C50).withOpacity(0.3),
+                            color:
+                                const Color(0xFFFF5C50).withValues(alpha: 0.3),
                             blurRadius: 4,
                             spreadRadius: 0,
                           ),
@@ -963,7 +962,7 @@ class _MeterState extends State<Meter> with TickerProviderStateMixin {
                     .typography
                     .caption
                     ?.color
-                    ?.withOpacity(0.5),
+                    ?.withValues(alpha: 0.5),
               ),
         ),
       ],
@@ -1035,7 +1034,9 @@ class _MeterState extends State<Meter> with TickerProviderStateMixin {
                 Container(
                   padding: const EdgeInsets.all(8),
                   decoration: BoxDecoration(
-                    color: FluentTheme.of(context).accentColor.withOpacity(0.1),
+                    color: FluentTheme.of(context)
+                        .accentColor
+                        .withValues(alpha: 0.1),
                     borderRadius: BorderRadius.circular(8),
                   ),
                   child: Icon(
@@ -1154,7 +1155,7 @@ class _MeterState extends State<Meter> with TickerProviderStateMixin {
                     decoration: BoxDecoration(
                       color: FluentTheme.of(context)
                           .inactiveBackgroundColor
-                          .withOpacity(0.3),
+                          .withValues(alpha: 0.3),
                       borderRadius: BorderRadius.circular(8),
                     ),
                     child: Column(
@@ -1253,7 +1254,7 @@ class _MeterState extends State<Meter> with TickerProviderStateMixin {
             Container(
               padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
               decoration: BoxDecoration(
-                color: color.withOpacity(0.1),
+                color: color.withValues(alpha: 0.1),
                 borderRadius: BorderRadius.circular(6),
               ),
               child: Text(

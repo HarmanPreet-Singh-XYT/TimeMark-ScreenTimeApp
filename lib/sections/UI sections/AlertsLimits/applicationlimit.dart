@@ -11,6 +11,7 @@ class ApplicationLimitsCard extends StatelessWidget {
   final VoidCallback onDataChanged;
 
   const ApplicationLimitsCard({
+    super.key,
     required this.appSummaries,
     required this.controller,
     required this.onDataChanged,
@@ -39,7 +40,7 @@ class ApplicationLimitsCard extends StatelessWidget {
                     Container(
                       padding: const EdgeInsets.all(8),
                       decoration: BoxDecoration(
-                        color: theme.accentColor.withOpacity(0.1),
+                        color: theme.accentColor.withValues(alpha: 0.1),
                         borderRadius: BorderRadius.circular(8),
                       ),
                       child: Icon(FluentIcons.app_icon_default,
@@ -61,7 +62,7 @@ class ApplicationLimitsCard extends StatelessWidget {
                             style: TextStyle(
                               fontSize: 12,
                               color: theme.typography.caption?.color
-                                  ?.withOpacity(0.6),
+                                  ?.withValues(alpha: 0.6),
                             ),
                           ),
                         ],
@@ -93,12 +94,14 @@ class ApplicationLimitsCard extends StatelessWidget {
                 padding:
                     const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
                 decoration: BoxDecoration(
-                  color: theme.accentColor.withOpacity(0.03),
+                  color: theme.accentColor.withValues(alpha: 0.03),
                   border: Border(
                     top: BorderSide(
-                        color: theme.inactiveBackgroundColor.withOpacity(0.5)),
+                        color: theme.inactiveBackgroundColor
+                            .withValues(alpha: 0.5)),
                     bottom: BorderSide(
-                        color: theme.inactiveBackgroundColor.withOpacity(0.5)),
+                        color: theme.inactiveBackgroundColor
+                            .withValues(alpha: 0.5)),
                   ),
                 ),
                 child: Row(
@@ -207,7 +210,7 @@ class ApplicationLimitsCard extends StatelessWidget {
                 Container(
                   padding: const EdgeInsets.all(8),
                   decoration: BoxDecoration(
-                    color: theme.accentColor.withOpacity(0.1),
+                    color: theme.accentColor.withValues(alpha: 0.1),
                     borderRadius: BorderRadius.circular(8),
                   ),
                   child: Icon(
@@ -281,7 +284,7 @@ class ApplicationLimitsCard extends StatelessWidget {
                               vertical: 8,
                             ),
                             decoration: BoxDecoration(
-                              color: theme.accentColor.withOpacity(0.1),
+                              color: theme.accentColor.withValues(alpha: 0.1),
                               borderRadius: BorderRadius.circular(6),
                             ),
                             child: Text(
@@ -363,7 +366,7 @@ class ApplicationLimitsCard extends StatelessWidget {
                 Container(
                   padding: const EdgeInsets.all(8),
                   decoration: BoxDecoration(
-                    color: theme.accentColor.withOpacity(0.1),
+                    color: theme.accentColor.withValues(alpha: 0.1),
                     borderRadius: BorderRadius.circular(8),
                   ),
                   child: Icon(
@@ -413,7 +416,7 @@ class ApplicationLimitsCard extends StatelessWidget {
                               vertical: 8,
                             ),
                             decoration: BoxDecoration(
-                              color: theme.accentColor.withOpacity(0.1),
+                              color: theme.accentColor.withValues(alpha: 0.1),
                               borderRadius: BorderRadius.circular(6),
                             ),
                             child: Text(
