@@ -251,9 +251,9 @@ class BackgroundAppTracker {
     }
 
     // Handle Windows Explorer as empty (idle)
-    if (newApp.contains("Windows Explorer")) {
-      newApp = "";
-    }
+    // if (newApp.contains("Windows Explorer")) {
+    //   newApp = "";
+    // }
 
     // If app changed, save the current app's time
     if (newApp != _currentApp) {
