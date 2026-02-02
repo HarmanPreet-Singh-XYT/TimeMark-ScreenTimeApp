@@ -3,19 +3,20 @@ import 'dart:ui';
 import 'package:flutter/foundation.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'dart:async';
-import 'package:synchronized/synchronized.dart'; 
+import 'package:synchronized/synchronized.dart';
+
 // TypeAdapters for complex types
 @HiveType(typeId: 1)
 class AppUsageRecord {
   @HiveField(0)
   final DateTime date;
-  
+
   @HiveField(1)
   final Duration timeSpent;
-  
+
   @HiveField(2)
   final int openCount;
-  
+
   @HiveField(3)
   final List<TimeRange> usagePeriods;
 
@@ -31,7 +32,7 @@ class AppUsageRecord {
 class TimeRange {
   @HiveField(0)
   final DateTime startTime;
-  
+
   @HiveField(1)
   final DateTime endTime;
 
@@ -39,7 +40,7 @@ class TimeRange {
     required this.startTime,
     required this.endTime,
   });
-  
+
   Duration get duration => endTime.difference(startTime);
 }
 
@@ -47,22 +48,22 @@ class TimeRange {
 class FocusSessionRecord {
   @HiveField(0)
   final DateTime date;
-  
+
   @HiveField(1)
   final DateTime startTime;
-  
+
   @HiveField(2)
   final Duration duration;
-  
+
   @HiveField(3)
   final List<String> appsBlocked;
-  
+
   @HiveField(4)
   final bool completed;
-  
+
   @HiveField(5)
   final int breakCount;
-  
+
   @HiveField(6)
   final Duration totalBreakTime;
 
@@ -75,7 +76,7 @@ class FocusSessionRecord {
     required this.breakCount,
     required this.totalBreakTime,
   });
-  
+
   Duration get focusTime => duration - totalBreakTime;
 }
 
@@ -83,16 +84,16 @@ class FocusSessionRecord {
 class AppMetadata {
   @HiveField(0)
   final String category;
-  
+
   @HiveField(1)
   final bool isProductive;
-  
+
   @HiveField(2)
   final bool isTracking;
-  
+
   @HiveField(3)
   final bool isVisible;
-  
+
   @HiveField(4)
   final Duration dailyLimit;
 
@@ -114,11 +115,11 @@ class AppDataStore extends ChangeNotifier {
   static const String _usageBoxName = 'harman_screentime_app_usage_box';
   static const String _focusBoxName = 'harman_screentime_focus_session_box';
   static const String _metadataBoxName = 'harman_screentime_app_metadata_box';
-  
+
   Box<AppUsageRecord>? _usageBox;
   Box<FocusSessionRecord>? _focusBox;
   Box<AppMetadata>? _metadataBox;
-  
+
   bool _isInitialized = false;
   String? _lastError;
   DateTime? _lastMaintenanceDate;
@@ -144,33 +145,39 @@ class AppDataStore extends ChangeNotifier {
   Future<bool> init() async {
     return await _initLock.synchronized(() async {
       if (_isInitialized) return true;
-      
+
       try {
         // Initialize Hive
         await Hive.initFlutter();
-        
+
         // Register adapters
-        if (!Hive.isAdapterRegistered(1)) Hive.registerAdapter(AppUsageRecordAdapter());
-        if (!Hive.isAdapterRegistered(2)) Hive.registerAdapter(TimeRangeAdapter());
-        if (!Hive.isAdapterRegistered(3)) Hive.registerAdapter(FocusSessionRecordAdapter());
-        if (!Hive.isAdapterRegistered(4)) Hive.registerAdapter(AppMetadataAdapter());
-        if (!Hive.isAdapterRegistered(5)) Hive.registerAdapter(DurationAdapter());
-        
+        if (!Hive.isAdapterRegistered(1))
+          Hive.registerAdapter(AppUsageRecordAdapter());
+        if (!Hive.isAdapterRegistered(2))
+          Hive.registerAdapter(TimeRangeAdapter());
+        if (!Hive.isAdapterRegistered(3))
+          Hive.registerAdapter(FocusSessionRecordAdapter());
+        if (!Hive.isAdapterRegistered(4))
+          Hive.registerAdapter(AppMetadataAdapter());
+        if (!Hive.isAdapterRegistered(5))
+          Hive.registerAdapter(DurationAdapter());
+
         // Open boxes with retry logic
         _usageBox = await _openBoxWithRetry<AppUsageRecord>(_usageBoxName);
         _focusBox = await _openBoxWithRetry<FocusSessionRecord>(_focusBoxName);
         _metadataBox = await _openBoxWithRetry<AppMetadata>(_metadataBoxName);
-        
+
         if (_usageBox == null || _focusBox == null || _metadataBox == null) {
-          _lastError = "Failed to open one or more Hive boxes after multiple attempts";
+          _lastError =
+              "Failed to open one or more Hive boxes after multiple attempts";
           return false;
         }
-        
+
         _isInitialized = true;
-        
+
         // Schedule periodic maintenance
         _schedulePeriodicMaintenance();
-        
+
         notifyListeners();
         return true;
       } catch (e) {
@@ -182,9 +189,10 @@ class AppDataStore extends ChangeNotifier {
   }
 
   // Helper method to open a box with retry logic
-  Future<Box<T>?> _openBoxWithRetry<T>(String boxName, {int maxRetries = 3}) async {
+  Future<Box<T>?> _openBoxWithRetry<T>(String boxName,
+      {int maxRetries = 3}) async {
     int attempts = 0;
-    
+
     while (attempts < maxRetries) {
       try {
         // Add additional parameters for better robustness
@@ -197,23 +205,24 @@ class AppDataStore extends ChangeNotifier {
         );
       } catch (e) {
         attempts++;
-        
+
         debugPrint("Box opening attempt $attempts failed: $e");
-        
+
         if (attempts >= maxRetries) {
-          _lastError = "Failed to open box $boxName after $maxRetries attempts: $e";
+          _lastError =
+              "Failed to open box $boxName after $maxRetries attempts: $e";
           debugPrint(_lastError);
           return null;
         }
-        
+
         // Check if box is corrupted or lock file is missing
-        if (e.toString().contains('corrupted') || 
-            e.toString().contains('not found') || 
+        if (e.toString().contains('corrupted') ||
+            e.toString().contains('not found') ||
             e.toString().contains('lock') ||
             e.toString().contains('permission')) {
           try {
             debugPrint("Attempting to delete and recreate box: $boxName");
-            
+
             // Force close any open instances
             try {
               final box = Hive.box(boxName);
@@ -221,7 +230,7 @@ class AppDataStore extends ChangeNotifier {
             } catch (_) {
               // Ignore errors during force close
             }
-            
+
             // Delete the box completely from disk
             await Hive.deleteBoxFromDisk(boxName);
             debugPrint("Deleted corrupted box: $boxName, retrying...");
@@ -229,29 +238,33 @@ class AppDataStore extends ChangeNotifier {
             debugPrint("Error deleting box: $deleteError");
           }
         }
-        
+
         // Exponential backoff before retry
         await Future.delayed(Duration(milliseconds: 200 * (1 << attempts)));
       }
     }
-    
+
     return null;
   }
 
   // New method to periodically check and repair boxes
   Future<void> checkAndRepairBoxes() async {
     debugPrint("Running database maintenance check...");
-    
+
     await _initLock.synchronized(() async {
       for (final boxInfo in [
         {'name': _usageBoxName, 'box': _usageBox, 'lock': _usageBoxLock},
         {'name': _focusBoxName, 'box': _focusBox, 'lock': _focusBoxLock},
-        {'name': _metadataBoxName, 'box': _metadataBox, 'lock': _metadataBoxLock},
+        {
+          'name': _metadataBoxName,
+          'box': _metadataBox,
+          'lock': _metadataBoxLock
+        },
       ]) {
         final String boxName = boxInfo['name'] as String;
         final Box? box = boxInfo['box'] as Box?;
         final Lock lock = boxInfo['lock'] as Lock;
-        
+
         await lock.synchronized(() async {
           try {
             // Check if box is open and valid
@@ -262,25 +275,26 @@ class AppDataStore extends ChangeNotifier {
                 debugPrint("Box $boxName is healthy");
               } catch (e) {
                 debugPrint("Box $boxName is corrupted, repairing: $e");
-                
+
                 // Close and reopen
                 try {
                   await box.close();
                 } catch (_) {
                   // Ignore close errors
                 }
-                
+
                 try {
                   await Hive.deleteBoxFromDisk(boxName);
                 } catch (deleteError) {
                   debugPrint("Error deleting box: $deleteError");
                 }
-                
+
                 // Reopen using type-specific locks
                 if (boxName == _usageBoxName) {
                   _usageBox = await _openBoxWithRetry<AppUsageRecord>(boxName);
                 } else if (boxName == _focusBoxName) {
-                  _focusBox = await _openBoxWithRetry<FocusSessionRecord>(boxName);
+                  _focusBox =
+                      await _openBoxWithRetry<FocusSessionRecord>(boxName);
                 } else if (boxName == _metadataBoxName) {
                   _metadataBox = await _openBoxWithRetry<AppMetadata>(boxName);
                 }
@@ -291,7 +305,8 @@ class AppDataStore extends ChangeNotifier {
               if (boxName == _usageBoxName) {
                 _usageBox = await _openBoxWithRetry<AppUsageRecord>(boxName);
               } else if (boxName == _focusBoxName) {
-                _focusBox = await _openBoxWithRetry<FocusSessionRecord>(boxName);
+                _focusBox =
+                    await _openBoxWithRetry<FocusSessionRecord>(boxName);
               } else if (boxName == _metadataBoxName) {
                 _metadataBox = await _openBoxWithRetry<AppMetadata>(boxName);
               }
@@ -301,7 +316,7 @@ class AppDataStore extends ChangeNotifier {
           }
         });
       }
-      
+
       _lastMaintenanceDate = DateTime.now();
     });
   }
@@ -310,21 +325,17 @@ class AppDataStore extends ChangeNotifier {
   void _schedulePeriodicMaintenance() {
     // Check if maintenance is needed (daily)
     final now = DateTime.now();
-    if (_lastMaintenanceDate == null || 
+    if (_lastMaintenanceDate == null ||
         now.difference(_lastMaintenanceDate!).inHours > 24) {
       checkAndRepairBoxes();
     }
   }
 
   // Generic method to perform operations with a box safely
-  Future<T> _withBox<T, B>(
-    B? box, 
-    Lock lock,
-    Future<T> Function(B box) operation, 
-    T defaultValue
-  ) async {
+  Future<T> _withBox<T, B>(B? box, Lock lock,
+      Future<T> Function(B box) operation, T defaultValue) async {
     if (!(_ensureInitialized()) || box == null) return defaultValue;
-    
+
     return await lock.synchronized(() async {
       try {
         return await operation(box);
@@ -338,7 +349,10 @@ class AppDataStore extends ChangeNotifier {
 
   // Ensure boxes are initialized
   bool _ensureInitialized() {
-    if (!_isInitialized || _usageBox == null || _focusBox == null || _metadataBox == null) {
+    if (!_isInitialized ||
+        _usageBox == null ||
+        _focusBox == null ||
+        _metadataBox == null) {
       _lastError = "AppDataStore not initialized. Call init() first.";
       debugPrint(_lastError);
       return false;
@@ -347,11 +361,11 @@ class AppDataStore extends ChangeNotifier {
   }
 
   // METADATA OPERATIONS
-  
+
   // Get all app names with error handling
   List<String> get allAppNames {
     if (!_ensureInitialized() || _metadataBox == null) return [];
-    
+
     try {
       return _metadataBox!.keys.cast<String>().toList();
     } catch (e) {
@@ -360,9 +374,10 @@ class AppDataStore extends ChangeNotifier {
       return [];
     }
   }
-  
+
   // Add or update app metadata with error handling
-  Future<bool> updateAppMetadata(String appName, {
+  Future<bool> updateAppMetadata(
+    String appName, {
     String? category,
     bool? isProductive,
     bool? isTracking,
@@ -371,17 +386,18 @@ class AppDataStore extends ChangeNotifier {
     bool? limitStatus,
   }) async {
     if (!_ensureInitialized() || _metadataBox == null) return false;
-    
+
     try {
       AppMetadata? existing;
-      
+
       try {
         existing = _metadataBox!.get(appName);
       } catch (e) {
         debugPrint("Error fetching existing metadata for $appName: $e");
         // Continue with null existing
       }
-      String defaultCategory = appName.startsWith(':') ? 'Idle' : 'Uncategorized';
+      String defaultCategory =
+          appName.startsWith(':') ? 'Idle' : 'Uncategorized';
       final AppMetadata updated = AppMetadata(
         category: category ?? existing?.category ?? defaultCategory,
         isProductive: isProductive ?? existing?.isProductive ?? false,
@@ -390,7 +406,7 @@ class AppDataStore extends ChangeNotifier {
         dailyLimit: dailyLimit ?? existing?.dailyLimit ?? Duration.zero,
         limitStatus: limitStatus ?? existing?.limitStatus ?? false,
       );
-      
+
       await _metadataBox!.put(appName, updated);
       notifyListeners();
       return true;
@@ -400,11 +416,11 @@ class AppDataStore extends ChangeNotifier {
       return false;
     }
   }
-  
+
   // Get app metadata with error handling
   AppMetadata? getAppMetadata(String appName) {
     if (!_ensureInitialized() || _metadataBox == null) return null;
-    
+
     try {
       return _metadataBox!.get(appName);
     } catch (e) {
@@ -413,11 +429,11 @@ class AppDataStore extends ChangeNotifier {
       return null;
     }
   }
-  
+
   // Delete app metadata with error handling
   Future<bool> deleteAppMetadata(String appName) async {
     if (!_ensureInitialized() || _metadataBox == null) return false;
-    
+
     try {
       if (_metadataBox!.containsKey(appName)) {
         await _metadataBox!.delete(appName);
@@ -434,115 +450,114 @@ class AppDataStore extends ChangeNotifier {
   }
 
   // APP USAGE OPERATIONS
-  
+
   // Record app usage with error handling
-  Future<bool> recordAppUsage(String appName, DateTime date, Duration timeSpent, int openCount, List<TimeRange> usagePeriods) async {
-    return await _withBox<bool, Box<AppUsageRecord>>(
-      _usageBox, 
-      _usageBoxLock,
-      (box) async {
-        final String key = '$appName:${_formatDateKey(date)}';
-        AppUsageRecord? existing;
-        
-        try {
-          existing = box.get(key);
-        } catch (e) {
-          debugPrint("Error fetching existing usage record for $key: $e");
-        }
-        
-        if (existing != null) {
-          final List<TimeRange> optimizedUsagePeriods = _optimizeUsagePeriods(
-            [...existing.usagePeriods, ...usagePeriods]
-          );
-          
-          final AppUsageRecord updated = AppUsageRecord(
-            date: date,
-            timeSpent: existing.timeSpent + timeSpent,
-            openCount: existing.openCount + openCount,
-            usagePeriods: optimizedUsagePeriods,
-          );
-          
-          await box.put(key, updated);
-        } else {
-          final AppUsageRecord record = AppUsageRecord(
-            date: date,
-            timeSpent: timeSpent,
-            openCount: openCount,
-            usagePeriods: usagePeriods,
-          );
-          
-          await box.put(key, record);
-        }
-        
-        notifyListeners();
-        return true;
-      },
-      false
-    );
+  Future<bool> recordAppUsage(String appName, DateTime date, Duration timeSpent,
+      int openCount, List<TimeRange> usagePeriods) async {
+    return await _withBox<bool, Box<AppUsageRecord>>(_usageBox, _usageBoxLock,
+        (box) async {
+      final String key = '$appName:${_formatDateKey(date)}';
+      AppUsageRecord? existing;
+
+      try {
+        existing = box.get(key);
+      } catch (e) {
+        debugPrint("Error fetching existing usage record for $key: $e");
+      }
+
+      if (existing != null) {
+        final List<TimeRange> optimizedUsagePeriods =
+            _optimizeUsagePeriods([...existing.usagePeriods, ...usagePeriods]);
+
+        final AppUsageRecord updated = AppUsageRecord(
+          date: date,
+          timeSpent: existing.timeSpent + timeSpent,
+          openCount: existing.openCount + openCount,
+          usagePeriods: optimizedUsagePeriods,
+        );
+
+        await box.put(key, updated);
+      } else {
+        final AppUsageRecord record = AppUsageRecord(
+          date: date,
+          timeSpent: timeSpent,
+          openCount: openCount,
+          usagePeriods: usagePeriods,
+        );
+
+        await box.put(key, record);
+      }
+
+      notifyListeners();
+      return true;
+    }, false);
   }
 
   // Helper method to optimize usage periods
   List<TimeRange> _optimizeUsagePeriods(List<TimeRange> periods) {
     if (periods.length <= 10) return periods;
-    
+
     // Sort periods by start time
     periods.sort((a, b) => a.startTime.compareTo(b.startTime));
-    
+
     // Group and merge very close periods (within 5 seconds)
     List<TimeRange> optimizedPeriods = [];
     TimeRange current = periods.first;
-    
+
     for (int i = 1; i < periods.length; i++) {
       TimeRange next = periods[i];
-      
+
       // If periods are very close, merge them
       if (next.startTime.difference(current.endTime).inSeconds <= 5) {
-        current = TimeRange(
-          startTime: current.startTime,
-          endTime: next.endTime
-        );
+        current =
+            TimeRange(startTime: current.startTime, endTime: next.endTime);
       } else {
         // Add current period and move to next
         optimizedPeriods.add(current);
         current = next;
       }
     }
-    
+
     // Add the last period
     optimizedPeriods.add(current);
-    
+
     // If still too many periods, keep only the most recent ones
     if (optimizedPeriods.length > 10) {
       return optimizedPeriods.sublist(optimizedPeriods.length - 10);
     }
-    
+
     return optimizedPeriods;
   }
-  
+
   // Get app usage for a specific day with error handling
   AppUsageRecord? getAppUsage(String appName, DateTime date) {
     if (!_ensureInitialized() || _usageBox == null) return null;
-    
+
     try {
       final String key = '$appName:${_formatDateKey(date)}';
       return _usageBox!.get(key);
     } catch (e) {
-      _lastError = "Error getting app usage for $appName on ${_formatDateKey(date)}: $e";
+      _lastError =
+          "Error getting app usage for $appName on ${_formatDateKey(date)}: $e";
       debugPrint(_lastError);
       return null;
     }
   }
-  
+
   // Get app usage for a date range with error handling
-  List<AppUsageRecord> getAppUsageRange(String appName, DateTime startDate, DateTime endDate) {
+  List<AppUsageRecord> getAppUsageRange(
+      String appName, DateTime startDate, DateTime endDate) {
     if (!_ensureInitialized() || _usageBox == null) return [];
-    
+
     try {
       final List<AppUsageRecord> result = [];
-      DateTime currentDate = DateTime(startDate.year, startDate.month, startDate.day);
-      final DateTime endOfRange = DateTime(endDate.year, endDate.month, endDate.day);
-      
-      while (currentDate.isBefore(endOfRange) || currentDate.day == endOfRange.day) {
+      DateTime currentDate =
+          DateTime(startDate.year, startDate.month, startDate.day);
+      final DateTime endOfRange =
+          DateTime(endDate.year, endDate.month, endDate.day);
+
+      while (currentDate.isBefore(endOfRange) ||
+          currentDate.day == endOfRange.day) {
         final AppUsageRecord? record = getAppUsage(appName, currentDate);
         if (record != null) {
           result.add(record);
@@ -550,7 +565,7 @@ class AppDataStore extends ChangeNotifier {
         // Properly add one day to currentDate
         currentDate = currentDate.add(const Duration(days: 1));
       }
-      
+
       return result;
     } catch (e) {
       _lastError = "Error getting app usage range for $appName: $e";
@@ -558,15 +573,16 @@ class AppDataStore extends ChangeNotifier {
       return [];
     }
   }
-  
+
   // FOCUS SESSION OPERATIONS
-  
+
   // Record focus session with error handling
   Future<bool> recordFocusSession(FocusSessionRecord session) async {
     if (!_ensureInitialized() || _focusBox == null) return false;
-    
+
     try {
-      final String key = '${_formatDateKey(session.date)}:${session.startTime.millisecondsSinceEpoch}';
+      final String key =
+          '${_formatDateKey(session.date)}:${session.startTime.millisecondsSinceEpoch}';
       await _focusBox!.put(key, session);
       notifyListeners();
       return true;
@@ -576,15 +592,15 @@ class AppDataStore extends ChangeNotifier {
       return false;
     }
   }
-  
+
   // Get focus sessions for a specific day with error handling
   List<FocusSessionRecord> getFocusSessions(DateTime date) {
     if (!_ensureInitialized() || _focusBox == null) return [];
-    
+
     try {
       final String dateKey = _formatDateKey(date);
       final List<FocusSessionRecord> result = [];
-      
+
       for (final key in _focusBox!.keys) {
         if (key.toString().startsWith(dateKey)) {
           try {
@@ -598,30 +614,35 @@ class AppDataStore extends ChangeNotifier {
           }
         }
       }
-      
+
       return result;
     } catch (e) {
-      _lastError = "Error getting focus sessions for ${_formatDateKey(date)}: $e";
+      _lastError =
+          "Error getting focus sessions for ${_formatDateKey(date)}: $e";
       debugPrint(_lastError);
       return [];
     }
   }
-  
+
   // Get focus sessions for a date range with error handling
-  List<FocusSessionRecord> getFocusSessionsRange(DateTime startDate, DateTime endDate) {
+  List<FocusSessionRecord> getFocusSessionsRange(
+      DateTime startDate, DateTime endDate) {
     if (!_ensureInitialized() || _focusBox == null) return [];
-    
+
     try {
       final List<FocusSessionRecord> result = [];
-      DateTime currentDate = DateTime(startDate.year, startDate.month, startDate.day);
-      final DateTime endOfRange = DateTime(endDate.year, endDate.month, endDate.day);
-      
-      while (currentDate.isBefore(endOfRange) || currentDate.day == endOfRange.day) {
+      DateTime currentDate =
+          DateTime(startDate.year, startDate.month, startDate.day);
+      final DateTime endOfRange =
+          DateTime(endDate.year, endDate.month, endDate.day);
+
+      while (currentDate.isBefore(endOfRange) ||
+          currentDate.day == endOfRange.day) {
         result.addAll(getFocusSessions(currentDate));
         // Properly add one day to currentDate
         currentDate = currentDate.add(const Duration(days: 1));
       }
-      
+
       return result;
     } catch (e) {
       _lastError = "Error getting focus sessions range: $e";
@@ -629,11 +650,11 @@ class AppDataStore extends ChangeNotifier {
       return [];
     }
   }
-  
+
   // Delete focus session with error handling
   Future<bool> deleteFocusSession(String key) async {
     if (!_ensureInitialized() || _focusBox == null) return false;
-    
+
     try {
       if (_focusBox!.containsKey(key)) {
         await _focusBox!.delete(key);
@@ -648,38 +669,39 @@ class AppDataStore extends ChangeNotifier {
       return false;
     }
   }
-  
+
   // ANALYTICS & DERIVED DATA
-  
+
   // Get total screen time for a specific day with error handling
   Duration getTotalScreenTime(DateTime date) {
     if (!_ensureInitialized()) return Duration.zero;
-    
+
     try {
       Duration total = Duration.zero;
-      
+
       for (final appName in allAppNames) {
         final AppUsageRecord? record = getAppUsage(appName, date);
         if (record != null) {
           total += record.timeSpent;
         }
       }
-      
+
       return total;
     } catch (e) {
-      _lastError = "Error calculating total screen time for ${_formatDateKey(date)}: $e";
+      _lastError =
+          "Error calculating total screen time for ${_formatDateKey(date)}: $e";
       debugPrint(_lastError);
       return Duration.zero;
     }
   }
-  
+
   // Get productive time for a specific day with error handling
   Duration getProductiveTime(DateTime date) {
     if (!_ensureInitialized()) return Duration.zero;
-    
+
     try {
       Duration total = Duration.zero;
-      
+
       for (final appName in allAppNames) {
         final AppMetadata? metadata = getAppMetadata(appName);
         if (metadata != null && metadata.isProductive) {
@@ -689,23 +711,24 @@ class AppDataStore extends ChangeNotifier {
           }
         }
       }
-      
+
       return total;
     } catch (e) {
-      _lastError = "Error calculating productive time for ${_formatDateKey(date)}: $e";
+      _lastError =
+          "Error calculating productive time for ${_formatDateKey(date)}: $e";
       debugPrint(_lastError);
       return Duration.zero;
     }
   }
-  
+
   // Get most used app for a specific day with error handling
   String getMostUsedApp(DateTime date) {
     if (!_ensureInitialized()) return "None";
-    
+
     try {
       String mostUsed = "None";
       Duration maxTime = Duration.zero;
-      
+
       for (final appName in allAppNames) {
         final AppUsageRecord? record = getAppUsage(appName, date);
         if (record != null && record.timeSpent > maxTime) {
@@ -713,157 +736,194 @@ class AppDataStore extends ChangeNotifier {
           mostUsed = appName;
         }
       }
-      
+
       return mostUsed;
     } catch (e) {
-      _lastError = "Error finding most used app for ${_formatDateKey(date)}: $e";
+      _lastError =
+          "Error finding most used app for ${_formatDateKey(date)}: $e";
       debugPrint(_lastError);
       return "Error";
     }
   }
-  
+
   // Get focus sessions count for a specific day with error handling
   int getFocusSessionsCount(DateTime date) {
     if (!_ensureInitialized()) return 0;
-    
+
     try {
-      return getFocusSessions(date).where((session) => session.completed).length;
+      return getFocusSessions(date)
+          .where((session) => session.completed)
+          .length;
     } catch (e) {
-      _lastError = "Error counting focus sessions for ${_formatDateKey(date)}: $e";
+      _lastError =
+          "Error counting focus sessions for ${_formatDateKey(date)}: $e";
       debugPrint(_lastError);
       return 0;
     }
   }
-  
+
   // Get total focus time for a specific day with error handling
   Duration getTotalFocusTime(DateTime date) {
     if (!_ensureInitialized()) return Duration.zero;
-    
+
     try {
       Duration total = Duration.zero;
-      
+
       for (final session in getFocusSessions(date)) {
         if (session.completed) {
           total += session.focusTime;
         }
       }
-      
+
       return total;
     } catch (e) {
-      _lastError = "Error calculating total focus time for ${_formatDateKey(date)}: $e";
+      _lastError =
+          "Error calculating total focus time for ${_formatDateKey(date)}: $e";
       debugPrint(_lastError);
       return Duration.zero;
     }
   }
-  
+
   // Get category breakdown for a specific day with error handling
   Map<String, Duration> getCategoryBreakdown(DateTime date) {
     if (!_ensureInitialized()) return {};
-    
+
     try {
       final Map<String, Duration> result = {};
-      
+
       for (final appName in allAppNames) {
         final AppMetadata? metadata = getAppMetadata(appName);
         final AppUsageRecord? record = getAppUsage(appName, date);
-        
+
         if (metadata != null && record != null) {
           final String category = metadata.category;
-          result[category] = (result[category] ?? Duration.zero) + record.timeSpent;
+          result[category] =
+              (result[category] ?? Duration.zero) + record.timeSpent;
         }
       }
-      
+
       return result;
     } catch (e) {
-      _lastError = "Error calculating category breakdown for ${_formatDateKey(date)}: $e";
+      _lastError =
+          "Error calculating category breakdown for ${_formatDateKey(date)}: $e";
       debugPrint(_lastError);
       return {};
     }
   }
-  
+
   // Calculate productivity score (0-100) for a specific day with error handling
   double getProductivityScore(DateTime date) {
     if (!_ensureInitialized()) return 0.0;
-    
+
     try {
-      final Duration totalScreenTime = getTotalScreenTime(date);
-      final Duration productiveTime = getProductiveTime(date);
-      final int focusSessions = getFocusSessionsCount(date);
-      
-      if (totalScreenTime.inSeconds == 0) {
-        return 0.0;
+      final total = getTotalScreenTime(date);
+      final productive = getProductiveTime(date);
+      final sessions = getFocusSessionsCount(date);
+
+      if (total.inMinutes < 10) {
+        return 0.0; // not enough data
       }
-      
-      final double productiveRatio = productiveTime.inSeconds / totalScreenTime.inSeconds;
-      final double sessionBonus = focusSessions * 0.5; // Each completed session adds 0.5 points
-      
-      // Calculate score from 0-100
-      final double rawScore = (productiveRatio * 80) + sessionBonus;
-      return rawScore > 100 ? 100 : rawScore;
+
+      final productiveRatio = productive.inSeconds / total.inSeconds;
+
+      final sessionBonus = (sessions * 0.5).clamp(0.0, 10.0);
+
+      final rawScore = (productiveRatio * 80) + sessionBonus;
+
+      return rawScore.clamp(0.0, 100.0);
     } catch (e) {
-      _lastError = "Error calculating productivity score for ${_formatDateKey(date)}: $e";
+      _lastError =
+          "Error calculating productivity score for ${_formatDateKey(date)}: $e";
       debugPrint(_lastError);
       return 0.0;
     }
   }
-  
+
   // Get average screen time for a date range with error handling
-  Duration getAverageScreenTime(DateTime startDate, DateTime endDate) {
+  Duration getAverageScreenTime(
+    DateTime startDate,
+    DateTime endDate,
+  ) {
     if (!_ensureInitialized()) return Duration.zero;
-    
+
     try {
-      final List<Duration> dailyTotals = [];
-      DateTime currentDate = DateTime(startDate.year, startDate.month, startDate.day);
-      final DateTime endOfRange = DateTime(endDate.year, endDate.month, endDate.day);
-      
-      while (currentDate.isBefore(endOfRange) || currentDate.day == endOfRange.day) {
-        dailyTotals.add(getTotalScreenTime(currentDate));
-        // Properly add one day to currentDate
-        currentDate = currentDate.add(const Duration(days: 1));
+      int totalSeconds = 0;
+      int daysWithData = 0;
+
+      DateTime current = DateTime(
+        startDate.year,
+        startDate.month,
+        startDate.day,
+      );
+
+      final DateTime end = DateTime(
+        endDate.year,
+        endDate.month,
+        endDate.day,
+      );
+
+      while (!current.isAfter(end)) {
+        final Duration dayTotal = getTotalScreenTime(current);
+
+        if (dayTotal.inSeconds > 0) {
+          totalSeconds += dayTotal.inSeconds;
+          daysWithData++;
+        }
+
+        current = current.add(const Duration(days: 1));
       }
-      
-      if (dailyTotals.isEmpty) return Duration.zero;
-      
-      final int totalMicroseconds = dailyTotals.fold(0, (sum, duration) => sum + duration.inMicroseconds);
-      return Duration(microseconds: totalMicroseconds ~/ dailyTotals.length);
+
+      if (daysWithData == 0) {
+        return Duration.zero;
+      }
+
+      return Duration(
+        seconds: totalSeconds ~/ daysWithData,
+      );
     } catch (e) {
       _lastError = "Error calculating average screen time: $e";
       debugPrint(_lastError);
       return Duration.zero;
     }
   }
-  
+
   // Get focus trend (positive or negative percentage) with error handling
   double getFocusTrend(DateTime currentWeekStart, DateTime previousWeekStart) {
     if (!_ensureInitialized()) return 0.0;
-    
+
     try {
-      final DateTime currentWeekEnd = currentWeekStart.add(const Duration(days: 6));
-      final DateTime previousWeekEnd = previousWeekStart.add(const Duration(days: 6));
-      
-      final Duration currentWeekFocus = getFocusSessionsRange(currentWeekStart, currentWeekEnd)
-          .where((session) => session.completed)
-          .fold(Duration.zero, (sum, session) => sum + session.focusTime);
-      
-      final Duration previousWeekFocus = getFocusSessionsRange(previousWeekStart, previousWeekEnd)
-          .where((session) => session.completed)
-          .fold(Duration.zero, (sum, session) => sum + session.focusTime);
-      
+      final DateTime currentWeekEnd =
+          currentWeekStart.add(const Duration(days: 6));
+      final DateTime previousWeekEnd =
+          previousWeekStart.add(const Duration(days: 6));
+
+      final Duration currentWeekFocus =
+          getFocusSessionsRange(currentWeekStart, currentWeekEnd)
+              .where((session) => session.completed)
+              .fold(Duration.zero, (sum, session) => sum + session.focusTime);
+
+      final Duration previousWeekFocus =
+          getFocusSessionsRange(previousWeekStart, previousWeekEnd)
+              .where((session) => session.completed)
+              .fold(Duration.zero, (sum, session) => sum + session.focusTime);
+
       if (previousWeekFocus.inSeconds == 0) return 0.0;
-      
-      return (currentWeekFocus.inSeconds - previousWeekFocus.inSeconds) / previousWeekFocus.inSeconds * 100;
+
+      return (currentWeekFocus.inSeconds - previousWeekFocus.inSeconds) /
+          previousWeekFocus.inSeconds *
+          100;
     } catch (e) {
       _lastError = "Error calculating focus trend: $e";
       debugPrint(_lastError);
       return 0.0;
     }
   }
-  
+
   // Helper method to format date as a consistent string key
   String _formatDateKey(DateTime date) {
     return '${date.year}-${date.month.toString().padLeft(2, '0')}-${date.day.toString().padLeft(2, '0')}';
   }
-  
+
   /// Clear all data with improved performance and error handling
   Future<bool> clearAllData({Function(double)? progressCallback}) async {
     return await _initLock.synchronized(() async {
@@ -871,31 +931,32 @@ class AppDataStore extends ChangeNotifier {
 
       try {
         if (progressCallback != null) progressCallback(0.1);
-        
+
         // Close all boxes first
         if (_usageBox != null && _usageBox!.isOpen) await _usageBox!.close();
         if (_focusBox != null && _focusBox!.isOpen) await _focusBox!.close();
-        if (_metadataBox != null && _metadataBox!.isOpen) await _metadataBox!.close();
-        
+        if (_metadataBox != null && _metadataBox!.isOpen)
+          await _metadataBox!.close();
+
         if (progressCallback != null) progressCallback(0.3);
-        
+
         // Delete boxes from disk
         await Hive.deleteBoxFromDisk(_usageBoxName);
         if (progressCallback != null) progressCallback(0.5);
-        
+
         await Hive.deleteBoxFromDisk(_focusBoxName);
         if (progressCallback != null) progressCallback(0.7);
-        
+
         await Hive.deleteBoxFromDisk(_metadataBoxName);
         if (progressCallback != null) progressCallback(0.9);
-        
+
         // Reinitialize boxes
         _usageBox = await _openBoxWithRetry<AppUsageRecord>(_usageBoxName);
         _focusBox = await _openBoxWithRetry<FocusSessionRecord>(_focusBoxName);
         _metadataBox = await _openBoxWithRetry<AppMetadata>(_metadataBoxName);
-        
+
         if (progressCallback != null) progressCallback(1.0);
-        
+
         notifyListeners();
         return true;
       } catch (e) {
@@ -911,8 +972,9 @@ class AppDataStore extends ChangeNotifier {
       try {
         if (_usageBox != null && _usageBox!.isOpen) await _usageBox!.close();
         if (_focusBox != null && _focusBox!.isOpen) await _focusBox!.close();
-        if (_metadataBox != null && _metadataBox!.isOpen) await _metadataBox!.close();
-        
+        if (_metadataBox != null && _metadataBox!.isOpen)
+          await _metadataBox!.close();
+
         await Hive.close();
         _isInitialized = false;
       } catch (e) {
@@ -921,6 +983,7 @@ class AppDataStore extends ChangeNotifier {
       }
     });
   }
+
   // Close boxes when app terminates
   @override
   Future<void> dispose() async {
@@ -928,19 +991,21 @@ class AppDataStore extends ChangeNotifier {
       try {
         if (_usageBox != null && _usageBox!.isOpen) await _usageBox!.close();
         if (_focusBox != null && _focusBox!.isOpen) await _focusBox!.close();
-        if (_metadataBox != null && _metadataBox!.isOpen) await _metadataBox!.close();
-        
+        if (_metadataBox != null && _metadataBox!.isOpen)
+          await _metadataBox!.close();
+
         _isInitialized = false;
       } catch (e) {
         debugPrint("Error closing Hive boxes: $e");
       }
     });
-    
+
     super.dispose();
   }
+
   // Helper method to implement app lifecycle events
   void handleAppLifecycleState(AppLifecycleState state) {
-    if (state == AppLifecycleState.paused || 
+    if (state == AppLifecycleState.paused ||
         state == AppLifecycleState.detached) {
       debugPrint("App going to background, ensuring data is flushed");
       _flushBoxes();
@@ -949,14 +1014,15 @@ class AppDataStore extends ChangeNotifier {
       checkAndRepairBoxes();
     }
   }
-  
+
   // Flush boxes to ensure data is written to disk
   Future<void> _flushBoxes() async {
     await _initLock.synchronized(() async {
       try {
         if (_usageBox != null && _usageBox!.isOpen) await _usageBox!.flush();
         if (_focusBox != null && _focusBox!.isOpen) await _focusBox!.flush();
-        if (_metadataBox != null && _metadataBox!.isOpen) await _metadataBox!.flush();
+        if (_metadataBox != null && _metadataBox!.isOpen)
+          await _metadataBox!.flush();
       } catch (e) {
         debugPrint("Error flushing Hive boxes: $e");
       }

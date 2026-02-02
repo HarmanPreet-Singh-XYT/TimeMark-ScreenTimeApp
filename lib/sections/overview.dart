@@ -71,7 +71,7 @@ class _OverviewState extends State<Overview> with TickerProviderStateMixin {
         mostUsedApp = overviewData.mostUsedApp;
         focusSessions = overviewData.focusSessions.toString();
         screenTime = overviewData.screenTimePercentage / 100;
-        productiveScore = overviewData.productivityScore / 100;
+        productiveScore = overviewData.productivityScore;
 
         topApplications = overviewData.topApplications
             .map((app) => {
