@@ -4,6 +4,7 @@ import 'package:screentime/l10n/app_localizations.dart';
 import 'package:hive_flutter/adapters.dart';
 import 'package:screentime/sections/controller/app_data_controller.dart';
 import 'package:screentime/sections/controller/notification_controller.dart';
+import 'package:screentime/utils/macos_window.dart';
 import './sections/overview.dart';
 import './sections/applications.dart';
 import './sections/alerts_limits.dart';
@@ -99,9 +100,17 @@ void main(List<String> args) async {
     if (wasSystemLaunchedWindows ||
         wasSystemLaunchedMacOS ||
         isMinimizeAtLaunch) {
-      win.hide();
+      if (Platform.isMacOS) {
+        await MacOSWindow.hide();
+      } else {
+        win.hide();
+      }
     } else {
-      win.show();
+      if (Platform.isMacOS) {
+        await MacOSWindow.show();
+      } else {
+        win.show();
+      }
     }
   });
 }
@@ -242,17 +251,29 @@ class _MyAppState extends State<MyApp>
   }
 
   void _showApp() {
-    appWindow.show();
+    if (Platform.isMacOS) {
+      MacOSWindow.show();
+    } else {
+      appWindow.show();
+    }
   }
 
   void _exitApp() {
-    appWindow.close();
+    if (Platform.isMacOS) {
+      MacOSWindow.exit();
+    } else {
+      appWindow.close();
+    }
   }
 
   void _openReports() {
     if (!appWindow.isVisible) {
       changeIndex(3);
-      appWindow.show();
+      if (Platform.isMacOS) {
+        MacOSWindow.show();
+      } else {
+        appWindow.show();
+      }
       setState(() {});
     } else {
       setState(() {
@@ -264,7 +285,11 @@ class _MyAppState extends State<MyApp>
   void _openAlerts() {
     if (!appWindow.isVisible) {
       changeIndex(2);
-      appWindow.show();
+      if (Platform.isMacOS) {
+        MacOSWindow.show();
+      } else {
+        appWindow.show();
+      }
       setState(() {});
     } else {
       setState(() {
@@ -276,7 +301,11 @@ class _MyAppState extends State<MyApp>
   void _openApplications() {
     if (!appWindow.isVisible) {
       changeIndex(1);
-      appWindow.show();
+      if (Platform.isMacOS) {
+        MacOSWindow.show();
+      } else {
+        appWindow.show();
+      }
       setState(() {});
     } else {
       setState(() {
@@ -285,16 +314,20 @@ class _MyAppState extends State<MyApp>
     }
   }
 
+  @override
+  void onTrayIconMouseDown() {
+    if (Platform.isMacOS) {
+      MacOSWindow.show();
+    } else {
+      appWindow.show();
+    }
+  }
+
   void _toggleNotifications() {
     setState(() {
       notificationsEnabled = !notificationsEnabled;
     });
     _updateTrayMenu();
-  }
-
-  @override
-  void onTrayIconMouseDown() {
-    appWindow.show();
   }
 
   @override
@@ -328,6 +361,7 @@ class _MyAppState extends State<MyApp>
   void dispose() {
     WidgetsBinding.instance.removeObserver(this);
     BackgroundAppTracker().dispose();
+    SingleInstanceIPC.dispose();
     _dataStore.dispose().then((_) {
       Hive.close();
     });
@@ -492,10 +526,8 @@ class TitleBar extends StatelessWidget {
     final isDarkMode = FluentTheme.of(context).brightness == Brightness.dark;
     final l10n = AppLocalizations.of(context)!;
     final backgroundColor = FluentTheme.of(context).micaBackgroundColor;
-
     final textColor =
         isDarkMode ? Colors.white : const Color.fromARGB(255, 20, 20, 20);
-
     final isMacOS = Platform.isMacOS;
 
     return WindowTitleBarBox(
@@ -503,6 +535,12 @@ class TitleBar extends StatelessWidget {
         color: backgroundColor,
         child: Row(
           children: [
+            // macOS: Buttons on LEFT (traffic light style)
+            if (isMacOS) const _MacOSWindowButtons(),
+
+            // OR use Windows-style buttons on RIGHT for macOS too:
+            // if (isMacOS) const SizedBox(width: 8),
+
             Expanded(
               child: MoveWindow(
                 child: Padding(
@@ -522,7 +560,13 @@ class TitleBar extends StatelessWidget {
                 ),
               ),
             ),
-            const WindowButtons(),
+
+            // Windows: Buttons on RIGHT
+            // macOS: If you want Windows-style buttons on right, use WindowButtons()
+            if (!isMacOS) const WindowButtons(),
+
+            // OR for consistent right-side buttons on all platforms:
+            // const WindowButtons(),
           ],
         ),
       ),
@@ -558,6 +602,131 @@ class WindowButtons extends StatelessWidget {
           onPressed: () => {appWindow.hide()},
         ),
       ],
+    );
+  }
+}
+
+/// macOS Custom Window Buttons
+class _MacOSWindowButtons extends StatefulWidget {
+  const _MacOSWindowButtons();
+
+  @override
+  State<_MacOSWindowButtons> createState() => _MacOSWindowButtonsState();
+}
+
+class _MacOSWindowButtonsState extends State<_MacOSWindowButtons> {
+  bool _isHoveringGroup = false;
+
+  @override
+  Widget build(BuildContext context) {
+    return MouseRegion(
+      onEnter: (_) => setState(() => _isHoveringGroup = true),
+      onExit: (_) => setState(() => _isHoveringGroup = false),
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 12),
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            _TrafficLightButton(
+              color: const Color(0xFFFF5F57), // Red - Close
+              hoverColor: const Color(0xFFFF3B30),
+              icon: FluentIcons.chrome_minimize,
+              showIcon: _isHoveringGroup,
+              onPressed: () => MacOSWindow.hide(),
+            ),
+            const SizedBox(width: 8),
+            _TrafficLightButton(
+              color: const Color(0xFFFFBD2E), // Yellow - Minimize
+              hoverColor: const Color(0xFFFF9500),
+              icon: FluentIcons.full_screen,
+              showIcon: _isHoveringGroup,
+              onPressed: () => MacOSWindow.minimize(),
+            ),
+            const SizedBox(width: 8),
+            _TrafficLightButton(
+              color: const Color(0xFF28CA41), // Green - Maximize
+              hoverColor: const Color(0xFF34C759),
+              icon: FluentIcons.chrome_close,
+              showIcon: _isHoveringGroup,
+              onPressed: () => MacOSWindow.maximize(),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class _TrafficLightButton extends StatefulWidget {
+  final Color color;
+  final Color hoverColor;
+  final IconData icon;
+  final bool showIcon;
+  final VoidCallback onPressed;
+
+  const _TrafficLightButton({
+    required this.color,
+    required this.hoverColor,
+    required this.icon,
+    required this.showIcon,
+    required this.onPressed,
+  });
+
+  @override
+  State<_TrafficLightButton> createState() => _TrafficLightButtonState();
+}
+
+class _TrafficLightButtonState extends State<_TrafficLightButton> {
+  bool _isHovering = false;
+  bool _isPressed = false;
+
+  @override
+  Widget build(BuildContext context) {
+    return MouseRegion(
+      onEnter: (_) => setState(() => _isHovering = true),
+      onExit: (_) => setState(() {
+        _isHovering = false;
+        _isPressed = false;
+      }),
+      child: GestureDetector(
+        onTapDown: (_) => setState(() => _isPressed = true),
+        onTapUp: (_) => setState(() => _isPressed = false),
+        onTapCancel: () => setState(() => _isPressed = false),
+        onTap: widget.onPressed,
+        child: AnimatedContainer(
+          duration: const Duration(milliseconds: 100),
+          width: 12,
+          height: 12,
+          decoration: BoxDecoration(
+            color: _isPressed
+                ? widget.hoverColor.withOpacity(0.7)
+                : (_isHovering ? widget.hoverColor : widget.color),
+            shape: BoxShape.circle,
+            border: Border.all(
+              color: widget.color.withOpacity(0.2),
+              width: 0.5,
+            ),
+            boxShadow: [
+              BoxShadow(
+                color: widget.color.withOpacity(0.3),
+                blurRadius: 1,
+                offset: const Offset(0, 0.5),
+              ),
+            ],
+          ),
+          child: AnimatedOpacity(
+            duration: const Duration(milliseconds: 100),
+            opacity: widget.showIcon ? 1.0 : 0.0,
+            child: Center(
+              child: Icon(
+                widget.icon,
+                size: 8,
+                color: Colors.black.withOpacity(0.5),
+              ),
+            ),
+          ),
+        ),
+      ),
     );
   }
 }

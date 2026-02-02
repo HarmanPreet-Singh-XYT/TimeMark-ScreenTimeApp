@@ -6,6 +6,7 @@ class MainFlutterWindow: BitsdojoWindow {
   override func bitsdojo_window_configure() -> UInt {
     return BDW_CUSTOM_FRAME | BDW_HIDE_ON_STARTUP
   }
+  
   override func awakeFromNib() {
     let flutterViewController = FlutterViewController()
     let windowFrame = self.frame
@@ -15,5 +16,18 @@ class MainFlutterWindow: BitsdojoWindow {
     RegisterGeneratedPlugins(registry: flutterViewController)
 
     super.awakeFromNib()
+    
+    // ✅ Add this - prevents window from being released when closed
+    self.isReleasedWhenClosed = false
+    
+    // Hide traffic light buttons
+    self.standardWindowButton(.closeButton)?.isHidden = true
+    self.standardWindowButton(.miniaturizeButton)?.isHidden = true
+    self.standardWindowButton(.zoomButton)?.isHidden = true
+  }
+  
+  // ✅ Optional: Override close to hide instead
+  override func close() {
+    self.orderOut(nil)
   }
 }
