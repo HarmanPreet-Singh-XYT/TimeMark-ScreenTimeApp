@@ -154,6 +154,7 @@ class ProgressCard extends StatefulWidget {
   final Color color;
 
   const ProgressCard({
+    super.key,
     required this.title,
     required this.value,
     required this.color,
@@ -165,6 +166,18 @@ class ProgressCard extends StatefulWidget {
 
 class _ProgressCardState extends State<ProgressCard> {
   bool _isHovered = false;
+  bool _isReady = false;
+
+  @override
+  void initState() {
+    super.initState();
+    // Defer rendering until after the first frame to ensure correct layout
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (mounted) {
+        setState(() => _isReady = true);
+      }
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -196,41 +209,70 @@ class _ProgressCardState extends State<ProgressCard> {
         ),
         child: LayoutBuilder(
           builder: (context, constraints) {
+            // Safety check: skip rendering if constraints are invalid or not ready
+            if (!_isReady ||
+                !constraints.hasBoundedHeight ||
+                !constraints.hasBoundedWidth ||
+                constraints.maxHeight == 0 ||
+                constraints.maxWidth == 0) {
+              return const Center(
+                child: SizedBox.shrink(),
+              );
+            }
+
             final availableSize = constraints.maxHeight < constraints.maxWidth
                 ? constraints.maxHeight
                 : constraints.maxWidth;
             final radius = (availableSize / 2) - 20;
             final lineWidth = radius * 0.18;
 
+            // Calculate font sizes with proper bounds
+            final percentFontSize = (radius * 0.35).clamp(14.0, 32.0);
+            final titleFontSize = (radius * 0.16).clamp(9.0, 14.0);
+
             return Center(
               child: CircularPercentIndicator(
-                radius: radius.clamp(30, 200),
-                lineWidth: lineWidth.clamp(6, 24),
+                radius: radius.clamp(30.0, 200.0),
+                lineWidth: lineWidth.clamp(6.0, 24.0),
                 animation: true,
                 animationDuration: 1200,
                 percent: widget.value.clamp(0.0, 1.0),
-                center: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Text(
-                      '${(widget.value * 100).toInt()}%',
-                      style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: (radius * 0.35).clamp(14, 32),
-                        color: widget.color,
+                center: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      FittedBox(
+                        fit: BoxFit.scaleDown,
+                        child: Text(
+                          '${(widget.value * 100).toInt()}%',
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: percentFontSize,
+                            color: widget.color,
+                          ),
+                          maxLines: 1,
+                          overflow: TextOverflow.visible,
+                        ),
                       ),
-                    ),
-                    const SizedBox(height: 4),
-                    Text(
-                      widget.title,
-                      style: TextStyle(
-                        fontSize: (radius * 0.16).clamp(9, 14),
-                        color: theme.inactiveColor,
-                        height: 1.2,
+                      const SizedBox(height: 4),
+                      FittedBox(
+                        fit: BoxFit.scaleDown,
+                        child: Text(
+                          widget.title,
+                          style: TextStyle(
+                            fontSize: titleFontSize,
+                            color: theme.inactiveColor,
+                            height: 1.2,
+                          ),
+                          textAlign: TextAlign.center,
+                          maxLines: 2,
+                          overflow: TextOverflow.ellipsis,
+                        ),
                       ),
-                      textAlign: TextAlign.center,
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
                 circularStrokeCap: CircularStrokeCap.round,
                 progressColor: widget.color,
