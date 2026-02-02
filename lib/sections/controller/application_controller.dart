@@ -241,8 +241,9 @@ class BackgroundAppTracker {
   }
 
   // Handle focus change (when user switches apps)
-  void _handleFocusChange(AppWindowDto window) {
-    String newApp = window.windowTitle;
+  void _handleFocusChange(AppWindowDto window) async {
+    // Get the actual app title using ForegroundWindowPlugin
+    String newApp = await _getCurrentActiveApp();
 
     // Ignore our own app
     if (newApp == "Productive ScreenTime" || newApp == "screentime") {
@@ -269,6 +270,17 @@ class BackgroundAppTracker {
 
       // Notify listeners
       _appUpdateController.add(_currentApp);
+    }
+  }
+
+  // Get current active app using ForegroundWindowPlugin
+  Future<String> _getCurrentActiveApp() async {
+    try {
+      WindowInfo info = await ForegroundWindowPlugin.getForegroundWindowInfo();
+      return info.programName;
+    } catch (e) {
+      debugPrint('❌ Error getting current app: $e');
+      return '';
     }
   }
 
