@@ -16,6 +16,7 @@ import 'package:screentime/sections/UI sections/Settings/footer.dart';
 import 'package:screentime/sections/UI sections/Settings/data.dart';
 import 'package:screentime/sections/UI sections/Settings/about.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:screentime/sections/UI sections/Settings/theme_customization_section.dart';
 
 // ============== SETTINGS PROVIDER (unchanged logic) ==============
 class SettingsProvider extends ChangeNotifier {
@@ -350,6 +351,8 @@ class _SettingsContentState extends State<SettingsContent> {
                                 const SizedBox(height: 20),
                                 const ied.BackupRestoreSection(),
                                 const SizedBox(height: 20),
+                                const ThemeCustomizationSection(),
+                                const SizedBox(height: 20),
                                 const AboutSection(),
                               ],
                             ),
@@ -369,6 +372,8 @@ class _SettingsContentState extends State<SettingsContent> {
                         const DataSection(),
                         const SizedBox(height: 20),
                         const ied.BackupRestoreSection(),
+                        const SizedBox(height: 20),
+                        const ThemeCustomizationSection(),
                         const SizedBox(height: 20),
                         const AboutSection(),
                       ],

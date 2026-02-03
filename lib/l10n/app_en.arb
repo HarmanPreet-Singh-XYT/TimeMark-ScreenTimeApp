@@ -971,9 +971,6 @@
   "dataSection": "Data",
   "versionSection": "Version",
   
-  "themeTitle": "Theme",
-  "themeDescription": "Color theme of the application (Change Requires Restart)",
-  
   "languageTitle": "Language",
   "languageDescription": "Language of the application",
   
@@ -1404,5 +1401,14 @@
         "type": "int"
       }
     }
-  }
+  },
+
+
+
+  
+  "themeLight": "Light",
+  "themeDark": "Dark",
+  "themeSystem": "System",
+  "themeTitle": "Theme",
+  "themeDescription": "Color theme of the application"
 }

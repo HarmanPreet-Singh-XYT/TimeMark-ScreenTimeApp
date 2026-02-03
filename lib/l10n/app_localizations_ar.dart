@@ -951,12 +951,6 @@ class AppLocalizationsAr extends AppLocalizations {
   String get versionSection => 'الإصدار';
 
   @override
-  String get themeTitle => 'السمة';
-
-  @override
-  String get themeDescription => 'سمة ألوان التطبيق (يتطلب إعادة التشغيل)';
-
-  @override
   String get languageTitle => 'اللغة';
 
   @override
@@ -1671,4 +1665,19 @@ class AppLocalizationsAr extends AppLocalizations {
   String timeFormatMinutesSeconds(int minutes, int seconds) {
     return '$minutes د $secondsث';
   }
+
+  @override
+  String get themeLight => 'Light';
+
+  @override
+  String get themeDark => 'Dark';
+
+  @override
+  String get themeSystem => 'System';
+
+  @override
+  String get themeTitle => 'السمة';
+
+  @override
+  String get themeDescription => 'سمة ألوان التطبيق (يتطلب إعادة التشغيل)';
 }

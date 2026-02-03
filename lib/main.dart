@@ -22,73 +22,31 @@ import 'package:flutter_single_instance/flutter_single_instance.dart';
 import 'utils/single_instance_ipc.dart';
 import 'package:flutter/services.dart';
 import 'dart:ui' show lerpDouble;
-
+// ADD THESE IMPORTS
+import 'package:provider/provider.dart';
+import 'package:screentime/sections/UI sections/Settings/theme_provider.dart';
+import 'package:screentime/sections/UI sections/Settings/theme_customization_model.dart';
+// IMPORTANT: Import the new dynamic AppDesign
+import 'package:screentime/app_design.dart';
 // ============================================================================
-// DESIGN SYSTEM
+// NAVIGATION STATE - Add this near the top of the file
 // ============================================================================
 
-class AppDesign {
-  // Brand Colors
-  static const Color primaryAccent = Color(0xFF6366F1);
-  static const Color secondaryAccent = Color(0xFF8B5CF6);
-  static const Color successColor = Color(0xFF10B981);
-  static const Color warningColor = Color(0xFFF59E0B);
-  static const Color errorColor = Color(0xFFEF4444);
+class NavigationState extends ChangeNotifier {
+  int _selectedIndex = 0;
 
-  // Light Theme
-  static const Color lightBackground = Color(0xFFF8FAFC);
-  static const Color lightSurface = Color(0xFFFFFFFF);
-  static const Color lightSurfaceSecondary = Color(0xFFF1F5F9);
-  static const Color lightBorder = Color(0xFFE2E8F0);
-  static const Color lightTextPrimary = Color(0xFF1E293B);
-  static const Color lightTextSecondary = Color(0xFF64748B);
+  int get selectedIndex => _selectedIndex;
 
-  // Dark Theme - Obsidian Night
-  static const Color darkBackground = Color(0xFF0D0D12); // Near black
-  static const Color darkSurface = Color(0xFF16161D); // Dark purple-black
-  static const Color darkSurfaceSecondary = Color(0xFF1E1E28); // Soft obsidian
-  static const Color darkBorder = Color(0xFF2D2D3A); // Muted violet-gray
-  static const Color darkTextPrimary = Color(0xFFF0F0F5); // Cool white
-  static const Color darkTextSecondary = Color(0xFF8888A0); // Lavender gray
-
-  // Spacing
-  static const double spacingXs = 4.0;
-  static const double spacingSm = 8.0;
-  static const double spacingMd = 12.0;
-  static const double spacingLg = 16.0;
-  static const double spacingXl = 24.0;
-
-  // Border Radius
-  static const double radiusSm = 6.0;
-  static const double radiusMd = 8.0;
-  static const double radiusLg = 12.0;
-
-  // Animations
-  static const Duration animFast = Duration(milliseconds: 150);
-  static const Duration animMedium = Duration(milliseconds: 250);
-  static const Duration animSlow = Duration(milliseconds: 350);
-
-  // Sidebar
-  static const double sidebarExpandedWidth = 280.0;
-  static const double sidebarCollapsedWidth = 68.0;
-
-  // Gradients
-  static const LinearGradient primaryGradient = LinearGradient(
-    colors: [primaryAccent, secondaryAccent],
-    begin: Alignment.topLeft,
-    end: Alignment.bottomRight,
-  );
-
-  static LinearGradient subtleGradient(bool isDark) => LinearGradient(
-        colors: [
-          primaryAccent.withValues(alpha: isDark ? 0.15 : 0.08),
-          secondaryAccent.withValues(alpha: isDark ? 0.15 : 0.08),
-        ],
-        begin: Alignment.topLeft,
-        end: Alignment.bottomRight,
-      );
+  void changeIndex(int value) {
+    if (_selectedIndex != value) {
+      _selectedIndex = value;
+      notifyListeners();
+    }
+  }
 }
 
+// Create a global instance or use Provider
+final navigationState = NavigationState();
 // ============================================================================
 // MAIN
 // ============================================================================
@@ -186,31 +144,127 @@ String? _detectSystemLocale() {
 }
 
 // ============================================================================
-// THEME DATA
+// THEME DATA - UPDATED to use CustomThemeData
 // ============================================================================
 
-FluentThemeData buildLightTheme() {
+FluentThemeData buildLightTheme(CustomThemeData themeData) {
   return FluentThemeData(
     brightness: Brightness.light,
-    accentColor: Colors.purple,
-    scaffoldBackgroundColor: AppDesign.lightBackground,
-    cardColor: AppDesign.lightSurface,
-    micaBackgroundColor: AppDesign.lightSurface,
+    accentColor: AccentColor.swatch({
+      'normal': themeData.primaryAccent,
+      'dark': themeData.secondaryAccent,
+      'darker': themeData.primaryAccent.withValues(alpha: 0.8),
+      'darkest': themeData.primaryAccent.withValues(alpha: 0.6),
+    }),
+    scaffoldBackgroundColor: themeData.lightBackground,
+    cardColor: themeData.lightSurface,
+    micaBackgroundColor: themeData.lightSurface,
+    inactiveBackgroundColor: themeData.lightBorder,
+    typography: Typography.raw(
+      caption: TextStyle(
+        fontSize: 12,
+        color: themeData.lightTextSecondary,
+        fontWeight: FontWeight.normal,
+      ),
+      body: TextStyle(
+        fontSize: 14,
+        color: themeData.lightTextPrimary,
+        fontWeight: FontWeight.normal,
+      ),
+      bodyLarge: TextStyle(
+        fontSize: 16,
+        color: themeData.lightTextPrimary,
+        fontWeight: FontWeight.normal,
+      ),
+      bodyStrong: TextStyle(
+        fontSize: 14,
+        color: themeData.lightTextPrimary,
+        fontWeight: FontWeight.w600,
+      ),
+      subtitle: TextStyle(
+        fontSize: 20,
+        color: themeData.lightTextPrimary,
+        fontWeight: FontWeight.w600,
+      ),
+      title: TextStyle(
+        fontSize: 28,
+        color: themeData.lightTextPrimary,
+        fontWeight: FontWeight.w600,
+      ),
+      titleLarge: TextStyle(
+        fontSize: 40,
+        color: themeData.lightTextPrimary,
+        fontWeight: FontWeight.w600,
+      ),
+      display: TextStyle(
+        fontSize: 68,
+        color: themeData.lightTextPrimary,
+        fontWeight: FontWeight.w600,
+      ),
+    ),
   );
 }
 
-FluentThemeData buildDarkTheme() {
+FluentThemeData buildDarkTheme(CustomThemeData themeData) {
   return FluentThemeData(
     brightness: Brightness.dark,
-    accentColor: Colors.purple,
-    scaffoldBackgroundColor: AppDesign.darkBackground,
-    cardColor: AppDesign.darkSurface,
-    micaBackgroundColor: AppDesign.darkSurfaceSecondary,
+    accentColor: AccentColor.swatch({
+      'normal': themeData.primaryAccent,
+      'dark': themeData.secondaryAccent,
+      'darker': themeData.primaryAccent.withValues(alpha: 0.8),
+      'darkest': themeData.primaryAccent.withValues(alpha: 0.6),
+    }),
+    scaffoldBackgroundColor: themeData.darkBackground,
+    cardColor: themeData.darkSurface,
+    micaBackgroundColor: themeData.darkSurfaceSecondary,
+    inactiveBackgroundColor: themeData.darkBorder,
+    typography: Typography.raw(
+      caption: TextStyle(
+        fontSize: 12,
+        color: themeData.darkTextSecondary,
+        fontWeight: FontWeight.normal,
+      ),
+      body: TextStyle(
+        fontSize: 14,
+        color: themeData.darkTextPrimary,
+        fontWeight: FontWeight.normal,
+      ),
+      bodyLarge: TextStyle(
+        fontSize: 16,
+        color: themeData.darkTextPrimary,
+        fontWeight: FontWeight.normal,
+      ),
+      bodyStrong: TextStyle(
+        fontSize: 14,
+        color: themeData.darkTextPrimary,
+        fontWeight: FontWeight.w600,
+      ),
+      subtitle: TextStyle(
+        fontSize: 20,
+        color: themeData.darkTextPrimary,
+        fontWeight: FontWeight.w600,
+      ),
+      title: TextStyle(
+        fontSize: 28,
+        color: themeData.darkTextPrimary,
+        fontWeight: FontWeight.w600,
+      ),
+      titleLarge: TextStyle(
+        fontSize: 40,
+        color: themeData.darkTextPrimary,
+        fontWeight: FontWeight.w600,
+      ),
+      display: TextStyle(
+        fontSize: 68,
+        color: themeData.darkTextPrimary,
+        fontWeight: FontWeight.w600,
+      ),
+    ),
   );
 }
 
 // ============================================================================
-// MY APP
+// MY APP - UPDATED with Provider integration
 // ============================================================================
 
 class MyApp extends StatefulWidget {
@@ -231,12 +285,13 @@ class _MyAppState extends State<MyApp>
     with TrayListener, WidgetsBindingObserver {
   bool notificationsEnabled = true;
   final String appVersion = "v${SettingsManager().versionInfo["version"]}";
-  int selectedIndex = 0;
+  // REMOVED: int selectedIndex = 0;  -- Now using navigationState
   final AppDataStore _dataStore = AppDataStore();
   Locale? _locale;
 
+  // UPDATED: Use navigationState instead
   void changeIndex(int value) {
-    setState(() => selectedIndex = value);
+    navigationState.changeIndex(value);
   }
 
   void setLocale(Locale locale) async {
@@ -305,7 +360,6 @@ class _MyAppState extends State<MyApp>
   void _openSection(int index) {
     changeIndex(index);
     _showApp();
-    setState(() {});
   }
 
   @override
@@ -350,10 +404,50 @@ class _MyAppState extends State<MyApp>
 
   @override
   Widget build(BuildContext context) {
+    // WRAP WITH BOTH PROVIDERS
+    return MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (_) => ThemeCustomizationProvider()),
+        ChangeNotifierProvider.value(value: navigationState),
+      ],
+      child: _AppWithTheme(
+        initialTheme: widget.initialTheme,
+        locale: _locale,
+        setLocale: setLocale,
+      ),
+    );
+  }
+}
+
+// ============================================================================
+// APP WITH THEME - FIXED with key-based rebuild strategy
+// ============================================================================
+
+class _AppWithTheme extends StatelessWidget {
+  final AdaptiveThemeMode initialTheme;
+  final Locale? locale;
+  final Function(Locale) setLocale;
+
+  const _AppWithTheme({
+    required this.initialTheme,
+    required this.locale,
+    required this.setLocale,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final themeProvider = context.watch<ThemeCustomizationProvider>();
+    final customTheme = themeProvider.currentTheme;
+    final themeMode = themeProvider.adaptiveThemeMode;
+
+    // Composite key: rebuilds when either custom theme or mode changes
+    final themeKey = '${customTheme.id}_${themeProvider.themeMode}';
+
     return FluentAdaptiveTheme(
-      light: buildLightTheme(),
-      dark: buildDarkTheme(),
-      initial: widget.initialTheme,
+      key: ValueKey(themeKey),
+      light: buildLightTheme(customTheme),
+      dark: buildDarkTheme(customTheme),
+      initial: themeMode, // Use mode from provider
       builder: (theme, darkTheme) => FluentApp(
         title: 'TimeMark',
         theme: theme,
@@ -361,31 +455,24 @@ class _MyAppState extends State<MyApp>
         navigatorKey: navigatorKey,
         localizationsDelegates: AppLocalizations.localizationsDelegates,
         supportedLocales: AppLocalizations.supportedLocales,
-        locale: _locale,
+        locale: locale,
         debugShowCheckedModeBanner: false,
         home: HomePage(
-          selectedIndex: selectedIndex,
-          changeIndex: changeIndex,
           setLocale: setLocale,
         ),
       ),
     );
   }
 }
-
 // ============================================================================
 // HOME PAGE WITH CUSTOM COLLAPSIBLE SIDEBAR
 // ============================================================================
 
 class HomePage extends StatefulWidget {
-  final int selectedIndex;
-  final Function(int) changeIndex;
   final Function(Locale) setLocale;
 
   const HomePage({
     super.key,
-    required this.selectedIndex,
-    required this.changeIndex,
     required this.setLocale,
   });
 
@@ -409,7 +496,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
       parent: _sidebarAnimController,
       curve: Curves.easeInOutCubic,
     );
-    _sidebarAnimController.value = 1.0; // Start expanded
+    _sidebarAnimController.value = 1.0;
   }
 
   @override
@@ -434,18 +521,18 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
     final isDark = FluentTheme.of(context).brightness == Brightness.dark;
     final l10n = AppLocalizations.of(context)!;
 
+    // WATCH the navigation state
+    final navState = context.watch<NavigationState>();
+
     return Column(
       children: [
-        // Title Bar
         EnhancedTitleBar(
           onToggleSidebar: _toggleSidebar,
           isSidebarExpanded: _isSidebarExpanded,
         ),
-        // Main Content
         Expanded(
           child: Row(
             children: [
-              // Custom Animated Sidebar - USE AnimatedBuilder CORRECTLY
               AnimatedBuilder(
                 animation: _sidebarAnimation,
                 builder: (context, child) {
@@ -462,18 +549,17 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                       width: width,
                       isExpanded: _isSidebarExpanded,
                       expandProgress: expandProgress,
-                      selectedIndex: widget.selectedIndex,
-                      onItemSelected: widget.changeIndex,
+                      selectedIndex: navState.selectedIndex, // FROM PROVIDER
+                      onItemSelected: navState.changeIndex, // FROM PROVIDER
                       isDark: isDark,
                       l10n: l10n,
                     ),
                   );
                 },
               ),
-              // Content Area
               Expanded(
                 child: _ContentArea(
-                  selectedIndex: widget.selectedIndex,
+                  selectedIndex: navState.selectedIndex, // FROM PROVIDER
                   setLocale: widget.setLocale,
                   isDark: isDark,
                 ),
@@ -705,18 +791,18 @@ class _SidebarHeader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final design = AppDesign.of(context);
     final padding = isCompact ? AppDesign.spacingSm : AppDesign.spacingLg;
     final margin = isCompact ? AppDesign.spacingXs : AppDesign.spacingMd;
-
     return ClipRect(
       child: Container(
         margin: EdgeInsets.all(margin),
         padding: EdgeInsets.all(padding),
         decoration: BoxDecoration(
-          gradient: AppDesign.subtleGradient(isDark),
+          gradient: design.subtleGradient(isDark),
           borderRadius: BorderRadius.circular(AppDesign.radiusLg),
           border: Border.all(
-            color: AppDesign.primaryAccent.withValues(alpha: 0.2),
+            color: design.primaryAccent.withValues(alpha: 0.2),
             width: 1,
           ),
         ),
@@ -728,11 +814,11 @@ class _SidebarHeader extends StatelessWidget {
             Container(
               padding: const EdgeInsets.all(AppDesign.spacingSm),
               decoration: BoxDecoration(
-                gradient: AppDesign.primaryGradient,
+                gradient: design.primaryGradient,
                 borderRadius: BorderRadius.circular(AppDesign.radiusMd),
                 boxShadow: [
                   BoxShadow(
-                    color: AppDesign.primaryAccent.withValues(alpha: 0.3),
+                    color: design.primaryAccent.withValues(alpha: 0.3),
                     blurRadius: 8,
                     offset: const Offset(0, 2),
                   ),
@@ -761,8 +847,8 @@ class _SidebarHeader extends StatelessWidget {
                           fontSize: 16,
                           fontWeight: FontWeight.w700,
                           color: isDark
-                              ? AppDesign.darkTextPrimary
-                              : AppDesign.lightTextPrimary,
+                              ? design.darkTextPrimary
+                              : design.lightTextPrimary,
                         ),
                         overflow: TextOverflow.ellipsis,
                         maxLines: 1,
@@ -773,8 +859,8 @@ class _SidebarHeader extends StatelessWidget {
                         style: TextStyle(
                           fontSize: 11,
                           color: isDark
-                              ? AppDesign.darkTextSecondary
-                              : AppDesign.lightTextSecondary,
+                              ? design.darkTextSecondary
+                              : design.lightTextSecondary,
                         ),
                         overflow: TextOverflow.ellipsis,
                         maxLines: 1,
@@ -823,25 +909,24 @@ class _SidebarItemState extends State<_SidebarItem> {
 
   @override
   Widget build(BuildContext context) {
+    final design = AppDesign.of(context);
     // Colors
     Color bgColor = Colors.transparent;
-    Color iconColor = widget.isDark
-        ? AppDesign.darkTextSecondary
-        : AppDesign.lightTextSecondary;
+    Color iconColor =
+        widget.isDark ? design.darkTextSecondary : design.lightTextSecondary;
     Color textColor = iconColor;
 
     if (widget.isSelected) {
       bgColor =
-          AppDesign.primaryAccent.withValues(alpha: widget.isDark ? 0.2 : 0.1);
-      iconColor = AppDesign.primaryAccent;
-      textColor = AppDesign.primaryAccent;
+          design.primaryAccent.withValues(alpha: widget.isDark ? 0.2 : 0.1);
+      iconColor = design.primaryAccent;
+      textColor = design.primaryAccent;
     } else if (_isHovering) {
       bgColor = widget.isDark
           ? Colors.white.withValues(alpha: 0.05)
           : Colors.black.withValues(alpha: 0.03);
-      iconColor = widget.isDark
-          ? AppDesign.darkTextPrimary
-          : AppDesign.lightTextPrimary;
+      iconColor =
+          widget.isDark ? design.darkTextPrimary : design.lightTextPrimary;
       textColor = iconColor;
     }
 
@@ -859,7 +944,7 @@ class _SidebarItemState extends State<_SidebarItem> {
           borderRadius: BorderRadius.circular(AppDesign.radiusMd),
           border: widget.isSelected
               ? Border.all(
-                  color: AppDesign.primaryAccent.withValues(alpha: 0.3),
+                  color: design.primaryAccent.withValues(alpha: 0.3),
                   width: 1,
                 )
               : null,
@@ -874,7 +959,7 @@ class _SidebarItemState extends State<_SidebarItem> {
                 height: 3,
                 margin: const EdgeInsets.only(bottom: AppDesign.spacingXs),
                 decoration: BoxDecoration(
-                  color: AppDesign.primaryAccent,
+                  color: design.primaryAccent,
                   borderRadius: BorderRadius.circular(2),
                 ),
               ),
@@ -883,7 +968,7 @@ class _SidebarItemState extends State<_SidebarItem> {
               padding: const EdgeInsets.all(AppDesign.spacingSm),
               decoration: BoxDecoration(
                 color: widget.isSelected
-                    ? AppDesign.primaryAccent.withValues(alpha: 0.1)
+                    ? design.primaryAccent.withValues(alpha: 0.1)
                     : Colors.transparent,
                 borderRadius: BorderRadius.circular(AppDesign.radiusSm),
               ),
@@ -908,7 +993,7 @@ class _SidebarItemState extends State<_SidebarItem> {
           borderRadius: BorderRadius.circular(AppDesign.radiusMd),
           border: widget.isSelected
               ? Border.all(
-                  color: AppDesign.primaryAccent.withValues(alpha: 0.3),
+                  color: design.primaryAccent.withValues(alpha: 0.3),
                   width: 1,
                 )
               : null,
@@ -922,7 +1007,7 @@ class _SidebarItemState extends State<_SidebarItem> {
               height: widget.isSelected ? 20 : 0,
               margin: const EdgeInsets.only(right: AppDesign.spacingSm),
               decoration: BoxDecoration(
-                color: AppDesign.primaryAccent,
+                color: design.primaryAccent,
                 borderRadius: BorderRadius.circular(2),
               ),
             ),
@@ -932,7 +1017,7 @@ class _SidebarItemState extends State<_SidebarItem> {
               padding: const EdgeInsets.all(AppDesign.spacingXs),
               decoration: BoxDecoration(
                 color: widget.isSelected
-                    ? AppDesign.primaryAccent.withValues(alpha: 0.1)
+                    ? design.primaryAccent.withValues(alpha: 0.1)
                     : Colors.transparent,
                 borderRadius: BorderRadius.circular(AppDesign.radiusSm),
               ),
@@ -970,7 +1055,7 @@ class _SidebarItemState extends State<_SidebarItem> {
                 child: Icon(
                   FluentIcons.chevron_right,
                   size: 12,
-                  color: AppDesign.primaryAccent,
+                  color: design.primaryAccent,
                 ),
               ),
           ],
@@ -996,9 +1081,8 @@ class _SidebarItemState extends State<_SidebarItem> {
           ],
         ),
         textStyle: TextStyle(
-          color: widget.isDark
-              ? AppDesign.darkTextPrimary
-              : AppDesign.lightTextPrimary,
+          color:
+              widget.isDark ? design.darkTextPrimary : design.lightTextPrimary,
           fontSize: 12,
         ),
       ),
@@ -1035,7 +1119,7 @@ class _SidebarFooter extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final version = "v${SettingsManager().versionInfo["version"]}";
-
+    final design = AppDesign.of(context);
     return ClipRect(
       child: Container(
         padding: EdgeInsets.all(
@@ -1055,9 +1139,8 @@ class _SidebarFooter extends StatelessWidget {
             Icon(
               FluentIcons.info,
               size: 14,
-              color: isDark
-                  ? AppDesign.darkTextSecondary
-                  : AppDesign.lightTextSecondary,
+              color:
+                  isDark ? design.darkTextSecondary : design.lightTextSecondary,
             ),
             if (!isCompact && expandProgress > 0.6) ...[
               const SizedBox(width: AppDesign.spacingSm),
@@ -1069,8 +1152,8 @@ class _SidebarFooter extends StatelessWidget {
                     style: TextStyle(
                       fontSize: 11,
                       color: isDark
-                          ? AppDesign.darkTextSecondary
-                          : AppDesign.lightTextSecondary,
+                          ? design.darkTextSecondary
+                          : design.lightTextSecondary,
                     ),
                     overflow: TextOverflow.ellipsis,
                   ),
@@ -1166,7 +1249,7 @@ class EnhancedTitleBar extends StatelessWidget {
     final isDark = FluentTheme.of(context).brightness == Brightness.dark;
     final l10n = AppLocalizations.of(context)!;
     final isMacOS = Platform.isMacOS;
-
+    final design = AppDesign.of(context);
     return WindowTitleBarBox(
       child: Container(
         decoration: BoxDecoration(
@@ -1218,8 +1301,8 @@ class EnhancedTitleBar extends StatelessWidget {
                           fontSize: 13,
                           fontWeight: FontWeight.w600,
                           color: isDark
-                              ? AppDesign.darkTextPrimary
-                              : AppDesign.lightTextPrimary,
+                              ? design.darkTextPrimary
+                              : design.lightTextPrimary,
                         ),
                       ),
                     ],
@@ -1261,6 +1344,7 @@ class _SidebarToggleButtonState extends State<_SidebarToggleButton> {
 
   @override
   Widget build(BuildContext context) {
+    final design = AppDesign.of(context);
     return MouseRegion(
       onEnter: (_) => setState(() => _isHovering = true),
       onExit: (_) => setState(() => _isHovering = false),
@@ -1285,8 +1369,8 @@ class _SidebarToggleButtonState extends State<_SidebarToggleButton> {
               FluentIcons.collapse_menu,
               size: 14,
               color: widget.isDark
-                  ? AppDesign.darkTextSecondary
-                  : AppDesign.lightTextSecondary,
+                  ? design.darkTextSecondary
+                  : design.lightTextSecondary,
             ),
           ),
         ),
@@ -1352,14 +1436,14 @@ class _WindowButtonState extends State<_WindowButton> {
 
   @override
   Widget build(BuildContext context) {
+    final design = AppDesign.of(context);
     Color bgColor = Colors.transparent;
-    Color iconColor = widget.isDark
-        ? AppDesign.darkTextSecondary
-        : AppDesign.lightTextSecondary;
+    Color iconColor =
+        widget.isDark ? design.darkTextSecondary : design.lightTextSecondary;
 
     if (_isHovering) {
       if (widget.isClose) {
-        bgColor = AppDesign.errorColor;
+        bgColor = design.errorColor;
         iconColor = Colors.white;
       } else {
         bgColor = widget.isDark
@@ -1370,7 +1454,7 @@ class _WindowButtonState extends State<_WindowButton> {
 
     if (_isPressed) {
       bgColor = widget.isClose
-          ? AppDesign.errorColor.withValues(alpha: 0.8)
+          ? design.errorColor.withValues(alpha: 0.8)
           : (widget.isDark
               ? Colors.white.withValues(alpha: 0.15)
               : Colors.black.withValues(alpha: 0.1));

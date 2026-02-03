@@ -962,13 +962,6 @@ class AppLocalizationsUr extends AppLocalizations {
   String get versionSection => 'ورژن';
 
   @override
-  String get themeTitle => 'تھیم';
-
-  @override
-  String get themeDescription =>
-      'ایپلیکیشن کی رنگ سکیم (تبدیلی کے لیے دوبارہ شروع کرنا ضروری ہے)';
-
-  @override
   String get languageTitle => 'زبان';
 
   @override
@@ -1684,4 +1677,20 @@ class AppLocalizationsUr extends AppLocalizations {
   String timeFormatMinutesSeconds(int minutes, int seconds) {
     return '$minutes م $secondsس';
   }
+
+  @override
+  String get themeLight => 'Light';
+
+  @override
+  String get themeDark => 'Dark';
+
+  @override
+  String get themeSystem => 'System';
+
+  @override
+  String get themeTitle => 'تھیم';
+
+  @override
+  String get themeDescription =>
+      'ایپلیکیشن کی رنگ سکیم (تبدیلی کے لیے دوبارہ شروع کرنا ضروری ہے)';
 }

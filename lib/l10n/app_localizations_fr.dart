@@ -984,13 +984,6 @@ class AppLocalizationsFr extends AppLocalizations {
   String get versionSection => 'Version';
 
   @override
-  String get themeTitle => 'Thème';
-
-  @override
-  String get themeDescription =>
-      'Thème de couleur de l\'application (Redémarrage Requis)';
-
-  @override
   String get languageTitle => 'Langue';
 
   @override
@@ -1720,4 +1713,20 @@ class AppLocalizationsFr extends AppLocalizations {
   String timeFormatMinutesSeconds(int minutes, int seconds) {
     return '$minutes min ${seconds}s';
   }
+
+  @override
+  String get themeLight => 'Light';
+
+  @override
+  String get themeDark => 'Dark';
+
+  @override
+  String get themeSystem => 'System';
+
+  @override
+  String get themeTitle => 'Thème';
+
+  @override
+  String get themeDescription =>
+      'Thème de couleur de l\'application (Redémarrage Requis)';
 }

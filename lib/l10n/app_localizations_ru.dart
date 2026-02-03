@@ -967,13 +967,6 @@ class AppLocalizationsRu extends AppLocalizations {
   String get versionSection => 'Версия';
 
   @override
-  String get themeTitle => 'Тема';
-
-  @override
-  String get themeDescription =>
-      'Цветовая тема приложения (требуется перезапуск)';
-
-  @override
   String get languageTitle => 'Язык';
 
   @override
@@ -1696,4 +1689,20 @@ class AppLocalizationsRu extends AppLocalizations {
   String timeFormatMinutesSeconds(int minutes, int seconds) {
     return '$minutes мин $secondsс';
   }
+
+  @override
+  String get themeLight => 'Light';
+
+  @override
+  String get themeDark => 'Dark';
+
+  @override
+  String get themeSystem => 'System';
+
+  @override
+  String get themeTitle => 'Тема';
+
+  @override
+  String get themeDescription =>
+      'Цветовая тема приложения (требуется перезапуск)';
 }

@@ -249,6 +249,9 @@ class BackgroundAppTracker {
     if (newApp == "Productive ScreenTime" || newApp == "screentime") {
       return;
     }
+    if (newApp == "loginwindow") {
+      return;
+    }
 
     // Handle Windows Explorer as empty (idle)
     // if (newApp.contains("Windows Explorer")) {

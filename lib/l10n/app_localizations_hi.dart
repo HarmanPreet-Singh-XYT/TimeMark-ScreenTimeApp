@@ -965,13 +965,6 @@ class AppLocalizationsHi extends AppLocalizations {
   String get versionSection => 'संस्करण';
 
   @override
-  String get themeTitle => 'थीम';
-
-  @override
-  String get themeDescription =>
-      'एप्लिकेशन की रंग थीम (बदलाव के लिए पुनरारंभ आवश्यक)';
-
-  @override
   String get languageTitle => 'भाषा';
 
   @override
@@ -1690,4 +1683,20 @@ class AppLocalizationsHi extends AppLocalizations {
   String timeFormatMinutesSeconds(int minutes, int seconds) {
     return '$minutes मि $secondsसे';
   }
+
+  @override
+  String get themeLight => 'Light';
+
+  @override
+  String get themeDark => 'Dark';
+
+  @override
+  String get themeSystem => 'System';
+
+  @override
+  String get themeTitle => 'थीम';
+
+  @override
+  String get themeDescription =>
+      'एप्लिकेशन की रंग थीम (बदलाव के लिए पुनरारंभ आवश्यक)';
 }

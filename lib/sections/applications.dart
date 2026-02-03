@@ -298,7 +298,7 @@ class _Header extends StatelessWidget {
               width: 260,
               height: 36,
               decoration: BoxDecoration(
-                color: theme.cardColor,
+                color: theme.micaBackgroundColor,
                 borderRadius: BorderRadius.circular(8),
                 border: Border.all(
                   color: theme.inactiveBackgroundColor,
@@ -339,7 +339,7 @@ class _Header extends StatelessWidget {
                 icon: Container(
                   padding: const EdgeInsets.all(8),
                   decoration: BoxDecoration(
-                    color: theme.cardColor,
+                    color: theme.micaBackgroundColor,
                     borderRadius: BorderRadius.circular(8),
                     border: Border.all(
                       color: theme.inactiveBackgroundColor,
@@ -387,7 +387,7 @@ class _FilterBar extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 14),
       decoration: BoxDecoration(
-        color: theme.cardColor,
+        color: theme.micaBackgroundColor,
         borderRadius: BorderRadius.circular(12),
         border: Border.all(
           color: theme.inactiveBackgroundColor.withValues(alpha: 0.5),
@@ -646,7 +646,7 @@ class _DataTable extends StatelessWidget {
 
     return Container(
       decoration: BoxDecoration(
-        color: theme.cardColor,
+        color: theme.micaBackgroundColor,
         borderRadius: BorderRadius.circular(12),
         border: Border.all(
           color: theme.inactiveBackgroundColor.withValues(alpha: 0.5),
@@ -1310,7 +1310,7 @@ class _DialogSection extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(14),
       decoration: BoxDecoration(
-        color: theme.cardColor,
+        color: theme.micaBackgroundColor,
         borderRadius: BorderRadius.circular(10),
         border: Border.all(
           color: theme.inactiveBackgroundColor.withValues(alpha: 0.5),

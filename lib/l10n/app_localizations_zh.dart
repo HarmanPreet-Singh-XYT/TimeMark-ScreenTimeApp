@@ -934,12 +934,6 @@ class AppLocalizationsZh extends AppLocalizations {
   String get versionSection => '版本';
 
   @override
-  String get themeTitle => '主题';
-
-  @override
-  String get themeDescription => '应用程序的颜色主题（更改需要重启）';
-
-  @override
   String get languageTitle => '语言';
 
   @override
@@ -1642,4 +1636,19 @@ class AppLocalizationsZh extends AppLocalizations {
   String timeFormatMinutesSeconds(int minutes, int seconds) {
     return '$minutes分$seconds秒';
   }
+
+  @override
+  String get themeLight => 'Light';
+
+  @override
+  String get themeDark => 'Dark';
+
+  @override
+  String get themeSystem => 'System';
+
+  @override
+  String get themeTitle => '主题';
+
+  @override
+  String get themeDescription => '应用程序的颜色主题（更改需要重启）';
 }

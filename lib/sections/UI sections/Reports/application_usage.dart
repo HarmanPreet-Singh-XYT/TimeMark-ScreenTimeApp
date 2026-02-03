@@ -414,82 +414,83 @@ class _ApplicationUsageState extends State<ApplicationUsage> {
       bool isHovered, FluentThemeData theme) {
     final l10n = AppLocalizations.of(context)!;
 
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 10),
-      child: Row(
-        children: [
-          // App Name with Icon
-          Expanded(
-            flex: 3,
-            child: Row(
-              children: [
-                Container(
-                  width: 28,
-                  height: 28,
-                  decoration: BoxDecoration(
-                    color: app.isProductive
-                        ? Colors.green.withValues(alpha: 0.1)
-                        : Colors.red.withValues(alpha: 0.1),
-                    borderRadius: BorderRadius.circular(6),
-                  ),
-                  child: Icon(
-                    FluentIcons.app_icon_default,
-                    size: 14,
-                    color: app.isProductive ? Colors.green : Colors.red,
-                  ),
-                ),
-                const SizedBox(width: 10),
-                Expanded(
-                  child: Text(
-                    app.appName,
-                    style: theme.typography.body?.copyWith(
-                      fontWeight: FontWeight.w500,
+    return HoverButton(
+      onPressed: () => _showAppDetails(context, app),
+      builder: (context, states) {
+        return Container(
+          color: states.isHovered
+              ? theme.accentColor.withValues(alpha: 0.05)
+              : Colors.transparent,
+          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 10),
+          child: Row(
+            children: [
+              // App Name with Icon
+              Expanded(
+                flex: 3,
+                child: Row(
+                  children: [
+                    Container(
+                      width: 28,
+                      height: 28,
+                      decoration: BoxDecoration(
+                        color: app.isProductive
+                            ? Colors.green.withValues(alpha: 0.1)
+                            : Colors.red.withValues(alpha: 0.1),
+                        borderRadius: BorderRadius.circular(6),
+                      ),
+                      child: Icon(
+                        FluentIcons.app_icon_default,
+                        size: 14,
+                        color: app.isProductive ? Colors.green : Colors.red,
+                      ),
                     ),
-                    overflow: TextOverflow.ellipsis,
-                  ),
-                ),
-              ],
-            ),
-          ),
-
-          // Category
-          Expanded(
-            flex: 2,
-            child: _buildCategoryChip(app.category, theme),
-          ),
-
-          // Total Time
-          Expanded(
-            flex: 2,
-            child: _buildTimeDisplay(app.totalTime, theme),
-          ),
-
-          // Productivity
-          Expanded(
-            flex: 2,
-            child: _buildProductivityBadge(app.isProductive, l10n, theme),
-          ),
-
-          // Actions
-          SizedBox(
-            width: 50,
-            child: Center(
-              child: AnimatedOpacity(
-                duration: const Duration(milliseconds: 150),
-                opacity: isHovered ? 1.0 : 0.5,
-                child: IconButton(
-                  icon: Icon(
-                    FluentIcons.info,
-                    size: 14,
-                    color: theme.accentColor,
-                  ),
-                  onPressed: () => _showAppDetails(context, app),
+                    const SizedBox(width: 10),
+                    Expanded(
+                      child: Text(
+                        app.appName,
+                        style: theme.typography.body?.copyWith(
+                          fontWeight: FontWeight.w500,
+                        ),
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                    ),
+                  ],
                 ),
               ),
-            ),
+              // Category
+              Expanded(
+                flex: 2,
+                child: _buildCategoryChip(app.category, theme),
+              ),
+              // Total Time
+              Expanded(
+                flex: 2,
+                child: _buildTimeDisplay(app.totalTime, theme),
+              ),
+              // Productivity
+              Expanded(
+                flex: 2,
+                child: _buildProductivityBadge(app.isProductive, l10n, theme),
+              ),
+              // Actions
+              SizedBox(
+                width: 50,
+                child: Center(
+                  child: AnimatedOpacity(
+                    duration: const Duration(milliseconds: 150),
+                    opacity: states.isHovered ? 1.0 : 0.5,
+                    child: Icon(
+                      FluentIcons.info,
+                      size: 14,
+                      color: theme.accentColor,
+                    ),
+                  ),
+                ),
+              ),
+            ],
           ),
-        ],
-      ),
+        );
+      },
     );
   }
 

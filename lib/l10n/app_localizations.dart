@@ -1828,18 +1828,6 @@ abstract class AppLocalizations {
   /// **'Version'**
   String get versionSection;
 
-  /// No description provided for @themeTitle.
-  ///
-  /// In en, this message translates to:
-  /// **'Theme'**
-  String get themeTitle;
-
-  /// No description provided for @themeDescription.
-  ///
-  /// In en, this message translates to:
-  /// **'Color theme of the application (Change Requires Restart)'**
-  String get themeDescription;
-
   /// No description provided for @languageTitle.
   ///
   /// In en, this message translates to:
@@ -3177,6 +3165,36 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'{minutes} min {seconds}s'**
   String timeFormatMinutesSeconds(int minutes, int seconds);
+
+  /// No description provided for @themeLight.
+  ///
+  /// In en, this message translates to:
+  /// **'Light'**
+  String get themeLight;
+
+  /// No description provided for @themeDark.
+  ///
+  /// In en, this message translates to:
+  /// **'Dark'**
+  String get themeDark;
+
+  /// No description provided for @themeSystem.
+  ///
+  /// In en, this message translates to:
+  /// **'System'**
+  String get themeSystem;
+
+  /// No description provided for @themeTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Theme'**
+  String get themeTitle;
+
+  /// No description provided for @themeDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'Color theme of the application'**
+  String get themeDescription;
 }
 
 class _AppLocalizationsDelegate
