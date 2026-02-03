@@ -153,40 +153,22 @@ class _OverviewState extends State<Overview> with TickerProviderStateMixin {
       padding: EdgeInsets.zero,
       content: FadeTransition(
         opacity: _fadeAnimation,
-        child: Padding(
-          padding: const EdgeInsets.fromLTRB(24, 16, 24, 24),
-          child: Column(
-            children: [
-              _Header(refresh: refreshData),
-              const SizedBox(height: 20),
-              // Stats cards - fixed height
-              StatsCards(
-                totalScreenTime: totalScreenTime,
-                totalProductiveTime: totalProductiveTime,
-                mostUsedApp: mostUsedApp,
-                focusSessions: focusSessions,
-              ),
-              const SizedBox(height: 20),
-              // Main content - takes remaining space
-              Expanded(
-                flex: 5,
-                child: _MainContent(
-                  topApplications: topApplications,
-                  categoryApplications: categoryApplications,
-                ),
-              ),
-              const SizedBox(height: 20),
-              // Bottom section - flexible height
-              Expanded(
-                flex: 3,
-                child: _BottomSection(
-                  screenTime: screenTime,
-                  productiveScore: productiveScore,
-                  applicationLimits: applicationLimits,
-                ),
-              ),
-            ],
-          ),
+        child: LayoutBuilder(
+          builder: (context, constraints) {
+            return _ResponsiveOverviewContent(
+              constraints: constraints,
+              refreshData: refreshData,
+              totalScreenTime: totalScreenTime,
+              totalProductiveTime: totalProductiveTime,
+              mostUsedApp: mostUsedApp,
+              focusSessions: focusSessions,
+              topApplications: topApplications,
+              categoryApplications: categoryApplications,
+              applicationLimits: applicationLimits,
+              screenTime: screenTime,
+              productiveScore: productiveScore,
+            );
+          },
         ),
       ),
     );
@@ -315,6 +297,152 @@ class _OverviewState extends State<Overview> with TickerProviderStateMixin {
 }
 
 // ============================================================================
+// RESPONSIVE CONTENT WRAPPER
+// ============================================================================
+
+class _ResponsiveOverviewContent extends StatelessWidget {
+  final BoxConstraints constraints;
+  final VoidCallback refreshData;
+  final String totalScreenTime;
+  final String totalProductiveTime;
+  final String mostUsedApp;
+  final String focusSessions;
+  final List<dynamic> topApplications;
+  final List<dynamic> categoryApplications;
+  final List<dynamic> applicationLimits;
+  final double screenTime;
+  final double productiveScore;
+
+  const _ResponsiveOverviewContent({
+    required this.constraints,
+    required this.refreshData,
+    required this.totalScreenTime,
+    required this.totalProductiveTime,
+    required this.mostUsedApp,
+    required this.focusSessions,
+    required this.topApplications,
+    required this.categoryApplications,
+    required this.applicationLimits,
+    required this.screenTime,
+    required this.productiveScore,
+  });
+
+  // Breakpoints
+  static const double compactBreakpoint = 700;
+  static const double mediumBreakpoint = 1000;
+
+  bool get isCompact => constraints.maxWidth < compactBreakpoint;
+  bool get isMedium => constraints.maxWidth < mediumBreakpoint;
+
+  double get horizontalPadding {
+    if (isCompact) return 12;
+    if (isMedium) return 18;
+    return 24;
+  }
+
+  double get verticalSpacing {
+    if (isCompact) return 12;
+    if (isMedium) return 16;
+    return 20;
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    if (isCompact) {
+      return _buildCompactLayout(context);
+    }
+    return _buildExpandedLayout(context);
+  }
+
+  // Scrollable layout for narrow screens
+  Widget _buildCompactLayout(BuildContext context) {
+    return SingleChildScrollView(
+      padding: EdgeInsets.fromLTRB(
+        horizontalPadding,
+        horizontalPadding * 0.67,
+        horizontalPadding,
+        horizontalPadding,
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          _Header(refresh: refreshData),
+          SizedBox(height: verticalSpacing),
+          StatsCards(
+            totalScreenTime: totalScreenTime,
+            totalProductiveTime: totalProductiveTime,
+            mostUsedApp: mostUsedApp,
+            focusSessions: focusSessions,
+          ),
+          SizedBox(height: verticalSpacing),
+          // Main content - stacked vertically
+          _ResponsiveMainContent(
+            topApplications: topApplications,
+            categoryApplications: categoryApplications,
+            isCompact: true,
+          ),
+          SizedBox(height: verticalSpacing),
+          // Bottom section - stacked vertically
+          _ResponsiveBottomSection(
+            screenTime: screenTime,
+            productiveScore: productiveScore,
+            applicationLimits: applicationLimits,
+            isCompact: true,
+            isMedium: false,
+          ),
+        ],
+      ),
+    );
+  }
+
+  // Fixed layout for wider screens
+  Widget _buildExpandedLayout(BuildContext context) {
+    return Padding(
+      padding: EdgeInsets.fromLTRB(
+        horizontalPadding,
+        horizontalPadding * 0.67,
+        horizontalPadding,
+        horizontalPadding,
+      ),
+      child: Column(
+        children: [
+          _Header(refresh: refreshData),
+          SizedBox(height: verticalSpacing),
+          StatsCards(
+            totalScreenTime: totalScreenTime,
+            totalProductiveTime: totalProductiveTime,
+            mostUsedApp: mostUsedApp,
+            focusSessions: focusSessions,
+          ),
+          SizedBox(height: verticalSpacing),
+          // Main content - takes remaining space
+          Expanded(
+            flex: 5,
+            child: _ResponsiveMainContent(
+              topApplications: topApplications,
+              categoryApplications: categoryApplications,
+              isCompact: false,
+            ),
+          ),
+          SizedBox(height: verticalSpacing),
+          // Bottom section
+          Expanded(
+            flex: 3,
+            child: _ResponsiveBottomSection(
+              screenTime: screenTime,
+              productiveScore: productiveScore,
+              applicationLimits: applicationLimits,
+              isCompact: false,
+              isMedium: isMedium,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+// ============================================================================
 // HEADER
 // ============================================================================
 
@@ -328,30 +456,41 @@ class _Header extends StatelessWidget {
     final l10n = AppLocalizations.of(context)!;
     final theme = FluentTheme.of(context);
 
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        final isNarrow = constraints.maxWidth < 400;
+
+        return Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Text(
-              l10n.overviewTitle,
-              style: theme.typography.subtitle?.copyWith(
-                fontWeight: FontWeight.w600,
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    l10n.overviewTitle,
+                    style: theme.typography.subtitle?.copyWith(
+                      fontWeight: FontWeight.w600,
+                      fontSize: isNarrow ? 18 : null,
+                    ),
+                  ),
+                  const SizedBox(height: 2),
+                  Text(
+                    _getGreeting(l10n),
+                    style: TextStyle(
+                      color: theme.inactiveColor,
+                      fontSize: isNarrow ? 11 : 13,
+                    ),
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                ],
               ),
             ),
-            const SizedBox(height: 2),
-            Text(
-              _getGreeting(l10n),
-              style: TextStyle(
-                color: theme.inactiveColor,
-                fontSize: 13,
-              ),
-            ),
+            const SizedBox(width: 12),
+            _RefreshButton(onPressed: refresh, compact: isNarrow),
           ],
-        ),
-        _RefreshButton(onPressed: refresh),
-      ],
+        );
+      },
     );
   }
 
@@ -365,8 +504,9 @@ class _Header extends StatelessWidget {
 
 class _RefreshButton extends StatefulWidget {
   final VoidCallback onPressed;
+  final bool compact;
 
-  const _RefreshButton({required this.onPressed});
+  const _RefreshButton({required this.onPressed, this.compact = false});
 
   @override
   State<_RefreshButton> createState() => _RefreshButtonState();
@@ -387,7 +527,10 @@ class _RefreshButtonState extends State<_RefreshButton> {
         child: Button(
           style: ButtonStyle(
             padding: WidgetStateProperty.all(
-              const EdgeInsets.symmetric(vertical: 8, horizontal: 14),
+              EdgeInsets.symmetric(
+                vertical: widget.compact ? 6 : 8,
+                horizontal: widget.compact ? 10 : 14,
+              ),
             ),
           ),
           onPressed: widget.onPressed,
@@ -397,14 +540,19 @@ class _RefreshButtonState extends State<_RefreshButton> {
               AnimatedRotation(
                 turns: _isHovered ? 0.5 : 0,
                 duration: const Duration(milliseconds: 300),
-                child: const Icon(FluentIcons.refresh, size: 14),
+                child:
+                    Icon(FluentIcons.refresh, size: widget.compact ? 12 : 14),
               ),
-              const SizedBox(width: 8),
-              Text(
-                l10n.refresh,
-                style:
-                    const TextStyle(fontWeight: FontWeight.w500, fontSize: 13),
-              ),
+              if (!widget.compact) ...[
+                const SizedBox(width: 8),
+                Text(
+                  l10n.refresh,
+                  style: const TextStyle(
+                    fontWeight: FontWeight.w500,
+                    fontSize: 13,
+                  ),
+                ),
+              ],
             ],
           ),
         ),
@@ -414,20 +562,42 @@ class _RefreshButtonState extends State<_RefreshButton> {
 }
 
 // ============================================================================
-// MAIN CONTENT
+// RESPONSIVE MAIN CONTENT
 // ============================================================================
 
-class _MainContent extends StatelessWidget {
+class _ResponsiveMainContent extends StatelessWidget {
   final List<dynamic> topApplications;
   final List<dynamic> categoryApplications;
+  final bool isCompact;
 
-  const _MainContent({
+  const _ResponsiveMainContent({
     required this.topApplications,
     required this.categoryApplications,
+    required this.isCompact,
   });
 
   @override
   Widget build(BuildContext context) {
+    if (isCompact) {
+      return Column(
+        children: [
+          SizedBox(
+            height: 320,
+            child: _ContentCard(
+              child: TopApplicationsList(data: topApplications),
+            ),
+          ),
+          const SizedBox(height: 12),
+          SizedBox(
+            height: 320,
+            child: _ContentCard(
+              child: CategoryBreakdownList(data: categoryApplications),
+            ),
+          ),
+        ],
+      );
+    }
+
     return Row(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
@@ -471,40 +641,85 @@ class _ContentCard extends StatelessWidget {
 }
 
 // ============================================================================
-// BOTTOM SECTION
+// RESPONSIVE BOTTOM SECTION
 // ============================================================================
 
-class _BottomSection extends StatelessWidget {
+class _ResponsiveBottomSection extends StatelessWidget {
   final double screenTime;
   final double productiveScore;
   final List<dynamic> applicationLimits;
+  final bool isCompact;
+  final bool isMedium;
 
-  const _BottomSection({
+  const _ResponsiveBottomSection({
     required this.screenTime,
     required this.productiveScore,
     required this.applicationLimits,
+    required this.isCompact,
+    required this.isMedium,
   });
 
   @override
   Widget build(BuildContext context) {
     final theme = FluentTheme.of(context);
 
+    if (isCompact) {
+      return _buildCompactLayout(theme);
+    }
+
+    if (isMedium) {
+      return _buildMediumLayout(theme);
+    }
+
+    return _buildExpandedLayout(theme);
+  }
+
+  // Stacked vertical layout for narrow screens
+  Widget _buildCompactLayout(FluentThemeData theme) {
+    return Column(
+      children: [
+        // Progress cards in a row
+        SizedBox(
+          height: 140,
+          child: Row(
+            children: [
+              Expanded(
+                child: ProgressCard(
+                  title: 'Screen\nTime',
+                  value: screenTime,
+                  color: const Color(0xffA855F7),
+                ),
+              ),
+              const SizedBox(width: 12),
+              Expanded(
+                child: ProgressCard(
+                  title: 'Productive\nScore',
+                  value: productiveScore,
+                  color: const Color(0xff22C55E),
+                ),
+              ),
+            ],
+          ),
+        ),
+        const SizedBox(height: 12),
+        // Application limits
+        SizedBox(
+          height: 220,
+          child: _buildApplicationLimitsCard(theme),
+        ),
+      ],
+    );
+  }
+
+  // Two-column layout with limits on left, progress stacked on right
+  Widget _buildMediumLayout(FluentThemeData theme) {
     return Row(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
+        // Application limits - larger portion
         Expanded(
-          flex: 5,
-          child: Container(
-            decoration: BoxDecoration(
-              color: theme.micaBackgroundColor,
-              borderRadius: BorderRadius.circular(12),
-              border: Border.all(
-                color: theme.resources.cardStrokeColorDefault,
-                width: 1,
-              ),
-            ),
-            child: ApplicationLimitsList(data: applicationLimits),
-          ),
+          flex: 3,
+          child: _buildApplicationLimitsCard(theme),
         ),
         const SizedBox(width: 16),
         Expanded(
@@ -525,6 +740,51 @@ class _BottomSection extends StatelessWidget {
           ),
         ),
       ],
+    );
+  }
+
+  // Full horizontal layout for wide screens
+  Widget _buildExpandedLayout(FluentThemeData theme) {
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        Expanded(
+          flex: 5,
+          child: _buildApplicationLimitsCard(theme),
+        ),
+        const SizedBox(width: 16),
+        Expanded(
+          flex: 2,
+          child: ProgressCard(
+            title: 'Screen\nTime',
+            value: screenTime,
+            color: const Color(0xffA855F7),
+          ),
+        ),
+        const SizedBox(width: 16),
+        Expanded(
+          flex: 2,
+          child: ProgressCard(
+            title: 'Productive\nScore',
+            value: productiveScore,
+            color: const Color(0xff22C55E),
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildApplicationLimitsCard(FluentThemeData theme) {
+    return Container(
+      decoration: BoxDecoration(
+        color: theme.micaBackgroundColor,
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(
+          color: theme.resources.cardStrokeColorDefault,
+          width: 1,
+        ),
+      ),
+      child: ApplicationLimitsList(data: applicationLimits),
     );
   }
 }
