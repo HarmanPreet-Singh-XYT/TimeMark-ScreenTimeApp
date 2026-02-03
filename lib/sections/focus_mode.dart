@@ -153,50 +153,55 @@ class _FocusModeState extends State<FocusMode>
     final l10n = AppLocalizations.of(context)!;
 
     if (isLoading) {
-      return const Center(
-        child: ProgressRing(),
+      return ScaffoldPage(
+        padding: EdgeInsets.zero,
+        content: const Center(
+          child: ProgressRing(),
+        ),
       );
     }
 
-    return FadeTransition(
-      opacity: _fadeAnimation,
-      child: LayoutBuilder(
-        builder: (context, constraints) {
-          // Define breakpoint - adjust as needed
-          final isSmallScreen = constraints.maxWidth < 700;
+    return ScaffoldPage(
+      padding: EdgeInsets.zero,
+      content: FadeTransition(
+        opacity: _fadeAnimation,
+        child: LayoutBuilder(
+          builder: (context, constraints) {
+            final isSmallScreen = constraints.maxWidth < 700;
 
-          return SingleChildScrollView(
-            padding: const EdgeInsets.all(24),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                // Header with title
-                _buildHeader(context, l10n),
-                const SizedBox(height: 24),
+            return SingleChildScrollView(
+              padding: const EdgeInsets.all(24),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  // Header with title
+                  _buildHeader(context, l10n),
+                  const SizedBox(height: 24),
 
-                // Main content area - Timer + Quick Stats
-                _buildTimerAndStatsSection(context, l10n, isSmallScreen),
-                const SizedBox(height: 20),
+                  // Main content area - Timer + Quick Stats
+                  _buildTimerAndStatsSection(context, l10n, isSmallScreen),
+                  const SizedBox(height: 20),
 
-                // Analytics Section
-                _buildSectionTitle(
-                    context, l10n.historySection, FluentIcons.chart),
-                const SizedBox(height: 12),
-                _AnimatedCard(
-                  child: Padding(
-                    padding: const EdgeInsets.all(20),
-                    child: FocusModeHistoryChart(data: sessionCountByDay),
+                  // Analytics Section
+                  _buildSectionTitle(
+                      context, l10n.historySection, FluentIcons.chart),
+                  const SizedBox(height: 12),
+                  _AnimatedCard(
+                    child: Padding(
+                      padding: const EdgeInsets.all(20),
+                      child: FocusModeHistoryChart(data: sessionCountByDay),
+                    ),
                   ),
-                ),
-                const SizedBox(height: 20),
+                  const SizedBox(height: 20),
 
-                // Trends and Session History
-                _buildTrendsAndHistorySection(context, l10n, isSmallScreen),
-                const SizedBox(height: 20),
-              ],
-            ),
-          );
-        },
+                  // Trends and Session History
+                  _buildTrendsAndHistorySection(context, l10n, isSmallScreen),
+                  const SizedBox(height: 20),
+                ],
+              ),
+            );
+          },
+        ),
       ),
     );
   }

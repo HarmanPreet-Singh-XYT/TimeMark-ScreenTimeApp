@@ -524,11 +524,14 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
     // WATCH the navigation state
     final navState = context.watch<NavigationState>();
 
+    final themeProvider = context.watch<ThemeCustomizationProvider>();
+    final customTheme = themeProvider.currentTheme;
     return Column(
       children: [
         EnhancedTitleBar(
           onToggleSidebar: _toggleSidebar,
           isSidebarExpanded: _isSidebarExpanded,
+          customTheme: customTheme,
         ),
         Expanded(
           child: Row(
@@ -553,6 +556,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                       onItemSelected: navState.changeIndex, // FROM PROVIDER
                       isDark: isDark,
                       l10n: l10n,
+                      customTheme: customTheme,
                     ),
                   );
                 },
@@ -622,6 +626,7 @@ class CustomSidebar extends StatelessWidget {
   final Function(int) onItemSelected;
   final bool isDark;
   final AppLocalizations l10n;
+  final CustomThemeData customTheme;
 
   const CustomSidebar({
     super.key,
@@ -632,6 +637,7 @@ class CustomSidebar extends StatelessWidget {
     required this.onItemSelected,
     required this.isDark,
     required this.l10n,
+    required this.customTheme,
   });
 
   @override
@@ -643,11 +649,12 @@ class CustomSidebar extends StatelessWidget {
       child: Container(
         width: width,
         decoration: BoxDecoration(
-          color:
-              isDark ? AppDesign.darkSurfaceSecondary : AppDesign.lightSurface,
+          color: isDark
+              ? customTheme.darkSurfaceSecondary
+              : customTheme.lightSurface,
           border: Border(
             right: BorderSide(
-              color: isDark ? AppDesign.darkBorder : AppDesign.lightBorder,
+              color: isDark ? customTheme.darkBorder : customTheme.lightBorder,
               width: 1,
             ),
           ),
@@ -1237,11 +1244,13 @@ class _ContentArea extends StatelessWidget {
 class EnhancedTitleBar extends StatelessWidget {
   final VoidCallback onToggleSidebar;
   final bool isSidebarExpanded;
+  final CustomThemeData customTheme; // ✅ ADD THIS
 
   const EnhancedTitleBar({
     super.key,
     required this.onToggleSidebar,
     required this.isSidebarExpanded,
+    required this.customTheme, // ✅ ADD THIS
   });
 
   @override
@@ -1249,14 +1258,18 @@ class EnhancedTitleBar extends StatelessWidget {
     final isDark = FluentTheme.of(context).brightness == Brightness.dark;
     final l10n = AppLocalizations.of(context)!;
     final isMacOS = Platform.isMacOS;
-    final design = AppDesign.of(context);
+
     return WindowTitleBarBox(
       child: Container(
         decoration: BoxDecoration(
-          color: isDark ? const Color(0xFF141827) : AppDesign.lightSurface,
+          // ✅ USE customTheme
+          color: isDark
+              ? customTheme.darkSurfaceSecondary
+              : customTheme.lightSurface,
           border: Border(
             bottom: BorderSide(
-              color: isDark ? AppDesign.darkBorder : AppDesign.lightBorder,
+              // ✅ USE customTheme
+              color: isDark ? customTheme.darkBorder : customTheme.lightBorder,
               width: 1,
             ),
           ),
@@ -1281,28 +1294,15 @@ class EnhancedTitleBar extends StatelessWidget {
                   child: Row(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      // Container(
-                      //   padding: const EdgeInsets.all(4),
-                      //   decoration: BoxDecoration(
-                      //     gradient: AppDesign.primaryGradient,
-                      //     borderRadius:
-                      //         BorderRadius.circular(AppDesign.radiusSm),
-                      //   ),
-                      //   child: const Icon(
-                      //     FluentIcons.timer,
-                      //     size: 12,
-                      //     color: Colors.white,
-                      //   ),
-                      // ),
-                      // const SizedBox(width: AppDesign.spacingSm),
                       Text(
                         l10n.appWindowTitle,
                         style: TextStyle(
                           fontSize: 13,
                           fontWeight: FontWeight.w600,
+                          // ✅ USE customTheme
                           color: isDark
-                              ? design.darkTextPrimary
-                              : design.lightTextPrimary,
+                              ? customTheme.darkTextPrimary
+                              : customTheme.lightTextPrimary,
                         ),
                       ),
                     ],
@@ -1312,14 +1312,16 @@ class EnhancedTitleBar extends StatelessWidget {
             ),
 
             // Window buttons for Windows
-            if (!isMacOS) EnhancedWindowButtons(isDark: isDark),
+            if (!isMacOS)
+              EnhancedWindowButtons(
+                isDark: isDark,
+              ),
           ],
         ),
       ),
     );
   }
 }
-
 // ============================================================================
 // SIDEBAR TOGGLE BUTTON
 // ============================================================================

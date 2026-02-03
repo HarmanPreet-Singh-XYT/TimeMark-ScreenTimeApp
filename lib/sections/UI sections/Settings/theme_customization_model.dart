@@ -152,6 +152,96 @@ class CustomThemeData {
       darkTextSecondary: darkTextSecondary ?? this.darkTextSecondary,
     );
   }
+
+  /// Helper method to update any color by key
+  CustomThemeData updateColor(String colorKey, Color color) {
+    switch (colorKey) {
+      // Brand Colors
+      case 'primaryAccent':
+        return copyWith(primaryAccent: color);
+      case 'secondaryAccent':
+        return copyWith(secondaryAccent: color);
+      case 'successColor':
+        return copyWith(successColor: color);
+      case 'warningColor':
+        return copyWith(warningColor: color);
+      case 'errorColor':
+        return copyWith(errorColor: color);
+
+      // Light Theme Colors
+      case 'lightBackground':
+        return copyWith(lightBackground: color);
+      case 'lightSurface':
+        return copyWith(lightSurface: color);
+      case 'lightSurfaceSecondary':
+        return copyWith(lightSurfaceSecondary: color);
+      case 'lightBorder':
+        return copyWith(lightBorder: color);
+      case 'lightTextPrimary':
+        return copyWith(lightTextPrimary: color);
+      case 'lightTextSecondary':
+        return copyWith(lightTextSecondary: color);
+
+      // Dark Theme Colors
+      case 'darkBackground':
+        return copyWith(darkBackground: color);
+      case 'darkSurface':
+        return copyWith(darkSurface: color);
+      case 'darkSurfaceSecondary':
+        return copyWith(darkSurfaceSecondary: color);
+      case 'darkBorder':
+        return copyWith(darkBorder: color);
+      case 'darkTextPrimary':
+        return copyWith(darkTextPrimary: color);
+      case 'darkTextSecondary':
+        return copyWith(darkTextSecondary: color);
+
+      default:
+        return this;
+    }
+  }
+
+  /// Get color by key (for dynamic access)
+  Color? getColor(String colorKey) {
+    switch (colorKey) {
+      case 'primaryAccent':
+        return primaryAccent;
+      case 'secondaryAccent':
+        return secondaryAccent;
+      case 'successColor':
+        return successColor;
+      case 'warningColor':
+        return warningColor;
+      case 'errorColor':
+        return errorColor;
+      case 'lightBackground':
+        return lightBackground;
+      case 'lightSurface':
+        return lightSurface;
+      case 'lightSurfaceSecondary':
+        return lightSurfaceSecondary;
+      case 'lightBorder':
+        return lightBorder;
+      case 'lightTextPrimary':
+        return lightTextPrimary;
+      case 'lightTextSecondary':
+        return lightTextSecondary;
+      case 'darkBackground':
+        return darkBackground;
+      case 'darkSurface':
+        return darkSurface;
+      case 'darkSurfaceSecondary':
+        return darkSurfaceSecondary;
+      case 'darkBorder':
+        return darkBorder;
+      case 'darkTextPrimary':
+        return darkTextPrimary;
+      case 'darkTextSecondary':
+        return darkTextSecondary;
+      default:
+        return null;
+    }
+  }
 }
 
 // ============== THEME PRESETS ==============

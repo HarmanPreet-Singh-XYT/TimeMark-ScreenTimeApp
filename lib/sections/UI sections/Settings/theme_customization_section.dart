@@ -1,6 +1,7 @@
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:screentime/l10n/app_localizations.dart';
 import 'package:provider/provider.dart';
+import 'package:screentime/sections/UI%20sections/Settings/colorpicker.dart';
 import 'package:screentime/sections/settings.dart';
 import 'package:screentime/sections/UI sections/Settings/resuables.dart';
 import 'package:screentime/sections/UI sections/Settings/theme_customization_model.dart';
@@ -442,7 +443,7 @@ class _CustomThemeListItemState extends State<_CustomThemeListItem> {
   }
 }
 
-// ============== THEME EDITOR DIALOG ==============
+// ============== ENHANCED THEME EDITOR DIALOG ==============
 
 class _ThemeEditorDialog extends StatefulWidget {
   final CustomThemeData initialTheme;
@@ -460,6 +461,7 @@ class _ThemeEditorDialog extends StatefulWidget {
 class _ThemeEditorDialogState extends State<_ThemeEditorDialog> {
   late CustomThemeData _currentTheme;
   late TextEditingController _nameController;
+  int _selectedTabIndex = 0;
 
   @override
   void initState() {
@@ -476,93 +478,135 @@ class _ThemeEditorDialogState extends State<_ThemeEditorDialog> {
 
   void _updateColor(String colorKey, Color color) {
     setState(() {
-      switch (colorKey) {
-        case 'primaryAccent':
-          _currentTheme = _currentTheme.copyWith(primaryAccent: color);
-          break;
-        case 'secondaryAccent':
-          _currentTheme = _currentTheme.copyWith(secondaryAccent: color);
-          break;
-        case 'successColor':
-          _currentTheme = _currentTheme.copyWith(successColor: color);
-          break;
-        case 'warningColor':
-          _currentTheme = _currentTheme.copyWith(warningColor: color);
-          break;
-        case 'errorColor':
-          _currentTheme = _currentTheme.copyWith(errorColor: color);
-          break;
-        case 'lightBackground':
-          _currentTheme = _currentTheme.copyWith(lightBackground: color);
-          break;
-        case 'darkBackground':
-          _currentTheme = _currentTheme.copyWith(darkBackground: color);
-          break;
-      }
+      _currentTheme = _currentTheme.updateColor(colorKey, color);
     });
   }
 
   @override
   Widget build(BuildContext context) {
+    final fluentTheme = FluentTheme.of(context);
+
     return ContentDialog(
-      constraints: const BoxConstraints(maxWidth: 600, maxHeight: 700),
-      title: const Text('Customize Theme'),
-      content: SingleChildScrollView(
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            // Theme Name
-            TextBox(
+      constraints: const BoxConstraints(maxWidth: 700, maxHeight: 800),
+      title: Row(
+        children: [
+          const Icon(FluentIcons.color, size: 20),
+          const SizedBox(width: 12),
+          const Text('Customize Theme'),
+          const Spacer(),
+          // Live Preview Indicator
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+            decoration: BoxDecoration(
+              color: _currentTheme.primaryAccent.withValues(alpha: 0.2),
+              borderRadius: BorderRadius.circular(4),
+            ),
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Container(
+                  width: 8,
+                  height: 8,
+                  decoration: BoxDecoration(
+                    color: _currentTheme.primaryAccent,
+                    shape: BoxShape.circle,
+                  ),
+                ),
+                const SizedBox(width: 6),
+                Text(
+                  'Preview',
+                  style: TextStyle(
+                    fontSize: 11,
+                    color: _currentTheme.primaryAccent,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+      content: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          // Theme Name Input
+          Padding(
+            padding: const EdgeInsets.only(bottom: 16),
+            child: TextBox(
               controller: _nameController,
               placeholder: 'Theme Name',
+              prefix: const Padding(
+                padding: EdgeInsets.only(left: 8),
+                child: Icon(FluentIcons.tag, size: 14),
+              ),
             ),
-            const SizedBox(height: 20),
+          ),
 
-            // Brand Colors
-            _ColorSection(
-              title: 'Brand Colors',
-              colors: [
-                _ColorPickerItem(
-                    'Primary', _currentTheme.primaryAccent, 'primaryAccent'),
-                _ColorPickerItem('Secondary', _currentTheme.secondaryAccent,
-                    'secondaryAccent'),
-                _ColorPickerItem(
-                    'Success', _currentTheme.successColor, 'successColor'),
-                _ColorPickerItem(
-                    'Warning', _currentTheme.warningColor, 'warningColor'),
-                _ColorPickerItem(
-                    'Error', _currentTheme.errorColor, 'errorColor'),
+          // Tab Navigation
+          SizedBox(
+            height: 36,
+            child: Row(
+              children: [
+                _TabButton(
+                  label: 'Brand Colors',
+                  icon: FluentIcons.color,
+                  isSelected: _selectedTabIndex == 0,
+                  onTap: () => setState(() => _selectedTabIndex = 0),
+                ),
+                const SizedBox(width: 8),
+                _TabButton(
+                  label: 'Light Theme',
+                  icon: FluentIcons.sunny,
+                  isSelected: _selectedTabIndex == 1,
+                  onTap: () => setState(() => _selectedTabIndex = 1),
+                ),
+                const SizedBox(width: 8),
+                _TabButton(
+                  label: 'Dark Theme',
+                  icon: FluentIcons.clear_night,
+                  isSelected: _selectedTabIndex == 2,
+                  onTap: () => setState(() => _selectedTabIndex = 2),
+                ),
               ],
-              onColorChange: _updateColor,
             ),
+          ),
 
-            const SizedBox(height: 16),
+          const SizedBox(height: 16),
+          const Divider(),
+          const SizedBox(height: 16),
 
-            // Background Colors
-            _ColorSection(
-              title: 'Background Colors',
-              colors: [
-                _ColorPickerItem('Light Background',
-                    _currentTheme.lightBackground, 'lightBackground'),
-                _ColorPickerItem('Dark Background',
-                    _currentTheme.darkBackground, 'darkBackground'),
-              ],
-              onColorChange: _updateColor,
+          // Tab Content
+          Expanded(
+            child: SingleChildScrollView(
+              child: AnimatedSwitcher(
+                duration: const Duration(milliseconds: 200),
+                child: _buildTabContent(),
+              ),
             ),
-          ],
-        ),
+          ),
+        ],
       ),
       actions: [
         Button(
           child: const Text('Cancel'),
           onPressed: () => Navigator.pop(context),
         ),
-        FilledButton(
-          child: const Text('Save'),
+        Button(
+          child: const Text('Reset'),
           onPressed: () {
-            final updatedTheme =
-                _currentTheme.copyWith(name: _nameController.text);
+            setState(() {
+              _currentTheme = widget.initialTheme;
+              _nameController.text = widget.initialTheme.name;
+            });
+          },
+        ),
+        FilledButton(
+          child: const Text('Save Theme'),
+          onPressed: () {
+            final updatedTheme = _currentTheme.copyWith(
+              name: _nameController.text.trim().isEmpty
+                  ? 'Custom Theme'
+                  : _nameController.text.trim(),
+            );
             widget.onSave(updatedTheme);
             Navigator.pop(context);
           },
@@ -570,24 +614,114 @@ class _ThemeEditorDialogState extends State<_ThemeEditorDialog> {
       ],
     );
   }
+
+  Widget _buildTabContent() {
+    switch (_selectedTabIndex) {
+      case 0:
+        return _BrandColorsTab(
+          key: const ValueKey('brand'),
+          theme: _currentTheme,
+          onColorChange: _updateColor,
+        );
+      case 1:
+        return _LightThemeTab(
+          key: const ValueKey('light'),
+          theme: _currentTheme,
+          onColorChange: _updateColor,
+        );
+      case 2:
+        return _DarkThemeTab(
+          key: const ValueKey('dark'),
+          theme: _currentTheme,
+          onColorChange: _updateColor,
+        );
+      default:
+        return const SizedBox.shrink();
+    }
+  }
 }
 
-class _ColorPickerItem {
+// ============== TAB BUTTON ==============
+
+class _TabButton extends StatefulWidget {
   final String label;
-  final Color color;
-  final String key;
+  final IconData icon;
+  final bool isSelected;
+  final VoidCallback onTap;
 
-  _ColorPickerItem(this.label, this.color, this.key);
+  const _TabButton({
+    required this.label,
+    required this.icon,
+    required this.isSelected,
+    required this.onTap,
+  });
+
+  @override
+  State<_TabButton> createState() => _TabButtonState();
 }
 
-class _ColorSection extends StatelessWidget {
-  final String title;
-  final List<_ColorPickerItem> colors;
+class _TabButtonState extends State<_TabButton> {
+  bool _isHovered = false;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = FluentTheme.of(context);
+
+    return MouseRegion(
+      onEnter: (_) => setState(() => _isHovered = true),
+      onExit: (_) => setState(() => _isHovered = false),
+      child: GestureDetector(
+        onTap: widget.onTap,
+        child: AnimatedContainer(
+          duration: const Duration(milliseconds: 150),
+          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+          decoration: BoxDecoration(
+            color: widget.isSelected
+                ? theme.accentColor.withValues(alpha: 0.15)
+                : _isHovered
+                    ? theme.inactiveBackgroundColor.withValues(alpha: 0.5)
+                    : Colors.transparent,
+            borderRadius: BorderRadius.circular(6),
+            border: Border.all(
+              color: widget.isSelected ? theme.accentColor : Colors.transparent,
+              width: 1,
+            ),
+          ),
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Icon(
+                widget.icon,
+                size: 14,
+                color: widget.isSelected ? theme.accentColor : null,
+              ),
+              const SizedBox(width: 6),
+              Text(
+                widget.label,
+                style: TextStyle(
+                  fontSize: 12,
+                  fontWeight:
+                      widget.isSelected ? FontWeight.w600 : FontWeight.normal,
+                  color: widget.isSelected ? theme.accentColor : null,
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+// ============== BRAND COLORS TAB ==============
+
+class _BrandColorsTab extends StatelessWidget {
+  final CustomThemeData theme;
   final Function(String, Color) onColorChange;
 
-  const _ColorSection({
-    required this.title,
-    required this.colors,
+  const _BrandColorsTab({
+    super.key,
+    required this.theme,
     required this.onColorChange,
   });
 
@@ -596,70 +730,342 @@ class _ColorSection extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(
-          title,
-          style: const TextStyle(
-            fontSize: 13,
-            fontWeight: FontWeight.w600,
-          ),
+        _ColorSectionHeader(
+          title: 'Primary Colors',
+          description: 'Main accent colors used throughout the app',
         ),
-        const SizedBox(height: 8),
-        ...colors.map((item) => _ColorPickerRow(
-              label: item.label,
-              color: item.color,
-              onColorChanged: (color) => onColorChange(item.key, color),
-            )),
+        _ColorPickerRow(
+          label: 'Primary Accent',
+          description: 'Main brand color, buttons, links',
+          color: theme.primaryAccent,
+          onColorChanged: (c) => onColorChange('primaryAccent', c),
+        ),
+        _ColorPickerRow(
+          label: 'Secondary Accent',
+          description: 'Complementary accent for gradients',
+          color: theme.secondaryAccent,
+          onColorChanged: (c) => onColorChange('secondaryAccent', c),
+        ),
+
+        const SizedBox(height: 20),
+        _ColorSectionHeader(
+          title: 'Semantic Colors',
+          description: 'Colors that convey meaning and status',
+        ),
+        _ColorPickerRow(
+          label: 'Success Color',
+          description: 'Positive actions, confirmations',
+          color: theme.successColor,
+          onColorChanged: (c) => onColorChange('successColor', c),
+        ),
+        _ColorPickerRow(
+          label: 'Warning Color',
+          description: 'Caution, pending states',
+          color: theme.warningColor,
+          onColorChanged: (c) => onColorChange('warningColor', c),
+        ),
+        _ColorPickerRow(
+          label: 'Error Color',
+          description: 'Errors, destructive actions',
+          color: theme.errorColor,
+          onColorChanged: (c) => onColorChange('errorColor', c),
+        ),
+
+        const SizedBox(height: 20),
+        // Preview Card
+        _ThemePreviewCard(theme: theme, isDark: false),
       ],
     );
   }
 }
 
+// ============== LIGHT THEME TAB ==============
+
+class _LightThemeTab extends StatelessWidget {
+  final CustomThemeData theme;
+  final Function(String, Color) onColorChange;
+
+  const _LightThemeTab({
+    super.key,
+    required this.theme,
+    required this.onColorChange,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        _ColorSectionHeader(
+          title: 'Background Colors',
+          description: 'Main background surfaces for light mode',
+        ),
+        _ColorPickerRow(
+          label: 'Background',
+          description: 'Main app background',
+          color: theme.lightBackground,
+          onColorChanged: (c) => onColorChange('lightBackground', c),
+        ),
+        _ColorPickerRow(
+          label: 'Surface',
+          description: 'Cards, dialogs, elevated surfaces',
+          color: theme.lightSurface,
+          onColorChanged: (c) => onColorChange('lightSurface', c),
+        ),
+        _ColorPickerRow(
+          label: 'Surface Secondary',
+          description: 'Secondary cards, sidebars',
+          color: theme.lightSurfaceSecondary,
+          onColorChanged: (c) => onColorChange('lightSurfaceSecondary', c),
+        ),
+        _ColorPickerRow(
+          label: 'Border',
+          description: 'Dividers, card borders',
+          color: theme.lightBorder,
+          onColorChanged: (c) => onColorChange('lightBorder', c),
+        ),
+
+        const SizedBox(height: 20),
+        _ColorSectionHeader(
+          title: 'Text Colors',
+          description: 'Typography colors for light mode',
+        ),
+        _ColorPickerRow(
+          label: 'Text Primary',
+          description: 'Headings, important text',
+          color: theme.lightTextPrimary,
+          onColorChanged: (c) => onColorChange('lightTextPrimary', c),
+        ),
+        _ColorPickerRow(
+          label: 'Text Secondary',
+          description: 'Descriptions, captions',
+          color: theme.lightTextSecondary,
+          onColorChanged: (c) => onColorChange('lightTextSecondary', c),
+        ),
+
+        const SizedBox(height: 20),
+        // Preview Card
+        _ThemePreviewCard(theme: theme, isDark: false),
+      ],
+    );
+  }
+}
+
+// ============== DARK THEME TAB ==============
+
+class _DarkThemeTab extends StatelessWidget {
+  final CustomThemeData theme;
+  final Function(String, Color) onColorChange;
+
+  const _DarkThemeTab({
+    super.key,
+    required this.theme,
+    required this.onColorChange,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        _ColorSectionHeader(
+          title: 'Background Colors',
+          description: 'Main background surfaces for dark mode',
+        ),
+        _ColorPickerRow(
+          label: 'Background',
+          description: 'Main app background',
+          color: theme.darkBackground,
+          onColorChanged: (c) => onColorChange('darkBackground', c),
+        ),
+        _ColorPickerRow(
+          label: 'Surface',
+          description: 'Cards, dialogs, elevated surfaces',
+          color: theme.darkSurface,
+          onColorChanged: (c) => onColorChange('darkSurface', c),
+        ),
+        _ColorPickerRow(
+          label: 'Surface Secondary',
+          description: 'Secondary cards, sidebars',
+          color: theme.darkSurfaceSecondary,
+          onColorChanged: (c) => onColorChange('darkSurfaceSecondary', c),
+        ),
+        _ColorPickerRow(
+          label: 'Border',
+          description: 'Dividers, card borders',
+          color: theme.darkBorder,
+          onColorChanged: (c) => onColorChange('darkBorder', c),
+        ),
+
+        const SizedBox(height: 20),
+        _ColorSectionHeader(
+          title: 'Text Colors',
+          description: 'Typography colors for dark mode',
+        ),
+        _ColorPickerRow(
+          label: 'Text Primary',
+          description: 'Headings, important text',
+          color: theme.darkTextPrimary,
+          onColorChanged: (c) => onColorChange('darkTextPrimary', c),
+        ),
+        _ColorPickerRow(
+          label: 'Text Secondary',
+          description: 'Descriptions, captions',
+          color: theme.darkTextSecondary,
+          onColorChanged: (c) => onColorChange('darkTextSecondary', c),
+        ),
+
+        const SizedBox(height: 20),
+        // Preview Card
+        _ThemePreviewCard(theme: theme, isDark: true),
+      ],
+    );
+  }
+}
+
+// ============== SECTION HEADER ==============
+
+class _ColorSectionHeader extends StatelessWidget {
+  final String title;
+  final String description;
+
+  const _ColorSectionHeader({
+    required this.title,
+    required this.description,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = FluentTheme.of(context);
+
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 12),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            title,
+            style: TextStyle(
+              fontSize: 14,
+              fontWeight: FontWeight.w600,
+              color: theme.typography.body?.color,
+            ),
+          ),
+          const SizedBox(height: 2),
+          Text(
+            description,
+            style: TextStyle(
+              fontSize: 11,
+              color: theme.typography.caption?.color,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+// ============== UPDATED COLOR PICKER ROW ==============
+
 class _ColorPickerRow extends StatelessWidget {
   final String label;
+  final String? description;
   final Color color;
   final Function(Color) onColorChanged;
 
   const _ColorPickerRow({
     required this.label,
+    this.description,
     required this.color,
     required this.onColorChanged,
   });
 
   @override
   Widget build(BuildContext context) {
+    final theme = FluentTheme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
+
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 6),
       child: Row(
         children: [
           Expanded(
-            child: Text(
-              label,
-              style: const TextStyle(fontSize: 12),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  label,
+                  style: const TextStyle(
+                      fontSize: 12, fontWeight: FontWeight.w500),
+                ),
+                if (description != null)
+                  Text(
+                    description!,
+                    style: TextStyle(
+                      fontSize: 10,
+                      color: theme.typography.caption?.color,
+                    ),
+                  ),
+              ],
             ),
           ),
+
+          // Color Swatch Button
           GestureDetector(
             onTap: () => _showColorPicker(context),
-            child: Container(
-              width: 40,
-              height: 32,
-              decoration: BoxDecoration(
-                color: color,
-                borderRadius: BorderRadius.circular(6),
-                border: Border.all(
-                  color: Colors.grey[100]!,
-                  width: 1,
+            child: MouseRegion(
+              cursor: SystemMouseCursors.click,
+              child: AnimatedContainer(
+                duration: const Duration(milliseconds: 150),
+                width: 44,
+                height: 32,
+                decoration: BoxDecoration(
+                  color: color,
+                  borderRadius: BorderRadius.circular(6),
+                  border: Border.all(
+                    color: isDark
+                        ? Colors.white.withValues(alpha: 0.2)
+                        : Colors.black.withValues(alpha: 0.1),
+                    width: 1,
+                  ),
+                  boxShadow: [
+                    BoxShadow(
+                      color: color.withValues(alpha: 0.3),
+                      blurRadius: 4,
+                      offset: const Offset(0, 2),
+                    ),
+                  ],
                 ),
               ),
             ),
           ),
-          const SizedBox(width: 8),
-          SizedBox(
-            width: 80,
-            child: Text(
-              '#${color.value.toRadixString(16).substring(2).toUpperCase()}',
-              style: const TextStyle(
-                fontSize: 11,
-                fontFamily: 'monospace',
+          const SizedBox(width: 10),
+
+          // Hex Code Display (Clickable)
+          GestureDetector(
+            onTap: () => _showColorPicker(context),
+            child: MouseRegion(
+              cursor: SystemMouseCursors.click,
+              child: Container(
+                width: 80,
+                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 6),
+                decoration: BoxDecoration(
+                  color: theme.inactiveBackgroundColor.withValues(alpha: 0.3),
+                  borderRadius: BorderRadius.circular(4),
+                  border: Border.all(
+                    color: theme.inactiveBackgroundColor,
+                    width: 1,
+                  ),
+                ),
+                child: Text(
+                  '#${color.value.toRadixString(16).substring(2).toUpperCase()}',
+                  style: const TextStyle(
+                    fontSize: 11,
+                    fontFamily: 'monospace',
+                    fontWeight: FontWeight.w500,
+                  ),
+                  textAlign: TextAlign.center,
+                ),
               ),
             ),
           ),
@@ -668,35 +1074,179 @@ class _ColorPickerRow extends StatelessWidget {
     );
   }
 
-  void _showColorPicker(BuildContext context) {
-    Color pickerColor = color;
-
-    showDialog(
+  Future<void> _showColorPicker(BuildContext context) async {
+    final selectedColor = await FluentColorPickerDialog.show(
       context: context,
-      builder: (context) => ContentDialog(
-        title: Text('Pick Color for $label'),
-        content: SingleChildScrollView(
-          child: mt.Material(
-            color: Colors.transparent,
-            child: cp.BlockPicker(
-              pickerColor: pickerColor,
-              onColorChanged: (Color color) {
-                pickerColor = color;
-              },
+      title: label,
+      initialColor: color,
+    );
+
+    if (selectedColor != null) {
+      onColorChanged(selectedColor);
+    }
+  }
+}
+
+// ============== THEME PREVIEW CARD ==============
+
+class _ThemePreviewCard extends StatelessWidget {
+  final CustomThemeData theme;
+  final bool isDark;
+
+  const _ThemePreviewCard({
+    required this.theme,
+    required this.isDark,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final background = isDark ? theme.darkBackground : theme.lightBackground;
+    final surface = isDark ? theme.darkSurface : theme.lightSurface;
+    final surfaceSecondary =
+        isDark ? theme.darkSurfaceSecondary : theme.lightSurfaceSecondary;
+    final border = isDark ? theme.darkBorder : theme.lightBorder;
+    final textPrimary = isDark ? theme.darkTextPrimary : theme.lightTextPrimary;
+    final textSecondary =
+        isDark ? theme.darkTextSecondary : theme.lightTextSecondary;
+
+    return Container(
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: background,
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(color: border),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            'Preview: ${isDark ? "Dark" : "Light"} Mode',
+            style: TextStyle(
+              fontSize: 13,
+              fontWeight: FontWeight.w600,
+              color: textPrimary,
             ),
           ),
-        ),
-        actions: [
-          Button(
-            child: const Text('Cancel'),
-            onPressed: () => Navigator.pop(context),
+          const SizedBox(height: 12),
+
+          // Sample Card
+          Container(
+            padding: const EdgeInsets.all(12),
+            decoration: BoxDecoration(
+              color: surface,
+              borderRadius: BorderRadius.circular(8),
+              border: Border.all(color: border),
+            ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  'Sample Card Title',
+                  style: TextStyle(
+                    fontSize: 12,
+                    fontWeight: FontWeight.w600,
+                    color: textPrimary,
+                  ),
+                ),
+                const SizedBox(height: 4),
+                Text(
+                  'This is secondary text that appears below.',
+                  style: TextStyle(
+                    fontSize: 11,
+                    color: textSecondary,
+                  ),
+                ),
+                const SizedBox(height: 12),
+                Row(
+                  children: [
+                    _PreviewButton(
+                      color: theme.primaryAccent,
+                      label: 'Primary',
+                    ),
+                    const SizedBox(width: 8),
+                    _PreviewButton(
+                      color: theme.successColor,
+                      label: 'Success',
+                    ),
+                    const SizedBox(width: 8),
+                    _PreviewButton(
+                      color: theme.errorColor,
+                      label: 'Error',
+                    ),
+                  ],
+                ),
+              ],
+            ),
           ),
-          FilledButton(
-            child: const Text('Select'),
-            onPressed: () {
-              onColorChanged(pickerColor);
-              Navigator.pop(context);
-            },
+
+          const SizedBox(height: 12),
+
+          // Color Swatches Row
+          Row(
+            children: [
+              _PreviewSwatch(color: theme.primaryAccent, label: 'Primary'),
+              _PreviewSwatch(color: theme.secondaryAccent, label: 'Secondary'),
+              _PreviewSwatch(color: theme.successColor, label: 'Success'),
+              _PreviewSwatch(color: theme.warningColor, label: 'Warning'),
+              _PreviewSwatch(color: theme.errorColor, label: 'Error'),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _PreviewButton extends StatelessWidget {
+  final Color color;
+  final String label;
+
+  const _PreviewButton({required this.color, required this.label});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+      decoration: BoxDecoration(
+        color: color,
+        borderRadius: BorderRadius.circular(4),
+      ),
+      child: Text(
+        label,
+        style: const TextStyle(
+          fontSize: 10,
+          fontWeight: FontWeight.w600,
+          color: Colors.white,
+        ),
+      ),
+    );
+  }
+}
+
+class _PreviewSwatch extends StatelessWidget {
+  final Color color;
+  final String label;
+
+  const _PreviewSwatch({required this.color, required this.label});
+
+  @override
+  Widget build(BuildContext context) {
+    return Expanded(
+      child: Column(
+        children: [
+          Container(
+            height: 24,
+            margin: const EdgeInsets.symmetric(horizontal: 2),
+            decoration: BoxDecoration(
+              color: color,
+              borderRadius: BorderRadius.circular(4),
+            ),
+          ),
+          const SizedBox(height: 4),
+          Text(
+            label,
+            style: const TextStyle(fontSize: 8),
+            overflow: TextOverflow.ellipsis,
           ),
         ],
       ),
