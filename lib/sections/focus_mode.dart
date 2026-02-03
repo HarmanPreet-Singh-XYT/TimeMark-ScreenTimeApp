@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:math' as math;
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:percent_indicator/percent_indicator.dart';
 import 'package:screentime/sections/UI%20sections/FocusMode/sessionHistory.dart';
@@ -159,111 +160,154 @@ class _FocusModeState extends State<FocusMode>
 
     return FadeTransition(
       opacity: _fadeAnimation,
-      child: SingleChildScrollView(
-        padding: const EdgeInsets.all(24),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            // Header with title
-            _buildHeader(context, l10n),
-            const SizedBox(height: 24),
+      child: LayoutBuilder(
+        builder: (context, constraints) {
+          // Define breakpoint - adjust as needed
+          final isSmallScreen = constraints.maxWidth < 700;
 
-            // Main content area - Timer + Quick Stats side by side
-            Row(
+          return SingleChildScrollView(
+            padding: const EdgeInsets.all(24),
+            child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                // Timer Section
-                Expanded(
-                  flex: 3,
-                  child: _AnimatedCard(
-                    child: const Meter(),
-                  ),
-                ),
-                const SizedBox(width: 20),
+                // Header with title
+                _buildHeader(context, l10n),
+                const SizedBox(height: 24),
 
-                // Quick Stats Section
-                Expanded(
-                  flex: 2,
-                  child: Column(
-                    children: [
-                      _buildQuickStatCard(
-                        context,
-                        l10n.timeDistributionSection,
-                        FocusModePieChart(
-                          dataMap: {
-                            l10n.workSession: workPercentage,
-                            l10n.shortBreak: shortBreakPercentage,
-                            l10n.longBreak: longBreakPercentage,
-                          },
-                          colorList: const [
-                            Color(0xFF4CAF50),
-                            Color(0xFFFF7043),
-                            Color(0xFF42A5F5),
-                          ],
-                        ),
-                      ),
-                      const SizedBox(height: 16),
-                      _buildWeeklySummaryCard(context, l10n),
-                    ],
+                // Main content area - Timer + Quick Stats
+                _buildTimerAndStatsSection(context, l10n, isSmallScreen),
+                const SizedBox(height: 20),
+
+                // Analytics Section
+                _buildSectionTitle(
+                    context, l10n.historySection, FluentIcons.chart),
+                const SizedBox(height: 12),
+                _AnimatedCard(
+                  child: Padding(
+                    padding: const EdgeInsets.all(20),
+                    child: FocusModeHistoryChart(data: sessionCountByDay),
                   ),
                 ),
+                const SizedBox(height: 20),
+
+                // Trends and Session History
+                _buildTrendsAndHistorySection(context, l10n, isSmallScreen),
+                const SizedBox(height: 20),
               ],
             ),
-            const SizedBox(height: 20),
-
-            // Analytics Section
-            _buildSectionTitle(context, l10n.historySection, FluentIcons.chart),
-            const SizedBox(height: 12),
-            _AnimatedCard(
-              child: Padding(
-                padding: const EdgeInsets.all(20),
-                child: FocusModeHistoryChart(data: sessionCountByDay),
-              ),
-            ),
-            const SizedBox(height: 20),
-
-            // Trends and Session History Row
-            Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Expanded(
-                  flex: 3,
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      _buildSectionTitle(
-                          context, l10n.trendsSection, FluentIcons.trending12),
-                      const SizedBox(height: 12),
-                      _AnimatedCard(
-                        child: Padding(
-                          padding: const EdgeInsets.all(20),
-                          child: FocusModeTrends(data: focusTrends),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                const SizedBox(width: 20),
-                Expanded(
-                  flex: 2,
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      _buildSectionTitle(context, l10n.sessionHistorySection,
-                          FluentIcons.history),
-                      const SizedBox(height: 12),
-                      _AnimatedCard(
-                        child: SessionHistory(data: sessionHistory),
-                      ),
-                    ],
-                  ),
-                ),
-              ],
-            ),
-            const SizedBox(height: 20),
-          ],
-        ),
+          );
+        },
       ),
+    );
+  }
+
+  /// Timer + Quick Stats Section (responsive)
+  Widget _buildTimerAndStatsSection(
+    BuildContext context,
+    AppLocalizations l10n,
+    bool isSmallScreen,
+  ) {
+    final timerWidget = _AnimatedCard(
+      child: const Meter(),
+    );
+
+    final quickStatsWidget = Column(
+      children: [
+        _buildQuickStatCard(
+          context,
+          l10n.timeDistributionSection,
+          FocusModePieChart(
+            dataMap: {
+              l10n.workSession: workPercentage,
+              l10n.shortBreak: shortBreakPercentage,
+              l10n.longBreak: longBreakPercentage,
+            },
+            colorList: const [
+              Color(0xFF4CAF50),
+              Color(0xFFFF7043),
+              Color(0xFF42A5F5),
+            ],
+          ),
+        ),
+        const SizedBox(height: 16),
+        _buildWeeklySummaryCard(context, l10n),
+      ],
+    );
+
+    if (isSmallScreen) {
+      return Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          timerWidget,
+          const SizedBox(height: 20),
+          quickStatsWidget,
+        ],
+      );
+    }
+
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Expanded(flex: 3, child: timerWidget),
+        const SizedBox(width: 20),
+        Expanded(flex: 2, child: quickStatsWidget),
+      ],
+    );
+  }
+
+  /// Trends and Session History Section (responsive)
+  Widget _buildTrendsAndHistorySection(
+    BuildContext context,
+    AppLocalizations l10n,
+    bool isSmallScreen,
+  ) {
+    final trendsWidget = Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        _buildSectionTitle(context, l10n.trendsSection, FluentIcons.trending12),
+        const SizedBox(height: 12),
+        _AnimatedCard(
+          child: Padding(
+            padding: const EdgeInsets.all(20),
+            child: FocusModeTrends(data: focusTrends),
+          ),
+        ),
+      ],
+    );
+
+    final historyWidget = Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        _buildSectionTitle(
+          context,
+          l10n.sessionHistorySection,
+          FluentIcons.history,
+        ),
+        const SizedBox(height: 12),
+        _AnimatedCard(
+          child: SessionHistory(data: sessionHistory),
+        ),
+      ],
+    );
+
+    if (isSmallScreen) {
+      return Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          trendsWidget,
+          const SizedBox(height: 20),
+          historyWidget,
+        ],
+      );
+    }
+
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Expanded(flex: 3, child: trendsWidget),
+        const SizedBox(width: 20),
+        Expanded(flex: 2, child: historyWidget),
+      ],
     );
   }
 
@@ -276,7 +320,7 @@ class _FocusModeState extends State<FocusMode>
             Container(
               padding: const EdgeInsets.all(10),
               decoration: BoxDecoration(
-                color: const Color(0xFFFF5C50).withValues(alpha: 0.1),
+                color: const Color(0xFFFF5C50).withOpacity(0.1),
                 borderRadius: BorderRadius.circular(12),
               ),
               child: const Icon(
@@ -303,7 +347,7 @@ class _FocusModeState extends State<FocusMode>
                             .typography
                             .caption
                             ?.color
-                            ?.withValues(alpha: 0.7),
+                            ?.withOpacity(0.7),
                       ),
                 ),
               ],
@@ -394,7 +438,7 @@ class _FocusModeState extends State<FocusMode>
         Container(
           padding: const EdgeInsets.all(6),
           decoration: BoxDecoration(
-            color: FluentTheme.of(context).accentColor.withValues(alpha: 0.1),
+            color: FluentTheme.of(context).accentColor.withOpacity(0.1),
             borderRadius: BorderRadius.circular(6),
           ),
           child:
@@ -421,9 +465,11 @@ class _FocusModeState extends State<FocusMode>
 // Animated card wrapper with hover effects
 class _AnimatedCard extends StatefulWidget {
   final Widget child;
+  final EdgeInsets? padding;
 
   const _AnimatedCard({
     required this.child,
+    this.padding,
   });
 
   @override
@@ -446,16 +492,15 @@ class _AnimatedCardState extends State<_AnimatedCard> {
           borderRadius: BorderRadius.circular(12),
           border: Border.all(
             color: _isHovered
-                ? FluentTheme.of(context).accentColor.withValues(alpha: 0.3)
+                ? FluentTheme.of(context).accentColor.withOpacity(0.3)
                 : FluentTheme.of(context).inactiveBackgroundColor,
             width: 1,
           ),
           boxShadow: _isHovered
               ? [
                   BoxShadow(
-                    color: FluentTheme.of(context)
-                        .accentColor
-                        .withValues(alpha: 0.08),
+                    color:
+                        FluentTheme.of(context).accentColor.withOpacity(0.08),
                     blurRadius: 20,
                     offset: const Offset(0, 4),
                   ),
@@ -748,7 +793,7 @@ class _MeterState extends State<Meter> with TickerProviderStateMixin {
                       shape: BoxShape.circle,
                       boxShadow: [
                         BoxShadow(
-                          color: timerColor.withValues(alpha: 0.15),
+                          color: timerColor.withOpacity(0.15),
                           blurRadius: 40,
                           spreadRadius: 5,
                         ),
@@ -762,7 +807,7 @@ class _MeterState extends State<Meter> with TickerProviderStateMixin {
                   animationDuration: 300,
                   backgroundColor: FluentTheme.of(context)
                       .inactiveBackgroundColor
-                      .withValues(alpha: 0.3),
+                      .withOpacity(0.3),
                   percent: _percentComplete.clamp(0.0, 1.0),
                   center: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
@@ -790,7 +835,7 @@ class _MeterState extends State<Meter> with TickerProviderStateMixin {
                                     .typography
                                     .caption
                                     ?.color
-                                    ?.withValues(alpha: 0.6),
+                                    ?.withOpacity(0.6),
                                 fontWeight: FontWeight.w500,
                               ),
                         ),
@@ -937,13 +982,12 @@ class _MeterState extends State<Meter> with TickerProviderStateMixin {
                   color: isCompleted
                       ? const Color(0xFFFF5C50)
                       : isCurrent
-                          ? const Color(0xFFFF5C50).withValues(alpha: 0.5)
+                          ? const Color(0xFFFF5C50).withOpacity(0.5)
                           : FluentTheme.of(context).inactiveBackgroundColor,
                   boxShadow: isCompleted || isCurrent
                       ? [
                           BoxShadow(
-                            color:
-                                const Color(0xFFFF5C50).withValues(alpha: 0.3),
+                            color: const Color(0xFFFF5C50).withOpacity(0.3),
                             blurRadius: 4,
                             spreadRadius: 0,
                           ),
@@ -962,7 +1006,7 @@ class _MeterState extends State<Meter> with TickerProviderStateMixin {
                     .typography
                     .caption
                     ?.color
-                    ?.withValues(alpha: 0.5),
+                    ?.withOpacity(0.5),
               ),
         ),
       ],
@@ -1034,9 +1078,7 @@ class _MeterState extends State<Meter> with TickerProviderStateMixin {
                 Container(
                   padding: const EdgeInsets.all(8),
                   decoration: BoxDecoration(
-                    color: FluentTheme.of(context)
-                        .accentColor
-                        .withValues(alpha: 0.1),
+                    color: FluentTheme.of(context).accentColor.withOpacity(0.1),
                     borderRadius: BorderRadius.circular(8),
                   ),
                   child: Icon(
@@ -1155,7 +1197,7 @@ class _MeterState extends State<Meter> with TickerProviderStateMixin {
                     decoration: BoxDecoration(
                       color: FluentTheme.of(context)
                           .inactiveBackgroundColor
-                          .withValues(alpha: 0.3),
+                          .withOpacity(0.3),
                       borderRadius: BorderRadius.circular(8),
                     ),
                     child: Column(
@@ -1254,7 +1296,7 @@ class _MeterState extends State<Meter> with TickerProviderStateMixin {
             Container(
               padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
               decoration: BoxDecoration(
-                color: color.withValues(alpha: 0.1),
+                color: color.withOpacity(0.1),
                 borderRadius: BorderRadius.circular(6),
               ),
               child: Text(

@@ -166,68 +166,76 @@ class _ApplicationsState extends State<Applications>
                 app["name"].toLowerCase().contains(searchValue.toLowerCase())))
         .toList();
 
-    return _isLoading
-        ? Center(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                const ProgressRing(),
-                const SizedBox(height: 16),
-                Text(l10n.applicationsTitle, style: theme.typography.body),
-              ],
-            ),
-          )
-        : FadeTransition(
-            opacity: _fadeAnimation,
-            child: Padding(
-              padding: const EdgeInsets.all(24),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  // Header Section
-                  _Header(
-                    changeSearchValue: changeSearchValue,
-                    onRefresh: refreshData,
-                  ),
-                  const SizedBox(height: 20),
+    if (_isLoading) {
+      return ScaffoldPage(
+        padding: EdgeInsets.zero,
+        content: Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              const ProgressRing(),
+              const SizedBox(height: 16),
+              Text(l10n.applicationsTitle, style: theme.typography.body),
+            ],
+          ),
+        ),
+      );
+    }
 
-                  // Filter Bar
-                  _FilterBar(
-                    isTracking: isTracking,
-                    isHidden: isHidden,
-                    selectedCategory: selectedCategory,
-                    onTrackingChanged: (v) => setSetting('tracking', v),
-                    onHiddenChanged: (v) => setSetting('isHidden', v),
-                    onCategoryChanged: changeCategory,
-                  ),
-                  const SizedBox(height: 16),
-
-                  // Results count
-                  Padding(
-                    padding: const EdgeInsets.only(left: 4, bottom: 8),
-                    child: Text(
-                      '${filteredApps.length} ${filteredApps.length == 1 ? 'application' : 'applications'}',
-                      style: TextStyle(
-                        fontSize: 13,
-                        color: theme.typography.caption?.color
-                            ?.withValues(alpha: 0.7),
-                        fontWeight: FontWeight.w500,
-                      ),
-                    ),
-                  ),
-
-                  // Data Table
-                  Expanded(
-                    child: _DataTable(
-                      apps: filteredApps,
-                      changeIndividualParam: changeIndividualParam,
-                      refreshData: refreshData,
-                    ),
-                  ),
-                ],
+    return ScaffoldPage(
+      padding: EdgeInsets.zero,
+      content: FadeTransition(
+        opacity: _fadeAnimation,
+        child: Padding(
+          padding: const EdgeInsets.all(24),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              // Header Section
+              _Header(
+                changeSearchValue: changeSearchValue,
+                onRefresh: refreshData,
               ),
-            ),
-          );
+              const SizedBox(height: 20),
+
+              // Filter Bar
+              _FilterBar(
+                isTracking: isTracking,
+                isHidden: isHidden,
+                selectedCategory: selectedCategory,
+                onTrackingChanged: (v) => setSetting('tracking', v),
+                onHiddenChanged: (v) => setSetting('isHidden', v),
+                onCategoryChanged: changeCategory,
+              ),
+              const SizedBox(height: 16),
+
+              // Results count
+              Padding(
+                padding: const EdgeInsets.only(left: 4, bottom: 8),
+                child: Text(
+                  '${filteredApps.length} ${filteredApps.length == 1 ? 'application' : 'applications'}',
+                  style: TextStyle(
+                    fontSize: 13,
+                    color:
+                        theme.typography.caption?.color?.withValues(alpha: 0.7),
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+              ),
+
+              // Data Table
+              Expanded(
+                child: _DataTable(
+                  apps: filteredApps,
+                  changeIndividualParam: changeIndividualParam,
+                  refreshData: refreshData,
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
   }
 }
 

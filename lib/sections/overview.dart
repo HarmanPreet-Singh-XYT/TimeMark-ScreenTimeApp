@@ -129,52 +129,64 @@ class _OverviewState extends State<Overview> with TickerProviderStateMixin {
     final l10n = AppLocalizations.of(context)!;
 
     if (_isLoading) {
-      return _buildLoadingState(l10n);
+      return ScaffoldPage(
+        padding: EdgeInsets.zero,
+        content: _buildLoadingState(l10n),
+      );
     }
 
     if (_hasError) {
-      return _buildErrorState(l10n);
+      return ScaffoldPage(
+        padding: EdgeInsets.zero,
+        content: _buildErrorState(l10n),
+      );
     }
 
     if (!_hasData) {
-      return _buildEmptyState(l10n);
+      return ScaffoldPage(
+        padding: EdgeInsets.zero,
+        content: _buildEmptyState(l10n),
+      );
     }
 
-    return FadeTransition(
-      opacity: _fadeAnimation,
-      child: Padding(
-        padding: const EdgeInsets.fromLTRB(24, 16, 24, 24),
-        child: Column(
-          children: [
-            _Header(refresh: refreshData),
-            const SizedBox(height: 20),
-            // Stats cards - fixed height
-            StatsCards(
-              totalScreenTime: totalScreenTime,
-              totalProductiveTime: totalProductiveTime,
-              mostUsedApp: mostUsedApp,
-              focusSessions: focusSessions,
-            ),
-            const SizedBox(height: 20),
-            // Main content - takes remaining space
-            Expanded(
-              flex: 5,
-              child: _MainContent(
-                topApplications: topApplications,
-                categoryApplications: categoryApplications,
+    return ScaffoldPage(
+      padding: EdgeInsets.zero,
+      content: FadeTransition(
+        opacity: _fadeAnimation,
+        child: Padding(
+          padding: const EdgeInsets.fromLTRB(24, 16, 24, 24),
+          child: Column(
+            children: [
+              _Header(refresh: refreshData),
+              const SizedBox(height: 20),
+              // Stats cards - fixed height
+              StatsCards(
+                totalScreenTime: totalScreenTime,
+                totalProductiveTime: totalProductiveTime,
+                mostUsedApp: mostUsedApp,
+                focusSessions: focusSessions,
               ),
-            ),
-            const SizedBox(height: 20),
-            // Bottom section - flexible height
-            Expanded(
-              flex: 3,
-              child: _BottomSection(
-                screenTime: screenTime,
-                productiveScore: productiveScore,
-                applicationLimits: applicationLimits,
+              const SizedBox(height: 20),
+              // Main content - takes remaining space
+              Expanded(
+                flex: 5,
+                child: _MainContent(
+                  topApplications: topApplications,
+                  categoryApplications: categoryApplications,
+                ),
               ),
-            ),
-          ],
+              const SizedBox(height: 20),
+              // Bottom section - flexible height
+              Expanded(
+                flex: 3,
+                child: _BottomSection(
+                  screenTime: screenTime,
+                  productiveScore: productiveScore,
+                  applicationLimits: applicationLimits,
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );

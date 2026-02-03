@@ -17,6 +17,47 @@ class ReportsPieChart extends StatefulWidget {
 
 class _ReportsPieChartState extends State<ReportsPieChart> {
   int _touchedIndex = -1;
+  final ScrollController _scrollController = ScrollController();
+  bool _showScrollIndicator = false;
+
+  @override
+  void initState() {
+    super.initState();
+    // Check if content is scrollable after build
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _checkIfScrollable();
+    });
+    _scrollController.addListener(_onScroll);
+  }
+
+  @override
+  void dispose() {
+    _scrollController.removeListener(_onScroll);
+    _scrollController.dispose();
+    super.dispose();
+  }
+
+  void _checkIfScrollable() {
+    if (_scrollController.hasClients) {
+      setState(() {
+        _showScrollIndicator = _scrollController.position.maxScrollExtent > 0 &&
+            _scrollController.offset <
+                _scrollController.position.maxScrollExtent;
+      });
+    }
+  }
+
+  void _onScroll() {
+    if (_scrollController.hasClients) {
+      final isAtBottom = _scrollController.offset >=
+          _scrollController.position.maxScrollExtent;
+      if (_showScrollIndicator == isAtBottom) {
+        setState(() {
+          _showScrollIndicator = !isAtBottom;
+        });
+      }
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -25,6 +66,7 @@ class _ReportsPieChartState extends State<ReportsPieChart> {
     return Column(
       children: [
         Expanded(
+          flex: 3,
           child: PieChart(
             PieChartData(
               pieTouchData: PieTouchData(
@@ -49,54 +91,115 @@ class _ReportsPieChartState extends State<ReportsPieChart> {
           ),
         ),
         const SizedBox(height: 16),
-        Wrap(
-          spacing: 16,
-          runSpacing: 8,
-          alignment: WrapAlignment.center,
-          children:
-              widget.dataMap.entries.toList().asMap().entries.map((entry) {
-            final index = entry.key;
-            final data = entry.value;
-            final percentage = (data.value / total * 100).toStringAsFixed(1);
-            final isSelected = _touchedIndex == index;
-
-            return AnimatedContainer(
-              duration: const Duration(milliseconds: 200),
-              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-              decoration: BoxDecoration(
-                color: isSelected
-                    ? widget.colorList[index % widget.colorList.length]
-                        .withValues(alpha: 0.1)
-                    : Colors.transparent,
-                borderRadius: BorderRadius.circular(4),
-              ),
-              child: Row(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Container(
-                    width: 10,
-                    height: 10,
-                    decoration: BoxDecoration(
-                      color: widget.colorList[index % widget.colorList.length],
-                      borderRadius: BorderRadius.circular(2),
+        Flexible(
+          flex: 1,
+          child: ConstrainedBox(
+            constraints: const BoxConstraints(maxHeight: 100),
+            child: Stack(
+              children: [
+                SingleChildScrollView(
+                  controller: _scrollController,
+                  child: Padding(
+                    padding: const EdgeInsets.only(bottom: 16),
+                    child: Wrap(
+                      spacing: 16,
+                      runSpacing: 8,
+                      alignment: WrapAlignment.center,
+                      children: _buildLegendItems(total),
                     ),
                   ),
-                  const SizedBox(width: 6),
-                  Text(
-                    '${data.key} ($percentage%)',
-                    style: TextStyle(
-                      fontSize: 12,
-                      fontWeight:
-                          isSelected ? FontWeight.w600 : FontWeight.normal,
+                ),
+                // Fade effect at the bottom when scrollable
+                if (_showScrollIndicator)
+                  Positioned(
+                    left: 0,
+                    right: 0,
+                    bottom: 0,
+                    height: 30,
+                    child: IgnorePointer(
+                      child: Container(
+                        decoration: BoxDecoration(
+                          gradient: LinearGradient(
+                            begin: Alignment.topCenter,
+                            end: Alignment.bottomCenter,
+                            colors: [
+                              Theme.of(context)
+                                  .scaffoldBackgroundColor
+                                  .withValues(alpha: 0.0),
+                              Theme.of(context).scaffoldBackgroundColor,
+                            ],
+                          ),
+                        ),
+                      ),
                     ),
                   ),
-                ],
-              ),
-            );
-          }).toList(),
+                // Optional: Down arrow indicator
+                if (_showScrollIndicator)
+                  Positioned(
+                    left: 0,
+                    right: 0,
+                    bottom: 0,
+                    child: IgnorePointer(
+                      child: Center(
+                        child: Icon(
+                          Icons.keyboard_arrow_down,
+                          size: 20,
+                          color: Theme.of(context)
+                              .iconTheme
+                              .color
+                              ?.withValues(alpha: 0.5),
+                        ),
+                      ),
+                    ),
+                  ),
+              ],
+            ),
+          ),
         ),
       ],
     );
+  }
+
+  List<Widget> _buildLegendItems(double total) {
+    return widget.dataMap.entries.toList().asMap().entries.map((entry) {
+      final index = entry.key;
+      final data = entry.value;
+      final percentage = (data.value / total * 100).toStringAsFixed(1);
+      final isSelected = _touchedIndex == index;
+
+      return AnimatedContainer(
+        duration: const Duration(milliseconds: 200),
+        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+        decoration: BoxDecoration(
+          color: isSelected
+              ? widget.colorList[index % widget.colorList.length]
+                  .withValues(alpha: 0.1)
+              : Colors.transparent,
+          borderRadius: BorderRadius.circular(4),
+        ),
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Container(
+              width: 10,
+              height: 10,
+              decoration: BoxDecoration(
+                color: widget.colorList[index % widget.colorList.length],
+                borderRadius: BorderRadius.circular(2),
+              ),
+            ),
+            const SizedBox(width: 6),
+            Text(
+              '${data.key} ($percentage%)',
+              style: TextStyle(
+                fontSize: 12,
+                fontWeight: isSelected ? FontWeight.w600 : FontWeight.normal,
+              ),
+            ),
+          ],
+        ),
+      );
+    }).toList();
   }
 
   List<PieChartSectionData> _buildSections(double total) {

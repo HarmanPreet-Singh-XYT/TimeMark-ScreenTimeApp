@@ -108,20 +108,20 @@ class _CompactThemeSelector extends StatelessWidget {
         children: [
           _CompactThemeButton(
             icon: FluentIcons.sunny,
-            tooltip: "l10n.themeLight",
+            tooltip: l10n.themeLight,
             isSelected: currentMode == ThemeOptions.light,
             onTap: () => onModeChanged(ThemeOptions.light),
             isFirst: true,
           ),
           _CompactThemeButton(
             icon: FluentIcons.clear_night,
-            tooltip: "l10n.themeDark",
+            tooltip: l10n.themeDark,
             isSelected: currentMode == ThemeOptions.dark,
             onTap: () => onModeChanged(ThemeOptions.dark),
           ),
           _CompactThemeButton(
             icon: FluentIcons.devices2,
-            tooltip: "l10n.themeSystem",
+            tooltip: l10n.themeSystem,
             isSelected: currentMode == ThemeOptions.system,
             onTap: () => onModeChanged(ThemeOptions.system),
             isLast: true,

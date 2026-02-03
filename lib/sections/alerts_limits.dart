@@ -188,21 +188,27 @@ class _AlertsLimitsState extends State<AlertsLimits> {
   @override
   Widget build(BuildContext context) {
     if (isLoading) {
-      return const Center(child: ProgressRing());
+      return ScaffoldPage(
+        padding: EdgeInsets.zero,
+        content: const Center(child: ProgressRing()),
+      );
     }
 
     if (errorMessage != null) {
-      return Center(
-        child: _ErrorCard(
-          message: errorMessage!,
-          onRetry: _loadData,
+      return ScaffoldPage(
+        padding: EdgeInsets.zero,
+        content: Center(
+          child: _ErrorCard(
+            message: errorMessage!,
+            onRetry: _loadData,
+          ),
         ),
       );
     }
 
-    // Use SizedBox.expand to take all available space from parent
-    return SizedBox.expand(
-      child: LayoutBuilder(
+    return ScaffoldPage(
+      padding: EdgeInsets.zero,
+      content: LayoutBuilder(
         builder: (context, constraints) {
           final isWide = constraints.maxWidth >= 1000;
           final isMedium = constraints.maxWidth >= 700;
@@ -210,9 +216,8 @@ class _AlertsLimitsState extends State<AlertsLimits> {
           return SingleChildScrollView(
             padding: const EdgeInsets.all(24),
             child: ConstrainedBox(
-              // Ensure minimum height fills the viewport
               constraints: BoxConstraints(
-                minHeight: constraints.maxHeight - 48, // minus padding
+                minHeight: constraints.maxHeight - 48,
               ),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,

@@ -155,31 +155,35 @@ class _ReportsState extends State<Reports> {
 
   @override
   Widget build(BuildContext context) {
-    return NotificationListener<ScrollNotification>(
-      onNotification: (ScrollNotification scrollInfo) {
-        if (scrollInfo is ScrollStartNotification &&
-            scrollInfo.metrics.pixels == scrollInfo.metrics.minScrollExtent) {
-          _loadAnalyticsData();
-          return true;
-        }
-        return false;
-      },
-      child: SingleChildScrollView(
-        physics: const AlwaysScrollableScrollPhysics(),
-        child: Container(
-          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              _buildHeader(),
-              const SizedBox(height: 20),
-              if (_isLoading)
-                _buildCustomLoadingIndicator()
-              else if (_error != null)
-                _buildCustomErrorDisplay()
-              else if (_analyticsSummary != null)
-                ..._buildAnalyticsContent(),
-            ],
+    return ScaffoldPage(
+      padding: EdgeInsets.zero,
+      // ScaffoldPage automatically uses theme's scaffold background
+      content: NotificationListener<ScrollNotification>(
+        onNotification: (ScrollNotification scrollInfo) {
+          if (scrollInfo is ScrollStartNotification &&
+              scrollInfo.metrics.pixels == scrollInfo.metrics.minScrollExtent) {
+            _loadAnalyticsData();
+            return true;
+          }
+          return false;
+        },
+        child: SingleChildScrollView(
+          physics: const AlwaysScrollableScrollPhysics(),
+          child: Container(
+            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                _buildHeader(),
+                const SizedBox(height: 20),
+                if (_isLoading)
+                  _buildCustomLoadingIndicator()
+                else if (_error != null)
+                  _buildCustomErrorDisplay()
+                else if (_analyticsSummary != null)
+                  ..._buildAnalyticsContent(),
+              ],
+            ),
           ),
         ),
       ),
