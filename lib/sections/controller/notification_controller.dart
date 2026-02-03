@@ -2,39 +2,49 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:local_notifier/local_notifier.dart';
 import 'package:screentime/sections/controller/settings_data_controller.dart';
+import 'dart:io' show Platform;
 
 import 'data_controllers/alerts_limits_data_controller.dart';
 
 class NotificationController with ChangeNotifier {
   // Singleton instance
-  static final NotificationController _instance = NotificationController._internal();
-  
+  static final NotificationController _instance =
+      NotificationController._internal();
+
   // Factory constructor to return the same instance
   factory NotificationController() {
     return _instance;
   }
-  
+
   // Private constructor
   NotificationController._internal();
-  
+
   // Reference to settings manager
   final _settingsManager = SettingsManager();
-  final ScreenTimeDataController _screenTimeController = ScreenTimeDataController();
-  
+  final ScreenTimeDataController _screenTimeController =
+      ScreenTimeDataController();
+
   // Reminder timer
   Timer? _reminderTimer;
-  
+
   // Settings
   bool _soundEnabled = true;
   int _reminderFrequency = 60; // seconds between reminders if not acknowledged
   static const int autoDismissSeconds = 5;
-  
+
   // Pending alerts tracking
-  final Map<int, DateTime> _pendingAlerts = {}; // alertId -> time it was created
-  
+  final Map<int, DateTime> _pendingAlerts =
+      {}; // alertId -> time it was created
+
   // Callback for showing custom alerts
-  Function(String title, String message, {Function? onClose, Function? onRemind})? _showAlertCallback;
-  
+  Function(String title, String message,
+      {Function? onClose, Function? onRemind})? _showAlertCallback;
+
+  // Permission status cache
+  NotificationPermissionStatus? _cachedPermissionStatus;
+  DateTime? _lastPermissionCheck;
+  static const _permissionCacheDuration = Duration(seconds: 30);
+
   // Initialize controller
   Future<void> initialize() async {
     // Initialize local_notifier
@@ -42,19 +52,62 @@ class NotificationController with ChangeNotifier {
       appName: 'TimeMark',
       shortcutPolicy: ShortcutPolicy.requireCreate,
     );
-    
+
     // Ensure the notificationController section exists in settings
     _initializeSettings();
-    
+
     // Load settings from SettingsManager
     _loadSettings();
+
+    // Check permission on macOS
+    if (Platform.isMacOS) {
+      await _checkAndCachePermission();
+    }
   }
-  
+
+  // Check and cache permission status
+  Future<bool> _checkAndCachePermission() async {
+    if (!Platform.isMacOS) {
+      return true; // Always allowed on non-macOS
+    }
+
+    // Use cached status if recent
+    if (_cachedPermissionStatus != null &&
+        _lastPermissionCheck != null &&
+        DateTime.now().difference(_lastPermissionCheck!) <
+            _permissionCacheDuration) {
+      return _cachedPermissionStatus!.isGranted;
+    }
+
+    try {
+      _cachedPermissionStatus = await localNotifier.checkPermission();
+      _lastPermissionCheck = DateTime.now();
+
+      if (!_cachedPermissionStatus!.isGranted) {
+        debugPrint(
+            '🍎 macOS notification permission not granted: ${_cachedPermissionStatus!.status}');
+      }
+
+      return _cachedPermissionStatus!.isGranted;
+    } catch (e) {
+      debugPrint('Error checking notification permission: $e');
+      return false;
+    }
+  }
+
+  // Force refresh permission status
+  Future<void> refreshPermissionStatus() async {
+    _cachedPermissionStatus = null;
+    _lastPermissionCheck = null;
+    await _checkAndCachePermission();
+  }
+
   // Initialize dedicated settings section if it doesn't exist
   void _initializeSettings() {
     // Check if our dedicated section exists
-    var notificationSettings = _settingsManager.getSetting('notificationController');
-    
+    var notificationSettings =
+        _settingsManager.getSetting('notificationController');
+
     if (notificationSettings == null) {
       // Create our dedicated section with default values
       Map<String, dynamic> defaultSettings = {
@@ -63,85 +116,97 @@ class NotificationController with ChangeNotifier {
         // "useSystemNotifications": true,
         // "usePopupAlerts": true,
       };
-      
+
       _settingsManager.updateSetting('notificationController', defaultSettings);
     }
   }
-  
+
   // Load settings from SettingsManager
   void _loadSettings() {
     // Load from our dedicated section
     var notificationSettings = _settingsManager.getSetting('notifications');
-    var frequency = _settingsManager.getSetting('notificationController.reminderFrequency');
-    
+    var frequency =
+        _settingsManager.getSetting('notificationController.reminderFrequency');
+
     if (notificationSettings != null) {
       _soundEnabled = notificationSettings['sound'] ?? true;
       _reminderFrequency = frequency ?? 60;
     }
-    
+
     notifyListeners();
   }
-  
+
   // Method to register a custom alert handler for popup alerts
   void registerAlertHandler(
-    Function(String title, String message, {Function? onClose, Function? onRemind}) showAlert
-  ) {
+      Function(String title, String message,
+              {Function? onClose, Function? onRemind})
+          showAlert) {
     _showAlertCallback = showAlert;
   }
-  
+
   // Settings configuration with persistence in dedicated section
   // void setSoundEnabled(bool enabled) {
   //   _soundEnabled = enabled;
   //   _settingsManager.updateSetting('notificationController.soundEnabled', enabled);
   //   notifyListeners();
   // }
-  
+
   void setReminderFrequency(int seconds) {
     _reminderFrequency = seconds;
-    _settingsManager.updateSetting('notificationController.reminderFrequency', seconds);
+    _settingsManager.updateSetting(
+        'notificationController.reminderFrequency', seconds);
     notifyListeners();
   }
-  
+
   // void setUseSystemNotifications(bool enabled) {
   //   _settingsManager.updateSetting('notificationController.useSystemNotifications', enabled);
   //   notifyListeners();
   // }
-  
+
   // void setUsePopupAlerts(bool enabled) {
   //   _settingsManager.updateSetting('notificationController.usePopupAlerts', enabled);
   //   notifyListeners();
   // }
-  
+
   // Getters for notification settings
   bool getSoundEnabled() {
     return _soundEnabled;
   }
-  
+
   int getReminderFrequency() {
     return _reminderFrequency;
   }
-  
+
   bool getUseSystemNotifications() {
     var settings = _settingsManager.getSetting('notifications');
     return settings != null ? settings['system'] ?? true : true;
   }
-  
+
   bool getUsePopupAlerts() {
     var settings = _settingsManager.getSetting('notifications');
     return settings != null ? settings['popup'] ?? true : true;
   }
-  
+
   // Focus Notification Functions
-  void sendFocusNotification(String mode, bool isCompleted) {
+  Future<void> sendFocusNotification(String mode, bool isCompleted) async {
     // Check if focus notifications are enabled in the general settings
-    if (!(_settingsManager.getSetting('notifications.enabled') ?? true) || 
+    if (!(_settingsManager.getSetting('notifications.enabled') ?? true) ||
         !(_settingsManager.getSetting('notifications.focusMode') ?? true)) {
       return;
     }
-    
+
+    // Check permission on macOS
+    if (Platform.isMacOS) {
+      final hasPermission = await _checkAndCachePermission();
+      if (!hasPermission) {
+        debugPrint('🍎 Cannot send focus notification: permission not granted');
+        return;
+      }
+    }
+
     String title;
     String body;
-    
+
     if (isCompleted) {
       title = '$mode Completed';
       body = 'Your $mode session has ended.';
@@ -149,96 +214,130 @@ class NotificationController with ChangeNotifier {
       title = '$mode Started';
       body = 'Your $mode session has started.';
     }
-    
-    _sendPomodoroNotification(title, body, isCompleted);
-    
+
+    await _sendPomodoroNotification(title, body, isCompleted);
   }
-  
+
   // Screen Time Notification
-  void sendScreenTimeNotification(int limitInMinutes) {
+  Future<void> sendScreenTimeNotification(int limitInMinutes) async {
     // Check if screen time notifications are enabled in the general settings
-    if (!(_settingsManager.getSetting('notifications.enabled') ?? true) || 
-        !(_settingsManager.getSetting('limitsAlerts.overallLimit.enabled') ?? true)) {
+    if (!(_settingsManager.getSetting('notifications.enabled') ?? true) ||
+        !(_settingsManager.getSetting('limitsAlerts.overallLimit.enabled') ??
+            true)) {
       return;
     }
-    
+
+    // Check permission on macOS
+    if (Platform.isMacOS) {
+      final hasPermission = await _checkAndCachePermission();
+      if (!hasPermission) {
+        debugPrint(
+            '🍎 Cannot send screen time notification: permission not granted');
+        return;
+      }
+    }
+
     String title = 'Screen Time Limit Reached';
-    String body = 'You have reached your daily screen time limit of $limitInMinutes minutes.';
-    
-    _sendNotification(title, body, 'screenTime');
+    String body =
+        'You have reached your daily screen time limit of $limitInMinutes minutes.';
+
+    await _sendNotification(title, body, 'screenTime');
   }
-  
+
   // App Limit Notification
-  void sendAppLimitNotification(String appName, int limitInMinutes) {
+  Future<void> sendAppLimitNotification(
+      String appName, int limitInMinutes) async {
     // Check if app screen time notifications are enabled in the general settings
-    if (!(_settingsManager.getSetting('notifications.enabled') ?? true) || 
-        !(_settingsManager.getSetting('notifications.overallLimit.enabled') ?? true)) {
+    if (!(_settingsManager.getSetting('notifications.enabled') ?? true) ||
+        !(_settingsManager.getSetting('notifications.overallLimit.enabled') ??
+            true)) {
       return;
     }
-    
+
+    // Check permission on macOS
+    if (Platform.isMacOS) {
+      final hasPermission = await _checkAndCachePermission();
+      if (!hasPermission) {
+        debugPrint(
+            '🍎 Cannot send app limit notification: permission not granted');
+        return;
+      }
+    }
+
     String title = 'App Time Limit Reached';
-    String body = 'You have reached your time limit of $limitInMinutes minutes for $appName.';
-    
-    _sendNotification(title, body, 'appLimit', appName);
+    String body =
+        'You have reached your time limit of $limitInMinutes minutes for $appName.';
+
+    await _sendNotification(title, body, 'appLimit', appName);
   }
-  
+
   // Generic notification sender
-  void _sendNotification(String title, String body, String type, [String? extraData]) {
+  Future<void> _sendNotification(String title, String body, String type,
+      [String? extraData]) async {
     // Use our own dedicated settings
     bool useSystemNotifications = getUseSystemNotifications();
     bool usePopupAlerts = getUsePopupAlerts();
-    
+
     final id = DateTime.now().millisecondsSinceEpoch % 10000;
     _pendingAlerts[id] = DateTime.now();
-    
+
     // Cancel any existing reminder timer to prevent spam
     _reminderTimer?.cancel();
-    
+
     // Send Windows notification if system notifications are enabled
     if (useSystemNotifications) {
-      final notification = LocalNotification(
-        title: title,
-        body: body,
-        actions: _soundEnabled 
-        ? [
-            LocalNotificationAction(text: 'Close', type: 'close'),
-            LocalNotificationAction(text: 'Remind Later', type: 'remind'),
-          ] 
-        : null,
-      );
-      
-      // Auto-dismiss timer
-      Timer(const Duration(seconds: autoDismissSeconds), () {
-        if (_pendingAlerts.containsKey(id)) {
-          _handleNotificationAction(id, 'close', type, extraData);
+      try {
+        final notification = LocalNotification(
+          title: title,
+          body: body,
+          actions: _soundEnabled
+              ? [
+                  LocalNotificationAction(text: 'Close', type: 'close'),
+                  LocalNotificationAction(text: 'Remind Later', type: 'remind'),
+                ]
+              : null,
+        );
+
+        // Auto-dismiss timer
+        Timer(const Duration(seconds: autoDismissSeconds), () {
+          if (_pendingAlerts.containsKey(id)) {
+            _handleNotificationAction(id, 'close', type, extraData);
+          }
+        });
+
+        // Play sound if enabled
+        if (_soundEnabled) {
+          // You would implement sound playing here using a package like audioplayers
+          // For example: _audioPlayer.play('assets/notification_sound.wav');
         }
-      });
-      
-      // Play sound if enabled
-      if (_soundEnabled) {
-        // You would implement sound playing here using a package like audioplayers
-        // For example: _audioPlayer.play('assets/notification_sound.wav');
+
+        // Show notification
+        notification.onClickAction = (actionIndex) {
+          if (actionIndex == 0) {
+            // Close
+            _handleNotificationAction(id, 'close', type, extraData);
+          } else if (actionIndex == 1) {
+            // Remind Later
+            _handleNotificationAction(id, 'remind', type, extraData);
+          }
+        };
+
+        await notification.show();
+      } catch (e) {
+        debugPrint('Error showing system notification: $e');
       }
-      
-      // Show notification
-      notification.onClickAction = (actionIndex) {
-        if (actionIndex == 0) { // Close
-          _handleNotificationAction(id, 'close', type, extraData);
-        } else if (actionIndex == 1) { // Remind Later
-          _handleNotificationAction(id, 'remind', type, extraData);
-        }
-      };
-      
-      notification.show();
     }
-    
+
     // Also show in-app alert if callback is registered and popup alerts are enabled
     if (_showAlertCallback != null && usePopupAlerts) {
-      _showAlertCallback!(title, body,
+      _showAlertCallback!(
+        title,
+        body,
         onClose: () => _handleNotificationAction(id, 'close', type, extraData),
-        onRemind: () => _handleNotificationAction(id, 'remind', type, extraData),
+        onRemind: () =>
+            _handleNotificationAction(id, 'remind', type, extraData),
       );
-      
+
       // Auto-dismiss timer for popup alerts
       Timer(const Duration(seconds: autoDismissSeconds), () {
         if (_pendingAlerts.containsKey(id)) {
@@ -246,24 +345,25 @@ class NotificationController with ChangeNotifier {
         }
       });
     }
-    
+
     // Modify reminder scheduling to be less aggressive
     _scheduleReminderIfNeeded(id, type, extraData);
   }
-  
+
   // Schedule reminder for unacknowledged alerts
   void _scheduleReminderIfNeeded(int id, String type, [String? extraData]) {
     _reminderTimer?.cancel();
-    _reminderTimer = Timer.periodic(Duration(minutes: _reminderFrequency), (timer) {
+    _reminderTimer =
+        Timer.periodic(Duration(minutes: _reminderFrequency), (timer) {
       if (!_pendingAlerts.containsKey(id)) {
         timer.cancel();
         return;
       }
-      
+
       // Send reminder based on type
       String reminderTitle = 'Reminder';
       String reminderBody = 'You have an unacknowledged alert';
-      
+
       switch (type) {
         case 'focus':
           reminderBody = 'You have an unacknowledged focus alert';
@@ -273,141 +373,159 @@ class NotificationController with ChangeNotifier {
           break;
         case 'appLimit':
           if (extraData != null) {
-            reminderBody = 'You have an unacknowledged app limit alert for $extraData';
+            reminderBody =
+                'You have an unacknowledged app limit alert for $extraData';
           }
           break;
       }
-      
+
       _sendNotification(reminderTitle, reminderBody, type, extraData);
     });
   }
-  
+
   // Action handlers
-  void _handleNotificationAction(int id, String action, String type, [String? extraData]) {
+  void _handleNotificationAction(int id, String action, String type,
+      [String? extraData]) {
     if (action == 'close') {
       _pendingAlerts.remove(id);
       _reminderTimer?.cancel();
     } else if (action == 'remind') {
       _pendingAlerts.remove(id);
       _reminderTimer?.cancel();
-      
+
       // Schedule a reminder in 15 minutes
       Timer(const Duration(minutes: 15), () {
         String title = '15-Minute Reminder';
         String body = '';
-        
+
         switch (type) {
           case 'focus':
             body = 'This is your 15-minute reminder about your focus session';
             break;
           case 'screenTime':
-            body = 'This is your 15-minute reminder about your screen time limit';
+            body =
+                'This is your 15-minute reminder about your screen time limit';
             break;
           case 'appLimit':
             if (extraData != null) {
-              body = 'This is your 15-minute reminder about your app limit for $extraData';
+              body =
+                  'This is your 15-minute reminder about your app limit for $extraData';
             }
             break;
           default:
             body = 'This is your 15-minute reminder';
         }
-        
+
         _sendNotification(title, body, type, extraData);
       });
     }
   }
-  
+
   // Method to show a custom popup alert
-  void showPopupAlert(String title, String message) {
+  Future<void> showPopupAlert(String title, String message) async {
     // Check if popup alerts are enabled
     bool usePopupAlerts = getUsePopupAlerts();
     if (!usePopupAlerts || _showAlertCallback == null) {
       return;
     }
-    
+
+    // Check permission on macOS for system notifications
+    if (Platform.isMacOS && getUseSystemNotifications()) {
+      final hasPermission = await _checkAndCachePermission();
+      if (!hasPermission) {
+        debugPrint(
+            '🍎 Cannot send popup alert notification: permission not granted');
+        // Still show in-app popup even without permission
+      }
+    }
+
     final id = DateTime.now().millisecondsSinceEpoch % 10000;
     _pendingAlerts[id] = DateTime.now();
-    
-    _showAlertCallback!(title, message,
-      onClose: () {
-        _pendingAlerts.remove(id);
-        _reminderTimer?.cancel();
-      },
-      onRemind: () {
-        _pendingAlerts.remove(id);
-        _reminderTimer?.cancel();
-        Timer(const Duration(minutes: 15), () {
-          showPopupAlert('Reminder: $title', message);
-        });
-      }
-    );
-    
+
+    _showAlertCallback!(title, message, onClose: () {
+      _pendingAlerts.remove(id);
+      _reminderTimer?.cancel();
+    }, onRemind: () {
+      _pendingAlerts.remove(id);
+      _reminderTimer?.cancel();
+      Timer(const Duration(minutes: 15), () {
+        showPopupAlert('Reminder: $title', message);
+      });
+    });
+
     _scheduleReminderIfNeeded(id, 'popup');
   }
-  
+
   // Cancel all active reminders
   void cancelAllReminders() {
     _pendingAlerts.clear();
     _reminderTimer?.cancel();
   }
-  
+
   // Method to reload settings when they change externally
   void refreshSettings() {
     _loadSettings();
   }
-  void _sendPomodoroNotification(String title, String body, bool isCompleted) {
+
+  Future<void> _sendPomodoroNotification(
+      String title, String body, bool isCompleted) async {
     // Use our own dedicated settings
     bool useSystemNotifications = getUseSystemNotifications();
     bool usePopupAlerts = getUsePopupAlerts();
-    
+
     final id = DateTime.now().millisecondsSinceEpoch % 10000;
     _pendingAlerts[id] = DateTime.now();
-    
+
     // Cancel any existing reminder timer to prevent spam
     _reminderTimer?.cancel();
-    
+
     // Send Windows notification if system notifications are enabled
     if (useSystemNotifications) {
-      final notification = LocalNotification(
-        title: title,
-        body: body,
-        actions: _soundEnabled 
-        ? [
-            LocalNotificationAction(text: 'Close', type: 'close'),
-          ] 
-        : null,
-      );
-      
-      // Auto-dismiss timer
-      Timer(const Duration(seconds: autoDismissSeconds), () {
-        if (_pendingAlerts.containsKey(id)) {
-          _handleNotificationAction(id, 'close', 'focus');
+      try {
+        final notification = LocalNotification(
+          title: title,
+          body: body,
+          actions: _soundEnabled
+              ? [
+                  LocalNotificationAction(text: 'Close', type: 'close'),
+                ]
+              : null,
+        );
+
+        // Auto-dismiss timer
+        Timer(const Duration(seconds: autoDismissSeconds), () {
+          if (_pendingAlerts.containsKey(id)) {
+            _handleNotificationAction(id, 'close', 'focus');
+          }
+        });
+
+        // Play sound if enabled
+        if (_soundEnabled) {
+          // You would implement sound playing here using a package like audioplayers
+          // For example: _audioPlayer.play('assets/notification_sound.wav');
         }
-      });
-      
-      // Play sound if enabled
-      if (_soundEnabled) {
-        // You would implement sound playing here using a package like audioplayers
-        // For example: _audioPlayer.play('assets/notification_sound.wav');
+
+        // Show notification
+        notification.onClickAction = (actionIndex) {
+          // Only close action for Pomodoro
+          _handleNotificationAction(id, 'close', 'focus');
+        };
+
+        await notification.show();
+      } catch (e) {
+        debugPrint('Error showing Pomodoro notification: $e');
       }
-      
-      // Show notification
-      notification.onClickAction = (actionIndex) {
-        // Only close action for Pomodoro
-        _handleNotificationAction(id, 'close', 'focus');
-      };
-      
-      notification.show();
     }
-    
+
     // Also show in-app alert if callback is registered and popup alerts are enabled
     if (_showAlertCallback != null && usePopupAlerts) {
-      _showAlertCallback!(title, body,
+      _showAlertCallback!(
+        title, body,
         onClose: () => _handleNotificationAction(id, 'close', 'focus'),
         // No onRemind callback for Pomodoro
         onRemind: null,
       );
-      
+
       // Auto-dismiss timer for popup alerts
       Timer(const Duration(seconds: autoDismissSeconds), () {
         if (_pendingAlerts.containsKey(id)) {
@@ -415,9 +533,10 @@ class NotificationController with ChangeNotifier {
         }
       });
     }
-    
+
     // No reminder scheduling for Pomodoro notifications
   }
+
   // screenTime
   // Keep track of sent notifications to avoid spamming
   final Set<String> _notifiedApproachingApps = {};
@@ -425,21 +544,33 @@ class NotificationController with ChangeNotifier {
   bool _notifiedOverallApproaching = false;
   bool _notifiedOverallExceeded = false;
 
-  void checkAndSendNotifications() {
-    List<AppUsageSummary> appSummaries = _screenTimeController.getAllAppsSummary();
+  Future<void> checkAndSendNotifications() async {
+    // Check permission on macOS before checking anything
+    if (Platform.isMacOS) {
+      final hasPermission = await _checkAndCachePermission();
+      if (!hasPermission) {
+        debugPrint('🍎 Skipping notification check: permission not granted');
+        return;
+      }
+    }
+
+    List<AppUsageSummary> appSummaries =
+        _screenTimeController.getAllAppsSummary();
 
     for (final app in appSummaries) {
       if (app.limitStatus) {
         if (app.currentUsage >= app.dailyLimit) {
           // Only send if we haven't already sent an "exceeded" notification
           if (!_notifiedExceededApps.contains(app.appName)) {
-            sendAppLimitNotification(app.appName, app.dailyLimit.inMinutes);
-            _notifiedExceededApps.add(app.appName);  // Mark as notified
+            await sendAppLimitNotification(
+                app.appName, app.dailyLimit.inMinutes);
+            _notifiedExceededApps.add(app.appName); // Mark as notified
           }
         } else if (app.percentageOfLimitUsed >= 0.9) {
           // Send warning only once per day per app
           if (!_notifiedApproachingApps.contains(app.appName)) {
-            showPopupAlert("Approaching App Limit", "You're about to reach your daily limit for ${app.appName}");
+            await showPopupAlert("Approaching App Limit",
+                "You're about to reach your daily limit for ${app.appName}");
             _notifiedApproachingApps.add(app.appName);
           }
         }
@@ -453,12 +584,13 @@ class NotificationController with ChangeNotifier {
 
       if (currentUsage >= overallLimit) {
         if (!_notifiedOverallExceeded) {
-          sendScreenTimeNotification(overallLimit.inMinutes);
+          await sendScreenTimeNotification(overallLimit.inMinutes);
           _notifiedOverallExceeded = true;
         }
       } else if (currentUsage.inMinutes >= overallLimit.inMinutes * 0.9) {
         if (!_notifiedOverallApproaching) {
-          showPopupAlert("Approaching Screen Time Limit", "You're about to reach your daily screen time limit of ${overallLimit.inMinutes} minutes");
+          await showPopupAlert("Approaching Screen Time Limit",
+              "You're about to reach your daily screen time limit of ${overallLimit.inMinutes} minutes");
           _notifiedOverallApproaching = true;
         }
       }
@@ -471,5 +603,14 @@ class NotificationController with ChangeNotifier {
     _notifiedExceededApps.clear();
     _notifiedOverallApproaching = false;
     _notifiedOverallExceeded = false;
+  }
+
+  // Get current permission status (for UI)
+  NotificationPermissionStatus? get permissionStatus => _cachedPermissionStatus;
+
+  // Check if notifications are available
+  bool get canSendNotifications {
+    if (!Platform.isMacOS) return true;
+    return _cachedPermissionStatus?.isGranted ?? false;
   }
 }

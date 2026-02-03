@@ -175,6 +175,24 @@ class SettingsProvider extends ChangeNotifier {
     notifyListeners();
   }
 
+  /// Enable all notification settings at once
+  /// Useful after user grants permission on macOS
+  Future<void> enableAllNotifications() async {
+    await updateSetting('notificationsEnabled', true);
+    await updateSetting('notificationsFocusMode', true);
+    await updateSetting('notificationsScreenTime', true);
+    await updateSetting('notificationsAppScreenTime', true);
+  }
+
+  /// Disable all notification settings
+  /// Called when permission is denied or revoked
+  Future<void> disableAllNotifications() async {
+    await updateSetting('notificationsEnabled', false);
+    await updateSetting('notificationsFocusMode', false);
+    await updateSetting('notificationsScreenTime', false);
+    await updateSetting('notificationsAppScreenTime', false);
+  }
+
   int getReminderFrequency() {
     return _settingsManager
             .getSetting("notificationController.reminderFrequency") ??

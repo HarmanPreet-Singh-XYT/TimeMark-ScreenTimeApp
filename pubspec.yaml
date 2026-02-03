@@ -61,6 +61,7 @@ dependencies:
       ref: master
   url_launcher: ^6.3.2
   flutter_colorpicker: ^1.0.3
+  audioplayers: ^6.5.1
   # Native Code Interaction for Foreground Window
   # You'll need to implement a custom plugin or package
   # Placeholder for your native window tracking plugin
@@ -78,6 +79,10 @@ flutter:
   uses-material-design: true
   assets:
     - assets/icons/
+    - assets/sounds/work_start.mp3
+    - assets/sounds/break_start.mp3
+    - assets/sounds/long_break_start.mp3
+    - assets/sounds/timer_complete.mp3
   # plugin:
   #   platforms:
   #     macos:

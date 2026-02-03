@@ -1,5 +1,6 @@
 import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:convert';
+import 'dart:io' show Platform;
 import 'package:flutter/material.dart';
 import 'package:adaptive_theme/adaptive_theme.dart';
 
@@ -74,56 +75,67 @@ class SettingsManager {
 
   late SharedPreferences _prefs;
 
-  /// Settings Map
-  Map<String, dynamic> settings = {
-    "theme": {
-      "selected": ThemeOptions.defaultTheme,
-    },
-    "language": {
-      "selected": LanguageOptions.defaultLanguage,
-    },
-    "launchAtStartup": true,
-    "launchAsMinimized": false,
-    "notifications": {
-      "enabled": true,
-      "focusMode": true,
-      "screenTime": true,
-      "appScreenTime": true,
-    },
-    "limitsAlerts": {
-      "popup": true,
-      "frequent": true,
-      "sound": true,
-      "system": true,
-      "overallLimit": {"enabled": false, "hours": 2, "minutes": 0}
-    },
-    "applications": {
-      "tracking": true,
-      "isHidden": false,
-      "selectedCategory": CategoryOptions.defaultCategory
-    },
-    "focusModeSettings": {
-      "selectedMode": FocusModeOptions.defaultMode,
-      "workDuration": 25.0,
-      "shortBreak": 5.0,
-      "longBreak": 15.0,
-      "autoStart": false,
-      "blockDistractions": false,
-      "enableSoundsNotifications": true
-    },
-    "notificationController": {
-      "reminderFrequency": 5, // minutes
-    },
-    // All tracking settings default to true
-    "tracking": {
-      "idleDetection": true,
-      "idleTimeout": IdleTimeoutOptions.defaultTimeout,
-      "monitorAudio": true,
-      "monitorControllers": true,
-      "monitorHIDDevices": true,
-      "audioThreshold": 0.01,
-    }
-  };
+  // Check if running on macOS
+  bool get _isMacOS => Platform.isMacOS;
+
+  // Get default notification settings based on platform
+  Map<String, dynamic> get _defaultNotificationSettings => {
+        "enabled": !_isMacOS, // Disabled by default on macOS
+        "focusMode": !_isMacOS,
+        "screenTime": !_isMacOS,
+        "appScreenTime": !_isMacOS,
+      };
+
+  // Get default limits alerts settings based on platform
+  Map<String, dynamic> get _defaultLimitsAlertsSettings => {
+        "popup": true,
+        "frequent": true,
+        "sound": !_isMacOS, // Disabled by default on macOS
+        "system": !_isMacOS, // Disabled by default on macOS
+        "overallLimit": {"enabled": false, "hours": 2, "minutes": 0}
+      };
+
+  /// Settings Map - initialized with getter for platform-specific defaults
+  Map<String, dynamic> get _defaultSettings => {
+        "theme": {
+          "selected": ThemeOptions.defaultTheme,
+        },
+        "language": {
+          "selected": LanguageOptions.defaultLanguage,
+        },
+        "launchAtStartup": true,
+        "launchAsMinimized": false,
+        "notifications": _defaultNotificationSettings,
+        "limitsAlerts": _defaultLimitsAlertsSettings,
+        "applications": {
+          "tracking": true,
+          "isHidden": false,
+          "selectedCategory": CategoryOptions.defaultCategory
+        },
+        "focusModeSettings": {
+          "selectedMode": FocusModeOptions.defaultMode,
+          "workDuration": 25.0,
+          "shortBreak": 5.0,
+          "longBreak": 15.0,
+          "autoStart": false,
+          "blockDistractions": false,
+          "enableSoundsNotifications": !_isMacOS // Disabled by default on macOS
+        },
+        "notificationController": {
+          "reminderFrequency": 5, // minutes
+        },
+        // All tracking settings default to true
+        "tracking": {
+          "idleDetection": true,
+          "idleTimeout": IdleTimeoutOptions.defaultTimeout,
+          "monitorAudio": true,
+          "monitorControllers": true,
+          "monitorHIDDevices": true,
+          "audioThreshold": 0.01,
+        }
+      };
+
+  late Map<String, dynamic> settings;
 
   Map<String, String> versionInfo = {
     "version": "1.2.2",
@@ -133,7 +145,16 @@ class SettingsManager {
   /// Initialize SharedPreferences and load settings
   Future<void> init() async {
     _prefs = await SharedPreferences.getInstance();
+
+    // Initialize settings with platform-specific defaults
+    settings = Map<String, dynamic>.from(_defaultSettings);
+
     _loadSettings();
+
+    if (_isMacOS) {
+      debugPrint(
+          "🍎 Running on macOS - notifications disabled by default (requires permission)");
+    }
   }
 
   /// Load settings from SharedPreferences
@@ -329,61 +350,32 @@ class SettingsManager {
     return IdleTimeoutOptions.presets;
   }
 
+  /// Check if platform requires explicit notification permission
+  bool get requiresNotificationPermission => _isMacOS;
+
+  /// Enable all notifications (useful after user grants permission on macOS)
+  void enableAllNotifications() {
+    settings["notifications"] = {
+      "enabled": true,
+      "focusMode": true,
+      "screenTime": true,
+      "appScreenTime": true,
+    };
+    settings["limitsAlerts"]["sound"] = true;
+    settings["limitsAlerts"]["system"] = true;
+    settings["focusModeSettings"]["enableSoundsNotifications"] = true;
+    _saveSettings();
+    debugPrint("🔔 All notifications enabled");
+  }
+
   /// Reset settings to default
   Future<void> resetSettings([BuildContext? context]) async {
-    final Map<String, dynamic> defaultSettings = {
-      "theme": {
-        "selected": ThemeOptions.defaultTheme,
-      },
-      "language": {
-        "selected": LanguageOptions.defaultLanguage,
-      },
-      "launchAtStartup": true,
-      "launchAsMinimized": false,
-      "notifications": {
-        "enabled": true,
-        "focusMode": true,
-        "screenTime": true,
-        "appScreenTime": true,
-      },
-      "limitsAlerts": {
-        "popup": true,
-        "frequent": true,
-        "sound": true,
-        "system": true,
-        "overallLimit": {"enabled": false, "hours": 2, "minutes": 0}
-      },
-      "applications": {
-        "tracking": true,
-        "isHidden": false,
-        "selectedCategory": CategoryOptions.defaultCategory
-      },
-      "focusModeSettings": {
-        "selectedMode": FocusModeOptions.defaultMode,
-        "workDuration": 25.0,
-        "shortBreak": 5.0,
-        "longBreak": 15.0,
-        "autoStart": false,
-        "blockDistractions": false,
-        "enableSoundsNotifications": true
-      },
-      "notificationController": {
-        "reminderFrequency": 5,
-      },
-      // All tracking settings default to true
-      "tracking": {
-        "idleDetection": true,
-        "idleTimeout": IdleTimeoutOptions.defaultTimeout,
-        "monitorAudio": true,
-        "monitorControllers": true,
-        "monitorHIDDevices": true,
-        "audioThreshold": 0.01,
-      }
-    };
-
-    settings = Map<String, dynamic>.from(defaultSettings);
+    settings = Map<String, dynamic>.from(_defaultSettings);
     _saveSettings();
 
     debugPrint("✅ Settings reset to default values");
+    if (_isMacOS) {
+      debugPrint("🍎 macOS detected - notifications reset to disabled");
+    }
   }
 }

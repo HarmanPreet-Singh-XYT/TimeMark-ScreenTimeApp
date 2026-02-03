@@ -1,13 +1,9 @@
 import 'package:fluent_ui/fluent_ui.dart';
-import 'package:screentime/l10n/app_localizations.dart';
 import 'package:provider/provider.dart';
 import 'package:screentime/sections/UI%20sections/Settings/colorpicker.dart';
-import 'package:screentime/sections/settings.dart';
 import 'package:screentime/sections/UI sections/Settings/resuables.dart';
 import 'package:screentime/sections/UI sections/Settings/theme_customization_model.dart';
 import 'package:screentime/sections/UI sections/Settings/theme_provider.dart';
-import 'package:flutter_colorpicker/flutter_colorpicker.dart' as cp;
-import 'package:flutter/material.dart' as mt;
 import 'package:screentime/adaptive_fluent/adaptive_theme_fluent_ui.dart';
 import 'package:screentime/main.dart'; // For buildLightTheme and buildDarkTheme
 
@@ -22,8 +18,6 @@ class ThemeCustomizationSection extends StatefulWidget {
 }
 
 class _ThemeCustomizationSectionState extends State<ThemeCustomizationSection> {
-  bool _showAdvanced = false;
-
   // Method to manually refresh FluentAdaptiveTheme with new colors
   void _refreshTheme(BuildContext context, CustomThemeData newTheme) {
     final adaptiveTheme = FluentAdaptiveTheme.of(context);
@@ -37,7 +31,6 @@ class _ThemeCustomizationSectionState extends State<ThemeCustomizationSection> {
 
   @override
   Widget build(BuildContext context) {
-    final l10n = AppLocalizations.of(context)!;
     final themeProvider = context.watch<ThemeCustomizationProvider>();
     final fluentTheme = FluentTheme.of(context);
 
@@ -484,8 +477,6 @@ class _ThemeEditorDialogState extends State<_ThemeEditorDialog> {
 
   @override
   Widget build(BuildContext context) {
-    final fluentTheme = FluentTheme.of(context);
-
     return ContentDialog(
       constraints: const BoxConstraints(maxWidth: 700, maxHeight: 800),
       title: Row(
@@ -1102,8 +1093,6 @@ class _ThemePreviewCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final background = isDark ? theme.darkBackground : theme.lightBackground;
     final surface = isDark ? theme.darkSurface : theme.lightSurface;
-    final surfaceSecondary =
-        isDark ? theme.darkSurfaceSecondary : theme.lightSurfaceSecondary;
     final border = isDark ? theme.darkBorder : theme.lightBorder;
     final textPrimary = isDark ? theme.darkTextPrimary : theme.lightTextPrimary;
     final textSecondary =

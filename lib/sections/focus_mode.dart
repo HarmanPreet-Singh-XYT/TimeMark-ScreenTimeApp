@@ -1,7 +1,8 @@
 import 'dart:async';
-import 'dart:math' as math;
+import 'package:audioplayers/audioplayers.dart';
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:percent_indicator/percent_indicator.dart';
+import 'package:screentime/sections/UI%20sections/FocusMode/permissionbanner.dart';
 import 'package:screentime/sections/UI%20sections/FocusMode/sessionHistory.dart';
 import 'package:screentime/sections/UI%20sections/FocusMode/helper.dart';
 import 'package:screentime/sections/controller/data_controllers/focus_mode_data_controller.dart';
@@ -177,6 +178,8 @@ class _FocusModeState extends State<FocusMode>
                   // Header with title
                   _buildHeader(context, l10n),
                   const SizedBox(height: 24),
+
+                  const NotificationPermissionBanner(),
 
                   // Main content area - Timer + Quick Stats
                   _buildTimerAndStatsSection(context, l10n, isSmallScreen),
@@ -470,11 +473,9 @@ class _FocusModeState extends State<FocusMode>
 // Animated card wrapper with hover effects
 class _AnimatedCard extends StatefulWidget {
   final Widget child;
-  final EdgeInsets? padding;
 
   const _AnimatedCard({
     required this.child,
-    this.padding,
   });
 
   @override
@@ -528,7 +529,7 @@ class Meter extends StatefulWidget {
 
 class _MeterState extends State<Meter> with TickerProviderStateMixin {
   SettingsManager settingsManager = SettingsManager();
-
+  final AudioPlayer _audioPlayer = AudioPlayer();
   double workDuration = 25;
   double shortBreak = 5;
   double longBreak = 15;
@@ -653,29 +654,41 @@ class _MeterState extends State<Meter> with TickerProviderStateMixin {
     _currentTimerState = _timerService.currentState;
   }
 
+  Future<void> _playSound(String soundFile) async {
+    if (enableSounds) {
+      try {
+        await _audioPlayer.play(AssetSource('sounds/$soundFile'));
+      } catch (e) {
+        debugPrint('Error playing sound: $e');
+      }
+    }
+  }
+
   void _onWorkSessionStart() {
-    if (enableSounds) debugPrint('Work session started');
+    debugPrint('Work session started');
+    _playSound('work_start.mp3');
     if (blockDistractions) debugPrint('Blocking distractions');
   }
 
   void _onShortBreakStart() {
-    if (enableSounds) debugPrint('Short break started');
-    // Increment completed sessions when transitioning to break
+    debugPrint('Short break started');
+    _playSound('break_start.mp3');
     setState(() {
       _completedWorkSessions++;
     });
   }
 
   void _onLongBreakStart() {
-    if (enableSounds) debugPrint('Long break started');
-    // Increment completed sessions when transitioning to long break
+    debugPrint('Long break started');
+    _playSound('long_break_start.mp3');
     setState(() {
       _completedWorkSessions++;
     });
   }
 
   void _onTimerComplete() {
-    if (enableSounds) debugPrint('Timer completed');
+    debugPrint('Timer completed');
+    _playSound('timer_complete.mp3');
   }
 
   void _handlePlayPausePressed() {
@@ -760,6 +773,7 @@ class _MeterState extends State<Meter> with TickerProviderStateMixin {
     _uiUpdateTimer?.cancel();
     _pulseController.dispose();
     _buttonScaleController.dispose();
+    _audioPlayer.dispose();
     super.dispose();
   }
 
@@ -1222,7 +1236,7 @@ class _MeterState extends State<Meter> with TickerProviderStateMixin {
                         const SizedBox(height: 12),
                         _buildToggleOption(
                           context,
-                          label: l10n.enableNotifications,
+                          label: "l10n.enableSounds",
                           value: dialogEnableSounds,
                           icon: FluentIcons.ringer,
                           onChanged: (value) =>

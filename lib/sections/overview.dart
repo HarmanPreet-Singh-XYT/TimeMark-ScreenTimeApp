@@ -718,7 +718,7 @@ class _ResponsiveBottomSection extends StatelessWidget {
       children: [
         // Application limits - larger portion
         Expanded(
-          flex: 3,
+          flex: 4,
           child: _buildApplicationLimitsCard(theme),
         ),
         const SizedBox(width: 16),
