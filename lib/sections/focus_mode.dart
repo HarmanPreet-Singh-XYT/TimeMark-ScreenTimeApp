@@ -2,6 +2,7 @@ import 'dart:async';
 import 'package:audioplayers/audioplayers.dart';
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:percent_indicator/percent_indicator.dart';
+import 'package:screentime/sections/UI%20sections/FocusMode/audio.dart';
 import 'package:screentime/sections/UI%20sections/FocusMode/permissionbanner.dart';
 import 'package:screentime/sections/UI%20sections/FocusMode/sessionHistory.dart';
 import 'package:screentime/sections/UI%20sections/FocusMode/helper.dart';
@@ -654,25 +655,29 @@ class _MeterState extends State<Meter> with TickerProviderStateMixin {
     _currentTimerState = _timerService.currentState;
   }
 
-  Future<void> _playSound(String soundFile) async {
-    if (enableSounds) {
-      try {
-        await _audioPlayer.play(AssetSource('sounds/$soundFile'));
-      } catch (e) {
-        debugPrint('Error playing sound: $e');
-      }
-    }
-  }
+  String selectedVoiceGender = 'male';
 
   void _onWorkSessionStart() {
     debugPrint('Work session started');
-    _playSound('work_start.mp3');
+    if (enableSounds) {
+      SoundManager.playSound(
+        context: context,
+        soundType: 'work_start',
+        voiceGender: selectedVoiceGender,
+      );
+    }
     if (blockDistractions) debugPrint('Blocking distractions');
   }
 
   void _onShortBreakStart() {
     debugPrint('Short break started');
-    _playSound('break_start.mp3');
+    if (enableSounds) {
+      SoundManager.playSound(
+        context: context,
+        soundType: 'break_start',
+        voiceGender: selectedVoiceGender,
+      );
+    }
     setState(() {
       _completedWorkSessions++;
     });
@@ -680,7 +685,13 @@ class _MeterState extends State<Meter> with TickerProviderStateMixin {
 
   void _onLongBreakStart() {
     debugPrint('Long break started');
-    _playSound('long_break_start.mp3');
+    if (enableSounds) {
+      SoundManager.playSound(
+        context: context,
+        soundType: 'long_break_start',
+        voiceGender: selectedVoiceGender,
+      );
+    }
     setState(() {
       _completedWorkSessions++;
     });
@@ -688,7 +699,13 @@ class _MeterState extends State<Meter> with TickerProviderStateMixin {
 
   void _onTimerComplete() {
     debugPrint('Timer completed');
-    _playSound('timer_complete.mp3');
+    if (enableSounds) {
+      SoundManager.playSound(
+        context: context,
+        soundType: 'timer_complete',
+        voiceGender: selectedVoiceGender,
+      );
+    }
   }
 
   void _handlePlayPausePressed() {

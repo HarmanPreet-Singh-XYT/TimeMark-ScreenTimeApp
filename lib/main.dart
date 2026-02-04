@@ -28,6 +28,7 @@ import 'package:screentime/sections/UI sections/Settings/theme_provider.dart';
 import 'package:screentime/sections/UI sections/Settings/theme_customization_model.dart';
 // IMPORTANT: Import the new dynamic AppDesign
 import 'package:screentime/app_design.dart';
+import 'package:screentime/sections/UI sections/FocusMode/audio.dart';
 // ============================================================================
 // NAVIGATION STATE - Add this near the top of the file
 // ============================================================================
@@ -394,6 +395,7 @@ class _MyAppState extends State<MyApp>
     SingleInstanceIPC.dispose();
     _dataStore.dispose().then((_) => Hive.close());
     trayManager.removeListener(this);
+    SoundManager.dispose();
     super.dispose();
   }
 
