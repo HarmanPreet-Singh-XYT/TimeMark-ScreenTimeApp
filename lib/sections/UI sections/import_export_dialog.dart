@@ -331,6 +331,7 @@ class _LastBackupIndicator extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     // You can implement logic to show last backup date from settings/storage
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
@@ -345,7 +346,7 @@ class _LastBackupIndicator extends StatelessWidget {
           Icon(FluentIcons.cloud, size: 12, color: Colors.blue),
           const SizedBox(width: 6),
           Text(
-            'Sync Ready',
+            l10n.sync_ready,
             style: TextStyle(
               fontSize: 10,
               fontWeight: FontWeight.w500,
@@ -882,7 +883,7 @@ class _AnimatedResultBoxState extends State<_AnimatedResultBox>
   @override
   Widget build(BuildContext context) {
     final color = widget.isSuccess ? Colors.green : Colors.red;
-
+    final l10n = AppLocalizations.of(context)!;
     return FadeTransition(
       opacity: _fadeAnimation,
       child: ScaleTransition(
@@ -917,7 +918,7 @@ class _AnimatedResultBoxState extends State<_AnimatedResultBox>
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      widget.isSuccess ? 'Success!' : 'Error',
+                      widget.isSuccess ? l10n.success : l10n.error,
                       style: TextStyle(
                         fontWeight: FontWeight.w600,
                         fontSize: 14,
@@ -1138,7 +1139,7 @@ class _RefinedImportModeDialog extends StatelessWidget {
             subtitle: l10n.replaceModeDescription,
             mode: ImportMode.replace,
             color: Colors.red,
-            badge: 'Destructive',
+            badge: l10n.destructive_badge,
           ),
           const SizedBox(height: 10),
           _ImportModeCard(
@@ -1147,7 +1148,7 @@ class _RefinedImportModeDialog extends StatelessWidget {
             subtitle: l10n.mergeModeDescription,
             mode: ImportMode.merge,
             color: Colors.orange,
-            badge: 'Recommended',
+            badge: l10n.recommended_badge,
             isRecommended: true,
           ),
           const SizedBox(height: 10),
@@ -1157,7 +1158,7 @@ class _RefinedImportModeDialog extends StatelessWidget {
             subtitle: l10n.appendModeDescription,
             mode: ImportMode.append,
             color: Colors.green,
-            badge: 'Safe',
+            badge: l10n.safe_badge,
           ),
         ],
       ),

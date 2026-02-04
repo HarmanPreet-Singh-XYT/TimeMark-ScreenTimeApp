@@ -213,7 +213,7 @@ class _ApplicationsState extends State<Applications>
               Padding(
                 padding: const EdgeInsets.only(left: 4, bottom: 8),
                 child: Text(
-                  '${filteredApps.length} ${filteredApps.length == 1 ? 'application' : 'applications'}',
+                  l10n.applicationCount(filteredApps.length),
                   style: TextStyle(
                     fontSize: 13,
                     color:
@@ -288,7 +288,7 @@ class _Header extends StatelessWidget {
                   ),
                 ),
                 Text(
-                  'Manage your tracked applications',
+                  l10n.applicationsSubtitle,
                   style: TextStyle(
                     fontSize: 12,
                     color:
@@ -342,7 +342,7 @@ class _Header extends StatelessWidget {
             const SizedBox(width: 12),
             // Refresh Button
             Tooltip(
-              message: 'Refresh',
+              message: l10n.refresh,
               child: IconButton(
                 icon: Container(
                   padding: const EdgeInsets.all(8),
@@ -632,7 +632,7 @@ class _DataTable extends StatelessWidget {
             ),
             const SizedBox(height: 16),
             Text(
-              'No applications found',
+              l10n.noApplicationsFound,
               style: TextStyle(
                 fontSize: 16,
                 fontWeight: FontWeight.w500,
@@ -641,7 +641,7 @@ class _DataTable extends StatelessWidget {
             ),
             const SizedBox(height: 8),
             Text(
-              'Try adjusting your filters',
+              l10n.tryAdjustingFilters,
               style: TextStyle(
                 fontSize: 13,
                 color: theme.typography.caption?.color?.withValues(alpha: 0.5),
@@ -844,7 +844,7 @@ class _ApplicationRowState extends State<_ApplicationRow> {
                       overflow: TextOverflow.ellipsis,
                     ),
                     Text(
-                      'Configure application settings',
+                      l10n.configureAppSettings,
                       style: TextStyle(
                         fontSize: 12,
                         fontWeight: FontWeight.normal,
@@ -926,7 +926,7 @@ class _ApplicationRowState extends State<_ApplicationRow> {
                     // Behavior Section
                     _DialogSection(
                       icon: FluentIcons.settings,
-                      title: 'Behavior',
+                      title: l10n.behaviorSection,
                       iconColor: const Color(0xFF10B981),
                       child: Column(
                         children: [

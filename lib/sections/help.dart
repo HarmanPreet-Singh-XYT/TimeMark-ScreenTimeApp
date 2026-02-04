@@ -198,7 +198,7 @@ class _HelpState extends State<Help> {
                     ),
                     const SizedBox(height: 2),
                     Text(
-                      '$totalQuestions questions across 7 categories',
+                      l10n.helpSubtitle(totalQuestions),
                       style: theme.typography.caption?.copyWith(
                         color: theme.resources.textFillColorSecondary,
                       ),
@@ -214,7 +214,7 @@ class _HelpState extends State<Help> {
           SizedBox(
             height: 36,
             child: TextBox(
-              placeholder: 'Search for help...',
+              placeholder: l10n.searchForHelp,
               prefix: Padding(
                 padding: const EdgeInsets.only(left: 10),
                 child: Icon(
@@ -244,11 +244,12 @@ class _HelpState extends State<Help> {
   }
 
   Widget _buildQuickNavigation(BuildContext context, FluentThemeData theme) {
+    final l10n = AppLocalizations.of(context)!;
     final categories = [
-      (FluentIcons.info, 'General', 0),
-      (FluentIcons.app_icon_default, 'Apps', 1),
-      (FluentIcons.chart, 'Reports', 2),
-      (FluentIcons.focus, 'Focus', 4),
+      (FluentIcons.info, l10n.quickNavGeneral, 0),
+      (FluentIcons.app_icon_default, l10n.quickNavApps, 1),
+      (FluentIcons.chart, l10n.quickNavReports, 2),
+      (FluentIcons.focus, l10n.quickNavFocus, 4),
     ];
 
     return SingleChildScrollView(
@@ -440,14 +441,14 @@ class _HelpState extends State<Help> {
           ),
           const SizedBox(height: 16),
           Text(
-            'No results found',
+            l10n.noResultsFound,
             style: theme.typography.bodyLarge?.copyWith(
               color: theme.resources.textFillColorSecondary,
             ),
           ),
           const SizedBox(height: 4),
           Text(
-            'Try searching with different keywords',
+            l10n.tryDifferentKeywords,
             style: theme.typography.caption?.copyWith(
               color: theme.resources.textFillColorDisabled,
             ),
@@ -455,7 +456,7 @@ class _HelpState extends State<Help> {
           const SizedBox(height: 16),
           FilledButton(
             onPressed: () => setState(() => _searchQuery = ''),
-            child: const Text('Clear search'),
+            child: Text(l10n.clearSearch),
           ),
         ],
       ),

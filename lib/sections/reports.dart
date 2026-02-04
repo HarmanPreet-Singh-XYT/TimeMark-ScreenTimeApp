@@ -517,7 +517,7 @@ class CardContainer extends StatelessWidget {
           Text(
             title,
             style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
-            semanticsLabel: '$title section',
+            semanticsLabel: AppLocalizations.of(context)!.sectionLabel(title),
           ),
           const SizedBox(height: 20),
           Expanded(child: child),

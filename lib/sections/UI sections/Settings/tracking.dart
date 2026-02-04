@@ -27,8 +27,8 @@ class _TrackingSectionState extends State<TrackingSection> {
       iconColor: Colors.teal,
       trailing: StatusBadge(
         isActive: settings.idleDetectionEnabled,
-        activeText: 'Active',
-        inactiveText: 'Disabled',
+        activeText: l10n.active,
+        inactiveText: l10n.disabled,
       ),
       children: [
         SettingRow(
@@ -71,7 +71,7 @@ class _TrackingSectionState extends State<TrackingSection> {
                     Icon(FluentIcons.developer_tools, size: 14),
                     const SizedBox(width: 8),
                     Text(
-                      'Advanced Options',
+                      l10n.advanced_options,
                       style:
                           TextStyle(fontSize: 12, fontWeight: FontWeight.w500),
                     ),

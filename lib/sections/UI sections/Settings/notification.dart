@@ -117,8 +117,9 @@ class _NotificationSectionState extends State<NotificationSection>
 
   void _showErrorInfoBar(BuildContext context, String error) {
     displayInfoBar(context, builder: (context, close) {
+      final l10n = AppLocalizations.of(context)!;
       return InfoBar(
-        title: const Text('Permission Error'),
+        title: Text(l10n.permission_error),
         content: Text(error),
         severity: InfoBarSeverity.error,
         onClose: close,
@@ -132,24 +133,21 @@ class _NotificationSectionState extends State<NotificationSection>
     await showDialog<void>(
       context: context,
       builder: (context) => ContentDialog(
-        title: const Text('Notification Permission Denied'),
-        content: const Text(
-          'ScreenTime needs notification permission to send you alerts and reminders.\n\n'
-          'Would you like to open System Settings to enable notifications?',
-        ),
+        title: Text(l10n.notification_permission_denied),
+        content: Text(l10n.notification_permission_denied_message),
         actions: [
           Button(
             onPressed: () {
               Navigator.pop(context);
             },
-            child: const Text('Cancel'),
+            child: Text(l10n.cancel),
           ),
           FilledButton(
             onPressed: () {
               Navigator.pop(context);
               _openSystemSettings();
             },
-            child: const Text('Open Settings'),
+            child: Text(l10n.open_settings),
           ),
         ],
       ),
@@ -194,14 +192,14 @@ class _NotificationSectionState extends State<NotificationSection>
     if (_permissionStatus == null) return const SizedBox.shrink();
 
     final theme = FluentTheme.of(context);
-
+    final l10n = AppLocalizations.of(context)!;
     if (_permissionStatus!.isDenied) {
       return Container(
         margin: const EdgeInsets.only(bottom: 12),
         padding: const EdgeInsets.all(12),
         decoration: BoxDecoration(
-          color: Colors.orange.withOpacity(0.1),
-          border: Border.all(color: Colors.orange.withOpacity(0.3)),
+          color: Colors.orange.withValues(alpha: 0.1),
+          border: Border.all(color: Colors.orange.withValues(alpha: 0.3)),
           borderRadius: BorderRadius.circular(6),
         ),
         child: Row(
@@ -213,7 +211,7 @@ class _NotificationSectionState extends State<NotificationSection>
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    'Notification Permission Denied',
+                    l10n.notification_permission_denied,
                     style: TextStyle(
                       fontSize: 12,
                       fontWeight: FontWeight.w600,
@@ -222,7 +220,7 @@ class _NotificationSectionState extends State<NotificationSection>
                   ),
                   const SizedBox(height: 2),
                   Text(
-                    'Open System Settings to enable notifications for ScreenTime.',
+                    l10n.notification_permission_denied_hint,
                     style: TextStyle(
                       fontSize: 11,
                       color: Colors.grey[100],
@@ -239,8 +237,8 @@ class _NotificationSectionState extends State<NotificationSection>
                   const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
                 ),
               ),
-              child:
-                  const Text('Open Settings', style: TextStyle(fontSize: 11)),
+              child: Text(l10n.open_settings,
+                  style: const TextStyle(fontSize: 11)),
             ),
           ],
         ),
@@ -252,8 +250,8 @@ class _NotificationSectionState extends State<NotificationSection>
         margin: const EdgeInsets.only(bottom: 12),
         padding: const EdgeInsets.all(12),
         decoration: BoxDecoration(
-          color: theme.accentColor.withOpacity(0.1),
-          border: Border.all(color: theme.accentColor.withOpacity(0.3)),
+          color: theme.accentColor.withValues(alpha: 0.1),
+          border: Border.all(color: theme.accentColor.withValues(alpha: 0.3)),
           borderRadius: BorderRadius.circular(6),
         ),
         child: Row(
@@ -265,7 +263,7 @@ class _NotificationSectionState extends State<NotificationSection>
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    'Notification Permission Required',
+                    l10n.notification_permission_required,
                     style: TextStyle(
                       fontSize: 12,
                       fontWeight: FontWeight.w600,
@@ -274,7 +272,7 @@ class _NotificationSectionState extends State<NotificationSection>
                   ),
                   const SizedBox(height: 2),
                   Text(
-                    'ScreenTime needs permission to send you notifications.',
+                    l10n.notification_permission_required_message,
                     style: TextStyle(
                       fontSize: 11,
                       color: Colors.grey[100],
@@ -294,8 +292,8 @@ class _NotificationSectionState extends State<NotificationSection>
                       height: 12,
                       child: ProgressRing(strokeWidth: 2),
                     )
-                  : const Text('Allow Notifications',
-                      style: TextStyle(fontSize: 11)),
+                  : Text(l10n.allow_notifications,
+                      style: const TextStyle(fontSize: 11)),
             ),
           ],
         ),
@@ -307,6 +305,7 @@ class _NotificationSectionState extends State<NotificationSection>
   }
 
   Widget _buildPermissionStatusBadge() {
+    final l10n = AppLocalizations.of(context)!;
     if (!Platform.isMacOS) return const SizedBox.shrink();
     if (_isCheckingPermission) {
       return const SizedBox(
@@ -322,21 +321,21 @@ class _NotificationSectionState extends State<NotificationSection>
 
     if (_permissionStatus!.isGranted) {
       color = Colors.green;
-      text = 'Allowed';
+      text = l10n.permission_allowed;
     } else if (_permissionStatus!.isDenied) {
       color = Colors.orange;
-      text = 'Denied';
+      text = l10n.permission_denied;
     } else {
       color = Colors.grey;
-      text = 'Not Set';
+      text = l10n.permission_not_set;
     }
 
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
       decoration: BoxDecoration(
-        color: color.withOpacity(0.15),
+        color: color.withValues(alpha: 0.15),
         borderRadius: BorderRadius.circular(4),
-        border: Border.all(color: color.withOpacity(0.3)),
+        border: Border.all(color: color.withValues(alpha: 0.3)),
       ),
       child: Row(
         mainAxisSize: MainAxisSize.min,
@@ -388,8 +387,8 @@ class _NotificationSectionState extends State<NotificationSection>
           ],
           StatusBadge(
             isActive: notificationsEnabled,
-            activeText: 'On',
-            inactiveText: 'Off',
+            activeText: l10n.on,
+            inactiveText: l10n.off,
           ),
         ],
       ),
@@ -399,7 +398,7 @@ class _NotificationSectionState extends State<NotificationSection>
           title: l10n.notificationsTitle,
           description:
               Platform.isMacOS && !(_permissionStatus?.isGranted ?? false)
-                  ? 'Enable notification permission to receive alerts'
+                  ? l10n.enable_notification_permission_hint
                   : l10n.notificationsAllDescription,
           control: ToggleSwitch(
             checked: notificationsEnabled,
@@ -447,7 +446,7 @@ class _NotificationSectionState extends State<NotificationSection>
               items: [1, 5, 15, 30, 60].map((val) {
                 return ComboBoxItem<String>(
                   value: val.toString(),
-                  child: Text('$val min'),
+                  child: Text(l10n.minutes_format(val)),
                 );
               }).toList(),
               onChanged: (value) {

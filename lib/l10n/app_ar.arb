@@ -1342,5 +1342,282 @@
   "timeFormatSeconds": "{seconds}ث",
   "timeFormatMinute": "1 د",
   "timeFormatMinutes": "{minutes} د",
-  "timeFormatMinutesSeconds": "{minutes} د {seconds}ث"
+  "timeFormatMinutesSeconds": "{minutes} د {seconds}ث",
+  "alertsLimitsSubtitle": "إدارة حدود وقت الشاشة والإشعارات الخاصة بك",
+  
+  "applicationsSubtitle": "إدارة التطبيقات المتتبعة الخاصة بك",
+  "applicationCount": "{count, plural, other{{count} تطبيق}}",
+  "@applicationCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "refresh": "تحديث",
+  "noApplicationsFound": "لم يتم العثور على تطبيقات",
+  "tryAdjustingFilters": "حاول ضبط المرشحات الخاصة بك",
+  "configureAppSettings": "تكوين إعدادات التطبيق",
+  "behaviorSection": "السلوك",
+  
+  "helpSubtitle": "{count, plural, other{{count} سؤال عبر 7 فئات}}",
+  "@helpSubtitle": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "searchForHelp": "البحث عن المساعدة...",
+  "quickNavGeneral": "عام",
+  "quickNavApps": "التطبيقات",
+  "quickNavReports": "التقارير",
+  "quickNavFocus": "التركيز",
+  "noResultsFound": "لم يتم العثور على نتائج",
+  "tryDifferentKeywords": "حاول البحث بكلمات مفتاحية مختلفة",
+  "clearSearch": "مسح البحث",
+  
+  "greetingMorning": "صباح الخير! هذا ملخص نشاطك.",
+  "greetingAfternoon": "مساء الخير! هذا ملخص نشاطك.",
+  "greetingEvening": "مساء الخير! هذا ملخص نشاطك.",
+  "screenTimeProgress": "وقت\nالشاشة",
+  "productiveScoreProgress": "نقاط\nالإنتاجية",
+  
+  "sectionLabel": "قسم {title}",
+  "@sectionLabel": {
+    "placeholders": {
+      "title": {
+        "type": "String"
+      }
+    }
+  },
+  "themeLight": "فاتح",
+  "themeDark": "داكن",
+  "themeSystem": "النظام",
+  "themeTitle": "المظهر",
+  "themeDescription": "نمط ألوان التطبيق",
+  "voiceGenderTitle": "جنس الصوت",
+  "voiceGenderDescription": "اختر جنس الصوت لإشعارات المؤقت",
+  "voiceGenderMale": "ذكر",
+  "voiceGenderFemale": "أنثى",
+
+  "focusModeSubtitle": "ابق مركزًا، كن منتجًا",
+  "thisWeek": "هذا الأسبوع",
+  "sessions": "الجلسات",
+  "totalTime": "الوقت الإجمالي",
+  "avgLength": "متوسط المدة",
+  "focusTime": "وقت التركيز",
+  "paused": "متوقف مؤقتًا",
+  "shortBreakStatus": "استراحة قصيرة",
+  "longBreakStatus": "استراحة طويلة",
+  "readyToFocus": "جاهز للتركيز",
+  "focus": "تركيز",
+  "shortBreakLabel": "استراحة قصيرة",
+  "longBreakLabel": "استراحة طويلة",
+  "restartSession": "إعادة تشغيل الجلسة",
+  "skipToNext": "الانتقال إلى التالي",
+  "settings": "الإعدادات",
+  "sessionsCompleted": "{count, plural, other{{count} جلسة مكتملة}}",
+  "@sessionsCompleted": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "focusModePreset": "إعداد مسبق لوضع التركيز",
+  "focusDuration": "مدة التركيز",
+  "minutesFormat": "{minutes} دقيقة",
+  "@minutesFormat": {
+    "placeholders": {
+      "minutes": {
+        "type": "int"
+      }
+    }
+  },
+  "shortBreakDuration": "استراحة قصيرة",
+  "longBreakDuration": "استراحة طويلة",
+  "enableSounds": "تفعيل الأصوات",
+  "focus_mode_this_week": "هذا الأسبوع",
+  "focus_mode_best_day": "أفضل يوم",
+  "focus_mode_sessions_count": "{count} جلسة",
+  "focus_mode_no_data_yet": "لا توجد بيانات حتى الآن",
+  "chart_current": "الحالي",
+  "chart_previous": "السابق",
+  "permission_error": "خطأ في الإذن",
+  "notification_permission_denied": "تم رفض إذن الإشعار",
+  "notification_permission_denied_message": "يحتاج ScreenTime إلى إذن الإشعار لإرسال التنبيهات والتذكيرات.\n\nهل تريد فتح إعدادات النظام لتمكين الإشعارات؟",
+  "notification_permission_denied_hint": "افتح إعدادات النظام لتمكين إشعارات ScreenTime.",
+  "notification_permission_required": "مطلوب إذن الإشعار",
+  "notification_permission_required_message": "يحتاج ScreenTime إلى إذن لإرسال الإشعارات إليك.",
+  "cancel": "إلغاء",
+  "open_settings": "فتح الإعدادات",
+  "allow_notifications": "السماح بالإشعارات",
+  "permission_allowed": "مسموح",
+  "permission_denied": "مرفوض",
+  "permission_not_set": "غير محدد",
+  "on": "تشغيل",
+  "off": "إيقاف",
+  "enable_notification_permission_hint": "قم بتمكين إذن الإشعار لتلقي التنبيهات",
+  "minutes_format": "{minutes} دقيقة",
+  "chart_average": "المتوسط",
+  "chart_peak": "الذروة",
+  "chart_lowest": "الأدنى",
+  "active": "نشط",
+  "disabled": "معطل",
+  "advanced_options": "خيارات متقدمة",
+  "sync_ready": "المزامنة جاهزة",
+  "success": "نجح!",
+  "error": "خطأ",
+  "destructive_badge": "مدمر",
+  "recommended_badge": "موصى به",
+  "safe_badge": "آمن",
+  "overview": "نظرة عامة",
+  "patterns": "الأنماط",
+  "apps": "التطبيقات",
+  "sortAscending": "ترتيب تصاعدي",
+  "sortDescending": "ترتيب تنازلي",
+  "clearSearch": "مسح البحث",
+  "applicationsShowing": "عرض {count} تطبيق",
+  "totalTime": "إجمالي الوقت",
+  "valueLabel": "القيمة: {value}",
+  "appsCount": "{count} تطبيق",
+  "categoriesCount": "{count} فئة",
+  "systemNotificationsDisabled": "تم تعطيل إشعارات النظام. قم بتمكينها في إعدادات النظام لتنبيهات التركيز.",
+  "openSystemSettings": "فتح إعدادات النظام",
+  "appNotificationsDisabled": "تم تعطيل الإشعارات في إعدادات التطبيق. قم بتمكينها لتلقي تنبيهات التركيز.",
+  "goToSettings": "الانتقال إلى الإعدادات",
+  "focusModeNotificationsDisabled": "تم تعطيل إشعارات وضع التركيز. قم بتمكينها لتلقي تنبيهات الجلسة.",
+  "notificationsDisabled": "الإشعارات معطلة",
+  "dontShowAgain": "لا تظهر مرة أخرى",
+  "systemSettingsRequired": "مطلوب إعدادات النظام",
+  "notificationsDisabledSystemLevel": "تم تعطيل الإشعارات على مستوى النظام. للتمكين:",
+  "step1OpenSystemSettings": "1. افتح إعدادات النظام (تفضيلات النظام)",
+  "step2GoToNotifications": "2. انتقل إلى الإشعارات",
+  "step3FindApp": "3. ابحث عن TimeMark وحدده",
+  "step4EnableNotifications": "4. قم بتمكين \"السماح بالإشعارات\"",
+  "returnToAppMessage": "ثم عد إلى هذا التطبيق وستعمل الإشعارات.",
+  "gotIt": "فهمت",
+  "noSessionsYet": "لا توجد جلسات حتى الآن",
+  "applicationsTracked": "تم تتبع {count} تطبيق",
+  "applicationHeader": "التطبيق",
+  "currentUsageHeader": "الاستخدام الحالي",
+  "dailyLimitHeader": "الحد اليومي",
+  "edit": "تعديل",
+  "showPopupNotifications": "عرض الإشعارات المنبثقة",
+  "moreFrequentReminders": "تذكيرات أكثر تكرارًا",
+  "playSoundWithAlerts": "تشغيل الصوت مع التنبيهات",
+  "systemTrayNotifications": "إشعارات علبة النظام",
+  "screenTimeUsed": "تم استخدام {current} / {limit}",
+  "todaysScreenTime": "وقت الشاشة اليوم",
+  "activeLimits": "الحدود النشطة",
+  "nearLimit": "قريب من الحد",
+  "colorPickerSpectrum": "الطيف",
+  "colorPickerPresets": "الإعدادات المسبقة",
+  "colorPickerSliders": "أشرطة التمرير",
+  "colorPickerBasicColors": "الألوان الأساسية",
+  "colorPickerExtendedPalette": "لوحة الألوان الموسعة",
+  "colorPickerRed": "أحمر",
+  "colorPickerGreen": "أخضر",
+  "colorPickerBlue": "أزرق",
+  "colorPickerHue": "درجة اللون",
+  "colorPickerSaturation": "التشبع",
+  "colorPickerBrightness": "السطوع",
+  "colorPickerHexColor": "اللون السداسي عشري",
+  "colorPickerHexPlaceholder": "RRGGBB",
+  "colorPickerRGB": "RGB",
+  "cancel": "إلغاء",
+  "select": "تحديد",
+  "themeCustomization": "تخصيص السمة",
+  "chooseThemePreset": "اختر إعداداً مسبقاً للسمة",
+  "yourCustomThemes": "السمات المخصصة الخاصة بك",
+  "createCustomTheme": "إنشاء سمة مخصصة",
+  "designOwnColorScheme": "صمم نظام الألوان الخاص بك",
+  "newTheme": "سمة جديدة",
+  "editCurrentTheme": "تحرير السمة الحالية",
+  "customizeColorsFor": "تخصيص الألوان لـ {themeName}",
+  "@customizeColorsFor": {
+    "placeholders": {
+      "themeName": {
+        "type": "String"
+      }
+    }
+  },
+  "edit": "تحرير",
+  "customThemeNumber": "السمة المخصصة {number}",
+  "@customThemeNumber": {
+    "placeholders": {
+      "number": {
+        "type": "int"
+      }
+    }
+  },
+  "deleteCustomTheme": "حذف السمة المخصصة",
+  "confirmDeleteTheme": "هل أنت متأكد من أنك تريد حذف \"{themeName}\"؟",
+  "@confirmDeleteTheme": {
+    "placeholders": {
+      "themeName": {
+        "type": "String"
+      }
+    }
+  },
+  "delete": "حذف",
+  "customizeTheme": "تخصيص السمة",
+  "preview": "معاينة",
+  "themeName": "اسم السمة",
+  "brandColors": "ألوان العلامة التجارية",
+  "lightTheme": "السمة الفاتحة",
+  "darkTheme": "السمة الداكنة",
+  "reset": "إعادة تعيين",
+  "saveTheme": "حفظ السمة",
+  "customTheme": "سمة مخصصة",
+  "primaryColors": "الألوان الأساسية",
+  "primaryColorsDesc": "ألوان التمييز الرئيسية المستخدمة في جميع أنحاء التطبيق",
+  "primaryAccent": "التمييز الأساسي",
+  "primaryAccentDesc": "لون العلامة التجارية الرئيسي، الأزرار، الروابط",
+  "secondaryAccent": "التمييز الثانوي",
+  "secondaryAccentDesc": "تمييز تكميلي للتدرجات",
+  "semanticColors": "الألوان الدلالية",
+  "semanticColorsDesc": "الألوان التي تنقل المعنى والحالة",
+  "successColor": "لون النجاح",
+  "successColorDesc": "الإجراءات الإيجابية، التأكيدات",
+  "warningColor": "لون التحذير",
+  "warningColorDesc": "التحذير، الحالات المعلقة",
+  "errorColor": "لون الخطأ",
+  "errorColorDesc": "الأخطاء، الإجراءات المدمرة",
+  "backgroundColors": "ألوان الخلفية",
+  "backgroundColorsLightDesc": "أسطح الخلفية الرئيسية للوضع الفاتح",
+  "backgroundColorsDarkDesc": "أسطح الخلفية الرئيسية للوضع الداكن",
+  "background": "الخلفية",
+  "backgroundDesc": "خلفية التطبيق الرئيسية",
+  "surface": "السطح",
+  "surfaceDesc": "البطاقات، مربعات الحوار، الأسطح المرتفعة",
+  "surfaceSecondary": "السطح الثانوي",
+  "surfaceSecondaryDesc": "البطاقات الثانوية، الأشرطة الجانبية",
+  "border": "الحدود",
+  "borderDesc": "الفواصل، حدود البطاقات",
+  "textColors": "ألوان النص",
+  "textColorsLightDesc": "ألوان الطباعة للوضع الفاتح",
+  "textColorsDarkDesc": "ألوان الطباعة للوضع الداكن",
+  "textPrimary": "النص الأساسي",
+  "textPrimaryDesc": "العناوين، النص المهم",
+  "textSecondary": "النص الثانوي",
+  "textSecondaryDesc": "الأوصاف، التسميات التوضيحية",
+  "previewMode": "المعاينة: وضع {mode}",
+  "@previewMode": {
+    "placeholders": {
+      "mode": {
+        "type": "String"
+      }
+    }
+  },
+  "dark": "داكن",
+  "light": "فاتح",
+  "sampleCardTitle": "عنوان البطاقة النموذجية",
+  "sampleSecondaryText": "هذا نص ثانوي يظهر أدناه.",
+  "primary": "أساسي",
+  "success": "نجاح",
+  "error": "خطأ",
+  "secondary": "ثانوي",
+  "warning": "تحذير"
 }

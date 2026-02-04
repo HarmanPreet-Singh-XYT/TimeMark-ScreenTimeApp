@@ -1,4 +1,5 @@
 import 'package:fluent_ui/fluent_ui.dart';
+import 'package:screentime/l10n/app_localizations.dart';
 import '../../controller/notification_controller.dart';
 import '../../controller/settings_data_controller.dart';
 import 'dart:io' show Platform;
@@ -127,19 +128,16 @@ class _NotificationPermissionBannerState
     // Determine the message to show
     String message;
     String actionText;
-
+    final l10n = AppLocalizations.of(context)!;
     if (!systemPermissionGranted) {
-      message =
-          'System notifications are disabled. Enable them in System Settings for focus alerts.';
-      actionText = 'Open System Settings';
+      message = l10n.systemNotificationsDisabled;
+      actionText = l10n.openSystemSettings;
     } else if (!notificationsEnabled) {
-      message =
-          'Notifications are disabled in app settings. Enable them to receive focus alerts.';
-      actionText = 'Go to Settings';
+      message = l10n.appNotificationsDisabled;
+      actionText = l10n.goToSettings;
     } else if (!focusModeNotificationsEnabled) {
-      message =
-          'Focus mode notifications are disabled. Enable them to receive session alerts.';
-      actionText = 'Go to Settings';
+      message = l10n.focusModeNotificationsDisabled;
+      actionText = l10n.goToSettings;
     } else {
       return const SizedBox.shrink();
     }
@@ -149,6 +147,8 @@ class _NotificationPermissionBannerState
 
   Widget _buildBanner(BuildContext context, String message, String actionText,
       bool isSystemSettings) {
+    final l10n = AppLocalizations.of(context)!;
+
     return AnimatedContainer(
       duration: const Duration(milliseconds: 300),
       curve: Curves.easeOutCubic,
@@ -192,7 +192,7 @@ class _NotificationPermissionBannerState
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  'Notifications Disabled',
+                  l10n.notificationsDisabled,
                   style:
                       FluentTheme.of(context).typography.bodyStrong?.copyWith(
                             fontWeight: FontWeight.w600,
@@ -259,7 +259,7 @@ class _NotificationPermissionBannerState
                   ),
                 ),
                 onPressed: () => _dismissBanner(permanent: true),
-                child: const Text('Don\'t show again'),
+                child: Text(l10n.dontShowAgain),
               ),
               const SizedBox(width: 8),
 
@@ -276,46 +276,47 @@ class _NotificationPermissionBannerState
   }
 
   Future<void> _showSystemSettingsInfo() async {
+    final l10n = AppLocalizations.of(context)!;
     await showDialog(
       context: context,
       builder: (context) => ContentDialog(
-        title: const Row(
+        title: Row(
           children: [
             Icon(FluentIcons.system, size: 20),
             SizedBox(width: 12),
-            Text('System Settings Required'),
+            Text(l10n.systemSettingsRequired),
           ],
         ),
-        content: const Column(
+        content: Column(
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              'Notifications are disabled at the system level. To enable:',
+              l10n.notificationsDisabledSystemLevel,
               style: TextStyle(fontWeight: FontWeight.w600),
             ),
             SizedBox(height: 16),
-            Text('1. Open System Settings (System Preferences)'),
+            Text(l10n.step1OpenSystemSettings),
             SizedBox(height: 8),
-            Text('2. Go to Notifications'),
+            Text(l10n.step2GoToNotifications),
             SizedBox(height: 8),
-            Text('3. Find and select TimeMark'),
+            Text(l10n.step3FindApp),
             SizedBox(height: 8),
-            Text('4. Enable "Allow notifications"'),
+            Text(l10n.step4EnableNotifications),
             SizedBox(height: 16),
             Text(
-              'Then return to this app and notifications will work.',
+              l10n.returnToAppMessage,
               style: TextStyle(fontStyle: FontStyle.italic),
             ),
           ],
         ),
         actions: [
           Button(
-            child: const Text('Cancel'),
+            child: Text(l10n.cancel),
             onPressed: () => Navigator.pop(context),
           ),
           FilledButton(
-            child: const Text('Got it'),
+            child: Text(l10n.gotIt),
             onPressed: () {
               Navigator.pop(context);
             },
@@ -408,7 +409,6 @@ class _CompactNotificationBannerState extends State<CompactNotificationBanner> {
 
   Future<void> _navigateToSettings() async {
     // Navigate to settings screen
-    final result = await Navigator.pushNamed(context, '/settings');
 
     // When returning from settings, check permission again
     if (mounted) {

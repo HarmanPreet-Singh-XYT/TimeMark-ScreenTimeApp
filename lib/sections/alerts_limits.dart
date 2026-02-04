@@ -205,7 +205,6 @@ class _AlertsLimitsState extends State<AlertsLimits> {
         ),
       );
     }
-
     return ScaffoldPage(
       padding: EdgeInsets.zero,
       content: LayoutBuilder(
@@ -453,7 +452,7 @@ class _Header extends StatelessWidget {
               ),
               const SizedBox(height: 4),
               Text(
-                'Manage your screen time limits and notifications',
+                l10n.alertsLimitsSubtitle,
                 style: theme.typography.caption?.copyWith(
                   color:
                       theme.typography.caption?.color?.withValues(alpha: 0.7),

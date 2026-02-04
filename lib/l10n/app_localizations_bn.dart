@@ -704,7 +704,7 @@ class AppLocalizationsBn extends AppLocalizations {
   String get resetAll => 'সব রিসেট করুন';
 
   @override
-  String get refresh => 'রিফ্রেশ';
+  String get refresh => 'রিফ্রেশ করুন';
 
   @override
   String get save => 'সংরক্ষণ করুন';
@@ -864,12 +864,12 @@ class AppLocalizationsBn extends AppLocalizations {
 
   @override
   String shortBreakLabel(int minutes) {
-    return 'সংক্ষিপ্ত বিরতি: $minutes মিনিট';
+    return 'সংক্ষিপ্ত বিরতি';
   }
 
   @override
   String longBreakLabel(int minutes) {
-    return 'দীর্ঘ বিরতি: $minutes মিনিট';
+    return 'দীর্ঘ বিরতি';
   }
 
   @override
@@ -1686,31 +1686,661 @@ class AppLocalizationsBn extends AppLocalizations {
   }
 
   @override
-  String get themeLight => 'Light';
+  String get themeLight => 'হালকা';
 
   @override
-  String get themeDark => 'Dark';
+  String get themeDark => 'গাঢ়';
 
   @override
-  String get themeSystem => 'System';
+  String get themeSystem => 'সিস্টেম';
 
   @override
   String get themeTitle => 'থিম';
 
   @override
-  String get themeDescription =>
-      'অ্যাপ্লিকেশনের রঙের থিম (পরিবর্তনের জন্য পুনরায় চালু করা প্রয়োজন)';
+  String get themeDescription => 'অ্যাপ্লিকেশনের রঙের থিম';
 
   @override
-  String get voiceGenderTitle => 'Voice Gender';
+  String get voiceGenderTitle => 'ভয়েস লিঙ্গ';
 
   @override
   String get voiceGenderDescription =>
-      'Choose the voice gender for timer notifications';
+      'টাইমার বিজ্ঞপ্তির জন্য ভয়েসের লিঙ্গ নির্বাচন করুন';
 
   @override
-  String get voiceGenderMale => 'Male';
+  String get voiceGenderMale => 'পুরুষ';
 
   @override
-  String get voiceGenderFemale => 'Female';
+  String get voiceGenderFemale => 'মহিলা';
+
+  @override
+  String get alertsLimitsSubtitle =>
+      'আপনার স্ক্রিন টাইম সীমা এবং বিজ্ঞপ্তিগুলি পরিচালনা করুন';
+
+  @override
+  String get applicationsSubtitle =>
+      'আপনার ট্র্যাক করা অ্যাপ্লিকেশনগুলি পরিচালনা করুন';
+
+  @override
+  String applicationCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$countটি অ্যাপ্লিকেশন',
+      one: '1টি অ্যাপ্লিকেশন',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get noApplicationsFound => 'কোনো অ্যাপ্লিকেশন পাওয়া যায়নি';
+
+  @override
+  String get tryAdjustingFilters => 'আপনার ফিল্টার সামঞ্জস্য করার চেষ্টা করুন';
+
+  @override
+  String get configureAppSettings => 'অ্যাপ্লিকেশন সেটিংস কনফিগার করুন';
+
+  @override
+  String get behaviorSection => 'আচরণ';
+
+  @override
+  String helpSubtitle(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '7টি বিভাগে $countটি প্রশ্ন',
+      one: '7টি বিভাগে 1টি প্রশ্ন',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get searchForHelp => 'সাহায্য খুঁজুন...';
+
+  @override
+  String get quickNavGeneral => 'সাধারণ';
+
+  @override
+  String get quickNavApps => 'অ্যাপস';
+
+  @override
+  String get quickNavReports => 'রিপোর্ট';
+
+  @override
+  String get quickNavFocus => 'ফোকাস';
+
+  @override
+  String get noResultsFound => 'কোনো ফলাফল পাওয়া যায়নি';
+
+  @override
+  String get tryDifferentKeywords =>
+      'বিভিন্ন কীওয়ার্ড দিয়ে খোঁজার চেষ্টা করুন';
+
+  @override
+  String get clearSearch => 'অনুসন্ধান সাফ করুন';
+
+  @override
+  String get greetingMorning =>
+      'সুপ্রভাত! এখানে আপনার কার্যকলাপের সারাংশ রয়েছে।';
+
+  @override
+  String get greetingAfternoon =>
+      'শুভ বিকাল! এখানে আপনার কার্যকলাপের সারাংশ রয়েছে।';
+
+  @override
+  String get greetingEvening =>
+      'শুভ সন্ধ্যা! এখানে আপনার কার্যকলাপের সারাংশ রয়েছে।';
+
+  @override
+  String get screenTimeProgress => 'স্ক্রীন\nসময়';
+
+  @override
+  String get productiveScoreProgress => 'উৎপাদনশীল\nস্কোর';
+
+  @override
+  String get focusModeSubtitle => 'মনোযোগী থাকুন, উৎপাদনশীল হন';
+
+  @override
+  String get thisWeek => 'এই সপ্তাহ';
+
+  @override
+  String get sessions => 'সেশন';
+
+  @override
+  String get totalTime => 'মোট সময়';
+
+  @override
+  String get avgLength => 'গড় দৈর্ঘ্য';
+
+  @override
+  String get focusTime => 'ফোকাস টাইম';
+
+  @override
+  String get paused => 'বিরতি দেওয়া হয়েছে';
+
+  @override
+  String get shortBreakStatus => 'সংক্ষিপ্ত বিরতি';
+
+  @override
+  String get longBreakStatus => 'দীর্ঘ বিরতি';
+
+  @override
+  String get readyToFocus => 'ফোকাস করার জন্য প্রস্তুত';
+
+  @override
+  String get focus => 'ফোকাস';
+
+  @override
+  String get restartSession => 'সেশন পুনরায় শুরু করুন';
+
+  @override
+  String get skipToNext => 'পরবর্তীতে যান';
+
+  @override
+  String get settings => 'সেটিংস';
+
+  @override
+  String sessionsCompleted(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$countটি সেশন সম্পন্ন',
+      one: '1টি সেশন সম্পন্ন',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get focusModePreset => 'ফোকাস মোড প্রিসেট';
+
+  @override
+  String get focusDuration => 'ফোকাস সময়কাল';
+
+  @override
+  String minutesFormat(int minutes) {
+    return '$minutes মিনিট';
+  }
+
+  @override
+  String get shortBreakDuration => 'সংক্ষিপ্ত বিরতি';
+
+  @override
+  String get longBreakDuration => 'দীর্ঘ বিরতি';
+
+  @override
+  String get enableSounds => 'শব্দ সক্ষম করুন';
+
+  @override
+  String get focus_mode_this_week => 'এই সপ্তাহ';
+
+  @override
+  String get focus_mode_best_day => 'সেরা দিন';
+
+  @override
+  String focus_mode_sessions_count(int count) {
+    return '$countটি সেশন';
+  }
+
+  @override
+  String get focus_mode_no_data_yet => 'এখনও কোনো ডেটা নেই';
+
+  @override
+  String get chart_current => 'বর্তমান';
+
+  @override
+  String get chart_previous => 'পূর্ববর্তী';
+
+  @override
+  String get permission_error => 'অনুমতি ত্রুটি';
+
+  @override
+  String get notification_permission_denied => 'বিজ্ঞপ্তি অনুমতি প্রত্যাখ্যাত';
+
+  @override
+  String get notification_permission_denied_message =>
+      'ScreenTime আপনাকে সতর্কতা এবং অনুস্মারক পাঠাতে বিজ্ঞপ্তি অনুমতির প্রয়োজন।\n\nআপনি কি বিজ্ঞপ্তি সক্ষম করতে সিস্টেম সেটিংস খুলতে চান?';
+
+  @override
+  String get notification_permission_denied_hint =>
+      'ScreenTime এর জন্য বিজ্ঞপ্তি সক্ষম করতে সিস্টেম সেটিংস খুলুন।';
+
+  @override
+  String get notification_permission_required => 'বিজ্ঞপ্তি অনুমতি প্রয়োজন';
+
+  @override
+  String get notification_permission_required_message =>
+      'ScreenTime আপনাকে বিজ্ঞপ্তি পাঠাতে অনুমতির প্রয়োজন।';
+
+  @override
+  String get open_settings => 'সেটিংস খুলুন';
+
+  @override
+  String get allow_notifications => 'বিজ্ঞপ্তি অনুমতি দিন';
+
+  @override
+  String get permission_allowed => 'অনুমোদিত';
+
+  @override
+  String get permission_denied => 'প্রত্যাখ্যাত';
+
+  @override
+  String get permission_not_set => 'সেট করা নেই';
+
+  @override
+  String get on => 'চালু';
+
+  @override
+  String get off => 'বন্ধ';
+
+  @override
+  String get enable_notification_permission_hint =>
+      'সতর্কতা পেতে বিজ্ঞপ্তি অনুমতি সক্ষম করুন';
+
+  @override
+  String minutes_format(int minutes) {
+    return '$minutes মিনিট';
+  }
+
+  @override
+  String get chart_average => 'গড়';
+
+  @override
+  String get chart_peak => 'সর্বোচ্চ';
+
+  @override
+  String get chart_lowest => 'সর্বনিম্ন';
+
+  @override
+  String get active => 'সক্রিয়';
+
+  @override
+  String get disabled => 'নিষ্ক্রিয়';
+
+  @override
+  String get advanced_options => 'উন্নত বিকল্পসমূহ';
+
+  @override
+  String get sync_ready => 'সিঙ্ক প্রস্তুত';
+
+  @override
+  String get success => 'সফলতা';
+
+  @override
+  String get destructive_badge => 'ধ্বংসাত্মক';
+
+  @override
+  String get recommended_badge => 'প্রস্তাবিত';
+
+  @override
+  String get safe_badge => 'নিরাপদ';
+
+  @override
+  String get overview => 'সংক্ষিপ্ত বিবরণ';
+
+  @override
+  String get patterns => 'প্যাটার্ন';
+
+  @override
+  String get apps => 'অ্যাপ্স';
+
+  @override
+  String get sortAscending => 'ঊর্ধ্বক্রমে সাজান';
+
+  @override
+  String get sortDescending => 'অবরোহক্রমে সাজান';
+
+  @override
+  String applicationsShowing(int count) {
+    return '$countটি অ্যাপ্লিকেশন দেখানো হচ্ছে';
+  }
+
+  @override
+  String valueLabel(String value) {
+    return 'মান: $value';
+  }
+
+  @override
+  String appsCount(int count) {
+    return '$countটি অ্যাপ';
+  }
+
+  @override
+  String categoriesCount(int count) {
+    return '$countটি বিভাগ';
+  }
+
+  @override
+  String get systemNotificationsDisabled =>
+      'সিস্টেম বিজ্ঞপ্তি নিষ্ক্রিয়। ফোকাস সতর্কতার জন্য সিস্টেম সেটিংসে সেগুলি সক্ষম করুন।';
+
+  @override
+  String get openSystemSettings => 'সিস্টেম সেটিংস খুলুন';
+
+  @override
+  String get appNotificationsDisabled =>
+      'অ্যাপ সেটিংসে বিজ্ঞপ্তি নিষ্ক্রিয়। ফোকাস সতর্কতা পেতে সেগুলি সক্ষম করুন।';
+
+  @override
+  String get goToSettings => 'সেটিংসে যান';
+
+  @override
+  String get focusModeNotificationsDisabled =>
+      'ফোকাস মোড বিজ্ঞপ্তি নিষ্ক্রিয়। সেশন সতর্কতা পেতে সেগুলি সক্ষম করুন।';
+
+  @override
+  String get notificationsDisabled => 'বিজ্ঞপ্তি নিষ্ক্রিয়';
+
+  @override
+  String get dontShowAgain => 'আবার দেখাবেন না';
+
+  @override
+  String get systemSettingsRequired => 'সিস্টেম সেটিংস প্রয়োজন';
+
+  @override
+  String get notificationsDisabledSystemLevel =>
+      'সিস্টেম স্তরে বিজ্ঞপ্তি নিষ্ক্রিয়। সক্ষম করতে:';
+
+  @override
+  String get step1OpenSystemSettings =>
+      '1. সিস্টেম সেটিংস খুলুন (সিস্টেম পছন্দসমূহ)';
+
+  @override
+  String get step2GoToNotifications => '2. বিজ্ঞপ্তিতে যান';
+
+  @override
+  String get step3FindApp => '3. TimeMark খুঁজুন এবং নির্বাচন করুন';
+
+  @override
+  String get step4EnableNotifications =>
+      '4. \"বিজ্ঞপ্তির অনুমতি দিন\" সক্ষম করুন';
+
+  @override
+  String get returnToAppMessage =>
+      'তারপর এই অ্যাপে ফিরে আসুন এবং বিজ্ঞপ্তি কাজ করবে।';
+
+  @override
+  String get gotIt => 'বুঝেছি';
+
+  @override
+  String get noSessionsYet => 'এখনও কোনো সেশন নেই';
+
+  @override
+  String applicationsTracked(int count) {
+    return '$countটি অ্যাপ্লিকেশন ট্র্যাক করা হয়েছে';
+  }
+
+  @override
+  String get applicationHeader => 'অ্যাপ্লিকেশন';
+
+  @override
+  String get currentUsageHeader => 'বর্তমান ব্যবহার';
+
+  @override
+  String get dailyLimitHeader => 'দৈনিক সীমা';
+
+  @override
+  String get edit => 'সম্পাদনা করুন';
+
+  @override
+  String get showPopupNotifications => 'পপআপ বিজ্ঞপ্তি দেখান';
+
+  @override
+  String get moreFrequentReminders => 'আরও ঘন ঘন অনুস্মারক';
+
+  @override
+  String get playSoundWithAlerts => 'সতর্কতার সাথে শব্দ বাজান';
+
+  @override
+  String get systemTrayNotifications => 'সিস্টেম ট্রে বিজ্ঞপ্তি';
+
+  @override
+  String screenTimeUsed(String current, String limit) {
+    return '$current / $limit ব্যবহৃত';
+  }
+
+  @override
+  String get todaysScreenTime => 'আজকের স্ক্রিন টাইম';
+
+  @override
+  String get activeLimits => 'সক্রিয় সীমা';
+
+  @override
+  String get nearLimit => 'সীমার কাছে';
+
+  @override
+  String get colorPickerSpectrum => 'বর্ণালী';
+
+  @override
+  String get colorPickerPresets => 'প্রিসেট';
+
+  @override
+  String get colorPickerSliders => 'স্লাইডার';
+
+  @override
+  String get colorPickerBasicColors => 'মৌলিক রং';
+
+  @override
+  String get colorPickerExtendedPalette => 'বর্ধিত প্যালেট';
+
+  @override
+  String get colorPickerRed => 'লাল';
+
+  @override
+  String get colorPickerGreen => 'সবুজ';
+
+  @override
+  String get colorPickerBlue => 'নীল';
+
+  @override
+  String get colorPickerHue => 'রঙের ছটা';
+
+  @override
+  String get colorPickerSaturation => 'সম্পৃক্ততা';
+
+  @override
+  String get colorPickerBrightness => 'উজ্জ্বলতা';
+
+  @override
+  String get colorPickerHexColor => 'হেক্স রং';
+
+  @override
+  String get colorPickerHexPlaceholder => 'RRGGBB';
+
+  @override
+  String get colorPickerRGB => 'RGB';
+
+  @override
+  String get select => 'নির্বাচন করুন';
+
+  @override
+  String get themeCustomization => 'থিম কাস্টমাইজেশন';
+
+  @override
+  String get chooseThemePreset => 'একটি থিম প্রিসেট চয়ন করুন';
+
+  @override
+  String get yourCustomThemes => 'আপনার কাস্টম থিম';
+
+  @override
+  String get createCustomTheme => 'কাস্টম থিম তৈরি করুন';
+
+  @override
+  String get designOwnColorScheme => 'আপনার নিজস্ব রঙ পরিকল্পনা ডিজাইন করুন';
+
+  @override
+  String get newTheme => 'নতুন থিম';
+
+  @override
+  String get editCurrentTheme => 'বর্তমান থিম সম্পাদনা করুন';
+
+  @override
+  String customizeColorsFor(String themeName) {
+    return '$themeName এর জন্য রং কাস্টমাইজ করুন';
+  }
+
+  @override
+  String customThemeNumber(int number) {
+    return 'কাস্টম থিম $number';
+  }
+
+  @override
+  String get deleteCustomTheme => 'কাস্টম থিম মুছুন';
+
+  @override
+  String confirmDeleteTheme(String themeName) {
+    return 'আপনি কি নিশ্চিত যে আপনি \"$themeName\" মুছতে চান?';
+  }
+
+  @override
+  String get delete => 'মুছুন';
+
+  @override
+  String get customizeTheme => 'থিম কাস্টমাইজ করুন';
+
+  @override
+  String get preview => 'প্রিভিউ';
+
+  @override
+  String get themeName => 'থিমের নাম';
+
+  @override
+  String get brandColors => 'ব্র্যান্ড রং';
+
+  @override
+  String get lightTheme => 'হালকা থিম';
+
+  @override
+  String get darkTheme => 'গাঢ় থিম';
+
+  @override
+  String get reset => 'রিসেট করুন';
+
+  @override
+  String get saveTheme => 'থিম সংরক্ষণ করুন';
+
+  @override
+  String get customTheme => 'কাস্টম থিম';
+
+  @override
+  String get primaryColors => 'প্রাথমিক রং';
+
+  @override
+  String get primaryColorsDesc => 'পুরো অ্যাপ জুড়ে ব্যবহৃত মূল উচ্চারণ রং';
+
+  @override
+  String get primaryAccent => 'প্রাথমিক উচ্চারণ';
+
+  @override
+  String get primaryAccentDesc => 'মূল ব্র্যান্ড রং, বোতাম, লিংক';
+
+  @override
+  String get secondaryAccent => 'গৌণ উচ্চারণ';
+
+  @override
+  String get secondaryAccentDesc => 'গ্রেডিয়েন্টের জন্য পরিপূরক উচ্চারণ';
+
+  @override
+  String get semanticColors => 'অর্থগত রং';
+
+  @override
+  String get semanticColorsDesc => 'অর্থ এবং অবস্থা প্রকাশ করে এমন রং';
+
+  @override
+  String get successColor => 'সফলতার রং';
+
+  @override
+  String get successColorDesc => 'ইতিবাচক ক্রিয়া, নিশ্চিতকরণ';
+
+  @override
+  String get warningColor => 'সতর্কতার রং';
+
+  @override
+  String get warningColorDesc => 'সতর্কতা, মুলতুবি অবস্থা';
+
+  @override
+  String get errorColor => 'ত্রুটির রং';
+
+  @override
+  String get errorColorDesc => 'ত্রুটি, ধ্বংসাত্মক ক্রিয়া';
+
+  @override
+  String get backgroundColors => 'পটভূমির রং';
+
+  @override
+  String get backgroundColorsLightDesc => 'হালকা মোডের জন্য মূল পটভূমি পৃষ্ঠ';
+
+  @override
+  String get backgroundColorsDarkDesc => 'গাঢ় মোডের জন্য মূল পটভূমি পৃষ্ঠ';
+
+  @override
+  String get background => 'পটভূমি';
+
+  @override
+  String get backgroundDesc => 'মূল অ্যাপ পটভূমি';
+
+  @override
+  String get surface => 'পৃষ্ঠ';
+
+  @override
+  String get surfaceDesc => 'কার্ড, ডায়ালগ, উঁচু পৃষ্ঠ';
+
+  @override
+  String get surfaceSecondary => 'গৌণ পৃষ্ঠ';
+
+  @override
+  String get surfaceSecondaryDesc => 'গৌণ কার্ড, সাইডবার';
+
+  @override
+  String get border => 'সীমানা';
+
+  @override
+  String get borderDesc => 'বিভাজক, কার্ড সীমানা';
+
+  @override
+  String get textColors => 'টেক্সট রং';
+
+  @override
+  String get textColorsLightDesc => 'হালকা মোডের জন্য টাইপোগ্রাফি রং';
+
+  @override
+  String get textColorsDarkDesc => 'গাঢ় মোডের জন্য টাইপোগ্রাফি রং';
+
+  @override
+  String get textPrimary => 'প্রাথমিক টেক্সট';
+
+  @override
+  String get textPrimaryDesc => 'শিরোনাম, গুরুত্বপূর্ণ টেক্সট';
+
+  @override
+  String get textSecondary => 'গৌণ টেক্সট';
+
+  @override
+  String get textSecondaryDesc => 'বিবরণ, ক্যাপশন';
+
+  @override
+  String previewMode(String mode) {
+    return 'প্রিভিউ: $mode মোড';
+  }
+
+  @override
+  String get dark => 'গাঢ়';
+
+  @override
+  String get light => 'হালকা';
+
+  @override
+  String get sampleCardTitle => 'নমুনা কার্ড শিরোনাম';
+
+  @override
+  String get sampleSecondaryText => 'এটি নীচে প্রদর্শিত গৌণ টেক্সট।';
+
+  @override
+  String get primary => 'প্রাথমিক';
+
+  @override
+  String get secondary => 'গৌণ';
+
+  @override
+  String get warning => 'সতর্কতা';
 }

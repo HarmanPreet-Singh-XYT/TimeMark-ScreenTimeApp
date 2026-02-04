@@ -51,7 +51,7 @@ class TopApplicationsList extends StatelessWidget {
               ),
               const Spacer(),
               Text(
-                '${filteredData.length} apps',
+                l10n.appsCount(filteredData.length),
                 style: TextStyle(
                   fontSize: 12,
                   color: theme.inactiveColor,
@@ -138,7 +138,7 @@ class CategoryBreakdownList extends StatelessWidget {
               ),
               const Spacer(),
               Text(
-                '${filteredData.length} categories',
+                l10n.categoriesCount(filteredData.length),
                 style: TextStyle(
                   fontSize: 12,
                   color: theme.inactiveColor,

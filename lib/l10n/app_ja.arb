@@ -1342,5 +1342,282 @@
   "timeFormatSeconds": "{seconds}秒",
   "timeFormatMinute": "1分",
   "timeFormatMinutes": "{minutes}分",
-  "timeFormatMinutesSeconds": "{minutes}分{seconds}秒"
+  "timeFormatMinutesSeconds": "{minutes}分{seconds}秒",
+  "alertsLimitsSubtitle": "スクリーンタイムの制限と通知を管理する",
+  "themeLight": "ライト",
+  "themeDark": "ダーク",
+  "themeSystem": "システム",
+  "themeTitle": "テーマ",
+  "themeDescription": "アプリケーションのカラーテーマ",
+  "voiceGenderTitle": "音声の性別",
+  "voiceGenderDescription": "タイマー通知の音声の性別を選択してください",
+  "voiceGenderMale": "男性",
+  "voiceGenderFemale": "女性",
+
+  "applicationsSubtitle": "追跡されたアプリケーションを管理する",
+  "applicationCount": "{count, plural, other{{count} 個のアプリケーション}}",
+  "@applicationCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "refresh": "更新",
+  "noApplicationsFound": "アプリケーションが見つかりません",
+  "tryAdjustingFilters": "フィルターを調整してみてください",
+  "configureAppSettings": "アプリケーション設定を構成する",
+  "behaviorSection": "動作",
+  
+  "helpSubtitle": "{count, plural, other{7つのカテゴリに{count}個の質問}}",
+  "@helpSubtitle": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "searchForHelp": "ヘルプを検索...",
+  "quickNavGeneral": "一般",
+  "quickNavApps": "アプリ",
+  "quickNavReports": "レポート",
+  "quickNavFocus": "フォーカス",
+  "noResultsFound": "結果が見つかりません",
+  "tryDifferentKeywords": "別のキーワードで検索してみてください",
+  "clearSearch": "検索をクリア",
+  
+  "greetingMorning": "おはようございます！アクティビティの概要をご覧ください。",
+  "greetingAfternoon": "こんにちは！アクティビティの概要をご覧ください。",
+  "greetingEvening": "こんばんは！アクティビティの概要をご覧ください。",
+  "screenTimeProgress": "スクリーン\nタイム",
+  "productiveScoreProgress": "生産性\nスコア",
+  
+  "sectionLabel": "{title}セクション",
+  "@sectionLabel": {
+    "placeholders": {
+      "title": {
+        "type": "String"
+      }
+    }
+  },
+  
+  "focusModeSubtitle": "集中して、生産的に",
+  "thisWeek": "今週",
+  "sessions": "セッション",
+  "totalTime": "合計時間",
+  "avgLength": "平均時間",
+  "focusTime": "集中時間",
+  "paused": "一時停止中",
+  "shortBreakStatus": "短い休憩",
+  "longBreakStatus": "長い休憩",
+  "readyToFocus": "集中する準備完了",
+  "focus": "集中",
+  "shortBreakLabel": "短い休憩",
+  "longBreakLabel": "長い休憩",
+  "restartSession": "セッションを再開",
+  "skipToNext": "次へスキップ",
+  "settings": "設定",
+  "sessionsCompleted": "{count, plural, other{{count} セッション完了}}",
+  "@sessionsCompleted": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "focusModePreset": "集中モードプリセット",
+  "focusDuration": "集中時間",
+  "minutesFormat": "{minutes} 分",
+  "@minutesFormat": {
+    "placeholders": {
+      "minutes": {
+        "type": "int"
+      }
+    }
+  },
+  "shortBreakDuration": "短い休憩",
+  "longBreakDuration": "長い休憩",
+  "enableSounds": "サウンドを有効にする",
+  "focus_mode_this_week": "今週",
+  "focus_mode_best_day": "ベストデー",
+  "focus_mode_sessions_count": "{count}セッション",
+  "focus_mode_no_data_yet": "データがまだありません",
+  "chart_current": "現在",
+  "chart_previous": "前回",
+  "permission_error": "許可エラー",
+  "notification_permission_denied": "通知の許可が拒否されました",
+  "notification_permission_denied_message": "ScreenTimeはアラートとリマインダーを送信するために通知の許可が必要です。\n\n通知を有効にするためにシステム設定を開きますか？",
+  "notification_permission_denied_hint": "ScreenTimeの通知を有効にするには、システム設定を開いてください。",
+  "notification_permission_required": "通知の許可が必要です",
+  "notification_permission_required_message": "ScreenTimeは通知を送信するために許可が必要です。",
+  "cancel": "キャンセル",
+  "open_settings": "設定を開く",
+  "allow_notifications": "通知を許可",
+  "permission_allowed": "許可済み",
+  "permission_denied": "拒否",
+  "permission_not_set": "未設定",
+  "on": "オン",
+  "off": "オフ",
+  "enable_notification_permission_hint": "アラートを受信するには通知の許可を有効にしてください",
+  "minutes_format": "{minutes}分",
+  "chart_average": "平均",
+  "chart_peak": "ピーク",
+  "chart_lowest": "最低",
+  "active": "アクティブ",
+  "disabled": "無効",
+  "advanced_options": "詳細オプション",
+  "sync_ready": "同期準備完了",
+  "success": "成功！",
+  "error": "エラー",
+  "destructive_badge": "破壊的",
+  "recommended_badge": "推奨",
+  "safe_badge": "安全",
+  "overview": "概要",
+  "patterns": "パターン",
+  "apps": "アプリ",
+  "sortAscending": "昇順で並べ替え",
+  "sortDescending": "降順で並べ替え",
+  "clearSearch": "検索をクリア",
+  "applicationsShowing": "{count}個のアプリケーションを表示中",
+  "totalTime": "合計時間",
+  "valueLabel": "値：{value}",
+  "appsCount": "{count}個のアプリ",
+  "categoriesCount": "{count}個のカテゴリ",
+  "systemNotificationsDisabled": "システム通知が無効になっています。フォーカスアラートのためにシステム設定で有効にしてください。",
+  "openSystemSettings": "システム設定を開く",
+  "appNotificationsDisabled": "アプリ設定で通知が無効になっています。フォーカスアラートを受け取るには有効にしてください。",
+  "goToSettings": "設定に移動",
+  "focusModeNotificationsDisabled": "フォーカスモード通知が無効になっています。セッションアラートを受け取るには有効にしてください。",
+  "notificationsDisabled": "通知が無効",
+  "dontShowAgain": "今後表示しない",
+  "systemSettingsRequired": "システム設定が必要",
+  "notificationsDisabledSystemLevel": "システムレベルで通知が無効になっています。有効にするには:",
+  "step1OpenSystemSettings": "1. システム設定（システム環境設定）を開く",
+  "step2GoToNotifications": "2. 通知に移動",
+  "step3FindApp": "3. TimeMarkを見つけて選択",
+  "step4EnableNotifications": "4. 「通知を許可」を有効にする",
+  "returnToAppMessage": "その後、このアプリに戻ると通知が機能します。",
+  "gotIt": "了解",
+  "noSessionsYet": "まだセッションがありません",
+  "applicationsTracked": "{count}個のアプリケーションを追跡中",
+  "applicationHeader": "アプリケーション",
+  "currentUsageHeader": "現在の使用状況",
+  "dailyLimitHeader": "1日の制限",
+  "edit": "編集",
+  "showPopupNotifications": "ポップアップ通知を表示",
+  "moreFrequentReminders": "より頻繁なリマインダー",
+  "playSoundWithAlerts": "アラートと一緒に音を再生",
+  "systemTrayNotifications": "システムトレイ通知",
+  "screenTimeUsed": "{current} / {limit} 使用済み",
+  "todaysScreenTime": "今日のスクリーンタイム",
+  "activeLimits": "アクティブな制限",
+  "nearLimit": "制限に近い",
+  "colorPickerSpectrum": "スペクトラム",
+  "colorPickerPresets": "プリセット",
+  "colorPickerSliders": "スライダー",
+  "colorPickerBasicColors": "基本色",
+  "colorPickerExtendedPalette": "拡張パレット",
+  "colorPickerRed": "赤",
+  "colorPickerGreen": "緑",
+  "colorPickerBlue": "青",
+  "colorPickerHue": "色相",
+  "colorPickerSaturation": "彩度",
+  "colorPickerBrightness": "明度",
+  "colorPickerHexColor": "16進数カラー",
+  "colorPickerHexPlaceholder": "RRGGBB",
+  "colorPickerRGB": "RGB",
+  "cancel": "キャンセル",
+  "select": "選択",
+  "themeCustomization": "テーマのカスタマイズ",
+  "chooseThemePreset": "テーマプリセットを選択",
+  "yourCustomThemes": "カスタムテーマ",
+  "createCustomTheme": "カスタムテーマを作成",
+  "designOwnColorScheme": "独自のカラースキームをデザイン",
+  "newTheme": "新しいテーマ",
+  "editCurrentTheme": "現在のテーマを編集",
+  "customizeColorsFor": "{themeName}の色をカスタマイズ",
+  "@customizeColorsFor": {
+    "placeholders": {
+      "themeName": {
+        "type": "String"
+      }
+    }
+  },
+  "edit": "編集",
+  "customThemeNumber": "カスタムテーマ {number}",
+  "@customThemeNumber": {
+    "placeholders": {
+      "number": {
+        "type": "int"
+      }
+    }
+  },
+  "deleteCustomTheme": "カスタムテーマを削除",
+  "confirmDeleteTheme": "本当に「{themeName}」を削除しますか？",
+  "@confirmDeleteTheme": {
+    "placeholders": {
+      "themeName": {
+        "type": "String"
+      }
+    }
+  },
+  "delete": "削除",
+  "customizeTheme": "テーマをカスタマイズ",
+  "preview": "プレビュー",
+  "themeName": "テーマ名",
+  "brandColors": "ブランドカラー",
+  "lightTheme": "ライトテーマ",
+  "darkTheme": "ダークテーマ",
+  "reset": "リセット",
+  "saveTheme": "テーマを保存",
+  "customTheme": "カスタムテーマ",
+  "primaryColors": "プライマリカラー",
+  "primaryColorsDesc": "アプリ全体で使用される主要なアクセントカラー",
+  "primaryAccent": "プライマリアクセント",
+  "primaryAccentDesc": "メインブランドカラー、ボタン、リンク",
+  "secondaryAccent": "セカンダリアクセント",
+  "secondaryAccentDesc": "グラデーション用の補完アクセント",
+  "semanticColors": "セマンティックカラー",
+  "semanticColorsDesc": "意味とステータスを伝える色",
+  "successColor": "成功カラー",
+  "successColorDesc": "ポジティブなアクション、確認",
+  "warningColor": "警告カラー",
+  "warningColorDesc": "注意、保留状態",
+  "errorColor": "エラーカラー",
+  "errorColorDesc": "エラー、破壊的なアクション",
+  "backgroundColors": "背景色",
+  "backgroundColorsLightDesc": "ライトモード用のメイン背景サーフェス",
+  "backgroundColorsDarkDesc": "ダークモード用のメイン背景サーフェス",
+  "background": "背景",
+  "backgroundDesc": "メインアプリの背景",
+  "surface": "サーフェス",
+  "surfaceDesc": "カード、ダイアログ、高さのあるサーフェス",
+  "surfaceSecondary": "セカンダリサーフェス",
+  "surfaceSecondaryDesc": "セカンダリカード、サイドバー",
+  "border": "ボーダー",
+  "borderDesc": "区切り線、カードのボーダー",
+  "textColors": "テキストカラー",
+  "textColorsLightDesc": "ライトモード用のタイポグラフィカラー",
+  "textColorsDarkDesc": "ダークモード用のタイポグラフィカラー",
+  "textPrimary": "プライマリテキスト",
+  "textPrimaryDesc": "見出し、重要なテキスト",
+  "textSecondary": "セカンダリテキスト",
+  "textSecondaryDesc": "説明、キャプション",
+  "previewMode": "プレビュー：{mode}モード",
+  "@previewMode": {
+    "placeholders": {
+      "mode": {
+        "type": "String"
+      }
+    }
+  },
+  "dark": "ダーク",
+  "light": "ライト",
+  "sampleCardTitle": "サンプルカードタイトル",
+  "sampleSecondaryText": "これは下に表示されるセカンダリテキストです。",
+  "primary": "プライマリ",
+  "success": "成功",
+  "error": "エラー",
+  "secondary": "セカンダリ",
+  "warning": "警告"
 }

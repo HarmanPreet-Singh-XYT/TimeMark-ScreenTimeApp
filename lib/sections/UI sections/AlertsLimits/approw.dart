@@ -96,7 +96,9 @@ class AppRowState extends State<AppRow> {
                                 ),
                                 const SizedBox(width: 4),
                                 Text(
-                                  widget.app.limitStatus ? 'Active' : 'Off',
+                                  widget.app.limitStatus
+                                      ? l10n.active
+                                      : l10n.off,
                                   style: TextStyle(
                                     fontSize: 10,
                                     color: statusColor,

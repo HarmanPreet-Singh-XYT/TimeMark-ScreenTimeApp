@@ -172,7 +172,7 @@ class _ApplicationUsageState extends State<ApplicationUsage> {
         _buildMiniStat(
           context,
           '$totalApps',
-          "l10n.apps",
+          l10n.apps,
           FluentIcons.grid_view_medium,
           theme.accentColor,
         ),
@@ -278,8 +278,7 @@ class _ApplicationUsageState extends State<ApplicationUsage> {
 
           // Sort Direction
           Tooltip(
-            message:
-                _sortAscending ? "l10n.sortAscending" : "l10n.sortDescending",
+            message: _sortAscending ? l10n.sortAscending : l10n.sortDescending,
             child: ToggleButton(
               checked: _sortAscending,
               onChanged: (value) {
@@ -617,7 +616,7 @@ class _ApplicationUsageState extends State<ApplicationUsage> {
                   _filterAndSortAppList();
                 });
               },
-              child: Text("l10n.clearSearch"),
+              child: Text(l10n.clearSearch),
             ),
           ],
         ],
@@ -643,14 +642,14 @@ class _ApplicationUsageState extends State<ApplicationUsage> {
       child: Row(
         children: [
           Text(
-            '${apps.length} ${"l10n.applicationsShowing"}',
+            '${apps.length} ${l10n.applicationsShowing}',
             style: theme.typography.caption?.copyWith(
               color: theme.inactiveColor,
             ),
           ),
           const Spacer(),
           Text(
-            '${"l10n.totalTime"}: ',
+            '${l10n.totalTime}: ',
             style: theme.typography.caption?.copyWith(
               color: theme.inactiveColor,
             ),

@@ -865,12 +865,12 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String shortBreakLabel(int minutes) {
-    return 'Короткий перерыв: $minutes мин';
+    return 'Короткий перерыв';
   }
 
   @override
   String longBreakLabel(int minutes) {
-    return 'Длинный перерыв: $minutes мин';
+    return 'Длинный перерыв';
   }
 
   @override
@@ -1691,31 +1691,710 @@ class AppLocalizationsRu extends AppLocalizations {
   }
 
   @override
-  String get themeLight => 'Light';
+  String get themeLight => 'Светлая';
 
   @override
-  String get themeDark => 'Dark';
+  String get themeDark => 'Тёмная';
 
   @override
-  String get themeSystem => 'System';
+  String get themeSystem => 'Системная';
 
   @override
   String get themeTitle => 'Тема';
 
   @override
-  String get themeDescription =>
-      'Цветовая тема приложения (требуется перезапуск)';
+  String get themeDescription => 'Цветовая тема приложения';
 
   @override
-  String get voiceGenderTitle => 'Voice Gender';
+  String get voiceGenderTitle => 'Пол голоса';
 
   @override
   String get voiceGenderDescription =>
-      'Choose the voice gender for timer notifications';
+      'Выберите пол голоса для уведомлений таймера';
 
   @override
-  String get voiceGenderMale => 'Male';
+  String get voiceGenderMale => 'Мужской';
 
   @override
-  String get voiceGenderFemale => 'Female';
+  String get voiceGenderFemale => 'Женский';
+
+  @override
+  String get alertsLimitsSubtitle =>
+      'Управляйте лимитами экранного времени и уведомлениями';
+
+  @override
+  String get applicationsSubtitle => 'Управляйте отслеживаемыми приложениями';
+
+  @override
+  String applicationCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count приложений',
+      few: '$count приложения',
+      one: '1 приложение',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get noApplicationsFound => 'Приложения не найдены';
+
+  @override
+  String get tryAdjustingFilters => 'Попробуйте настроить фильтры';
+
+  @override
+  String get configureAppSettings => 'Настроить параметры приложения';
+
+  @override
+  String get behaviorSection => 'Поведение';
+
+  @override
+  String helpSubtitle(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count вопросов в 7 категориях',
+      few: '$count вопроса в 7 категориях',
+      one: '1 вопрос в 7 категориях',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get searchForHelp => 'Поиск справки...';
+
+  @override
+  String get quickNavGeneral => 'Общие';
+
+  @override
+  String get quickNavApps => 'Приложения';
+
+  @override
+  String get quickNavReports => 'Отчеты';
+
+  @override
+  String get quickNavFocus => 'Фокус';
+
+  @override
+  String get noResultsFound => 'Результаты не найдены';
+
+  @override
+  String get tryDifferentKeywords =>
+      'Попробуйте поискать с другими ключевыми словами';
+
+  @override
+  String get clearSearch => 'Очистить поиск';
+
+  @override
+  String get greetingMorning =>
+      'Доброе утро! Вот краткая информация о вашей активности.';
+
+  @override
+  String get greetingAfternoon =>
+      'Добрый день! Вот краткая информация о вашей активности.';
+
+  @override
+  String get greetingEvening =>
+      'Добрый вечер! Вот краткая информация о вашей активности.';
+
+  @override
+  String get screenTimeProgress => 'Экранное\nВремя';
+
+  @override
+  String get productiveScoreProgress => 'Показатель\nПродуктивности';
+
+  @override
+  String get focusModeSubtitle =>
+      'Оставайтесь сосредоточенными, будьте продуктивны';
+
+  @override
+  String get thisWeek => 'На этой неделе';
+
+  @override
+  String get sessions => 'Сессии';
+
+  @override
+  String get totalTime => 'Общее время';
+
+  @override
+  String get avgLength => 'Средняя длительность';
+
+  @override
+  String get focusTime => 'Время фокуса';
+
+  @override
+  String get paused => 'Приостановлено';
+
+  @override
+  String get shortBreakStatus => 'Короткий перерыв';
+
+  @override
+  String get longBreakStatus => 'Длинный перерыв';
+
+  @override
+  String get readyToFocus => 'Готов к фокусировке';
+
+  @override
+  String get focus => 'Фокус';
+
+  @override
+  String get restartSession => 'Перезапустить сессию';
+
+  @override
+  String get skipToNext => 'Перейти к следующему';
+
+  @override
+  String get settings => 'Настройки';
+
+  @override
+  String sessionsCompleted(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count сессий завершено',
+      few: '$count сессии завершены',
+      one: '1 сессия завершена',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get focusModePreset => 'Предустановка режима фокуса';
+
+  @override
+  String get focusDuration => 'Продолжительность фокуса';
+
+  @override
+  String minutesFormat(int minutes) {
+    return '$minutes мин';
+  }
+
+  @override
+  String get shortBreakDuration => 'Короткий перерыв';
+
+  @override
+  String get longBreakDuration => 'Длинный перерыв';
+
+  @override
+  String get enableSounds => 'Включить звуки';
+
+  @override
+  String get focus_mode_this_week => 'На этой неделе';
+
+  @override
+  String get focus_mode_best_day => 'Лучший день';
+
+  @override
+  String focus_mode_sessions_count(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count сеанса',
+      many: '$count сеансов',
+      few: '$count сеанса',
+      one: '1 сеанс',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get focus_mode_no_data_yet => 'Данных пока нет';
+
+  @override
+  String get chart_current => 'Текущий';
+
+  @override
+  String get chart_previous => 'Предыдущий';
+
+  @override
+  String get permission_error => 'Ошибка разрешения';
+
+  @override
+  String get notification_permission_denied =>
+      'Разрешение на уведомления отклонено';
+
+  @override
+  String get notification_permission_denied_message =>
+      'ScreenTime требуется разрешение на уведомления для отправки предупреждений и напоминаний.\n\nХотите открыть системные настройки, чтобы включить уведомления?';
+
+  @override
+  String get notification_permission_denied_hint =>
+      'Откройте системные настройки, чтобы включить уведомления для ScreenTime.';
+
+  @override
+  String get notification_permission_required =>
+      'Требуется разрешение на уведомления';
+
+  @override
+  String get notification_permission_required_message =>
+      'ScreenTime требуется разрешение для отправки уведомлений.';
+
+  @override
+  String get open_settings => 'Открыть настройки';
+
+  @override
+  String get allow_notifications => 'Разрешить уведомления';
+
+  @override
+  String get permission_allowed => 'Разрешено';
+
+  @override
+  String get permission_denied => 'Отклонено';
+
+  @override
+  String get permission_not_set => 'Не установлено';
+
+  @override
+  String get on => 'Вкл';
+
+  @override
+  String get off => 'Выкл';
+
+  @override
+  String get enable_notification_permission_hint =>
+      'Включите разрешение на уведомления для получения оповещений';
+
+  @override
+  String minutes_format(int minutes) {
+    return '$minutes мин';
+  }
+
+  @override
+  String get chart_average => 'Средний';
+
+  @override
+  String get chart_peak => 'Пик';
+
+  @override
+  String get chart_lowest => 'Самый низкий';
+
+  @override
+  String get active => 'Активно';
+
+  @override
+  String get disabled => 'Отключено';
+
+  @override
+  String get advanced_options => 'Расширенные параметры';
+
+  @override
+  String get sync_ready => 'Синхронизация готова';
+
+  @override
+  String get success => 'Успех';
+
+  @override
+  String get destructive_badge => 'Деструктивный';
+
+  @override
+  String get recommended_badge => 'Рекомендуется';
+
+  @override
+  String get safe_badge => 'Безопасный';
+
+  @override
+  String get overview => 'Обзор';
+
+  @override
+  String get patterns => 'Шаблоны';
+
+  @override
+  String get apps => 'Приложения';
+
+  @override
+  String get sortAscending => 'Сортировать по возрастанию';
+
+  @override
+  String get sortDescending => 'Сортировать по убыванию';
+
+  @override
+  String applicationsShowing(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'Показано $count приложения',
+      many: 'Показано $count приложений',
+      few: 'Показано $count приложения',
+      one: 'Показано $count приложение',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String valueLabel(String value) {
+    return 'Значение: $value';
+  }
+
+  @override
+  String appsCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count приложения',
+      many: '$count приложений',
+      few: '$count приложения',
+      one: '1 приложение',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String categoriesCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count категории',
+      many: '$count категорий',
+      few: '$count категории',
+      one: '1 категория',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get systemNotificationsDisabled =>
+      'Системные уведомления отключены. Включите их в системных настройках для оповещений о фокусе.';
+
+  @override
+  String get openSystemSettings => 'Открыть Системные Настройки';
+
+  @override
+  String get appNotificationsDisabled =>
+      'Уведомления отключены в настройках приложения. Включите их для получения оповещений о фокусе.';
+
+  @override
+  String get goToSettings => 'Перейти в Настройки';
+
+  @override
+  String get focusModeNotificationsDisabled =>
+      'Уведомления режима фокусировки отключены. Включите их для получения оповещений о сеансах.';
+
+  @override
+  String get notificationsDisabled => 'Уведомления Отключены';
+
+  @override
+  String get dontShowAgain => 'Больше не показывать';
+
+  @override
+  String get systemSettingsRequired => 'Требуются Системные Настройки';
+
+  @override
+  String get notificationsDisabledSystemLevel =>
+      'Уведомления отключены на системном уровне. Чтобы включить:';
+
+  @override
+  String get step1OpenSystemSettings =>
+      '1. Откройте Системные Настройки (Системные Параметры)';
+
+  @override
+  String get step2GoToNotifications => '2. Перейдите в Уведомления';
+
+  @override
+  String get step3FindApp => '3. Найдите и выберите TimeMark';
+
+  @override
+  String get step4EnableNotifications =>
+      '4. Включите \"Разрешить уведомления\"';
+
+  @override
+  String get returnToAppMessage =>
+      'Затем вернитесь в это приложение, и уведомления будут работать.';
+
+  @override
+  String get gotIt => 'Понятно';
+
+  @override
+  String get noSessionsYet => 'Пока нет сеансов';
+
+  @override
+  String applicationsTracked(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'Отслеживается $count приложения',
+      many: 'Отслеживается $count приложений',
+      few: 'Отслеживается $count приложения',
+      one: 'Отслеживается $count приложение',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get applicationHeader => 'Приложение';
+
+  @override
+  String get currentUsageHeader => 'Текущее использование';
+
+  @override
+  String get dailyLimitHeader => 'Дневной лимит';
+
+  @override
+  String get edit => 'Редактировать';
+
+  @override
+  String get showPopupNotifications => 'Показывать всплывающие уведомления';
+
+  @override
+  String get moreFrequentReminders => 'Более частые напоминания';
+
+  @override
+  String get playSoundWithAlerts => 'Воспроизводить звук с оповещениями';
+
+  @override
+  String get systemTrayNotifications => 'Уведомления в системном трее';
+
+  @override
+  String screenTimeUsed(String current, String limit) {
+    return '$current / $limit использовано';
+  }
+
+  @override
+  String get todaysScreenTime => 'Время экрана сегодня';
+
+  @override
+  String get activeLimits => 'Активные лимиты';
+
+  @override
+  String get nearLimit => 'Близко к лимиту';
+
+  @override
+  String get colorPickerSpectrum => 'Спектр';
+
+  @override
+  String get colorPickerPresets => 'Пресеты';
+
+  @override
+  String get colorPickerSliders => 'Ползунки';
+
+  @override
+  String get colorPickerBasicColors => 'Основные цвета';
+
+  @override
+  String get colorPickerExtendedPalette => 'Расширенная палитра';
+
+  @override
+  String get colorPickerRed => 'Красный';
+
+  @override
+  String get colorPickerGreen => 'Зеленый';
+
+  @override
+  String get colorPickerBlue => 'Синий';
+
+  @override
+  String get colorPickerHue => 'Оттенок';
+
+  @override
+  String get colorPickerSaturation => 'Насыщенность';
+
+  @override
+  String get colorPickerBrightness => 'Яркость';
+
+  @override
+  String get colorPickerHexColor => 'Шестнадцатеричный цвет';
+
+  @override
+  String get colorPickerHexPlaceholder => 'RRGGBB';
+
+  @override
+  String get colorPickerRGB => 'RGB';
+
+  @override
+  String get select => 'Выбрать';
+
+  @override
+  String get themeCustomization => 'Настройка темы';
+
+  @override
+  String get chooseThemePreset => 'Выбрать пресет темы';
+
+  @override
+  String get yourCustomThemes => 'Ваши пользовательские темы';
+
+  @override
+  String get createCustomTheme => 'Создать пользовательскую тему';
+
+  @override
+  String get designOwnColorScheme => 'Создайте свою собственную цветовую схему';
+
+  @override
+  String get newTheme => 'Новая тема';
+
+  @override
+  String get editCurrentTheme => 'Редактировать текущую тему';
+
+  @override
+  String customizeColorsFor(String themeName) {
+    return 'Настроить цвета для $themeName';
+  }
+
+  @override
+  String customThemeNumber(int number) {
+    return 'Пользовательская тема $number';
+  }
+
+  @override
+  String get deleteCustomTheme => 'Удалить пользовательскую тему';
+
+  @override
+  String confirmDeleteTheme(String themeName) {
+    return 'Вы уверены, что хотите удалить \"$themeName\"?';
+  }
+
+  @override
+  String get delete => 'Удалить';
+
+  @override
+  String get customizeTheme => 'Настроить тему';
+
+  @override
+  String get preview => 'Предпросмотр';
+
+  @override
+  String get themeName => 'Название темы';
+
+  @override
+  String get brandColors => 'Фирменные цвета';
+
+  @override
+  String get lightTheme => 'Светлая тема';
+
+  @override
+  String get darkTheme => 'Темная тема';
+
+  @override
+  String get reset => 'Сбросить';
+
+  @override
+  String get saveTheme => 'Сохранить тему';
+
+  @override
+  String get customTheme => 'Пользовательская тема';
+
+  @override
+  String get primaryColors => 'Основные цвета';
+
+  @override
+  String get primaryColorsDesc =>
+      'Основные акцентные цвета, используемые во всем приложении';
+
+  @override
+  String get primaryAccent => 'Основной акцент';
+
+  @override
+  String get primaryAccentDesc => 'Основной фирменный цвет, кнопки, ссылки';
+
+  @override
+  String get secondaryAccent => 'Вторичный акцент';
+
+  @override
+  String get secondaryAccentDesc => 'Дополнительный акцент для градиентов';
+
+  @override
+  String get semanticColors => 'Семантические цвета';
+
+  @override
+  String get semanticColorsDesc => 'Цвета, передающие смысл и состояние';
+
+  @override
+  String get successColor => 'Цвет успеха';
+
+  @override
+  String get successColorDesc => 'Положительные действия, подтверждения';
+
+  @override
+  String get warningColor => 'Цвет предупреждения';
+
+  @override
+  String get warningColorDesc => 'Осторожность, ожидающие состояния';
+
+  @override
+  String get errorColor => 'Цвет ошибки';
+
+  @override
+  String get errorColorDesc => 'Ошибки, разрушительные действия';
+
+  @override
+  String get backgroundColors => 'Цвета фона';
+
+  @override
+  String get backgroundColorsLightDesc =>
+      'Основные фоновые поверхности для светлого режима';
+
+  @override
+  String get backgroundColorsDarkDesc =>
+      'Основные фоновые поверхности для темного режима';
+
+  @override
+  String get background => 'Фон';
+
+  @override
+  String get backgroundDesc => 'Основной фон приложения';
+
+  @override
+  String get surface => 'Поверхность';
+
+  @override
+  String get surfaceDesc => 'Карточки, диалоги, приподнятые поверхности';
+
+  @override
+  String get surfaceSecondary => 'Вторичная поверхность';
+
+  @override
+  String get surfaceSecondaryDesc => 'Вторичные карточки, боковые панели';
+
+  @override
+  String get border => 'Граница';
+
+  @override
+  String get borderDesc => 'Разделители, границы карточек';
+
+  @override
+  String get textColors => 'Цвета текста';
+
+  @override
+  String get textColorsLightDesc => 'Типографические цвета для светлого режима';
+
+  @override
+  String get textColorsDarkDesc => 'Типографические цвета для темного режима';
+
+  @override
+  String get textPrimary => 'Основной текст';
+
+  @override
+  String get textPrimaryDesc => 'Заголовки, важный текст';
+
+  @override
+  String get textSecondary => 'Вторичный текст';
+
+  @override
+  String get textSecondaryDesc => 'Описания, подписи';
+
+  @override
+  String previewMode(String mode) {
+    return 'Предпросмотр: режим $mode';
+  }
+
+  @override
+  String get dark => 'Темный';
+
+  @override
+  String get light => 'Светлый';
+
+  @override
+  String get sampleCardTitle => 'Название примерной карточки';
+
+  @override
+  String get sampleSecondaryText =>
+      'Это вторичный текст, который отображается ниже.';
+
+  @override
+  String get primary => 'Основной';
+
+  @override
+  String get secondary => 'Вторичный';
+
+  @override
+  String get warning => 'Предупреждение';
 }

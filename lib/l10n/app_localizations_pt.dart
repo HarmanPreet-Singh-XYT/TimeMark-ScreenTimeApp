@@ -866,12 +866,12 @@ class AppLocalizationsPt extends AppLocalizations {
 
   @override
   String shortBreakLabel(int minutes) {
-    return 'Pausa Curta: $minutes min';
+    return 'Intervalo Curto';
   }
 
   @override
   String longBreakLabel(int minutes) {
-    return 'Pausa Longa: $minutes min';
+    return 'Intervalo Longo';
   }
 
   @override
@@ -1692,31 +1692,699 @@ class AppLocalizationsPt extends AppLocalizations {
   }
 
   @override
-  String get themeLight => 'Light';
+  String get themeLight => 'Claro';
 
   @override
-  String get themeDark => 'Dark';
+  String get themeDark => 'Escuro';
 
   @override
-  String get themeSystem => 'System';
+  String get themeSystem => 'Sistema';
 
   @override
   String get themeTitle => 'Tema';
 
   @override
-  String get themeDescription =>
-      'Tema de cores do aplicativo (Mudança requer reinicialização)';
+  String get themeDescription => 'Tema de cores do aplicativo';
 
   @override
-  String get voiceGenderTitle => 'Voice Gender';
+  String get voiceGenderTitle => 'Gênero da voz';
 
   @override
   String get voiceGenderDescription =>
-      'Choose the voice gender for timer notifications';
+      'Escolha o gênero da voz para notificações do temporizador';
 
   @override
-  String get voiceGenderMale => 'Male';
+  String get voiceGenderMale => 'Masculino';
 
   @override
-  String get voiceGenderFemale => 'Female';
+  String get voiceGenderFemale => 'Feminino';
+
+  @override
+  String get alertsLimitsSubtitle =>
+      'Gerencie seus limites de tempo de tela e notificações';
+
+  @override
+  String get applicationsSubtitle => 'Gerencie seus aplicativos rastreados';
+
+  @override
+  String applicationCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count aplicativos',
+      one: '1 aplicativo',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get noApplicationsFound => 'Nenhum aplicativo encontrado';
+
+  @override
+  String get tryAdjustingFilters => 'Tente ajustar seus filtros';
+
+  @override
+  String get configureAppSettings => 'Configurar configurações do aplicativo';
+
+  @override
+  String get behaviorSection => 'Comportamento';
+
+  @override
+  String helpSubtitle(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count perguntas em 7 categorias',
+      one: '1 pergunta em 7 categorias',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get searchForHelp => 'Buscar ajuda...';
+
+  @override
+  String get quickNavGeneral => 'Geral';
+
+  @override
+  String get quickNavApps => 'Aplicativos';
+
+  @override
+  String get quickNavReports => 'Relatórios';
+
+  @override
+  String get quickNavFocus => 'Foco';
+
+  @override
+  String get noResultsFound => 'Nenhum resultado encontrado';
+
+  @override
+  String get tryDifferentKeywords =>
+      'Tente pesquisar com palavras-chave diferentes';
+
+  @override
+  String get clearSearch => 'Limpar Pesquisa';
+
+  @override
+  String get greetingMorning => 'Bom dia! Aqui está seu resumo de atividades.';
+
+  @override
+  String get greetingAfternoon =>
+      'Boa tarde! Aqui está seu resumo de atividades.';
+
+  @override
+  String get greetingEvening =>
+      'Boa noite! Aqui está seu resumo de atividades.';
+
+  @override
+  String get screenTimeProgress => 'Tempo de\nTela';
+
+  @override
+  String get productiveScoreProgress => 'Pontuação\nProdutiva';
+
+  @override
+  String get focusModeSubtitle => 'Mantenha o foco, seja produtivo';
+
+  @override
+  String get thisWeek => 'Esta Semana';
+
+  @override
+  String get sessions => 'Sessões';
+
+  @override
+  String get totalTime => 'Tempo Total';
+
+  @override
+  String get avgLength => 'Duração Média';
+
+  @override
+  String get focusTime => 'Tempo de Foco';
+
+  @override
+  String get paused => 'Pausado';
+
+  @override
+  String get shortBreakStatus => 'Intervalo Curto';
+
+  @override
+  String get longBreakStatus => 'Intervalo Longo';
+
+  @override
+  String get readyToFocus => 'Pronto para Focar';
+
+  @override
+  String get focus => 'Foco';
+
+  @override
+  String get restartSession => 'Reiniciar Sessão';
+
+  @override
+  String get skipToNext => 'Pular para o Próximo';
+
+  @override
+  String get settings => 'Configurações';
+
+  @override
+  String sessionsCompleted(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count sessões concluídas',
+      one: '1 sessão concluída',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get focusModePreset => 'Predefinição do Modo de Foco';
+
+  @override
+  String get focusDuration => 'Duração do Foco';
+
+  @override
+  String minutesFormat(int minutes) {
+    return '$minutes min';
+  }
+
+  @override
+  String get shortBreakDuration => 'Intervalo Curto';
+
+  @override
+  String get longBreakDuration => 'Intervalo Longo';
+
+  @override
+  String get enableSounds => 'Ativar Sons';
+
+  @override
+  String get focus_mode_this_week => 'Esta Semana';
+
+  @override
+  String get focus_mode_best_day => 'Melhor Dia';
+
+  @override
+  String focus_mode_sessions_count(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count sessões',
+      one: '1 sessão',
+      zero: '0 sessões',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get focus_mode_no_data_yet => 'Ainda sem dados';
+
+  @override
+  String get chart_current => 'Atual';
+
+  @override
+  String get chart_previous => 'Anterior';
+
+  @override
+  String get permission_error => 'Erro de Permissão';
+
+  @override
+  String get notification_permission_denied =>
+      'Permissão de Notificação Negada';
+
+  @override
+  String get notification_permission_denied_message =>
+      'ScreenTime precisa de permissão de notificação para enviar alertas e lembretes.\n\nGostaria de abrir as Configurações do Sistema para ativar as notificações?';
+
+  @override
+  String get notification_permission_denied_hint =>
+      'Abra as Configurações do Sistema para ativar as notificações do ScreenTime.';
+
+  @override
+  String get notification_permission_required =>
+      'Permissão de Notificação Necessária';
+
+  @override
+  String get notification_permission_required_message =>
+      'ScreenTime precisa de permissão para enviar notificações.';
+
+  @override
+  String get open_settings => 'Abrir Configurações';
+
+  @override
+  String get allow_notifications => 'Permitir Notificações';
+
+  @override
+  String get permission_allowed => 'Permitido';
+
+  @override
+  String get permission_denied => 'Negado';
+
+  @override
+  String get permission_not_set => 'Não Definido';
+
+  @override
+  String get on => 'Ligado';
+
+  @override
+  String get off => 'Desligado';
+
+  @override
+  String get enable_notification_permission_hint =>
+      'Ative a permissão de notificação para receber alertas';
+
+  @override
+  String minutes_format(int minutes) {
+    return '$minutes min';
+  }
+
+  @override
+  String get chart_average => 'Média';
+
+  @override
+  String get chart_peak => 'Pico';
+
+  @override
+  String get chart_lowest => 'Mais baixo';
+
+  @override
+  String get active => 'Ativo';
+
+  @override
+  String get disabled => 'Desabilitado';
+
+  @override
+  String get advanced_options => 'Opções Avançadas';
+
+  @override
+  String get sync_ready => 'Sincronização Pronta';
+
+  @override
+  String get success => 'Sucesso';
+
+  @override
+  String get destructive_badge => 'Destrutivo';
+
+  @override
+  String get recommended_badge => 'Recomendado';
+
+  @override
+  String get safe_badge => 'Seguro';
+
+  @override
+  String get overview => 'Visão Geral';
+
+  @override
+  String get patterns => 'Padrões';
+
+  @override
+  String get apps => 'Aplicativos';
+
+  @override
+  String get sortAscending => 'Ordenar Crescente';
+
+  @override
+  String get sortDescending => 'Ordenar Decrescente';
+
+  @override
+  String applicationsShowing(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count aplicativos mostrando',
+      one: '1 aplicativo mostrando',
+      zero: '0 aplicativos mostrando',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String valueLabel(String value) {
+    return 'Valor: $value';
+  }
+
+  @override
+  String appsCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count aplicativos',
+      one: '1 aplicativo',
+      zero: '0 aplicativos',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String categoriesCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count categorias',
+      one: '1 categoria',
+      zero: '0 categorias',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get systemNotificationsDisabled =>
+      'As notificações do sistema estão desativadas. Ative-as nas Configurações do sistema para alertas de foco.';
+
+  @override
+  String get openSystemSettings => 'Abrir Configurações do Sistema';
+
+  @override
+  String get appNotificationsDisabled =>
+      'As notificações estão desativadas nas configurações do aplicativo. Ative-as para receber alertas de foco.';
+
+  @override
+  String get goToSettings => 'Ir para Configurações';
+
+  @override
+  String get focusModeNotificationsDisabled =>
+      'As notificações do modo de foco estão desativadas. Ative-as para receber alertas de sessão.';
+
+  @override
+  String get notificationsDisabled => 'Notificações Desativadas';
+
+  @override
+  String get dontShowAgain => 'Não mostrar novamente';
+
+  @override
+  String get systemSettingsRequired => 'Configurações do Sistema Necessárias';
+
+  @override
+  String get notificationsDisabledSystemLevel =>
+      'As notificações estão desativadas no nível do sistema. Para ativar:';
+
+  @override
+  String get step1OpenSystemSettings =>
+      '1. Abrir Configurações do Sistema (Preferências do Sistema)';
+
+  @override
+  String get step2GoToNotifications => '2. Ir para Notificações';
+
+  @override
+  String get step3FindApp => '3. Encontrar e selecionar TimeMark';
+
+  @override
+  String get step4EnableNotifications => '4. Ativar \"Permitir notificações\"';
+
+  @override
+  String get returnToAppMessage =>
+      'Em seguida, retorne a este aplicativo e as notificações funcionarão.';
+
+  @override
+  String get gotIt => 'Entendi';
+
+  @override
+  String get noSessionsYet => 'Ainda não há sessões';
+
+  @override
+  String applicationsTracked(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count aplicativos rastreados',
+      one: '1 aplicativo rastreado',
+      zero: '0 aplicativos rastreados',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get applicationHeader => 'Aplicativo';
+
+  @override
+  String get currentUsageHeader => 'Uso Atual';
+
+  @override
+  String get dailyLimitHeader => 'Limite Diário';
+
+  @override
+  String get edit => 'Editar';
+
+  @override
+  String get showPopupNotifications => 'Mostrar notificações pop-up';
+
+  @override
+  String get moreFrequentReminders => 'Lembretes mais frequentes';
+
+  @override
+  String get playSoundWithAlerts => 'Reproduzir som com alertas';
+
+  @override
+  String get systemTrayNotifications => 'Notificações na bandeja do sistema';
+
+  @override
+  String screenTimeUsed(String current, String limit) {
+    return '$current / $limit usado';
+  }
+
+  @override
+  String get todaysScreenTime => 'Tempo de Tela Hoje';
+
+  @override
+  String get activeLimits => 'Limites Ativos';
+
+  @override
+  String get nearLimit => 'Próximo ao Limite';
+
+  @override
+  String get colorPickerSpectrum => 'Espectro';
+
+  @override
+  String get colorPickerPresets => 'Predefinições';
+
+  @override
+  String get colorPickerSliders => 'Controles Deslizantes';
+
+  @override
+  String get colorPickerBasicColors => 'Cores Básicas';
+
+  @override
+  String get colorPickerExtendedPalette => 'Paleta Estendida';
+
+  @override
+  String get colorPickerRed => 'Vermelho';
+
+  @override
+  String get colorPickerGreen => 'Verde';
+
+  @override
+  String get colorPickerBlue => 'Azul';
+
+  @override
+  String get colorPickerHue => 'Matiz';
+
+  @override
+  String get colorPickerSaturation => 'Saturação';
+
+  @override
+  String get colorPickerBrightness => 'Brilho';
+
+  @override
+  String get colorPickerHexColor => 'Cor Hexadecimal';
+
+  @override
+  String get colorPickerHexPlaceholder => 'RRGGBB';
+
+  @override
+  String get colorPickerRGB => 'RGB';
+
+  @override
+  String get select => 'Selecionar';
+
+  @override
+  String get themeCustomization => 'Personalização de Tema';
+
+  @override
+  String get chooseThemePreset => 'Escolher uma Predefinição de Tema';
+
+  @override
+  String get yourCustomThemes => 'Seus Temas Personalizados';
+
+  @override
+  String get createCustomTheme => 'Criar Tema Personalizado';
+
+  @override
+  String get designOwnColorScheme => 'Projete seu próprio esquema de cores';
+
+  @override
+  String get newTheme => 'Novo Tema';
+
+  @override
+  String get editCurrentTheme => 'Editar Tema Atual';
+
+  @override
+  String customizeColorsFor(String themeName) {
+    return 'Personalizar cores para $themeName';
+  }
+
+  @override
+  String customThemeNumber(int number) {
+    return 'Tema Personalizado $number';
+  }
+
+  @override
+  String get deleteCustomTheme => 'Excluir Tema Personalizado';
+
+  @override
+  String confirmDeleteTheme(String themeName) {
+    return 'Tem certeza de que deseja excluir \"$themeName\"?';
+  }
+
+  @override
+  String get delete => 'Excluir';
+
+  @override
+  String get customizeTheme => 'Personalizar Tema';
+
+  @override
+  String get preview => 'Visualizar';
+
+  @override
+  String get themeName => 'Nome do Tema';
+
+  @override
+  String get brandColors => 'Cores da Marca';
+
+  @override
+  String get lightTheme => 'Tema Claro';
+
+  @override
+  String get darkTheme => 'Tema Escuro';
+
+  @override
+  String get reset => 'Redefinir';
+
+  @override
+  String get saveTheme => 'Salvar Tema';
+
+  @override
+  String get customTheme => 'Tema Personalizado';
+
+  @override
+  String get primaryColors => 'Cores Primárias';
+
+  @override
+  String get primaryColorsDesc =>
+      'Cores de destaque principais usadas em todo o aplicativo';
+
+  @override
+  String get primaryAccent => 'Destaque Primário';
+
+  @override
+  String get primaryAccentDesc => 'Cor principal da marca, botões, links';
+
+  @override
+  String get secondaryAccent => 'Destaque Secundário';
+
+  @override
+  String get secondaryAccentDesc => 'Destaque complementar para gradientes';
+
+  @override
+  String get semanticColors => 'Cores Semânticas';
+
+  @override
+  String get semanticColorsDesc => 'Cores que transmitem significado e status';
+
+  @override
+  String get successColor => 'Cor de Sucesso';
+
+  @override
+  String get successColorDesc => 'Ações positivas, confirmações';
+
+  @override
+  String get warningColor => 'Cor de Aviso';
+
+  @override
+  String get warningColorDesc => 'Cuidado, estados pendentes';
+
+  @override
+  String get errorColor => 'Cor de Erro';
+
+  @override
+  String get errorColorDesc => 'Erros, ações destrutivas';
+
+  @override
+  String get backgroundColors => 'Cores de Fundo';
+
+  @override
+  String get backgroundColorsLightDesc =>
+      'Superfícies de fundo principais para modo claro';
+
+  @override
+  String get backgroundColorsDarkDesc =>
+      'Superfícies de fundo principais para modo escuro';
+
+  @override
+  String get background => 'Fundo';
+
+  @override
+  String get backgroundDesc => 'Fundo principal do aplicativo';
+
+  @override
+  String get surface => 'Superfície';
+
+  @override
+  String get surfaceDesc => 'Cartões, diálogos, superfícies elevadas';
+
+  @override
+  String get surfaceSecondary => 'Superfície Secundária';
+
+  @override
+  String get surfaceSecondaryDesc => 'Cartões secundários, barras laterais';
+
+  @override
+  String get border => 'Borda';
+
+  @override
+  String get borderDesc => 'Divisórias, bordas de cartões';
+
+  @override
+  String get textColors => 'Cores de Texto';
+
+  @override
+  String get textColorsLightDesc => 'Cores de tipografia para modo claro';
+
+  @override
+  String get textColorsDarkDesc => 'Cores de tipografia para modo escuro';
+
+  @override
+  String get textPrimary => 'Texto Primário';
+
+  @override
+  String get textPrimaryDesc => 'Títulos, texto importante';
+
+  @override
+  String get textSecondary => 'Texto Secundário';
+
+  @override
+  String get textSecondaryDesc => 'Descrições, legendas';
+
+  @override
+  String previewMode(String mode) {
+    return 'Visualização: Modo $mode';
+  }
+
+  @override
+  String get dark => 'Escuro';
+
+  @override
+  String get light => 'Claro';
+
+  @override
+  String get sampleCardTitle => 'Título do Cartão de Exemplo';
+
+  @override
+  String get sampleSecondaryText =>
+      'Este é o texto secundário que aparece abaixo.';
+
+  @override
+  String get primary => 'Primário';
+
+  @override
+  String get secondary => 'Secundário';
+
+  @override
+  String get warning => 'Aviso';
 }

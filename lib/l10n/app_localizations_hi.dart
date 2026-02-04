@@ -394,7 +394,7 @@ class AppLocalizationsHi extends AppLocalizations {
 
   @override
   String sectionLabel(String title) {
-    return '$title सेक्शन';
+    return '$title अनुभाग';
   }
 
   @override
@@ -703,7 +703,7 @@ class AppLocalizationsHi extends AppLocalizations {
   String get resetAll => 'सब रीसेट करें';
 
   @override
-  String get refresh => 'रीफ्रेश';
+  String get refresh => 'रीफ्रेश करें';
 
   @override
   String get save => 'सहेजें';
@@ -863,12 +863,12 @@ class AppLocalizationsHi extends AppLocalizations {
 
   @override
   String shortBreakLabel(int minutes) {
-    return 'छोटा ब्रेक: $minutes मिनट';
+    return 'छोटा ब्रेक';
   }
 
   @override
   String longBreakLabel(int minutes) {
-    return 'लंबा ब्रेक: $minutes मिनट';
+    return 'लंबा ब्रेक';
   }
 
   @override
@@ -1685,31 +1685,659 @@ class AppLocalizationsHi extends AppLocalizations {
   }
 
   @override
-  String get themeLight => 'Light';
+  String get themeLight => 'हल्का';
 
   @override
-  String get themeDark => 'Dark';
+  String get themeDark => 'गहरा';
 
   @override
-  String get themeSystem => 'System';
+  String get themeSystem => 'सिस्टम';
 
   @override
   String get themeTitle => 'थीम';
 
   @override
-  String get themeDescription =>
-      'एप्लिकेशन की रंग थीम (बदलाव के लिए पुनरारंभ आवश्यक)';
+  String get themeDescription => 'एप्लिकेशन की रंग थीम';
 
   @override
-  String get voiceGenderTitle => 'Voice Gender';
+  String get voiceGenderTitle => 'आवाज़ का लिंग';
 
   @override
   String get voiceGenderDescription =>
-      'Choose the voice gender for timer notifications';
+      'टाइमर सूचनाओं के लिए आवाज़ का लिंग चुनें';
 
   @override
-  String get voiceGenderMale => 'Male';
+  String get voiceGenderMale => 'पुरुष';
 
   @override
-  String get voiceGenderFemale => 'Female';
+  String get voiceGenderFemale => 'महिला';
+
+  @override
+  String get alertsLimitsSubtitle =>
+      'अपने स्क्रीन टाइम की सीमा और सूचनाओं को प्रबंधित करें';
+
+  @override
+  String get applicationsSubtitle =>
+      'अपने ट्रैक किए गए एप्लिकेशन प्रबंधित करें';
+
+  @override
+  String applicationCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count एप्लिकेशन',
+      one: '1 एप्लिकेशन',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get noApplicationsFound => 'कोई एप्लिकेशन नहीं मिला';
+
+  @override
+  String get tryAdjustingFilters => 'अपने फ़िल्टर समायोजित करने का प्रयास करें';
+
+  @override
+  String get configureAppSettings => 'एप्लिकेशन सेटिंग्स कॉन्फ़िगर करें';
+
+  @override
+  String get behaviorSection => 'व्यवहार';
+
+  @override
+  String helpSubtitle(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '7 श्रेणियों में $count प्रश्न',
+      one: '7 श्रेणियों में 1 प्रश्न',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get searchForHelp => 'सहायता खोजें...';
+
+  @override
+  String get quickNavGeneral => 'सामान्य';
+
+  @override
+  String get quickNavApps => 'ऐप्स';
+
+  @override
+  String get quickNavReports => 'रिपोर्ट';
+
+  @override
+  String get quickNavFocus => 'फोकस';
+
+  @override
+  String get noResultsFound => 'कोई परिणाम नहीं मिला';
+
+  @override
+  String get tryDifferentKeywords =>
+      'विभिन्न कीवर्ड के साथ खोजने का प्रयास करें';
+
+  @override
+  String get clearSearch => 'खोज साफ़ करें';
+
+  @override
+  String get greetingMorning => 'सुप्रभात! यह आपकी गतिविधि का सारांश है।';
+
+  @override
+  String get greetingAfternoon => 'शुभ दोपहर! यह आपकी गतिविधि का सारांश है।';
+
+  @override
+  String get greetingEvening => 'शुभ संध्या! यह आपकी गतिविधि का सारांश है।';
+
+  @override
+  String get screenTimeProgress => 'स्क्रीन\nटाइम';
+
+  @override
+  String get productiveScoreProgress => 'उत्पादक\nस्कोर';
+
+  @override
+  String get focusModeSubtitle => 'केंद्रित रहें, उत्पादक बनें';
+
+  @override
+  String get thisWeek => 'इस सप्ताह';
+
+  @override
+  String get sessions => 'सत्र';
+
+  @override
+  String get totalTime => 'कुल समय';
+
+  @override
+  String get avgLength => 'औसत अवधि';
+
+  @override
+  String get focusTime => 'फोकस समय';
+
+  @override
+  String get paused => 'रोका गया';
+
+  @override
+  String get shortBreakStatus => 'छोटा ब्रेक';
+
+  @override
+  String get longBreakStatus => 'लंबा ब्रेक';
+
+  @override
+  String get readyToFocus => 'फोकस के लिए तैयार';
+
+  @override
+  String get focus => 'फोकस';
+
+  @override
+  String get restartSession => 'सत्र पुनः प्रारंभ करें';
+
+  @override
+  String get skipToNext => 'अगले पर जाएं';
+
+  @override
+  String get settings => 'सेटिंग्स';
+
+  @override
+  String sessionsCompleted(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count सत्र पूर्ण',
+      one: '1 सत्र पूर्ण',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get focusModePreset => 'फोकस मोड प्रीसेट';
+
+  @override
+  String get focusDuration => 'फोकस अवधि';
+
+  @override
+  String minutesFormat(int minutes) {
+    return '$minutes मिनट';
+  }
+
+  @override
+  String get shortBreakDuration => 'छोटा ब्रेक';
+
+  @override
+  String get longBreakDuration => 'लंबा ब्रेक';
+
+  @override
+  String get enableSounds => 'ध्वनि सक्षम करें';
+
+  @override
+  String get focus_mode_this_week => 'इस सप्ताह';
+
+  @override
+  String get focus_mode_best_day => 'सर्वश्रेष्ठ दिन';
+
+  @override
+  String focus_mode_sessions_count(int count) {
+    return '$count सत्र';
+  }
+
+  @override
+  String get focus_mode_no_data_yet => 'अभी तक कोई डेटा नहीं';
+
+  @override
+  String get chart_current => 'वर्तमान';
+
+  @override
+  String get chart_previous => 'पिछला';
+
+  @override
+  String get permission_error => 'अनुमति त्रुटि';
+
+  @override
+  String get notification_permission_denied => 'सूचना अनुमति अस्वीकृत';
+
+  @override
+  String get notification_permission_denied_message =>
+      'ScreenTime को आपको अलर्ट और रिमाइंडर भेजने के लिए सूचना अनुमति की आवश्यकता है।\n\nक्या आप सूचनाओं को सक्षम करने के लिए सिस्टम सेटिंग्स खोलना चाहेंगे?';
+
+  @override
+  String get notification_permission_denied_hint =>
+      'ScreenTime के लिए सूचनाओं को सक्षम करने के लिए सिस्टम सेटिंग्स खोलें।';
+
+  @override
+  String get notification_permission_required => 'सूचना अनुमति आवश्यक';
+
+  @override
+  String get notification_permission_required_message =>
+      'ScreenTime को आपको सूचनाएं भेजने के लिए अनुमति की आवश्यकता है।';
+
+  @override
+  String get open_settings => 'सेटिंग्स खोलें';
+
+  @override
+  String get allow_notifications => 'सूचनाओं की अनुमति दें';
+
+  @override
+  String get permission_allowed => 'अनुमत';
+
+  @override
+  String get permission_denied => 'अस्वीकृत';
+
+  @override
+  String get permission_not_set => 'सेट नहीं';
+
+  @override
+  String get on => 'चालू';
+
+  @override
+  String get off => 'बंद';
+
+  @override
+  String get enable_notification_permission_hint =>
+      'अलर्ट प्राप्त करने के लिए सूचना अनुमति सक्षम करें';
+
+  @override
+  String minutes_format(int minutes) {
+    return '$minutes मिनट';
+  }
+
+  @override
+  String get chart_average => 'औसत';
+
+  @override
+  String get chart_peak => 'चरम';
+
+  @override
+  String get chart_lowest => 'सबसे कम';
+
+  @override
+  String get active => 'सक्रिय';
+
+  @override
+  String get disabled => 'अक्षम';
+
+  @override
+  String get advanced_options => 'उन्नत विकल्प';
+
+  @override
+  String get sync_ready => 'सिंक तैयार';
+
+  @override
+  String get success => 'सफलता';
+
+  @override
+  String get destructive_badge => 'विनाशकारी';
+
+  @override
+  String get recommended_badge => 'अनुशंसित';
+
+  @override
+  String get safe_badge => 'सुरक्षित';
+
+  @override
+  String get overview => 'अवलोकन';
+
+  @override
+  String get patterns => 'पैटर्न';
+
+  @override
+  String get apps => 'ऐप्स';
+
+  @override
+  String get sortAscending => 'आरोही क्रम में क्रमबद्ध करें';
+
+  @override
+  String get sortDescending => 'अवरोही क्रम में क्रमबद्ध करें';
+
+  @override
+  String applicationsShowing(int count) {
+    return '$count एप्लिकेशन दिखाई जा रही हैं';
+  }
+
+  @override
+  String valueLabel(String value) {
+    return 'मान: $value';
+  }
+
+  @override
+  String appsCount(int count) {
+    return '$count ऐप्स';
+  }
+
+  @override
+  String categoriesCount(int count) {
+    return '$count श्रेणियाँ';
+  }
+
+  @override
+  String get systemNotificationsDisabled =>
+      'सिस्टम सूचनाएं अक्षम हैं। फोकस अलर्ट के लिए उन्हें सिस्टम सेटिंग्स में सक्षम करें।';
+
+  @override
+  String get openSystemSettings => 'सिस्टम सेटिंग्स खोलें';
+
+  @override
+  String get appNotificationsDisabled =>
+      'ऐप सेटिंग्स में सूचनाएं अक्षम हैं। फोकस अलर्ट प्राप्त करने के लिए उन्हें सक्षम करें।';
+
+  @override
+  String get goToSettings => 'सेटिंग्स पर जाएं';
+
+  @override
+  String get focusModeNotificationsDisabled =>
+      'फोकस मोड सूचनाएं अक्षम हैं। सत्र अलर्ट प्राप्त करने के लिए उन्हें सक्षम करें।';
+
+  @override
+  String get notificationsDisabled => 'सूचनाएं अक्षम';
+
+  @override
+  String get dontShowAgain => 'फिर से न दिखाएं';
+
+  @override
+  String get systemSettingsRequired => 'सिस्टम सेटिंग्स आवश्यक';
+
+  @override
+  String get notificationsDisabledSystemLevel =>
+      'सिस्टम स्तर पर सूचनाएं अक्षम हैं। सक्षम करने के लिए:';
+
+  @override
+  String get step1OpenSystemSettings =>
+      '1. सिस्टम सेटिंग्स खोलें (सिस्टम प्रेफरेंस)';
+
+  @override
+  String get step2GoToNotifications => '2. सूचनाओं पर जाएं';
+
+  @override
+  String get step3FindApp => '3. TimeMark ढूंढें और चुनें';
+
+  @override
+  String get step4EnableNotifications =>
+      '4. \"सूचनाओं की अनुमति दें\" सक्षम करें';
+
+  @override
+  String get returnToAppMessage => 'फिर इस ऐप पर लौटें और सूचनाएं काम करेंगी।';
+
+  @override
+  String get gotIt => 'समझ गया';
+
+  @override
+  String get noSessionsYet => 'अभी तक कोई सत्र नहीं';
+
+  @override
+  String applicationsTracked(int count) {
+    return '$count एप्लिकेशन ट्रैक किए गए';
+  }
+
+  @override
+  String get applicationHeader => 'एप्लिकेशन';
+
+  @override
+  String get currentUsageHeader => 'वर्तमान उपयोग';
+
+  @override
+  String get dailyLimitHeader => 'दैनिक सीमा';
+
+  @override
+  String get edit => 'संपादित करें';
+
+  @override
+  String get showPopupNotifications => 'पॉपअप सूचनाएं दिखाएं';
+
+  @override
+  String get moreFrequentReminders => 'अधिक बार अनुस्मारक';
+
+  @override
+  String get playSoundWithAlerts => 'अलर्ट के साथ ध्वनि बजाएं';
+
+  @override
+  String get systemTrayNotifications => 'सिस्टम ट्रे सूचनाएं';
+
+  @override
+  String screenTimeUsed(String current, String limit) {
+    return '$current / $limit उपयोग किया गया';
+  }
+
+  @override
+  String get todaysScreenTime => 'आज का स्क्रीन समय';
+
+  @override
+  String get activeLimits => 'सक्रिय सीमाएं';
+
+  @override
+  String get nearLimit => 'सीमा के पास';
+
+  @override
+  String get colorPickerSpectrum => 'स्पेक्ट्रम';
+
+  @override
+  String get colorPickerPresets => 'प्रीसेट';
+
+  @override
+  String get colorPickerSliders => 'स्लाइडर';
+
+  @override
+  String get colorPickerBasicColors => 'बुनियादी रंग';
+
+  @override
+  String get colorPickerExtendedPalette => 'विस्तारित पैलेट';
+
+  @override
+  String get colorPickerRed => 'लाल';
+
+  @override
+  String get colorPickerGreen => 'हरा';
+
+  @override
+  String get colorPickerBlue => 'नीला';
+
+  @override
+  String get colorPickerHue => 'रंगत';
+
+  @override
+  String get colorPickerSaturation => 'संतृप्ति';
+
+  @override
+  String get colorPickerBrightness => 'चमक';
+
+  @override
+  String get colorPickerHexColor => 'हेक्स रंग';
+
+  @override
+  String get colorPickerHexPlaceholder => 'RRGGBB';
+
+  @override
+  String get colorPickerRGB => 'RGB';
+
+  @override
+  String get select => 'चुनें';
+
+  @override
+  String get themeCustomization => 'थीम अनुकूलन';
+
+  @override
+  String get chooseThemePreset => 'थीम प्रीसेट चुनें';
+
+  @override
+  String get yourCustomThemes => 'आपकी कस्टम थीम';
+
+  @override
+  String get createCustomTheme => 'कस्टम थीम बनाएं';
+
+  @override
+  String get designOwnColorScheme => 'अपनी खुद की रंग योजना डिज़ाइन करें';
+
+  @override
+  String get newTheme => 'नई थीम';
+
+  @override
+  String get editCurrentTheme => 'वर्तमान थीम संपादित करें';
+
+  @override
+  String customizeColorsFor(String themeName) {
+    return '$themeName के लिए रंग अनुकूलित करें';
+  }
+
+  @override
+  String customThemeNumber(int number) {
+    return 'कस्टम थीम $number';
+  }
+
+  @override
+  String get deleteCustomTheme => 'कस्टम थीम हटाएं';
+
+  @override
+  String confirmDeleteTheme(String themeName) {
+    return 'क्या आप वाकई \"$themeName\" को हटाना चाहते हैं?';
+  }
+
+  @override
+  String get delete => 'हटाएं';
+
+  @override
+  String get customizeTheme => 'थीम अनुकूलित करें';
+
+  @override
+  String get preview => 'पूर्वावलोकन';
+
+  @override
+  String get themeName => 'थीम का नाम';
+
+  @override
+  String get brandColors => 'ब्रांड रंग';
+
+  @override
+  String get lightTheme => 'हल्की थीम';
+
+  @override
+  String get darkTheme => 'गहरी थीम';
+
+  @override
+  String get reset => 'रीसेट करें';
+
+  @override
+  String get saveTheme => 'थीम सहेजें';
+
+  @override
+  String get customTheme => 'कस्टम थीम';
+
+  @override
+  String get primaryColors => 'प्राथमिक रंग';
+
+  @override
+  String get primaryColorsDesc =>
+      'पूरे ऐप में उपयोग किए जाने वाले मुख्य उच्चारण रंग';
+
+  @override
+  String get primaryAccent => 'प्राथमिक उच्चारण';
+
+  @override
+  String get primaryAccentDesc => 'मुख्य ब्रांड रंग, बटन, लिंक';
+
+  @override
+  String get secondaryAccent => 'द्वितीयक उच्चारण';
+
+  @override
+  String get secondaryAccentDesc => 'ग्रेडिएंट के लिए पूरक उच्चारण';
+
+  @override
+  String get semanticColors => 'अर्थ संबंधी रंग';
+
+  @override
+  String get semanticColorsDesc => 'अर्थ और स्थिति व्यक्त करने वाले रंग';
+
+  @override
+  String get successColor => 'सफलता का रंग';
+
+  @override
+  String get successColorDesc => 'सकारात्मक क्रियाएं, पुष्टिकरण';
+
+  @override
+  String get warningColor => 'चेतावनी का रंग';
+
+  @override
+  String get warningColorDesc => 'सावधानी, लंबित स्थिति';
+
+  @override
+  String get errorColor => 'त्रुटि का रंग';
+
+  @override
+  String get errorColorDesc => 'त्रुटियां, विनाशकारी क्रियाएं';
+
+  @override
+  String get backgroundColors => 'पृष्ठभूमि रंग';
+
+  @override
+  String get backgroundColorsLightDesc =>
+      'हल्के मोड के लिए मुख्य पृष्ठभूमि सतह';
+
+  @override
+  String get backgroundColorsDarkDesc => 'गहरे मोड के लिए मुख्य पृष्ठभूमि सतह';
+
+  @override
+  String get background => 'पृष्ठभूमि';
+
+  @override
+  String get backgroundDesc => 'मुख्य ऐप पृष्ठभूमि';
+
+  @override
+  String get surface => 'सतह';
+
+  @override
+  String get surfaceDesc => 'कार्ड, डायलॉग, उभरी हुई सतहें';
+
+  @override
+  String get surfaceSecondary => 'द्वितीयक सतह';
+
+  @override
+  String get surfaceSecondaryDesc => 'द्वितीयक कार्ड, साइडबार';
+
+  @override
+  String get border => 'सीमा';
+
+  @override
+  String get borderDesc => 'विभाजक, कार्ड सीमाएं';
+
+  @override
+  String get textColors => 'पाठ रंग';
+
+  @override
+  String get textColorsLightDesc => 'हल्के मोड के लिए टाइपोग्राफी रंग';
+
+  @override
+  String get textColorsDarkDesc => 'गहरे मोड के लिए टाइपोग्राफी रंग';
+
+  @override
+  String get textPrimary => 'प्राथमिक पाठ';
+
+  @override
+  String get textPrimaryDesc => 'शीर्षक, महत्वपूर्ण पाठ';
+
+  @override
+  String get textSecondary => 'द्वितीयक पाठ';
+
+  @override
+  String get textSecondaryDesc => 'विवरण, कैप्शन';
+
+  @override
+  String previewMode(String mode) {
+    return 'पूर्वावलोकन: $mode मोड';
+  }
+
+  @override
+  String get dark => 'गहरा';
+
+  @override
+  String get light => 'हल्का';
+
+  @override
+  String get sampleCardTitle => 'नमूना कार्ड शीर्षक';
+
+  @override
+  String get sampleSecondaryText => 'यह नीचे दिखाई देने वाला द्वितीयक पाठ है।';
+
+  @override
+  String get primary => 'प्राथमिक';
+
+  @override
+  String get secondary => 'द्वितीयक';
+
+  @override
+  String get warning => 'चेतावनी';
 }

@@ -1342,5 +1342,284 @@
   "timeFormatSeconds": "{seconds}সে",
   "timeFormatMinute": "1 মিনিট",
   "timeFormatMinutes": "{minutes} মিনিট",
-  "timeFormatMinutesSeconds": "{minutes} মি {seconds}সে"
+  "timeFormatMinutesSeconds": "{minutes} মি {seconds}সে",
+
+  "themeLight": "হালকা",
+  "themeDark": "গাঢ়",
+  "themeSystem": "সিস্টেম",
+  "themeTitle": "থিম",
+  "themeDescription": "অ্যাপ্লিকেশনের রঙের থিম",
+  "voiceGenderTitle": "ভয়েস লিঙ্গ",
+  "voiceGenderDescription": "টাইমার বিজ্ঞপ্তির জন্য ভয়েসের লিঙ্গ নির্বাচন করুন",
+  "voiceGenderMale": "পুরুষ",
+  "voiceGenderFemale": "মহিলা",
+
+  "alertsLimitsSubtitle": "আপনার স্ক্রিন টাইম সীমা এবং বিজ্ঞপ্তিগুলি পরিচালনা করুন",
+  
+  "applicationsSubtitle": "আপনার ট্র্যাক করা অ্যাপ্লিকেশনগুলি পরিচালনা করুন",
+  "applicationCount": "{count, plural, =1{1টি অ্যাপ্লিকেশন} other{{count}টি অ্যাপ্লিকেশন}}",
+  "@applicationCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "refresh": "রিফ্রেশ করুন",
+  "noApplicationsFound": "কোনো অ্যাপ্লিকেশন পাওয়া যায়নি",
+  "tryAdjustingFilters": "আপনার ফিল্টার সামঞ্জস্য করার চেষ্টা করুন",
+  "configureAppSettings": "অ্যাপ্লিকেশন সেটিংস কনফিগার করুন",
+  "behaviorSection": "আচরণ",
+  
+  "helpSubtitle": "{count, plural, =1{7টি বিভাগে 1টি প্রশ্ন} other{7টি বিভাগে {count}টি প্রশ্ন}}",
+  "@helpSubtitle": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "searchForHelp": "সাহায্য খুঁজুন...",
+  "quickNavGeneral": "সাধারণ",
+  "quickNavApps": "অ্যাপস",
+  "quickNavReports": "রিপোর্ট",
+  "quickNavFocus": "ফোকাস",
+  "noResultsFound": "কোনো ফলাফল পাওয়া যায়নি",
+  "tryDifferentKeywords": "বিভিন্ন কীওয়ার্ড দিয়ে খোঁজার চেষ্টা করুন",
+  "clearSearch": "অনুসন্ধান সাফ করুন",
+  
+  "greetingMorning": "সুপ্রভাত! এখানে আপনার কার্যকলাপের সারাংশ রয়েছে।",
+  "greetingAfternoon": "শুভ বিকাল! এখানে আপনার কার্যকলাপের সারাংশ রয়েছে।",
+  "greetingEvening": "শুভ সন্ধ্যা! এখানে আপনার কার্যকলাপের সারাংশ রয়েছে।",
+  "screenTimeProgress": "স্ক্রীন\nসময়",
+  "productiveScoreProgress": "উৎপাদনশীল\nস্কোর",
+  
+  "sectionLabel": "{title} বিভাগ",
+  "@sectionLabel": {
+    "placeholders": {
+      "title": {
+        "type": "String"
+      }
+    }
+  },
+  
+  "focusModeSubtitle": "মনোযোগী থাকুন, উৎপাদনশীল হন",
+  "thisWeek": "এই সপ্তাহ",
+  "sessions": "সেশন",
+  "totalTime": "মোট সময়",
+  "avgLength": "গড় দৈর্ঘ্য",
+  "focusTime": "ফোকাস টাইম",
+  "paused": "বিরতি দেওয়া হয়েছে",
+  "shortBreakStatus": "সংক্ষিপ্ত বিরতি",
+  "longBreakStatus": "দীর্ঘ বিরতি",
+  "readyToFocus": "ফোকাস করার জন্য প্রস্তুত",
+  "focus": "ফোকাস",
+  "shortBreakLabel": "সংক্ষিপ্ত বিরতি",
+  "longBreakLabel": "দীর্ঘ বিরতি",
+  "restartSession": "সেশন পুনরায় শুরু করুন",
+  "skipToNext": "পরবর্তীতে যান",
+  "settings": "সেটিংস",
+  "sessionsCompleted": "{count, plural, =1{1টি সেশন সম্পন্ন} other{{count}টি সেশন সম্পন্ন}}",
+  "@sessionsCompleted": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "focusModePreset": "ফোকাস মোড প্রিসেট",
+  "focusDuration": "ফোকাস সময়কাল",
+  "minutesFormat": "{minutes} মিনিট",
+  "@minutesFormat": {
+    "placeholders": {
+      "minutes": {
+        "type": "int"
+      }
+    }
+  },
+  "shortBreakDuration": "সংক্ষিপ্ত বিরতি",
+  "longBreakDuration": "দীর্ঘ বিরতি",
+  "enableSounds": "শব্দ সক্ষম করুন",
+  "focus_mode_this_week": "এই সপ্তাহ",
+  "focus_mode_best_day": "সেরা দিন",
+  "focus_mode_sessions_count": "{count}টি সেশন",
+  "focus_mode_no_data_yet": "এখনও কোনো ডেটা নেই",
+  "chart_current": "বর্তমান",
+  "chart_previous": "পূর্ববর্তী",
+  "permission_error": "অনুমতি ত্রুটি",
+  "notification_permission_denied": "বিজ্ঞপ্তি অনুমতি প্রত্যাখ্যাত",
+  "notification_permission_denied_message": "ScreenTime আপনাকে সতর্কতা এবং অনুস্মারক পাঠাতে বিজ্ঞপ্তি অনুমতির প্রয়োজন।\n\nআপনি কি বিজ্ঞপ্তি সক্ষম করতে সিস্টেম সেটিংস খুলতে চান?",
+  "notification_permission_denied_hint": "ScreenTime এর জন্য বিজ্ঞপ্তি সক্ষম করতে সিস্টেম সেটিংস খুলুন।",
+  "notification_permission_required": "বিজ্ঞপ্তি অনুমতি প্রয়োজন",
+  "notification_permission_required_message": "ScreenTime আপনাকে বিজ্ঞপ্তি পাঠাতে অনুমতির প্রয়োজন।",
+  "cancel": "বাতিল করুন",
+  "open_settings": "সেটিংস খুলুন",
+  "allow_notifications": "বিজ্ঞপ্তি অনুমতি দিন",
+  "permission_allowed": "অনুমোদিত",
+  "permission_denied": "প্রত্যাখ্যাত",
+  "permission_not_set": "সেট করা নেই",
+  "on": "চালু",
+  "off": "বন্ধ",
+  "enable_notification_permission_hint": "সতর্কতা পেতে বিজ্ঞপ্তি অনুমতি সক্ষম করুন",
+  "minutes_format": "{minutes} মিনিট",
+  "chart_average": "গড়",
+  "chart_peak": "সর্বোচ্চ",
+  "chart_lowest": "সর্বনিম্ন",
+  "active": "সক্রিয়",
+  "disabled": "নিষ্ক্রিয়",
+  "advanced_options": "উন্নত বিকল্পসমূহ",
+  "sync_ready": "সিঙ্ক প্রস্তুত",
+  "success": "সফল!",
+  "error": "ত্রুটি",
+  "destructive_badge": "ধ্বংসাত্মক",
+  "recommended_badge": "প্রস্তাবিত",
+  "safe_badge": "নিরাপদ",
+  "overview": "সংক্ষিপ্ত বিবরণ",
+  "patterns": "প্যাটার্ন",
+  "apps": "অ্যাপ্স",
+  "sortAscending": "ঊর্ধ্বক্রমে সাজান",
+  "sortDescending": "অবরোহক্রমে সাজান",
+  "clearSearch": "অনুসন্ধান সাফ করুন",
+  "applicationsShowing": "{count}টি অ্যাপ্লিকেশন দেখানো হচ্ছে",
+  "totalTime": "মোট সময়",
+  "valueLabel": "মান: {value}",
+  "appsCount": "{count}টি অ্যাপ",
+  "categoriesCount": "{count}টি বিভাগ",
+  "systemNotificationsDisabled": "সিস্টেম বিজ্ঞপ্তি নিষ্ক্রিয়। ফোকাস সতর্কতার জন্য সিস্টেম সেটিংসে সেগুলি সক্ষম করুন।",
+  "openSystemSettings": "সিস্টেম সেটিংস খুলুন",
+  "appNotificationsDisabled": "অ্যাপ সেটিংসে বিজ্ঞপ্তি নিষ্ক্রিয়। ফোকাস সতর্কতা পেতে সেগুলি সক্ষম করুন।",
+  "goToSettings": "সেটিংসে যান",
+  "focusModeNotificationsDisabled": "ফোকাস মোড বিজ্ঞপ্তি নিষ্ক্রিয়। সেশন সতর্কতা পেতে সেগুলি সক্ষম করুন।",
+  "notificationsDisabled": "বিজ্ঞপ্তি নিষ্ক্রিয়",
+  "dontShowAgain": "আবার দেখাবেন না",
+  "systemSettingsRequired": "সিস্টেম সেটিংস প্রয়োজন",
+  "notificationsDisabledSystemLevel": "সিস্টেম স্তরে বিজ্ঞপ্তি নিষ্ক্রিয়। সক্ষম করতে:",
+  "step1OpenSystemSettings": "1. সিস্টেম সেটিংস খুলুন (সিস্টেম পছন্দসমূহ)",
+  "step2GoToNotifications": "2. বিজ্ঞপ্তিতে যান",
+  "step3FindApp": "3. TimeMark খুঁজুন এবং নির্বাচন করুন",
+  "step4EnableNotifications": "4. \"বিজ্ঞপ্তির অনুমতি দিন\" সক্ষম করুন",
+  "returnToAppMessage": "তারপর এই অ্যাপে ফিরে আসুন এবং বিজ্ঞপ্তি কাজ করবে।",
+  "gotIt": "বুঝেছি",
+  "noSessionsYet": "এখনও কোনো সেশন নেই",
+  "applicationsTracked": "{count}টি অ্যাপ্লিকেশন ট্র্যাক করা হয়েছে",
+  "applicationHeader": "অ্যাপ্লিকেশন",
+  "currentUsageHeader": "বর্তমান ব্যবহার",
+  "dailyLimitHeader": "দৈনিক সীমা",
+  "edit": "সম্পাদনা করুন",
+  "showPopupNotifications": "পপআপ বিজ্ঞপ্তি দেখান",
+  "moreFrequentReminders": "আরও ঘন ঘন অনুস্মারক",
+  "playSoundWithAlerts": "সতর্কতার সাথে শব্দ বাজান",
+  "systemTrayNotifications": "সিস্টেম ট্রে বিজ্ঞপ্তি",
+  "screenTimeUsed": "{current} / {limit} ব্যবহৃত",
+  "todaysScreenTime": "আজকের স্ক্রিন টাইম",
+  "activeLimits": "সক্রিয় সীমা",
+  "nearLimit": "সীমার কাছে",
+  "colorPickerSpectrum": "বর্ণালী",
+  "colorPickerPresets": "প্রিসেট",
+  "colorPickerSliders": "স্লাইডার",
+  "colorPickerBasicColors": "মৌলিক রং",
+  "colorPickerExtendedPalette": "বর্ধিত প্যালেট",
+  "colorPickerRed": "লাল",
+  "colorPickerGreen": "সবুজ",
+  "colorPickerBlue": "নীল",
+  "colorPickerHue": "রঙের ছটা",
+  "colorPickerSaturation": "সম্পৃক্ততা",
+  "colorPickerBrightness": "উজ্জ্বলতা",
+  "colorPickerHexColor": "হেক্স রং",
+  "colorPickerHexPlaceholder": "RRGGBB",
+  "colorPickerRGB": "RGB",
+  "cancel": "বাতিল",
+  "select": "নির্বাচন করুন",
+  "themeCustomization": "থিম কাস্টমাইজেশন",
+  "chooseThemePreset": "একটি থিম প্রিসেট চয়ন করুন",
+  "yourCustomThemes": "আপনার কাস্টম থিম",
+  "createCustomTheme": "কাস্টম থিম তৈরি করুন",
+  "designOwnColorScheme": "আপনার নিজস্ব রঙ পরিকল্পনা ডিজাইন করুন",
+  "newTheme": "নতুন থিম",
+  "editCurrentTheme": "বর্তমান থিম সম্পাদনা করুন",
+  "customizeColorsFor": "{themeName} এর জন্য রং কাস্টমাইজ করুন",
+  "@customizeColorsFor": {
+    "placeholders": {
+      "themeName": {
+        "type": "String"
+      }
+    }
+  },
+  "edit": "সম্পাদনা করুন",
+  "customThemeNumber": "কাস্টম থিম {number}",
+  "@customThemeNumber": {
+    "placeholders": {
+      "number": {
+        "type": "int"
+      }
+    }
+  },
+  "deleteCustomTheme": "কাস্টম থিম মুছুন",
+  "confirmDeleteTheme": "আপনি কি নিশ্চিত যে আপনি \"{themeName}\" মুছতে চান?",
+  "@confirmDeleteTheme": {
+    "placeholders": {
+      "themeName": {
+        "type": "String"
+      }
+    }
+  },
+  "delete": "মুছুন",
+  "customizeTheme": "থিম কাস্টমাইজ করুন",
+  "preview": "প্রিভিউ",
+  "themeName": "থিমের নাম",
+  "brandColors": "ব্র্যান্ড রং",
+  "lightTheme": "হালকা থিম",
+  "darkTheme": "গাঢ় থিম",
+  "reset": "রিসেট করুন",
+  "saveTheme": "থিম সংরক্ষণ করুন",
+  "customTheme": "কাস্টম থিম",
+  "primaryColors": "প্রাথমিক রং",
+  "primaryColorsDesc": "পুরো অ্যাপ জুড়ে ব্যবহৃত মূল উচ্চারণ রং",
+  "primaryAccent": "প্রাথমিক উচ্চারণ",
+  "primaryAccentDesc": "মূল ব্র্যান্ড রং, বোতাম, লিংক",
+  "secondaryAccent": "গৌণ উচ্চারণ",
+  "secondaryAccentDesc": "গ্রেডিয়েন্টের জন্য পরিপূরক উচ্চারণ",
+  "semanticColors": "অর্থগত রং",
+  "semanticColorsDesc": "অর্থ এবং অবস্থা প্রকাশ করে এমন রং",
+  "successColor": "সফলতার রং",
+  "successColorDesc": "ইতিবাচক ক্রিয়া, নিশ্চিতকরণ",
+  "warningColor": "সতর্কতার রং",
+  "warningColorDesc": "সতর্কতা, মুলতুবি অবস্থা",
+  "errorColor": "ত্রুটির রং",
+  "errorColorDesc": "ত্রুটি, ধ্বংসাত্মক ক্রিয়া",
+  "backgroundColors": "পটভূমির রং",
+  "backgroundColorsLightDesc": "হালকা মোডের জন্য মূল পটভূমি পৃষ্ঠ",
+  "backgroundColorsDarkDesc": "গাঢ় মোডের জন্য মূল পটভূমি পৃষ্ঠ",
+  "background": "পটভূমি",
+  "backgroundDesc": "মূল অ্যাপ পটভূমি",
+  "surface": "পৃষ্ঠ",
+  "surfaceDesc": "কার্ড, ডায়ালগ, উঁচু পৃষ্ঠ",
+  "surfaceSecondary": "গৌণ পৃষ্ঠ",
+  "surfaceSecondaryDesc": "গৌণ কার্ড, সাইডবার",
+  "border": "সীমানা",
+  "borderDesc": "বিভাজক, কার্ড সীমানা",
+  "textColors": "টেক্সট রং",
+  "textColorsLightDesc": "হালকা মোডের জন্য টাইপোগ্রাফি রং",
+  "textColorsDarkDesc": "গাঢ় মোডের জন্য টাইপোগ্রাফি রং",
+  "textPrimary": "প্রাথমিক টেক্সট",
+  "textPrimaryDesc": "শিরোনাম, গুরুত্বপূর্ণ টেক্সট",
+  "textSecondary": "গৌণ টেক্সট",
+  "textSecondaryDesc": "বিবরণ, ক্যাপশন",
+  "previewMode": "প্রিভিউ: {mode} মোড",
+  "@previewMode": {
+    "placeholders": {
+      "mode": {
+        "type": "String"
+      }
+    }
+  },
+  "dark": "গাঢ়",
+  "light": "হালকা",
+  "sampleCardTitle": "নমুনা কার্ড শিরোনাম",
+  "sampleSecondaryText": "এটি নীচে প্রদর্শিত গৌণ টেক্সট।",
+  "primary": "প্রাথমিক",
+  "success": "সফলতা",
+  "error": "ত্রুটি",
+  "secondary": "গৌণ",
+  "warning": "সতর্কতা"
 }

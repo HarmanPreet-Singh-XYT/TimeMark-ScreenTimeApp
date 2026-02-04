@@ -351,7 +351,7 @@ class _FocusModeState extends State<FocusMode>
                 ),
                 const SizedBox(height: 2),
                 Text(
-                  'Stay focused, be productive',
+                  l10n.focusModeSubtitle,
                   style: FluentTheme.of(context).typography.caption?.copyWith(
                         color: FluentTheme.of(context)
                             .typography
@@ -427,19 +427,19 @@ class _FocusModeState extends State<FocusMode>
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              'This Week',
+              l10n.thisWeek,
               style: FluentTheme.of(context).typography.bodyStrong?.copyWith(
                     fontWeight: FontWeight.w600,
                   ),
             ),
             const SizedBox(height: 16),
-            _buildStatRow(
-                context, 'Sessions', '$totalSessions', FluentIcons.check_mark),
+            _buildStatRow(context, l10n.sessions, '$totalSessions',
+                FluentIcons.check_mark),
             const SizedBox(height: 12),
             _buildStatRow(
-                context, 'Total Time', '${totalMinutes}m', FluentIcons.clock),
+                context, l10n.totalTime, '${totalMinutes}m', FluentIcons.clock),
             const SizedBox(height: 12),
-            _buildStatRow(context, 'Avg Length', '${avgSessionLength}m',
+            _buildStatRow(context, l10n.avgLength, '${avgSessionLength}m',
                 FluentIcons.calculator),
           ],
         ),
@@ -806,13 +806,13 @@ class _MeterState extends State<Meter> with TickerProviderStateMixin {
   String _getStatusText(AppLocalizations l10n) {
     switch (_currentTimerState) {
       case TimerState.work:
-        return _isRunning ? 'Focus Time' : 'Paused';
+        return _isRunning ? l10n.focusTime : l10n.paused;
       case TimerState.shortBreak:
-        return _isRunning ? 'Short Break' : 'Paused';
+        return _isRunning ? l10n.shortBreakStatus : l10n.paused;
       case TimerState.longBreak:
-        return _isRunning ? 'Long Break' : 'Paused';
+        return _isRunning ? l10n.longBreakStatus : l10n.paused;
       case TimerState.idle:
-        return 'Ready to Focus';
+        return l10n.readyToFocus;
     }
   }
 
@@ -935,7 +935,7 @@ class _MeterState extends State<Meter> with TickerProviderStateMixin {
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         SessionChip(
-          label: 'Focus',
+          label: l10n.focus,
           isActive: _currentTimerState == TimerState.work ||
               _currentTimerState == TimerState.idle,
           color: const Color(0xFFFF5C50),
@@ -950,7 +950,7 @@ class _MeterState extends State<Meter> with TickerProviderStateMixin {
         ),
         const SizedBox(width: 8),
         SessionChip(
-          label: 'Short Break',
+          label: l10n.shortBreakLabel(5),
           isActive: _currentTimerState == TimerState.shortBreak,
           color: const Color(0xFF4CAF50),
           onTap: () {
@@ -963,7 +963,7 @@ class _MeterState extends State<Meter> with TickerProviderStateMixin {
         ),
         const SizedBox(width: 8),
         SessionChip(
-          label: 'Long Break',
+          label: l10n.longBreakLabel(15),
           isActive: _currentTimerState == TimerState.longBreak,
           color: const Color(0xFF42A5F5),
           onTap: () {
@@ -979,20 +979,21 @@ class _MeterState extends State<Meter> with TickerProviderStateMixin {
   }
 
   Widget _buildControlButtons(BuildContext context, Color timerColor) {
+    final l10n = AppLocalizations.of(context)!;
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         ControlButton(
           icon: FluentIcons.refresh,
           onPressed: _handleReloadPressed,
-          tooltip: 'Restart Session',
+          tooltip: l10n.restartSession,
         ),
         const SizedBox(width: 16),
 
         ControlButton(
           icon: FluentIcons.previous,
           onPressed: _resetAllSessions,
-          tooltip: 'Reset All',
+          tooltip: l10n.resetAll,
         ),
         const SizedBox(width: 20),
 
@@ -1010,14 +1011,14 @@ class _MeterState extends State<Meter> with TickerProviderStateMixin {
         ControlButton(
           icon: FluentIcons.next,
           onPressed: _handleSkipPressed,
-          tooltip: 'Skip to Next',
+          tooltip: l10n.skipToNext,
         ),
         const SizedBox(width: 16),
 
         ControlButton(
           icon: FluentIcons.settings,
           onPressed: () => _showSettingsDialog(context),
-          tooltip: 'Settings',
+          tooltip: l10n.settings,
         ),
       ],
     );
@@ -1028,7 +1029,7 @@ class _MeterState extends State<Meter> with TickerProviderStateMixin {
     final sessionsUntilLongBreak = 4;
     final currentCycleProgress =
         _timerService.completedSessions % sessionsUntilLongBreak;
-
+    final l10n = AppLocalizations.of(context)!;
     return Column(
       children: [
         Row(
@@ -1069,7 +1070,7 @@ class _MeterState extends State<Meter> with TickerProviderStateMixin {
         ),
         const SizedBox(height: 8),
         Text(
-          '${_timerService.completedSessions} sessions completed', // ← Use service counter
+          l10n.sessionsCompleted(_timerService.completedSessions),
           style: FluentTheme.of(context).typography.caption?.copyWith(
                 color: FluentTheme.of(context)
                     .typography
@@ -1169,7 +1170,7 @@ class _MeterState extends State<Meter> with TickerProviderStateMixin {
                 children: [
                   // Mode Selection
                   Text(
-                    'Focus Mode Preset',
+                    l10n.focusModePreset,
                     style: FluentTheme.of(context).typography.bodyStrong,
                   ),
                   const SizedBox(height: 8),
@@ -1216,9 +1217,10 @@ class _MeterState extends State<Meter> with TickerProviderStateMixin {
                   // Duration Settings
                   _buildSliderSetting(
                     context,
-                    label: 'Focus Duration',
+                    label: l10n.focusDuration,
                     value: dialogWorkDuration,
-                    displayValue: '${dialogWorkDuration.toInt()} min',
+                    displayValue:
+                        l10n.minutesFormat(dialogWorkDuration.toInt()),
                     min: 15,
                     max: 120,
                     divisions: 21,
@@ -1232,9 +1234,9 @@ class _MeterState extends State<Meter> with TickerProviderStateMixin {
 
                   _buildSliderSetting(
                     context,
-                    label: 'Short Break',
+                    label: l10n.shortBreakDuration,
                     value: dialogShortBreak,
-                    displayValue: '${dialogShortBreak.toInt()} min',
+                    displayValue: l10n.minutesFormat(dialogShortBreak.toInt()),
                     min: 1,
                     max: 15,
                     divisions: 14,
@@ -1248,9 +1250,9 @@ class _MeterState extends State<Meter> with TickerProviderStateMixin {
 
                   _buildSliderSetting(
                     context,
-                    label: 'Long Break',
+                    label: l10n.longBreakDuration,
                     value: dialogLongBreak,
-                    displayValue: '${dialogLongBreak.toInt()} min',
+                    displayValue: l10n.minutesFormat(dialogLongBreak.toInt()),
                     min: 5,
                     max: 60,
                     divisions: 11,
@@ -1284,7 +1286,7 @@ class _MeterState extends State<Meter> with TickerProviderStateMixin {
                         const SizedBox(height: 12),
                         _buildToggleOption(
                           context,
-                          label: "l10n.enableSounds",
+                          label: l10n.enableSounds,
                           value: dialogEnableSounds,
                           icon: FluentIcons.ringer,
                           onChanged: (value) =>

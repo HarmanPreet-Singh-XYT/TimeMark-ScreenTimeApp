@@ -1,4 +1,5 @@
 import 'package:fluent_ui/fluent_ui.dart';
+import 'package:screentime/l10n/app_localizations.dart';
 
 // Quick Stats Row
 class QuickStatsRow extends StatelessWidget {
@@ -17,24 +18,25 @@ class QuickStatsRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     final cards = [
       _StatChip(
         icon: FluentIcons.clock,
-        label: 'Today\'s Screen Time',
+        label: l10n.todaysScreenTime,
         value: _formatDuration(totalScreenTime),
         color: const Color(0xFF3B82F6),
         lightBg: const Color(0xFFEFF6FF),
       ),
       _StatChip(
         icon: FluentIcons.shield,
-        label: 'Active Limits',
+        label: l10n.activeLimits,
         value: appsWithLimits.toString(),
         color: const Color(0xFF10B981),
         lightBg: const Color(0xFFECFDF5),
       ),
       _StatChip(
         icon: FluentIcons.warning,
-        label: 'Near Limit',
+        label: l10n.nearLimit,
         value: appsNearLimit.toString(),
         color: appsNearLimit > 0
             ? const Color(0xFFF59E0B)

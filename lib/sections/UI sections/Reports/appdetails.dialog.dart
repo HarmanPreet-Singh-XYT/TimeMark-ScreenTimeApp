@@ -279,9 +279,9 @@ class AppDetailsDialogState extends State<AppDetailsDialog> {
   Widget _buildTabBar(
       BuildContext context, AppLocalizations l10n, FluentThemeData theme) {
     final tabs = [
-      ("l10n.overview", FluentIcons.view_dashboard),
+      (l10n.overview, FluentIcons.view_dashboard),
       (l10n.usageOverPastWeek, FluentIcons.chart),
-      ("l10n.patterns", FluentIcons.insights),
+      (l10n.patterns, FluentIcons.insights),
     ];
 
     return Container(

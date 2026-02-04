@@ -713,7 +713,7 @@ class AppLocalizationsId extends AppLocalizations {
   String get add => 'Tambah';
 
   @override
-  String get error => 'Kesalahan';
+  String get error => 'Error';
 
   @override
   String get retry => 'Coba Lagi';
@@ -864,12 +864,12 @@ class AppLocalizationsId extends AppLocalizations {
 
   @override
   String shortBreakLabel(int minutes) {
-    return 'Istirahat Pendek: $minutes menit';
+    return 'Istirahat Pendek';
   }
 
   @override
   String longBreakLabel(int minutes) {
-    return 'Istirahat Panjang: $minutes menit';
+    return 'Istirahat Panjang';
   }
 
   @override
@@ -1687,31 +1687,657 @@ class AppLocalizationsId extends AppLocalizations {
   }
 
   @override
-  String get themeLight => 'Light';
+  String get themeLight => 'Terang';
 
   @override
-  String get themeDark => 'Dark';
+  String get themeDark => 'Gelap';
 
   @override
-  String get themeSystem => 'System';
+  String get themeSystem => 'Sistem';
 
   @override
   String get themeTitle => 'Tema';
 
   @override
-  String get themeDescription =>
-      'Tema warna aplikasi (Perubahan Memerlukan Mulai Ulang)';
+  String get themeDescription => 'Tema warna aplikasi';
 
   @override
-  String get voiceGenderTitle => 'Voice Gender';
+  String get voiceGenderTitle => 'Jenis Kelamin Suara';
 
   @override
   String get voiceGenderDescription =>
-      'Choose the voice gender for timer notifications';
+      'Pilih jenis kelamin suara untuk notifikasi timer';
 
   @override
-  String get voiceGenderMale => 'Male';
+  String get voiceGenderMale => 'Pria';
 
   @override
-  String get voiceGenderFemale => 'Female';
+  String get voiceGenderFemale => 'Wanita';
+
+  @override
+  String get alertsLimitsSubtitle =>
+      'Kelola batas waktu layar dan notifikasi Anda';
+
+  @override
+  String get applicationsSubtitle => 'Kelola aplikasi yang dilacak';
+
+  @override
+  String applicationCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count aplikasi',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get noApplicationsFound => 'Tidak ada aplikasi ditemukan';
+
+  @override
+  String get tryAdjustingFilters => 'Coba sesuaikan filter Anda';
+
+  @override
+  String get configureAppSettings => 'Konfigurasi pengaturan aplikasi';
+
+  @override
+  String get behaviorSection => 'Perilaku';
+
+  @override
+  String helpSubtitle(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count pertanyaan di 7 kategori',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get searchForHelp => 'Cari bantuan...';
+
+  @override
+  String get quickNavGeneral => 'Umum';
+
+  @override
+  String get quickNavApps => 'Aplikasi';
+
+  @override
+  String get quickNavReports => 'Laporan';
+
+  @override
+  String get quickNavFocus => 'Fokus';
+
+  @override
+  String get noResultsFound => 'Tidak ada hasil ditemukan';
+
+  @override
+  String get tryDifferentKeywords => 'Coba cari dengan kata kunci yang berbeda';
+
+  @override
+  String get clearSearch => 'Hapus Pencarian';
+
+  @override
+  String get greetingMorning => 'Selamat pagi! Ini ringkasan aktivitas Anda.';
+
+  @override
+  String get greetingAfternoon =>
+      'Selamat siang! Ini ringkasan aktivitas Anda.';
+
+  @override
+  String get greetingEvening => 'Selamat malam! Ini ringkasan aktivitas Anda.';
+
+  @override
+  String get screenTimeProgress => 'Waktu\nLayar';
+
+  @override
+  String get productiveScoreProgress => 'Skor\nProduktivitas';
+
+  @override
+  String get focusModeSubtitle => 'Tetap fokus, jadilah produktif';
+
+  @override
+  String get thisWeek => 'Minggu Ini';
+
+  @override
+  String get sessions => 'Sesi';
+
+  @override
+  String get totalTime => 'Total Waktu';
+
+  @override
+  String get avgLength => 'Rata-rata Durasi';
+
+  @override
+  String get focusTime => 'Waktu Fokus';
+
+  @override
+  String get paused => 'Dijeda';
+
+  @override
+  String get shortBreakStatus => 'Istirahat Pendek';
+
+  @override
+  String get longBreakStatus => 'Istirahat Panjang';
+
+  @override
+  String get readyToFocus => 'Siap untuk Fokus';
+
+  @override
+  String get focus => 'Fokus';
+
+  @override
+  String get restartSession => 'Mulai Ulang Sesi';
+
+  @override
+  String get skipToNext => 'Lompat ke Berikutnya';
+
+  @override
+  String get settings => 'Pengaturan';
+
+  @override
+  String sessionsCompleted(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count sesi selesai',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get focusModePreset => 'Preset Mode Fokus';
+
+  @override
+  String get focusDuration => 'Durasi Fokus';
+
+  @override
+  String minutesFormat(int minutes) {
+    return '$minutes mnt';
+  }
+
+  @override
+  String get shortBreakDuration => 'Istirahat Pendek';
+
+  @override
+  String get longBreakDuration => 'Istirahat Panjang';
+
+  @override
+  String get enableSounds => 'Aktifkan Suara';
+
+  @override
+  String get focus_mode_this_week => 'Minggu Ini';
+
+  @override
+  String get focus_mode_best_day => 'Hari Terbaik';
+
+  @override
+  String focus_mode_sessions_count(int count) {
+    return '$count sesi';
+  }
+
+  @override
+  String get focus_mode_no_data_yet => 'Belum ada data';
+
+  @override
+  String get chart_current => 'Saat Ini';
+
+  @override
+  String get chart_previous => 'Sebelumnya';
+
+  @override
+  String get permission_error => 'Kesalahan Izin';
+
+  @override
+  String get notification_permission_denied => 'Izin Notifikasi Ditolak';
+
+  @override
+  String get notification_permission_denied_message =>
+      'ScreenTime memerlukan izin notifikasi untuk mengirimkan peringatan dan pengingat.\n\nApakah Anda ingin membuka Pengaturan Sistem untuk mengaktifkan notifikasi?';
+
+  @override
+  String get notification_permission_denied_hint =>
+      'Buka Pengaturan Sistem untuk mengaktifkan notifikasi ScreenTime.';
+
+  @override
+  String get notification_permission_required => 'Izin Notifikasi Diperlukan';
+
+  @override
+  String get notification_permission_required_message =>
+      'ScreenTime memerlukan izin untuk mengirimkan notifikasi kepada Anda.';
+
+  @override
+  String get open_settings => 'Buka Pengaturan';
+
+  @override
+  String get allow_notifications => 'Izinkan Notifikasi';
+
+  @override
+  String get permission_allowed => 'Diizinkan';
+
+  @override
+  String get permission_denied => 'Ditolak';
+
+  @override
+  String get permission_not_set => 'Tidak Diatur';
+
+  @override
+  String get on => 'Aktif';
+
+  @override
+  String get off => 'Nonaktif';
+
+  @override
+  String get enable_notification_permission_hint =>
+      'Aktifkan izin notifikasi untuk menerima peringatan';
+
+  @override
+  String minutes_format(int minutes) {
+    return '$minutes menit';
+  }
+
+  @override
+  String get chart_average => 'Rata-rata';
+
+  @override
+  String get chart_peak => 'Puncak';
+
+  @override
+  String get chart_lowest => 'Terendah';
+
+  @override
+  String get active => 'Aktif';
+
+  @override
+  String get disabled => 'Dinonaktifkan';
+
+  @override
+  String get advanced_options => 'Opsi Lanjutan';
+
+  @override
+  String get sync_ready => 'Sinkronisasi Siap';
+
+  @override
+  String get success => 'Sukses';
+
+  @override
+  String get destructive_badge => 'Destruktif';
+
+  @override
+  String get recommended_badge => 'Direkomendasikan';
+
+  @override
+  String get safe_badge => 'Aman';
+
+  @override
+  String get overview => 'Ikhtisar';
+
+  @override
+  String get patterns => 'Pola';
+
+  @override
+  String get apps => 'Aplikasi';
+
+  @override
+  String get sortAscending => 'Urutkan Naik';
+
+  @override
+  String get sortDescending => 'Urutkan Turun';
+
+  @override
+  String applicationsShowing(int count) {
+    return '$count aplikasi ditampilkan';
+  }
+
+  @override
+  String valueLabel(String value) {
+    return 'Nilai: $value';
+  }
+
+  @override
+  String appsCount(int count) {
+    return '$count aplikasi';
+  }
+
+  @override
+  String categoriesCount(int count) {
+    return '$count kategori';
+  }
+
+  @override
+  String get systemNotificationsDisabled =>
+      'Notifikasi sistem dinonaktifkan. Aktifkan di Pengaturan Sistem untuk peringatan fokus.';
+
+  @override
+  String get openSystemSettings => 'Buka Pengaturan Sistem';
+
+  @override
+  String get appNotificationsDisabled =>
+      'Notifikasi dinonaktifkan di pengaturan aplikasi. Aktifkan untuk menerima peringatan fokus.';
+
+  @override
+  String get goToSettings => 'Buka Pengaturan';
+
+  @override
+  String get focusModeNotificationsDisabled =>
+      'Notifikasi mode fokus dinonaktifkan. Aktifkan untuk menerima peringatan sesi.';
+
+  @override
+  String get notificationsDisabled => 'Notifikasi Dinonaktifkan';
+
+  @override
+  String get dontShowAgain => 'Jangan tampilkan lagi';
+
+  @override
+  String get systemSettingsRequired => 'Pengaturan Sistem Diperlukan';
+
+  @override
+  String get notificationsDisabledSystemLevel =>
+      'Notifikasi dinonaktifkan di tingkat sistem. Untuk mengaktifkan:';
+
+  @override
+  String get step1OpenSystemSettings =>
+      '1. Buka Pengaturan Sistem (Preferensi Sistem)';
+
+  @override
+  String get step2GoToNotifications => '2. Buka Notifikasi';
+
+  @override
+  String get step3FindApp => '3. Cari dan pilih TimeMark';
+
+  @override
+  String get step4EnableNotifications => '4. Aktifkan \"Izinkan notifikasi\"';
+
+  @override
+  String get returnToAppMessage =>
+      'Kemudian kembali ke aplikasi ini dan notifikasi akan berfungsi.';
+
+  @override
+  String get gotIt => 'Mengerti';
+
+  @override
+  String get noSessionsYet => 'Belum ada sesi';
+
+  @override
+  String applicationsTracked(int count) {
+    return '$count aplikasi dilacak';
+  }
+
+  @override
+  String get applicationHeader => 'Aplikasi';
+
+  @override
+  String get currentUsageHeader => 'Penggunaan Saat Ini';
+
+  @override
+  String get dailyLimitHeader => 'Batas Harian';
+
+  @override
+  String get edit => 'Edit';
+
+  @override
+  String get showPopupNotifications => 'Tampilkan notifikasi pop-up';
+
+  @override
+  String get moreFrequentReminders => 'Pengingat lebih sering';
+
+  @override
+  String get playSoundWithAlerts => 'Putar suara dengan peringatan';
+
+  @override
+  String get systemTrayNotifications => 'Notifikasi system tray';
+
+  @override
+  String screenTimeUsed(String current, String limit) {
+    return '$current / $limit digunakan';
+  }
+
+  @override
+  String get todaysScreenTime => 'Waktu Layar Hari Ini';
+
+  @override
+  String get activeLimits => 'Batas Aktif';
+
+  @override
+  String get nearLimit => 'Mendekati Batas';
+
+  @override
+  String get colorPickerSpectrum => 'Spektrum';
+
+  @override
+  String get colorPickerPresets => 'Preset';
+
+  @override
+  String get colorPickerSliders => 'Penggeser';
+
+  @override
+  String get colorPickerBasicColors => 'Warna Dasar';
+
+  @override
+  String get colorPickerExtendedPalette => 'Palet yang Diperluas';
+
+  @override
+  String get colorPickerRed => 'Merah';
+
+  @override
+  String get colorPickerGreen => 'Hijau';
+
+  @override
+  String get colorPickerBlue => 'Biru';
+
+  @override
+  String get colorPickerHue => 'Rona';
+
+  @override
+  String get colorPickerSaturation => 'Saturasi';
+
+  @override
+  String get colorPickerBrightness => 'Kecerahan';
+
+  @override
+  String get colorPickerHexColor => 'Warna Heksadesimal';
+
+  @override
+  String get colorPickerHexPlaceholder => 'RRGGBB';
+
+  @override
+  String get colorPickerRGB => 'RGB';
+
+  @override
+  String get select => 'Pilih';
+
+  @override
+  String get themeCustomization => 'Kustomisasi Tema';
+
+  @override
+  String get chooseThemePreset => 'Pilih Preset Tema';
+
+  @override
+  String get yourCustomThemes => 'Tema Kustom Anda';
+
+  @override
+  String get createCustomTheme => 'Buat Tema Kustom';
+
+  @override
+  String get designOwnColorScheme => 'Rancang skema warna Anda sendiri';
+
+  @override
+  String get newTheme => 'Tema Baru';
+
+  @override
+  String get editCurrentTheme => 'Edit Tema Saat Ini';
+
+  @override
+  String customizeColorsFor(String themeName) {
+    return 'Sesuaikan warna untuk $themeName';
+  }
+
+  @override
+  String customThemeNumber(int number) {
+    return 'Tema Kustom $number';
+  }
+
+  @override
+  String get deleteCustomTheme => 'Hapus Tema Kustom';
+
+  @override
+  String confirmDeleteTheme(String themeName) {
+    return 'Apakah Anda yakin ingin menghapus \"$themeName\"?';
+  }
+
+  @override
+  String get delete => 'Hapus';
+
+  @override
+  String get customizeTheme => 'Sesuaikan Tema';
+
+  @override
+  String get preview => 'Pratinjau';
+
+  @override
+  String get themeName => 'Nama Tema';
+
+  @override
+  String get brandColors => 'Warna Merek';
+
+  @override
+  String get lightTheme => 'Tema Terang';
+
+  @override
+  String get darkTheme => 'Tema Gelap';
+
+  @override
+  String get reset => 'Atur Ulang';
+
+  @override
+  String get saveTheme => 'Simpan Tema';
+
+  @override
+  String get customTheme => 'Tema Kustom';
+
+  @override
+  String get primaryColors => 'Warna Utama';
+
+  @override
+  String get primaryColorsDesc =>
+      'Warna aksen utama yang digunakan di seluruh aplikasi';
+
+  @override
+  String get primaryAccent => 'Aksen Utama';
+
+  @override
+  String get primaryAccentDesc => 'Warna merek utama, tombol, tautan';
+
+  @override
+  String get secondaryAccent => 'Aksen Sekunder';
+
+  @override
+  String get secondaryAccentDesc => 'Aksen pelengkap untuk gradien';
+
+  @override
+  String get semanticColors => 'Warna Semantik';
+
+  @override
+  String get semanticColorsDesc => 'Warna yang menyampaikan makna dan status';
+
+  @override
+  String get successColor => 'Warna Sukses';
+
+  @override
+  String get successColorDesc => 'Tindakan positif, konfirmasi';
+
+  @override
+  String get warningColor => 'Warna Peringatan';
+
+  @override
+  String get warningColorDesc => 'Kehati-hatian, status tertunda';
+
+  @override
+  String get errorColor => 'Warna Error';
+
+  @override
+  String get errorColorDesc => 'Kesalahan, tindakan destruktif';
+
+  @override
+  String get backgroundColors => 'Warna Latar Belakang';
+
+  @override
+  String get backgroundColorsLightDesc =>
+      'Permukaan latar belakang utama untuk mode terang';
+
+  @override
+  String get backgroundColorsDarkDesc =>
+      'Permukaan latar belakang utama untuk mode gelap';
+
+  @override
+  String get background => 'Latar Belakang';
+
+  @override
+  String get backgroundDesc => 'Latar belakang aplikasi utama';
+
+  @override
+  String get surface => 'Permukaan';
+
+  @override
+  String get surfaceDesc => 'Kartu, dialog, permukaan yang ditinggikan';
+
+  @override
+  String get surfaceSecondary => 'Permukaan Sekunder';
+
+  @override
+  String get surfaceSecondaryDesc => 'Kartu sekunder, sidebar';
+
+  @override
+  String get border => 'Batas';
+
+  @override
+  String get borderDesc => 'Pembagi, batas kartu';
+
+  @override
+  String get textColors => 'Warna Teks';
+
+  @override
+  String get textColorsLightDesc => 'Warna tipografi untuk mode terang';
+
+  @override
+  String get textColorsDarkDesc => 'Warna tipografi untuk mode gelap';
+
+  @override
+  String get textPrimary => 'Teks Utama';
+
+  @override
+  String get textPrimaryDesc => 'Judul, teks penting';
+
+  @override
+  String get textSecondary => 'Teks Sekunder';
+
+  @override
+  String get textSecondaryDesc => 'Deskripsi, keterangan';
+
+  @override
+  String previewMode(String mode) {
+    return 'Pratinjau: Mode $mode';
+  }
+
+  @override
+  String get dark => 'Gelap';
+
+  @override
+  String get light => 'Terang';
+
+  @override
+  String get sampleCardTitle => 'Judul Kartu Contoh';
+
+  @override
+  String get sampleSecondaryText =>
+      'Ini adalah teks sekunder yang muncul di bawah.';
+
+  @override
+  String get primary => 'Utama';
+
+  @override
+  String get secondary => 'Sekunder';
+
+  @override
+  String get warning => 'Peringatan';
 }

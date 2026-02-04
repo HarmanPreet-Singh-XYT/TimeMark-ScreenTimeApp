@@ -1335,5 +1335,282 @@
   "timeFormatSeconds": "{seconds}dtk",
   "timeFormatMinute": "1 mnt",
   "timeFormatMinutes": "{minutes} mnt",
-  "timeFormatMinutesSeconds": "{minutes} mnt {seconds}dtk"
+  "timeFormatMinutesSeconds": "{minutes} mnt {seconds}dtk",
+  "alertsLimitsSubtitle": "Kelola batas waktu layar dan notifikasi Anda",
+  "themeLight": "Terang",
+  "themeDark": "Gelap",
+  "themeSystem": "Sistem",
+  "themeTitle": "Tema",
+  "themeDescription": "Tema warna aplikasi",
+  "voiceGenderTitle": "Jenis Kelamin Suara",
+  "voiceGenderDescription": "Pilih jenis kelamin suara untuk notifikasi timer",
+  "voiceGenderMale": "Pria",
+  "voiceGenderFemale": "Wanita",
+
+  "applicationsSubtitle": "Kelola aplikasi yang dilacak",
+  "applicationCount": "{count, plural, other{{count} aplikasi}}",
+  "@applicationCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "refresh": "Segarkan",
+  "noApplicationsFound": "Tidak ada aplikasi ditemukan",
+  "tryAdjustingFilters": "Coba sesuaikan filter Anda",
+  "configureAppSettings": "Konfigurasi pengaturan aplikasi",
+  "behaviorSection": "Perilaku",
+  
+  "helpSubtitle": "{count, plural, other{{count} pertanyaan di 7 kategori}}",
+  "@helpSubtitle": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "searchForHelp": "Cari bantuan...",
+  "quickNavGeneral": "Umum",
+  "quickNavApps": "Aplikasi",
+  "quickNavReports": "Laporan",
+  "quickNavFocus": "Fokus",
+  "noResultsFound": "Tidak ada hasil ditemukan",
+  "tryDifferentKeywords": "Coba cari dengan kata kunci yang berbeda",
+  "clearSearch": "Hapus pencarian",
+  
+  "greetingMorning": "Selamat pagi! Ini ringkasan aktivitas Anda.",
+  "greetingAfternoon": "Selamat siang! Ini ringkasan aktivitas Anda.",
+  "greetingEvening": "Selamat malam! Ini ringkasan aktivitas Anda.",
+  "screenTimeProgress": "Waktu\nLayar",
+  "productiveScoreProgress": "Skor\nProduktivitas",
+  
+  "sectionLabel": "Bagian {title}",
+  "@sectionLabel": {
+    "placeholders": {
+      "title": {
+        "type": "String"
+      }
+    }
+  },
+  
+  "focusModeSubtitle": "Tetap fokus, jadilah produktif",
+  "thisWeek": "Minggu Ini",
+  "sessions": "Sesi",
+  "totalTime": "Total Waktu",
+  "avgLength": "Rata-rata Durasi",
+  "focusTime": "Waktu Fokus",
+  "paused": "Dijeda",
+  "shortBreakStatus": "Istirahat Pendek",
+  "longBreakStatus": "Istirahat Panjang",
+  "readyToFocus": "Siap untuk Fokus",
+  "focus": "Fokus",
+  "shortBreakLabel": "Istirahat Pendek",
+  "longBreakLabel": "Istirahat Panjang",
+  "restartSession": "Mulai Ulang Sesi",
+  "skipToNext": "Lompat ke Berikutnya",
+  "settings": "Pengaturan",
+  "sessionsCompleted": "{count, plural, other{{count} sesi selesai}}",
+  "@sessionsCompleted": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "focusModePreset": "Preset Mode Fokus",
+  "focusDuration": "Durasi Fokus",
+  "minutesFormat": "{minutes} mnt",
+  "@minutesFormat": {
+    "placeholders": {
+      "minutes": {
+        "type": "int"
+      }
+    }
+  },
+  "shortBreakDuration": "Istirahat Pendek",
+  "longBreakDuration": "Istirahat Panjang",
+  "enableSounds": "Aktifkan Suara",
+  "focus_mode_this_week": "Minggu Ini",
+  "focus_mode_best_day": "Hari Terbaik",
+  "focus_mode_sessions_count": "{count} sesi",
+  "focus_mode_no_data_yet": "Belum ada data",
+  "chart_current": "Saat Ini",
+  "chart_previous": "Sebelumnya",
+  "permission_error": "Kesalahan Izin",
+  "notification_permission_denied": "Izin Notifikasi Ditolak",
+  "notification_permission_denied_message": "ScreenTime memerlukan izin notifikasi untuk mengirimkan peringatan dan pengingat.\n\nApakah Anda ingin membuka Pengaturan Sistem untuk mengaktifkan notifikasi?",
+  "notification_permission_denied_hint": "Buka Pengaturan Sistem untuk mengaktifkan notifikasi ScreenTime.",
+  "notification_permission_required": "Izin Notifikasi Diperlukan",
+  "notification_permission_required_message": "ScreenTime memerlukan izin untuk mengirimkan notifikasi kepada Anda.",
+  "cancel": "Batal",
+  "open_settings": "Buka Pengaturan",
+  "allow_notifications": "Izinkan Notifikasi",
+  "permission_allowed": "Diizinkan",
+  "permission_denied": "Ditolak",
+  "permission_not_set": "Tidak Diatur",
+  "on": "Aktif",
+  "off": "Nonaktif",
+  "enable_notification_permission_hint": "Aktifkan izin notifikasi untuk menerima peringatan",
+  "minutes_format": "{minutes} menit",
+  "chart_average": "Rata-rata",
+  "chart_peak": "Puncak",
+  "chart_lowest": "Terendah",
+  "active": "Aktif",
+  "disabled": "Dinonaktifkan",
+  "advanced_options": "Opsi Lanjutan",
+  "sync_ready": "Sinkronisasi Siap",
+  "success": "Berhasil!",
+  "error": "Kesalahan",
+  "destructive_badge": "Destruktif",
+  "recommended_badge": "Direkomendasikan",
+  "safe_badge": "Aman",
+  "overview": "Ikhtisar",
+  "patterns": "Pola",
+  "apps": "Aplikasi",
+  "sortAscending": "Urutkan Naik",
+  "sortDescending": "Urutkan Turun",
+  "clearSearch": "Hapus Pencarian",
+  "applicationsShowing": "{count} aplikasi ditampilkan",
+  "totalTime": "Total Waktu",
+  "valueLabel": "Nilai: {value}",
+  "appsCount": "{count} aplikasi",
+  "categoriesCount": "{count} kategori",
+  "systemNotificationsDisabled": "Notifikasi sistem dinonaktifkan. Aktifkan di Pengaturan Sistem untuk peringatan fokus.",
+  "openSystemSettings": "Buka Pengaturan Sistem",
+  "appNotificationsDisabled": "Notifikasi dinonaktifkan di pengaturan aplikasi. Aktifkan untuk menerima peringatan fokus.",
+  "goToSettings": "Buka Pengaturan",
+  "focusModeNotificationsDisabled": "Notifikasi mode fokus dinonaktifkan. Aktifkan untuk menerima peringatan sesi.",
+  "notificationsDisabled": "Notifikasi Dinonaktifkan",
+  "dontShowAgain": "Jangan tampilkan lagi",
+  "systemSettingsRequired": "Pengaturan Sistem Diperlukan",
+  "notificationsDisabledSystemLevel": "Notifikasi dinonaktifkan di tingkat sistem. Untuk mengaktifkan:",
+  "step1OpenSystemSettings": "1. Buka Pengaturan Sistem (Preferensi Sistem)",
+  "step2GoToNotifications": "2. Buka Notifikasi",
+  "step3FindApp": "3. Cari dan pilih TimeMark",
+  "step4EnableNotifications": "4. Aktifkan \"Izinkan notifikasi\"",
+  "returnToAppMessage": "Kemudian kembali ke aplikasi ini dan notifikasi akan berfungsi.",
+  "gotIt": "Mengerti",
+  "noSessionsYet": "Belum ada sesi",
+  "applicationsTracked": "{count} aplikasi dilacak",
+  "applicationHeader": "Aplikasi",
+  "currentUsageHeader": "Penggunaan Saat Ini",
+  "dailyLimitHeader": "Batas Harian",
+  "edit": "Edit",
+  "showPopupNotifications": "Tampilkan notifikasi pop-up",
+  "moreFrequentReminders": "Pengingat lebih sering",
+  "playSoundWithAlerts": "Putar suara dengan peringatan",
+  "systemTrayNotifications": "Notifikasi system tray",
+  "screenTimeUsed": "{current} / {limit} digunakan",
+  "todaysScreenTime": "Waktu Layar Hari Ini",
+  "activeLimits": "Batas Aktif",
+  "nearLimit": "Mendekati Batas",
+  "colorPickerSpectrum": "Spektrum",
+  "colorPickerPresets": "Preset",
+  "colorPickerSliders": "Penggeser",
+  "colorPickerBasicColors": "Warna Dasar",
+  "colorPickerExtendedPalette": "Palet yang Diperluas",
+  "colorPickerRed": "Merah",
+  "colorPickerGreen": "Hijau",
+  "colorPickerBlue": "Biru",
+  "colorPickerHue": "Rona",
+  "colorPickerSaturation": "Saturasi",
+  "colorPickerBrightness": "Kecerahan",
+  "colorPickerHexColor": "Warna Heksadesimal",
+  "colorPickerHexPlaceholder": "RRGGBB",
+  "colorPickerRGB": "RGB",
+  "cancel": "Batal",
+  "select": "Pilih",
+  "themeCustomization": "Kustomisasi Tema",
+  "chooseThemePreset": "Pilih Preset Tema",
+  "yourCustomThemes": "Tema Kustom Anda",
+  "createCustomTheme": "Buat Tema Kustom",
+  "designOwnColorScheme": "Rancang skema warna Anda sendiri",
+  "newTheme": "Tema Baru",
+  "editCurrentTheme": "Edit Tema Saat Ini",
+  "customizeColorsFor": "Sesuaikan warna untuk {themeName}",
+  "@customizeColorsFor": {
+    "placeholders": {
+      "themeName": {
+        "type": "String"
+      }
+    }
+  },
+  "edit": "Edit",
+  "customThemeNumber": "Tema Kustom {number}",
+  "@customThemeNumber": {
+    "placeholders": {
+      "number": {
+        "type": "int"
+      }
+    }
+  },
+  "deleteCustomTheme": "Hapus Tema Kustom",
+  "confirmDeleteTheme": "Apakah Anda yakin ingin menghapus \"{themeName}\"?",
+  "@confirmDeleteTheme": {
+    "placeholders": {
+      "themeName": {
+        "type": "String"
+      }
+    }
+  },
+  "delete": "Hapus",
+  "customizeTheme": "Sesuaikan Tema",
+  "preview": "Pratinjau",
+  "themeName": "Nama Tema",
+  "brandColors": "Warna Merek",
+  "lightTheme": "Tema Terang",
+  "darkTheme": "Tema Gelap",
+  "reset": "Atur Ulang",
+  "saveTheme": "Simpan Tema",
+  "customTheme": "Tema Kustom",
+  "primaryColors": "Warna Utama",
+  "primaryColorsDesc": "Warna aksen utama yang digunakan di seluruh aplikasi",
+  "primaryAccent": "Aksen Utama",
+  "primaryAccentDesc": "Warna merek utama, tombol, tautan",
+  "secondaryAccent": "Aksen Sekunder",
+  "secondaryAccentDesc": "Aksen pelengkap untuk gradien",
+  "semanticColors": "Warna Semantik",
+  "semanticColorsDesc": "Warna yang menyampaikan makna dan status",
+  "successColor": "Warna Sukses",
+  "successColorDesc": "Tindakan positif, konfirmasi",
+  "warningColor": "Warna Peringatan",
+  "warningColorDesc": "Kehati-hatian, status tertunda",
+  "errorColor": "Warna Error",
+  "errorColorDesc": "Kesalahan, tindakan destruktif",
+  "backgroundColors": "Warna Latar Belakang",
+  "backgroundColorsLightDesc": "Permukaan latar belakang utama untuk mode terang",
+  "backgroundColorsDarkDesc": "Permukaan latar belakang utama untuk mode gelap",
+  "background": "Latar Belakang",
+  "backgroundDesc": "Latar belakang aplikasi utama",
+  "surface": "Permukaan",
+  "surfaceDesc": "Kartu, dialog, permukaan yang ditinggikan",
+  "surfaceSecondary": "Permukaan Sekunder",
+  "surfaceSecondaryDesc": "Kartu sekunder, sidebar",
+  "border": "Batas",
+  "borderDesc": "Pembagi, batas kartu",
+  "textColors": "Warna Teks",
+  "textColorsLightDesc": "Warna tipografi untuk mode terang",
+  "textColorsDarkDesc": "Warna tipografi untuk mode gelap",
+    "textPrimary": "Teks Utama",
+  "textPrimaryDesc": "Judul, teks penting",
+  "textSecondary": "Teks Sekunder",
+  "textSecondaryDesc": "Deskripsi, keterangan",
+  "previewMode": "Pratinjau: Mode {mode}",
+  "@previewMode": {
+    "placeholders": {
+      "mode": {
+        "type": "String"
+      }
+    }
+  },
+  "dark": "Gelap",
+  "light": "Terang",
+  "sampleCardTitle": "Judul Kartu Contoh",
+  "sampleSecondaryText": "Ini adalah teks sekunder yang muncul di bawah.",
+  "primary": "Utama",
+  "success": "Sukses",
+  "error": "Error",
+  "secondary": "Sekunder",
+  "warning": "Peringatan"
 }

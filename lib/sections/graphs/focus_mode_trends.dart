@@ -142,13 +142,13 @@ class _FocusModeTrendsState extends State<FocusModeTrends> {
     return Row(
       children: [
         _StatCard(
-          label: 'Current',
+          label: l10n.chart_current,
           value: formatValue(currentValue.toDouble()),
           color: color,
         ),
         const SizedBox(width: 12),
         _StatCard(
-          label: 'Previous',
+          label: l10n.chart_previous,
           value: formatValue(previousValue.toDouble()),
           color: Colors.grey,
         ),

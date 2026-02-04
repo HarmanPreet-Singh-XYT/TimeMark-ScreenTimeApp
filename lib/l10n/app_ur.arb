@@ -1345,5 +1345,282 @@
   "timeFormatSeconds": "{seconds}س",
   "timeFormatMinute": "1 منٹ",
   "timeFormatMinutes": "{minutes} منٹ",
-  "timeFormatMinutesSeconds": "{minutes} م {seconds}س"
+  "timeFormatMinutesSeconds": "{minutes} م {seconds}س",
+  "alertsLimitsSubtitle": "اپنے اسکرین ٹائم کی حدود اور اطلاعات کا نظم کریں",
+  "themeLight": "ہلکا",
+  "themeDark": "گہرا",
+  "themeSystem": "سسٹم",
+  "themeTitle": "تھیم",
+  "themeDescription": "ایپلیکیشن کا رنگین تھیم",
+  "voiceGenderTitle": "آواز کی جنس",
+  "voiceGenderDescription": "ٹائمر اطلاعات کے لیے آواز کی جنس منتخب کریں",
+  "voiceGenderMale": "مرد",
+  "voiceGenderFemale": "عورت",
+
+  "applicationsSubtitle": "اپنی ٹریک کردہ ایپلیکیشنز کا نظم کریں",
+  "applicationCount": "{count, plural, other{{count} ایپلیکیشنز}}",
+  "@applicationCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "refresh": "ریفریش کریں",
+  "noApplicationsFound": "کوئی ایپلیکیشن نہیں ملی",
+  "tryAdjustingFilters": "اپنے فلٹرز کو ایڈجسٹ کرنے کی کوشش کریں",
+  "configureAppSettings": "ایپلیکیشن کی ترتیبات کو تشکیل دیں",
+  "behaviorSection": "رویہ",
+  
+  "helpSubtitle": "{count, plural, other{7 زمروں میں {count} سوالات}}",
+  "@helpSubtitle": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "searchForHelp": "مدد تلاش کریں...",
+  "quickNavGeneral": "عمومی",
+  "quickNavApps": "ایپس",
+  "quickNavReports": "رپورٹس",
+  "quickNavFocus": "فوکس",
+  "noResultsFound": "کوئی نتیجہ نہیں ملا",
+  "tryDifferentKeywords": "مختلف مطلوبہ الفاظ کے ساتھ تلاش کرنے کی کوشش کریں",
+  "clearSearch": "تلاش صاف کریں",
+  
+  "greetingMorning": "صبح بخیر! یہ آپ کی سرگرمی کا خلاصہ ہے۔",
+  "greetingAfternoon": "سہ پہر بخیر! یہ آپ کی سرگرمی کا خلاصہ ہے۔",
+  "greetingEvening": "شام بخیر! یہ آپ کی سرگرمی کا خلاصہ ہے۔",
+  "screenTimeProgress": "اسکرین\nٹائم",
+  "productiveScoreProgress": "پیداواری\nسکور",
+  
+  "sectionLabel": "{title} سیکشن",
+  "@sectionLabel": {
+    "placeholders": {
+      "title": {
+        "type": "String"
+      }
+    }
+  },
+  
+  "focusModeSubtitle": "توجہ مرکوز رکھیں، پیداواری بنیں",
+  "thisWeek": "اس ہفتے",
+  "sessions": "سیشنز",
+  "totalTime": "کل وقت",
+  "avgLength": "اوسط لمبائی",
+  "focusTime": "فوکس ٹائم",
+  "paused": "موقوف",
+  "shortBreakStatus": "مختصر وقفہ",
+  "longBreakStatus": "طویل وقفہ",
+  "readyToFocus": "فوکس کے لیے تیار",
+  "focus": "فوکس",
+  "shortBreakLabel": "مختصر وقفہ",
+  "longBreakLabel": "طویل وقفہ",
+  "restartSession": "سیشن دوبارہ شروع کریں",
+  "skipToNext": "اگلے پر جائیں",
+  "settings": "ترتیبات",
+  "sessionsCompleted": "{count, plural, other{{count} سیشنز مکمل}}",
+  "@sessionsCompleted": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "focusModePreset": "فوکس موڈ پری سیٹ",
+  "focusDuration": "فوکس کی مدت",
+  "minutesFormat": "{minutes} منٹ",
+  "@minutesFormat": {
+    "placeholders": {
+      "minutes": {
+        "type": "int"
+      }
+    }
+  },
+  "shortBreakDuration": "مختصر وقفہ",
+  "longBreakDuration": "طویل وقفہ",
+  "enableSounds": "آوازیں فعال کریں",
+  "focus_mode_this_week": "اس ہفتے",
+  "focus_mode_best_day": "بہترین دن",
+  "focus_mode_sessions_count": "{count} سیشن",
+  "focus_mode_no_data_yet": "ابھی تک کوئی ڈیٹا نہیں",
+  "chart_current": "موجودہ",
+  "chart_previous": "پچھلا",
+  "permission_error": "اجازت کی خرابی",
+  "notification_permission_denied": "اطلاع کی اجازت مسترد",
+  "notification_permission_denied_message": "ScreenTime کو آپ کو الرٹس اور یاد دہانیاں بھیجنے کے لیے اطلاع کی اجازت درکار ہے۔\n\nکیا آپ اطلاعات کو فعال کرنے کے لیے سسٹم کی ترتیبات کھولنا چاہیں گے؟",
+  "notification_permission_denied_hint": "ScreenTime کے لیے اطلاعات کو فعال کرنے کے لیے سسٹم کی ترتیبات کھولیں۔",
+  "notification_permission_required": "اطلاع کی اجازت درکار",
+  "notification_permission_required_message": "ScreenTime کو آپ کو اطلاعات بھیجنے کے لیے اجازت درکار ہے۔",
+  "cancel": "منسوخ کریں",
+  "open_settings": "ترتیبات کھولیں",
+  "allow_notifications": "اطلاعات کی اجازت دیں",
+  "permission_allowed": "اجازت دی گئی",
+  "permission_denied": "مسترد",
+  "permission_not_set": "سیٹ نہیں",
+  "on": "آن",
+  "off": "آف",
+  "enable_notification_permission_hint": "الرٹس حاصل کرنے کے لیے اطلاع کی اجازت فعال کریں",
+  "minutes_format": "{minutes} منٹ",
+  "chart_average": "اوسط",
+  "chart_peak": "چوٹی",
+  "chart_lowest": "سب سے کم",
+  "active": "فعال",
+  "disabled": "غیر فعال",
+  "advanced_options": "اعلی درجے کے اختیارات",
+  "sync_ready": "سنک تیار",
+  "success": "کامیاب!",
+  "error": "خرابی",
+  "destructive_badge": "تباہ کن",
+  "recommended_badge": "تجویز کردہ",
+  "safe_badge": "محفوظ",
+  "overview": "جائزہ",
+  "patterns": "نمونے",
+  "apps": "ایپس",
+  "sortAscending": "چڑھتی ترتیب",
+  "sortDescending": "اترتی ترتیب",
+  "clearSearch": "تلاش صاف کریں",
+  "applicationsShowing": "{count} ایپلیکیشنز دکھائی جا رہی ہیں",
+  "totalTime": "کل وقت",
+  "valueLabel": "قدر: {value}",
+  "appsCount": "{count} ایپس",
+  "categoriesCount": "{count} زمرے",
+  "systemNotificationsDisabled": "سسٹم نوٹیفکیشنز غیر فعال ہیں۔ فوکس الرٹس کے لیے انہیں سسٹم سیٹنگز میں فعال کریں۔",
+  "openSystemSettings": "سسٹم سیٹنگز کھولیں",
+  "appNotificationsDisabled": "ایپ کی سیٹنگز میں نوٹیفکیشنز غیر فعال ہیں۔ فوکس الرٹس وصول کرنے کے لیے انہیں فعال کریں۔",
+  "goToSettings": "سیٹنگز پر جائیں",
+  "focusModeNotificationsDisabled": "فوکس موڈ نوٹیفکیشنز غیر فعال ہیں۔ سیشن الرٹس وصول کرنے کے لیے انہیں فعال کریں۔",
+  "notificationsDisabled": "نوٹیفکیشنز غیر فعال",
+  "dontShowAgain": "دوبارہ نہ دکھائیں",
+  "systemSettingsRequired": "سسٹم سیٹنگز درکار",
+  "notificationsDisabledSystemLevel": "سسٹم لیول پر نوٹیفکیشنز غیر فعال ہیں۔ فعال کرنے کے لیے:",
+  "step1OpenSystemSettings": "1. سسٹم سیٹنگز کھولیں (سسٹم ترجیحات)",
+  "step2GoToNotifications": "2. نوٹیفکیشنز پر جائیں",
+  "step3FindApp": "3. TimeMark تلاش کریں اور منتخب کریں",
+  "step4EnableNotifications": "4. \"نوٹیفکیشنز کی اجازت دیں\" فعال کریں",
+  "returnToAppMessage": "پھر اس ایپ پر واپس آئیں اور نوٹیفکیشنز کام کریں گی۔",
+  "gotIt": "سمجھ گیا",
+  "noSessionsYet": "ابھی تک کوئی سیشن نہیں",
+  "applicationsTracked": "{count} ایپلیکیشنز ٹریک کی گئیں",
+  "applicationHeader": "ایپلیکیشن",
+  "currentUsageHeader": "موجودہ استعمال",
+  "dailyLimitHeader": "روزانہ کی حد",
+  "edit": "ترمیم",
+  "showPopupNotifications": "پاپ اپ نوٹیفکیشنز دکھائیں",
+  "moreFrequentReminders": "زیادہ بار یاد دہانیاں",
+  "playSoundWithAlerts": "الرٹس کے ساتھ آواز چلائیں",
+  "systemTrayNotifications": "سسٹم ٹرے نوٹیفکیشنز",
+  "screenTimeUsed": "{current} / {limit} استعمال شدہ",
+  "todaysScreenTime": "آج کا اسکرین ٹائم",
+  "activeLimits": "فعال حدود",
+  "nearLimit": "حد کے قریب",
+  "colorPickerSpectrum": "سپیکٹرم",
+  "colorPickerPresets": "پری سیٹس",
+  "colorPickerSliders": "سلائیڈرز",
+  "colorPickerBasicColors": "بنیادی رنگ",
+  "colorPickerExtendedPalette": "توسیع شدہ پیلیٹ",
+  "colorPickerRed": "سرخ",
+  "colorPickerGreen": "سبز",
+  "colorPickerBlue": "نیلا",
+  "colorPickerHue": "رنگت",
+  "colorPickerSaturation": "سنترپتی",
+  "colorPickerBrightness": "چمک",
+  "colorPickerHexColor": "ہیکس رنگ",
+  "colorPickerHexPlaceholder": "RRGGBB",
+  "colorPickerRGB": "RGB",
+  "cancel": "منسوخ کریں",
+  "select": "منتخب کریں",
+  "themeCustomization": "تھیم کی تخصیص",
+  "chooseThemePreset": "تھیم پری سیٹ منتخب کریں",
+  "yourCustomThemes": "آپ کی کسٹم تھیمز",
+  "createCustomTheme": "کسٹم تھیم بنائیں",
+  "designOwnColorScheme": "اپنی رنگ اسکیم ڈیزائن کریں",
+  "newTheme": "نئی تھیم",
+  "editCurrentTheme": "موجودہ تھیم میں ترمیم کریں",
+  "customizeColorsFor": "{themeName} کے لیے رنگ تخصیص کریں",
+  "@customizeColorsFor": {
+    "placeholders": {
+      "themeName": {
+        "type": "String"
+      }
+    }
+  },
+  "edit": "ترمیم کریں",
+  "customThemeNumber": "کسٹم تھیم {number}",
+  "@customThemeNumber": {
+    "placeholders": {
+      "number": {
+        "type": "int"
+      }
+    }
+  },
+  "deleteCustomTheme": "کسٹم تھیم حذف کریں",
+  "confirmDeleteTheme": "کیا آپ واقعی \"{themeName}\" کو حذف کرنا چاہتے ہیں؟",
+  "@confirmDeleteTheme": {
+    "placeholders": {
+      "themeName": {
+        "type": "String"
+      }
+    }
+  },
+  "delete": "حذف کریں",
+  "customizeTheme": "تھیم تخصیص کریں",
+  "preview": "پیش نظارہ",
+  "themeName": "تھیم کا نام",
+  "brandColors": "برانڈ رنگ",
+  "lightTheme": "ہلکی تھیم",
+  "darkTheme": "گہری تھیم",
+  "reset": "دوبارہ ترتیب دیں",
+  "saveTheme": "تھیم محفوظ کریں",
+  "customTheme": "کسٹم تھیم",
+  "primaryColors": "بنیادی رنگ",
+  "primaryColorsDesc": "پوری ایپ میں استعمال ہونے والے اہم زور رنگ",
+  "primaryAccent": "بنیادی زور",
+  "primaryAccentDesc": "اہم برانڈ رنگ، بٹن، لنکس",
+  "secondaryAccent": "ثانوی زور",
+  "secondaryAccentDesc": "گریڈینٹس کے لیے تکمیلی زور",
+  "semanticColors": "معنوی رنگ",
+  "semanticColorsDesc": "رنگ جو معنی اور حالت کو ظاہر کرتے ہیں",
+  "successColor": "کامیابی کا رنگ",
+  "successColorDesc": "مثبت اعمال، تصدیقات",
+  "warningColor": "انتباہ کا رنگ",
+  "warningColorDesc": "احتیاط، زیر التواء حالات",
+  "errorColor": "خرابی کا رنگ",
+  "errorColorDesc": "خرابیاں، تباہ کن اعمال",
+  "backgroundColors": "پس منظر کے رنگ",
+  "backgroundColorsLightDesc": "ہلکے موڈ کے لیے اہم پس منظر کی سطحیں",
+  "backgroundColorsDarkDesc": "گہرے موڈ کے لیے اہم پس منظر کی سطحیں",
+  "background": "پس منظر",
+  "backgroundDesc": "اہم ایپ کا پس منظر",
+  "surface": "سطح",
+  "surfaceDesc": "کارڈز، ڈائیلاگز، بلند سطحیں",
+  "surfaceSecondary": "ثانوی سطح",
+  "surfaceSecondaryDesc": "ثانوی کارڈز، سائیڈبارز",
+  "border": "سرحد",
+  "borderDesc": "تقسیم کار، کارڈ کی سرحدیں",
+  "textColors": "متن کے رنگ",
+  "textColorsLightDesc": "ہلکے موڈ کے لیے ٹائپوگرافی رنگ",
+  "textColorsDarkDesc": "گہرے موڈ کے لیے ٹائپوگرافی رنگ",
+  "textPrimary": "بنیادی متن",
+  "textPrimaryDesc": "عنوانات، اہم متن",
+  "textSecondary": "ثانوی متن",
+  "textSecondaryDesc": "تفصیلات، کیپشنز",
+  "previewMode": "پیش نظارہ: {mode} موڈ",
+  "@previewMode": {
+    "placeholders": {
+      "mode": {
+        "type": "String"
+      }
+    }
+  },
+  "dark": "گہرا",
+  "light": "ہلکا",
+  "sampleCardTitle": "نمونہ کارڈ کا عنوان",
+  "sampleSecondaryText": "یہ ثانوی متن ہے جو نیچے ظاہر ہوتا ہے۔",
+  "primary": "بنیادی",
+  "success": "کامیابی",
+  "error": "خرابی",
+  "secondary": "ثانوی",
+  "warning": "انتباہ"
 }

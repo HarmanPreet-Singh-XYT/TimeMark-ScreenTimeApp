@@ -1,4 +1,5 @@
 import 'package:fluent_ui/fluent_ui.dart';
+import 'package:screentime/l10n/app_localizations.dart';
 
 // ============== FLUENT COLOR PICKER DIALOG ==============
 
@@ -200,11 +201,11 @@ class _FluentColorPickerDialogState extends State<FluentColorPickerDialog>
       ),
       actions: [
         Button(
-          child: const Text('Cancel'),
+          child: Text(AppLocalizations.of(context)!.cancel),
           onPressed: () => Navigator.pop(context),
         ),
         FilledButton(
-          child: const Text('Select'),
+          child: Text(AppLocalizations.of(context)!.select),
           onPressed: () {
             widget.onColorSelected(_currentColor);
             Navigator.pop(context);
@@ -218,21 +219,21 @@ class _FluentColorPickerDialogState extends State<FluentColorPickerDialog>
     return Row(
       children: [
         _TabChip(
-          label: 'Spectrum',
+          label: AppLocalizations.of(context)!.colorPickerSpectrum,
           icon: FluentIcons.color,
           isSelected: _selectedTab == 0,
           onTap: () => setState(() => _selectedTab = 0),
         ),
         const SizedBox(width: 8),
         _TabChip(
-          label: 'Presets',
+          label: AppLocalizations.of(context)!.colorPickerPresets,
           icon: FluentIcons.grid_view_medium,
           isSelected: _selectedTab == 1,
           onTap: () => setState(() => _selectedTab = 1),
         ),
         const SizedBox(width: 8),
         _TabChip(
-          label: 'Sliders',
+          label: AppLocalizations.of(context)!.colorPickerSliders,
           icon: FluentIcons.slider,
           isSelected: _selectedTab == 2,
           onTap: () => setState(() => _selectedTab = 2),
@@ -292,15 +293,15 @@ class _FluentColorPickerDialogState extends State<FluentColorPickerDialog>
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Text(
-            'Basic Colors',
+          Text(
+            AppLocalizations.of(context)!.colorPickerBasicColors,
             style: TextStyle(fontSize: 12, fontWeight: FontWeight.w600),
           ),
           const SizedBox(height: 8),
           _buildColorGrid(_basicColors, isDark),
           const SizedBox(height: 16),
-          const Text(
-            'Extended Palette',
+          Text(
+            AppLocalizations.of(context)!.colorPickerExtendedPalette,
             style: TextStyle(fontSize: 12, fontWeight: FontWeight.w600),
           ),
           const SizedBox(height: 8),
@@ -366,7 +367,7 @@ class _FluentColorPickerDialogState extends State<FluentColorPickerDialog>
         children: [
           // RGB Sliders
           _ColorSliderRow(
-            label: 'Red',
+            label: AppLocalizations.of(context)!.colorPickerRed,
             value: r.toDouble(),
             max: 255,
             activeColor: Colors.red,
@@ -376,7 +377,7 @@ class _FluentColorPickerDialogState extends State<FluentColorPickerDialog>
           ),
           const SizedBox(height: 12),
           _ColorSliderRow(
-            label: 'Green',
+            label: AppLocalizations.of(context)!.colorPickerGreen,
             value: g.toDouble(),
             max: 255,
             activeColor: Colors.green,
@@ -386,7 +387,7 @@ class _FluentColorPickerDialogState extends State<FluentColorPickerDialog>
           ),
           const SizedBox(height: 12),
           _ColorSliderRow(
-            label: 'Blue',
+            label: AppLocalizations.of(context)!.colorPickerBlue,
             value: b.toDouble(),
             max: 255,
             activeColor: Colors.blue,
@@ -401,7 +402,7 @@ class _FluentColorPickerDialogState extends State<FluentColorPickerDialog>
 
           // HSV Sliders
           _ColorSliderRow(
-            label: 'Hue',
+            label: AppLocalizations.of(context)!.colorPickerHue,
             value: _hue,
             max: 360,
             activeColor: HSVColor.fromAHSV(1, _hue, 1, 1).toColor(),
@@ -412,7 +413,7 @@ class _FluentColorPickerDialogState extends State<FluentColorPickerDialog>
           ),
           const SizedBox(height: 12),
           _ColorSliderRow(
-            label: 'Saturation',
+            label: AppLocalizations.of(context)!.colorPickerSaturation,
             value: _saturation * 100,
             max: 100,
             activeColor: _currentColor,
@@ -423,7 +424,7 @@ class _FluentColorPickerDialogState extends State<FluentColorPickerDialog>
           ),
           const SizedBox(height: 12),
           _ColorSliderRow(
-            label: 'Brightness',
+            label: AppLocalizations.of(context)!.colorPickerBrightness,
             value: _value * 100,
             max: 100,
             activeColor: _currentColor,
@@ -468,8 +469,8 @@ class _FluentColorPickerDialogState extends State<FluentColorPickerDialog>
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const Text(
-                'Hex Color',
+              Text(
+                AppLocalizations.of(context)!.colorPickerHexColor,
                 style: TextStyle(fontSize: 11, fontWeight: FontWeight.w500),
               ),
               const SizedBox(height: 4),
@@ -487,7 +488,8 @@ class _FluentColorPickerDialogState extends State<FluentColorPickerDialog>
                   Expanded(
                     child: TextBox(
                       controller: _hexController,
-                      placeholder: 'RRGGBB',
+                      placeholder: AppLocalizations.of(context)!
+                          .colorPickerHexPlaceholder,
                       style: const TextStyle(
                         fontFamily: 'monospace',
                         fontSize: 14,
@@ -517,7 +519,7 @@ class _FluentColorPickerDialogState extends State<FluentColorPickerDialog>
           crossAxisAlignment: CrossAxisAlignment.end,
           children: [
             Text(
-              'RGB',
+              AppLocalizations.of(context)!.colorPickerRGB,
               style: TextStyle(
                 fontSize: 10,
                 color: theme.typography.caption?.color,

@@ -851,12 +851,12 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String shortBreakLabel(int minutes) {
-    return 'استراحة قصيرة: $minutes دقيقة';
+    return 'استراحة قصيرة';
   }
 
   @override
   String longBreakLabel(int minutes) {
-    return 'استراحة طويلة: $minutes دقيقة';
+    return 'استراحة طويلة';
   }
 
   @override
@@ -1667,30 +1667,652 @@ class AppLocalizationsAr extends AppLocalizations {
   }
 
   @override
-  String get themeLight => 'Light';
+  String get themeLight => 'فاتح';
 
   @override
-  String get themeDark => 'Dark';
+  String get themeDark => 'داكن';
 
   @override
-  String get themeSystem => 'System';
+  String get themeSystem => 'النظام';
 
   @override
-  String get themeTitle => 'السمة';
+  String get themeTitle => 'المظهر';
 
   @override
-  String get themeDescription => 'سمة ألوان التطبيق (يتطلب إعادة التشغيل)';
+  String get themeDescription => 'نمط ألوان التطبيق';
 
   @override
-  String get voiceGenderTitle => 'Voice Gender';
+  String get voiceGenderTitle => 'جنس الصوت';
 
   @override
-  String get voiceGenderDescription =>
-      'Choose the voice gender for timer notifications';
+  String get voiceGenderDescription => 'اختر جنس الصوت لإشعارات المؤقت';
 
   @override
-  String get voiceGenderMale => 'Male';
+  String get voiceGenderMale => 'ذكر';
 
   @override
-  String get voiceGenderFemale => 'Female';
+  String get voiceGenderFemale => 'أنثى';
+
+  @override
+  String get alertsLimitsSubtitle =>
+      'إدارة حدود وقت الشاشة والإشعارات الخاصة بك';
+
+  @override
+  String get applicationsSubtitle => 'إدارة التطبيقات المتتبعة الخاصة بك';
+
+  @override
+  String applicationCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count تطبيق',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get noApplicationsFound => 'لم يتم العثور على تطبيقات';
+
+  @override
+  String get tryAdjustingFilters => 'حاول ضبط المرشحات الخاصة بك';
+
+  @override
+  String get configureAppSettings => 'تكوين إعدادات التطبيق';
+
+  @override
+  String get behaviorSection => 'السلوك';
+
+  @override
+  String helpSubtitle(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count سؤال عبر 7 فئات',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get searchForHelp => 'البحث عن المساعدة...';
+
+  @override
+  String get quickNavGeneral => 'عام';
+
+  @override
+  String get quickNavApps => 'التطبيقات';
+
+  @override
+  String get quickNavReports => 'التقارير';
+
+  @override
+  String get quickNavFocus => 'التركيز';
+
+  @override
+  String get noResultsFound => 'لم يتم العثور على نتائج';
+
+  @override
+  String get tryDifferentKeywords => 'حاول البحث بكلمات مفتاحية مختلفة';
+
+  @override
+  String get clearSearch => 'مسح البحث';
+
+  @override
+  String get greetingMorning => 'صباح الخير! هذا ملخص نشاطك.';
+
+  @override
+  String get greetingAfternoon => 'مساء الخير! هذا ملخص نشاطك.';
+
+  @override
+  String get greetingEvening => 'مساء الخير! هذا ملخص نشاطك.';
+
+  @override
+  String get screenTimeProgress => 'وقت\nالشاشة';
+
+  @override
+  String get productiveScoreProgress => 'نقاط\nالإنتاجية';
+
+  @override
+  String get focusModeSubtitle => 'ابق مركزًا، كن منتجًا';
+
+  @override
+  String get thisWeek => 'هذا الأسبوع';
+
+  @override
+  String get sessions => 'الجلسات';
+
+  @override
+  String get totalTime => 'إجمالي الوقت';
+
+  @override
+  String get avgLength => 'متوسط المدة';
+
+  @override
+  String get focusTime => 'وقت التركيز';
+
+  @override
+  String get paused => 'متوقف مؤقتًا';
+
+  @override
+  String get shortBreakStatus => 'استراحة قصيرة';
+
+  @override
+  String get longBreakStatus => 'استراحة طويلة';
+
+  @override
+  String get readyToFocus => 'جاهز للتركيز';
+
+  @override
+  String get focus => 'تركيز';
+
+  @override
+  String get restartSession => 'إعادة تشغيل الجلسة';
+
+  @override
+  String get skipToNext => 'الانتقال إلى التالي';
+
+  @override
+  String get settings => 'الإعدادات';
+
+  @override
+  String sessionsCompleted(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count جلسة مكتملة',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get focusModePreset => 'إعداد مسبق لوضع التركيز';
+
+  @override
+  String get focusDuration => 'مدة التركيز';
+
+  @override
+  String minutesFormat(int minutes) {
+    return '$minutes دقيقة';
+  }
+
+  @override
+  String get shortBreakDuration => 'استراحة قصيرة';
+
+  @override
+  String get longBreakDuration => 'استراحة طويلة';
+
+  @override
+  String get enableSounds => 'تفعيل الأصوات';
+
+  @override
+  String get focus_mode_this_week => 'هذا الأسبوع';
+
+  @override
+  String get focus_mode_best_day => 'أفضل يوم';
+
+  @override
+  String focus_mode_sessions_count(int count) {
+    return '$count جلسة';
+  }
+
+  @override
+  String get focus_mode_no_data_yet => 'لا توجد بيانات حتى الآن';
+
+  @override
+  String get chart_current => 'الحالي';
+
+  @override
+  String get chart_previous => 'السابق';
+
+  @override
+  String get permission_error => 'خطأ في الإذن';
+
+  @override
+  String get notification_permission_denied => 'تم رفض إذن الإشعار';
+
+  @override
+  String get notification_permission_denied_message =>
+      'يحتاج ScreenTime إلى إذن الإشعار لإرسال التنبيهات والتذكيرات.\n\nهل تريد فتح إعدادات النظام لتمكين الإشعارات؟';
+
+  @override
+  String get notification_permission_denied_hint =>
+      'افتح إعدادات النظام لتمكين إشعارات ScreenTime.';
+
+  @override
+  String get notification_permission_required => 'مطلوب إذن الإشعار';
+
+  @override
+  String get notification_permission_required_message =>
+      'يحتاج ScreenTime إلى إذن لإرسال الإشعارات إليك.';
+
+  @override
+  String get open_settings => 'فتح الإعدادات';
+
+  @override
+  String get allow_notifications => 'السماح بالإشعارات';
+
+  @override
+  String get permission_allowed => 'مسموح';
+
+  @override
+  String get permission_denied => 'مرفوض';
+
+  @override
+  String get permission_not_set => 'غير محدد';
+
+  @override
+  String get on => 'تشغيل';
+
+  @override
+  String get off => 'إيقاف';
+
+  @override
+  String get enable_notification_permission_hint =>
+      'قم بتمكين إذن الإشعار لتلقي التنبيهات';
+
+  @override
+  String minutes_format(int minutes) {
+    return '$minutes دقيقة';
+  }
+
+  @override
+  String get chart_average => 'المتوسط';
+
+  @override
+  String get chart_peak => 'الذروة';
+
+  @override
+  String get chart_lowest => 'الأدنى';
+
+  @override
+  String get active => 'نشط';
+
+  @override
+  String get disabled => 'معطل';
+
+  @override
+  String get advanced_options => 'خيارات متقدمة';
+
+  @override
+  String get sync_ready => 'المزامنة جاهزة';
+
+  @override
+  String get success => 'نجاح';
+
+  @override
+  String get destructive_badge => 'مدمر';
+
+  @override
+  String get recommended_badge => 'موصى به';
+
+  @override
+  String get safe_badge => 'آمن';
+
+  @override
+  String get overview => 'نظرة عامة';
+
+  @override
+  String get patterns => 'الأنماط';
+
+  @override
+  String get apps => 'التطبيقات';
+
+  @override
+  String get sortAscending => 'ترتيب تصاعدي';
+
+  @override
+  String get sortDescending => 'ترتيب تنازلي';
+
+  @override
+  String applicationsShowing(int count) {
+    return 'عرض $count تطبيق';
+  }
+
+  @override
+  String valueLabel(String value) {
+    return 'القيمة: $value';
+  }
+
+  @override
+  String appsCount(int count) {
+    return '$count تطبيق';
+  }
+
+  @override
+  String categoriesCount(int count) {
+    return '$count فئة';
+  }
+
+  @override
+  String get systemNotificationsDisabled =>
+      'تم تعطيل إشعارات النظام. قم بتمكينها في إعدادات النظام لتنبيهات التركيز.';
+
+  @override
+  String get openSystemSettings => 'فتح إعدادات النظام';
+
+  @override
+  String get appNotificationsDisabled =>
+      'تم تعطيل الإشعارات في إعدادات التطبيق. قم بتمكينها لتلقي تنبيهات التركيز.';
+
+  @override
+  String get goToSettings => 'الانتقال إلى الإعدادات';
+
+  @override
+  String get focusModeNotificationsDisabled =>
+      'تم تعطيل إشعارات وضع التركيز. قم بتمكينها لتلقي تنبيهات الجلسة.';
+
+  @override
+  String get notificationsDisabled => 'الإشعارات معطلة';
+
+  @override
+  String get dontShowAgain => 'لا تظهر مرة أخرى';
+
+  @override
+  String get systemSettingsRequired => 'مطلوب إعدادات النظام';
+
+  @override
+  String get notificationsDisabledSystemLevel =>
+      'تم تعطيل الإشعارات على مستوى النظام. للتمكين:';
+
+  @override
+  String get step1OpenSystemSettings =>
+      '1. افتح إعدادات النظام (تفضيلات النظام)';
+
+  @override
+  String get step2GoToNotifications => '2. انتقل إلى الإشعارات';
+
+  @override
+  String get step3FindApp => '3. ابحث عن TimeMark وحدده';
+
+  @override
+  String get step4EnableNotifications => '4. قم بتمكين \"السماح بالإشعارات\"';
+
+  @override
+  String get returnToAppMessage => 'ثم عد إلى هذا التطبيق وستعمل الإشعارات.';
+
+  @override
+  String get gotIt => 'فهمت';
+
+  @override
+  String get noSessionsYet => 'لا توجد جلسات حتى الآن';
+
+  @override
+  String applicationsTracked(int count) {
+    return 'تم تتبع $count تطبيق';
+  }
+
+  @override
+  String get applicationHeader => 'التطبيق';
+
+  @override
+  String get currentUsageHeader => 'الاستخدام الحالي';
+
+  @override
+  String get dailyLimitHeader => 'الحد اليومي';
+
+  @override
+  String get edit => 'تحرير';
+
+  @override
+  String get showPopupNotifications => 'عرض الإشعارات المنبثقة';
+
+  @override
+  String get moreFrequentReminders => 'تذكيرات أكثر تكرارًا';
+
+  @override
+  String get playSoundWithAlerts => 'تشغيل الصوت مع التنبيهات';
+
+  @override
+  String get systemTrayNotifications => 'إشعارات علبة النظام';
+
+  @override
+  String screenTimeUsed(String current, String limit) {
+    return 'تم استخدام $current / $limit';
+  }
+
+  @override
+  String get todaysScreenTime => 'وقت الشاشة اليوم';
+
+  @override
+  String get activeLimits => 'الحدود النشطة';
+
+  @override
+  String get nearLimit => 'قريب من الحد';
+
+  @override
+  String get colorPickerSpectrum => 'الطيف';
+
+  @override
+  String get colorPickerPresets => 'الإعدادات المسبقة';
+
+  @override
+  String get colorPickerSliders => 'أشرطة التمرير';
+
+  @override
+  String get colorPickerBasicColors => 'الألوان الأساسية';
+
+  @override
+  String get colorPickerExtendedPalette => 'لوحة الألوان الموسعة';
+
+  @override
+  String get colorPickerRed => 'أحمر';
+
+  @override
+  String get colorPickerGreen => 'أخضر';
+
+  @override
+  String get colorPickerBlue => 'أزرق';
+
+  @override
+  String get colorPickerHue => 'درجة اللون';
+
+  @override
+  String get colorPickerSaturation => 'التشبع';
+
+  @override
+  String get colorPickerBrightness => 'السطوع';
+
+  @override
+  String get colorPickerHexColor => 'اللون السداسي عشري';
+
+  @override
+  String get colorPickerHexPlaceholder => 'RRGGBB';
+
+  @override
+  String get colorPickerRGB => 'RGB';
+
+  @override
+  String get select => 'تحديد';
+
+  @override
+  String get themeCustomization => 'تخصيص السمة';
+
+  @override
+  String get chooseThemePreset => 'اختر إعداداً مسبقاً للسمة';
+
+  @override
+  String get yourCustomThemes => 'السمات المخصصة الخاصة بك';
+
+  @override
+  String get createCustomTheme => 'إنشاء سمة مخصصة';
+
+  @override
+  String get designOwnColorScheme => 'صمم نظام الألوان الخاص بك';
+
+  @override
+  String get newTheme => 'سمة جديدة';
+
+  @override
+  String get editCurrentTheme => 'تحرير السمة الحالية';
+
+  @override
+  String customizeColorsFor(String themeName) {
+    return 'تخصيص الألوان لـ $themeName';
+  }
+
+  @override
+  String customThemeNumber(int number) {
+    return 'السمة المخصصة $number';
+  }
+
+  @override
+  String get deleteCustomTheme => 'حذف السمة المخصصة';
+
+  @override
+  String confirmDeleteTheme(String themeName) {
+    return 'هل أنت متأكد من أنك تريد حذف \"$themeName\"؟';
+  }
+
+  @override
+  String get delete => 'حذف';
+
+  @override
+  String get customizeTheme => 'تخصيص السمة';
+
+  @override
+  String get preview => 'معاينة';
+
+  @override
+  String get themeName => 'اسم السمة';
+
+  @override
+  String get brandColors => 'ألوان العلامة التجارية';
+
+  @override
+  String get lightTheme => 'السمة الفاتحة';
+
+  @override
+  String get darkTheme => 'السمة الداكنة';
+
+  @override
+  String get reset => 'إعادة تعيين';
+
+  @override
+  String get saveTheme => 'حفظ السمة';
+
+  @override
+  String get customTheme => 'سمة مخصصة';
+
+  @override
+  String get primaryColors => 'الألوان الأساسية';
+
+  @override
+  String get primaryColorsDesc =>
+      'ألوان التمييز الرئيسية المستخدمة في جميع أنحاء التطبيق';
+
+  @override
+  String get primaryAccent => 'التمييز الأساسي';
+
+  @override
+  String get primaryAccentDesc =>
+      'لون العلامة التجارية الرئيسي، الأزرار، الروابط';
+
+  @override
+  String get secondaryAccent => 'التمييز الثانوي';
+
+  @override
+  String get secondaryAccentDesc => 'تمييز تكميلي للتدرجات';
+
+  @override
+  String get semanticColors => 'الألوان الدلالية';
+
+  @override
+  String get semanticColorsDesc => 'الألوان التي تنقل المعنى والحالة';
+
+  @override
+  String get successColor => 'لون النجاح';
+
+  @override
+  String get successColorDesc => 'الإجراءات الإيجابية، التأكيدات';
+
+  @override
+  String get warningColor => 'لون التحذير';
+
+  @override
+  String get warningColorDesc => 'التحذير، الحالات المعلقة';
+
+  @override
+  String get errorColor => 'لون الخطأ';
+
+  @override
+  String get errorColorDesc => 'الأخطاء، الإجراءات المدمرة';
+
+  @override
+  String get backgroundColors => 'ألوان الخلفية';
+
+  @override
+  String get backgroundColorsLightDesc => 'أسطح الخلفية الرئيسية للوضع الفاتح';
+
+  @override
+  String get backgroundColorsDarkDesc => 'أسطح الخلفية الرئيسية للوضع الداكن';
+
+  @override
+  String get background => 'الخلفية';
+
+  @override
+  String get backgroundDesc => 'خلفية التطبيق الرئيسية';
+
+  @override
+  String get surface => 'السطح';
+
+  @override
+  String get surfaceDesc => 'البطاقات، مربعات الحوار، الأسطح المرتفعة';
+
+  @override
+  String get surfaceSecondary => 'السطح الثانوي';
+
+  @override
+  String get surfaceSecondaryDesc => 'البطاقات الثانوية، الأشرطة الجانبية';
+
+  @override
+  String get border => 'الحدود';
+
+  @override
+  String get borderDesc => 'الفواصل، حدود البطاقات';
+
+  @override
+  String get textColors => 'ألوان النص';
+
+  @override
+  String get textColorsLightDesc => 'ألوان الطباعة للوضع الفاتح';
+
+  @override
+  String get textColorsDarkDesc => 'ألوان الطباعة للوضع الداكن';
+
+  @override
+  String get textPrimary => 'النص الأساسي';
+
+  @override
+  String get textPrimaryDesc => 'العناوين، النص المهم';
+
+  @override
+  String get textSecondary => 'النص الثانوي';
+
+  @override
+  String get textSecondaryDesc => 'الأوصاف، التسميات التوضيحية';
+
+  @override
+  String previewMode(String mode) {
+    return 'المعاينة: وضع $mode';
+  }
+
+  @override
+  String get dark => 'داكن';
+
+  @override
+  String get light => 'فاتح';
+
+  @override
+  String get sampleCardTitle => 'عنوان البطاقة النموذجية';
+
+  @override
+  String get sampleSecondaryText => 'هذا نص ثانوي يظهر أدناه.';
+
+  @override
+  String get primary => 'أساسي';
+
+  @override
+  String get secondary => 'ثانوي';
+
+  @override
+  String get warning => 'تحذير';
 }

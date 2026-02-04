@@ -58,7 +58,7 @@ class ApplicationLimitsCard extends StatelessWidget {
                                 fontSize: 16, fontWeight: FontWeight.w600),
                           ),
                           Text(
-                            '${filteredApps.length} applications tracked',
+                            l10n.applicationsTracked(filteredApps.length),
                             style: TextStyle(
                               fontSize: 12,
                               color: theme.typography.caption?.color
@@ -108,32 +108,33 @@ class ApplicationLimitsCard extends StatelessWidget {
                   children: [
                     Expanded(
                       flex: 3,
-                      child: Text('Application', style: _headerStyle),
+                      child: Text(l10n.applicationHeader, style: _headerStyle),
                     ),
                     Expanded(
                       flex: 3,
                       child: Padding(
                         padding: const EdgeInsets.only(left: 8),
-                        child: Text('Category', style: _headerStyle),
+                        child: Text(l10n.categoryHeader, style: _headerStyle),
                       ),
                     ),
                     Expanded(
                       flex: 2,
                       child: Padding(
                         padding: const EdgeInsets.only(left: 8),
-                        child: Text('Daily Limit', style: _headerStyle),
+                        child: Text(l10n.dailyLimitHeader, style: _headerStyle),
                       ),
                     ),
                     Expanded(
                       flex: 2,
                       child: Padding(
                         padding: const EdgeInsets.only(left: 8),
-                        child: Text('Current Usage', style: _headerStyle),
+                        child:
+                            Text(l10n.currentUsageHeader, style: _headerStyle),
                       ),
                     ),
-                    const SizedBox(
+                    SizedBox(
                       width: 50,
-                      child: Text('Edit',
+                      child: Text(l10n.edit,
                           style: _headerStyle, textAlign: TextAlign.center),
                     ),
                   ],

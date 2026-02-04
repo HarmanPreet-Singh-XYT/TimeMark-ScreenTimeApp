@@ -1342,5 +1342,283 @@
   "timeFormatSeconds": "{seconds}से",
   "timeFormatMinute": "1 मिनट",
   "timeFormatMinutes": "{minutes} मिनट",
-  "timeFormatMinutesSeconds": "{minutes} मि {seconds}से"
+  "timeFormatMinutesSeconds": "{minutes} मि {seconds}से",
+
+  "alertsLimitsSubtitle": "अपने स्क्रीन टाइम की सीमा और सूचनाओं को प्रबंधित करें",
+  "themeLight": "हल्का",
+  "themeDark": "गहरा",
+  "themeSystem": "सिस्टम",
+  "themeTitle": "थीम",
+  "themeDescription": "एप्लिकेशन की रंग थीम",
+  "voiceGenderTitle": "आवाज़ का लिंग",
+  "voiceGenderDescription": "टाइमर सूचनाओं के लिए आवाज़ का लिंग चुनें",
+  "voiceGenderMale": "पुरुष",
+  "voiceGenderFemale": "महिला",
+
+  "applicationsSubtitle": "अपने ट्रैक किए गए एप्लिकेशन प्रबंधित करें",
+  "applicationCount": "{count, plural, =1{1 एप्लिकेशन} other{{count} एप्लिकेशन}}",
+  "@applicationCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "refresh": "रीफ्रेश करें",
+  "noApplicationsFound": "कोई एप्लिकेशन नहीं मिला",
+  "tryAdjustingFilters": "अपने फ़िल्टर समायोजित करने का प्रयास करें",
+  "configureAppSettings": "एप्लिकेशन सेटिंग्स कॉन्फ़िगर करें",
+  "behaviorSection": "व्यवहार",
+  
+  "helpSubtitle": "{count, plural, =1{7 श्रेणियों में 1 प्रश्न} other{7 श्रेणियों में {count} प्रश्न}}",
+  "@helpSubtitle": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "searchForHelp": "सहायता खोजें...",
+  "quickNavGeneral": "सामान्य",
+  "quickNavApps": "ऐप्स",
+  "quickNavReports": "रिपोर्ट",
+  "quickNavFocus": "फोकस",
+  "noResultsFound": "कोई परिणाम नहीं मिला",
+  "tryDifferentKeywords": "विभिन्न कीवर्ड के साथ खोजने का प्रयास करें",
+  "clearSearch": "खोज साफ़ करें",
+  
+  "greetingMorning": "सुप्रभात! यह आपकी गतिविधि का सारांश है।",
+  "greetingAfternoon": "शुभ दोपहर! यह आपकी गतिविधि का सारांश है।",
+  "greetingEvening": "शुभ संध्या! यह आपकी गतिविधि का सारांश है।",
+  "screenTimeProgress": "स्क्रीन\nटाइम",
+  "productiveScoreProgress": "उत्पादक\nस्कोर",
+  
+  "sectionLabel": "{title} अनुभाग",
+  "@sectionLabel": {
+    "placeholders": {
+      "title": {
+        "type": "String"
+      }
+    }
+  },
+  
+  "focusModeSubtitle": "केंद्रित रहें, उत्पादक बनें",
+  "thisWeek": "इस सप्ताह",
+  "sessions": "सत्र",
+  "totalTime": "कुल समय",
+  "avgLength": "औसत अवधि",
+  "focusTime": "फोकस समय",
+  "paused": "रोका गया",
+  "shortBreakStatus": "छोटा ब्रेक",
+  "longBreakStatus": "लंबा ब्रेक",
+  "readyToFocus": "फोकस के लिए तैयार",
+  "focus": "फोकस",
+  "shortBreakLabel": "छोटा ब्रेक",
+  "longBreakLabel": "लंबा ब्रेक",
+  "restartSession": "सत्र पुनः प्रारंभ करें",
+  "skipToNext": "अगले पर जाएं",
+  "settings": "सेटिंग्स",
+  "sessionsCompleted": "{count, plural, =1{1 सत्र पूर्ण} other{{count} सत्र पूर्ण}}",
+  "@sessionsCompleted": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "focusModePreset": "फोकस मोड प्रीसेट",
+  "focusDuration": "फोकस अवधि",
+  "minutesFormat": "{minutes} मिनट",
+  "@minutesFormat": {
+    "placeholders": {
+      "minutes": {
+        "type": "int"
+      }
+    }
+  },
+  "shortBreakDuration": "छोटा ब्रेक",
+  "longBreakDuration": "लंबा ब्रेक",
+  "enableSounds": "ध्वनि सक्षम करें",
+  "focus_mode_this_week": "इस सप्ताह",
+  "focus_mode_best_day": "सर्वश्रेष्ठ दिन",
+  "focus_mode_sessions_count": "{count} सत्र",
+  "focus_mode_no_data_yet": "अभी तक कोई डेटा नहीं",
+  "chart_current": "वर्तमान",
+  "chart_previous": "पिछला",
+  "permission_error": "अनुमति त्रुटि",
+  "notification_permission_denied": "सूचना अनुमति अस्वीकृत",
+  "notification_permission_denied_message": "ScreenTime को आपको अलर्ट और रिमाइंडर भेजने के लिए सूचना अनुमति की आवश्यकता है।\n\nक्या आप सूचनाओं को सक्षम करने के लिए सिस्टम सेटिंग्स खोलना चाहेंगे?",
+  "notification_permission_denied_hint": "ScreenTime के लिए सूचनाओं को सक्षम करने के लिए सिस्टम सेटिंग्स खोलें।",
+  "notification_permission_required": "सूचना अनुमति आवश्यक",
+  "notification_permission_required_message": "ScreenTime को आपको सूचनाएं भेजने के लिए अनुमति की आवश्यकता है।",
+  "cancel": "रद्द करें",
+  "open_settings": "सेटिंग्स खोलें",
+  "allow_notifications": "सूचनाओं की अनुमति दें",
+  "permission_allowed": "अनुमत",
+  "permission_denied": "अस्वीकृत",
+  "permission_not_set": "सेट नहीं",
+  "on": "चालू",
+  "off": "बंद",
+  "enable_notification_permission_hint": "अलर्ट प्राप्त करने के लिए सूचना अनुमति सक्षम करें",
+  "minutes_format": "{minutes} मिनट",
+  "chart_average": "औसत",
+  "chart_peak": "चरम",
+  "chart_lowest": "सबसे कम",
+  "active": "सक्रिय",
+  "disabled": "अक्षम",
+  "advanced_options": "उन्नत विकल्प",
+  "sync_ready": "सिंक तैयार",
+  "success": "सफल!",
+  "error": "त्रुटि",
+  "destructive_badge": "विनाशकारी",
+  "recommended_badge": "अनुशंसित",
+  "safe_badge": "सुरक्षित",
+  "overview": "अवलोकन",
+  "patterns": "पैटर्न",
+  "apps": "ऐप्स",
+  "sortAscending": "आरोही क्रम में क्रमबद्ध करें",
+  "sortDescending": "अवरोही क्रम में क्रमबद्ध करें",
+  "clearSearch": "खोज साफ़ करें",
+  "applicationsShowing": "{count} एप्लिकेशन दिखाई जा रही हैं",
+  "totalTime": "कुल समय",
+  "valueLabel": "मान: {value}",
+  "appsCount": "{count} ऐप्स",
+  "categoriesCount": "{count} श्रेणियाँ",
+  "systemNotificationsDisabled": "सिस्टम सूचनाएं अक्षम हैं। फोकस अलर्ट के लिए उन्हें सिस्टम सेटिंग्स में सक्षम करें।",
+  "openSystemSettings": "सिस्टम सेटिंग्स खोलें",
+  "appNotificationsDisabled": "ऐप सेटिंग्स में सूचनाएं अक्षम हैं। फोकस अलर्ट प्राप्त करने के लिए उन्हें सक्षम करें।",
+  "goToSettings": "सेटिंग्स पर जाएं",
+  "focusModeNotificationsDisabled": "फोकस मोड सूचनाएं अक्षम हैं। सत्र अलर्ट प्राप्त करने के लिए उन्हें सक्षम करें।",
+  "notificationsDisabled": "सूचनाएं अक्षम",
+  "dontShowAgain": "फिर से न दिखाएं",
+  "systemSettingsRequired": "सिस्टम सेटिंग्स आवश्यक",
+  "notificationsDisabledSystemLevel": "सिस्टम स्तर पर सूचनाएं अक्षम हैं। सक्षम करने के लिए:",
+  "step1OpenSystemSettings": "1. सिस्टम सेटिंग्स खोलें (सिस्टम प्रेफरेंस)",
+  "step2GoToNotifications": "2. सूचनाओं पर जाएं",
+  "step3FindApp": "3. TimeMark ढूंढें और चुनें",
+  "step4EnableNotifications": "4. \"सूचनाओं की अनुमति दें\" सक्षम करें",
+  "returnToAppMessage": "फिर इस ऐप पर लौटें और सूचनाएं काम करेंगी।",
+  "gotIt": "समझ गया",
+  "noSessionsYet": "अभी तक कोई सत्र नहीं",
+  "applicationsTracked": "{count} एप्लिकेशन ट्रैक किए गए",
+  "applicationHeader": "एप्लिकेशन",
+  "currentUsageHeader": "वर्तमान उपयोग",
+  "dailyLimitHeader": "दैनिक सीमा",
+  "edit": "संपादित करें",
+  "showPopupNotifications": "पॉपअप सूचनाएं दिखाएं",
+  "moreFrequentReminders": "अधिक बार अनुस्मारक",
+  "playSoundWithAlerts": "अलर्ट के साथ ध्वनि बजाएं",
+  "systemTrayNotifications": "सिस्टम ट्रे सूचनाएं",
+  "screenTimeUsed": "{current} / {limit} उपयोग किया गया",
+  "todaysScreenTime": "आज का स्क्रीन समय",
+  "activeLimits": "सक्रिय सीमाएं",
+  "nearLimit": "सीमा के पास",
+  "colorPickerSpectrum": "स्पेक्ट्रम",
+  "colorPickerPresets": "प्रीसेट",
+  "colorPickerSliders": "स्लाइडर",
+  "colorPickerBasicColors": "बुनियादी रंग",
+  "colorPickerExtendedPalette": "विस्तारित पैलेट",
+  "colorPickerRed": "लाल",
+  "colorPickerGreen": "हरा",
+  "colorPickerBlue": "नीला",
+  "colorPickerHue": "रंगत",
+  "colorPickerSaturation": "संतृप्ति",
+  "colorPickerBrightness": "चमक",
+  "colorPickerHexColor": "हेक्स रंग",
+  "colorPickerHexPlaceholder": "RRGGBB",
+  "colorPickerRGB": "RGB",
+  "cancel": "रद्द करें",
+  "select": "चुनें",
+  "themeCustomization": "थीम अनुकूलन",
+  "chooseThemePreset": "थीम प्रीसेट चुनें",
+  "yourCustomThemes": "आपकी कस्टम थीम",
+  "createCustomTheme": "कस्टम थीम बनाएं",
+  "designOwnColorScheme": "अपनी खुद की रंग योजना डिज़ाइन करें",
+  "newTheme": "नई थीम",
+  "editCurrentTheme": "वर्तमान थीम संपादित करें",
+  "customizeColorsFor": "{themeName} के लिए रंग अनुकूलित करें",
+  "@customizeColorsFor": {
+    "placeholders": {
+      "themeName": {
+        "type": "String"
+      }
+    }
+  },
+  "edit": "संपादित करें",
+  "customThemeNumber": "कस्टम थीम {number}",
+  "@customThemeNumber": {
+    "placeholders": {
+      "number": {
+        "type": "int"
+      }
+    }
+  },
+  "deleteCustomTheme": "कस्टम थीम हटाएं",
+  "confirmDeleteTheme": "क्या आप वाकई \"{themeName}\" को हटाना चाहते हैं?",
+  "@confirmDeleteTheme": {
+    "placeholders": {
+      "themeName": {
+        "type": "String"
+      }
+    }
+  },
+  "delete": "हटाएं",
+  "customizeTheme": "थीम अनुकूलित करें",
+  "preview": "पूर्वावलोकन",
+  "themeName": "थीम का नाम",
+  "brandColors": "ब्रांड रंग",
+  "lightTheme": "हल्की थीम",
+  "darkTheme": "गहरी थीम",
+  "reset": "रीसेट करें",
+  "saveTheme": "थीम सहेजें",
+  "customTheme": "कस्टम थीम",
+  "primaryColors": "प्राथमिक रंग",
+  "primaryColorsDesc": "पूरे ऐप में उपयोग किए जाने वाले मुख्य उच्चारण रंग",
+  "primaryAccent": "प्राथमिक उच्चारण",
+  "primaryAccentDesc": "मुख्य ब्रांड रंग, बटन, लिंक",
+  "secondaryAccent": "द्वितीयक उच्चारण",
+  "secondaryAccentDesc": "ग्रेडिएंट के लिए पूरक उच्चारण",
+  "semanticColors": "अर्थ संबंधी रंग",
+  "semanticColorsDesc": "अर्थ और स्थिति व्यक्त करने वाले रंग",
+  "successColor": "सफलता का रंग",
+  "successColorDesc": "सकारात्मक क्रियाएं, पुष्टिकरण",
+  "warningColor": "चेतावनी का रंग",
+  "warningColorDesc": "सावधानी, लंबित स्थिति",
+  "errorColor": "त्रुटि का रंग",
+  "errorColorDesc": "त्रुटियां, विनाशकारी क्रियाएं",
+  "backgroundColors": "पृष्ठभूमि रंग",
+  "backgroundColorsLightDesc": "हल्के मोड के लिए मुख्य पृष्ठभूमि सतह",
+  "backgroundColorsDarkDesc": "गहरे मोड के लिए मुख्य पृष्ठभूमि सतह",
+  "background": "पृष्ठभूमि",
+  "backgroundDesc": "मुख्य ऐप पृष्ठभूमि",
+  "surface": "सतह",
+  "surfaceDesc": "कार्ड, डायलॉग, उभरी हुई सतहें",
+  "surfaceSecondary": "द्वितीयक सतह",
+  "surfaceSecondaryDesc": "द्वितीयक कार्ड, साइडबार",
+  "border": "सीमा",
+  "borderDesc": "विभाजक, कार्ड सीमाएं",
+  "textColors": "पाठ रंग",
+  "textColorsLightDesc": "हल्के मोड के लिए टाइपोग्राफी रंग",
+  "textColorsDarkDesc": "गहरे मोड के लिए टाइपोग्राफी रंग",
+  "textPrimary": "प्राथमिक पाठ",
+  "textPrimaryDesc": "शीर्षक, महत्वपूर्ण पाठ",
+  "textSecondary": "द्वितीयक पाठ",
+  "textSecondaryDesc": "विवरण, कैप्शन",
+  "previewMode": "पूर्वावलोकन: {mode} मोड",
+  "@previewMode": {
+    "placeholders": {
+      "mode": {
+        "type": "String"
+      }
+    }
+  },
+  "dark": "गहरा",
+  "light": "हल्का",
+  "sampleCardTitle": "नमूना कार्ड शीर्षक",
+  "sampleSecondaryText": "यह नीचे दिखाई देने वाला द्वितीयक पाठ है।",
+  "primary": "प्राथमिक",
+  "success": "सफलता",
+  "error": "त्रुटि",
+  "secondary": "द्वितीयक",
+  "warning": "चेतावनी"
 }

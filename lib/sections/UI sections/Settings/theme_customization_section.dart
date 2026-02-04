@@ -1,5 +1,6 @@
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:provider/provider.dart';
+import 'package:screentime/l10n/app_localizations.dart';
 import 'package:screentime/sections/UI%20sections/Settings/colorpicker.dart';
 import 'package:screentime/sections/UI sections/Settings/resuables.dart';
 import 'package:screentime/sections/UI sections/Settings/theme_customization_model.dart';
@@ -33,9 +34,10 @@ class _ThemeCustomizationSectionState extends State<ThemeCustomizationSection> {
   Widget build(BuildContext context) {
     final themeProvider = context.watch<ThemeCustomizationProvider>();
     final fluentTheme = FluentTheme.of(context);
+    final l10n = AppLocalizations.of(context)!;
 
     return SettingsCard(
-      title: 'Theme Customization',
+      title: l10n.themeCustomization,
       icon: FluentIcons.color,
       iconColor: Colors.magenta,
       trailing: Text(
@@ -54,7 +56,7 @@ class _ThemeCustomizationSectionState extends State<ThemeCustomizationSection> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                'Choose a Theme Preset',
+                l10n.chooseThemePreset,
                 style: TextStyle(
                   fontSize: 13,
                   fontWeight: FontWeight.w600,
@@ -95,7 +97,7 @@ class _ThemeCustomizationSectionState extends State<ThemeCustomizationSection> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text(
-                      'Your Custom Themes',
+                      l10n.yourCustomThemes,
                       style: TextStyle(
                         fontSize: 13,
                         fontWeight: FontWeight.w600,
@@ -137,16 +139,16 @@ class _ThemeCustomizationSectionState extends State<ThemeCustomizationSection> {
 
         // Create Custom Theme Button
         SettingRow(
-          title: 'Create Custom Theme',
-          description: 'Design your own color scheme',
+          title: l10n.createCustomTheme,
+          description: l10n.designOwnColorScheme,
           control: FilledButton(
             onPressed: () => _createNewCustomTheme(context, themeProvider),
-            child: const Row(
+            child: Row(
               mainAxisSize: MainAxisSize.min,
               children: [
-                Icon(FluentIcons.add, size: 12),
-                SizedBox(width: 6),
-                Text('New Theme', style: TextStyle(fontSize: 11)),
+                const Icon(FluentIcons.add, size: 12),
+                const SizedBox(width: 6),
+                Text(l10n.newTheme, style: const TextStyle(fontSize: 11)),
               ],
             ),
           ),
@@ -156,19 +158,19 @@ class _ThemeCustomizationSectionState extends State<ThemeCustomizationSection> {
         if (themeProvider.currentTheme.isCustom) ...[
           const Divider(),
           SettingRow(
-            title: 'Edit Current Theme',
+            title: l10n.editCurrentTheme,
             description:
-                'Customize colors for ${themeProvider.currentTheme.name}',
+                l10n.customizeColorsFor(themeProvider.currentTheme.name),
             showDivider: false,
             control: FilledButton(
               onPressed: () => _editCustomTheme(
                   context, themeProvider, themeProvider.currentTheme),
-              child: const Row(
+              child: Row(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  Icon(FluentIcons.edit, size: 12),
-                  SizedBox(width: 6),
-                  Text('Edit', style: TextStyle(fontSize: 11)),
+                  const Icon(FluentIcons.edit, size: 12),
+                  const SizedBox(width: 6),
+                  Text(l10n.edit, style: const TextStyle(fontSize: 11)),
                 ],
               ),
             ),
@@ -180,12 +182,13 @@ class _ThemeCustomizationSectionState extends State<ThemeCustomizationSection> {
 
   void _createNewCustomTheme(
       BuildContext context, ThemeCustomizationProvider provider) {
+    final l10n = AppLocalizations.of(context)!;
     showDialog(
       context: context,
       builder: (context) => _ThemeEditorDialog(
         initialTheme: ThemePresets.defaultTheme.copyWith(
           id: 'custom_${DateTime.now().millisecondsSinceEpoch}',
-          name: 'Custom Theme ${provider.customThemes.length + 1}',
+          name: l10n.customThemeNumber(provider.customThemes.length + 1),
           isCustom: true,
         ),
         onSave: (theme) async {
@@ -220,21 +223,22 @@ class _ThemeCustomizationSectionState extends State<ThemeCustomizationSection> {
 
   void _deleteCustomTheme(BuildContext context,
       ThemeCustomizationProvider provider, CustomThemeData theme) {
+    final l10n = AppLocalizations.of(context)!;
     showDialog(
       context: context,
       builder: (context) => ContentDialog(
-        title: const Text('Delete Custom Theme'),
-        content: Text('Are you sure you want to delete "${theme.name}"?'),
+        title: Text(l10n.deleteCustomTheme),
+        content: Text(l10n.confirmDeleteTheme(theme.name)),
         actions: [
           Button(
-            child: const Text('Cancel'),
+            child: Text(l10n.cancel),
             onPressed: () => Navigator.pop(context),
           ),
           FilledButton(
             style: const ButtonStyle(
               backgroundColor: WidgetStatePropertyAll(Color(0xffff0000)),
             ),
-            child: const Text('Delete'),
+            child: Text(l10n.delete),
             onPressed: () async {
               await provider.deleteCustomTheme(theme.id);
               if (mounted) {
@@ -477,13 +481,15 @@ class _ThemeEditorDialogState extends State<_ThemeEditorDialog> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+
     return ContentDialog(
       constraints: const BoxConstraints(maxWidth: 700, maxHeight: 800),
       title: Row(
         children: [
           const Icon(FluentIcons.color, size: 20),
           const SizedBox(width: 12),
-          const Text('Customize Theme'),
+          Text(l10n.customizeTheme),
           const Spacer(),
           // Live Preview Indicator
           Container(
@@ -505,7 +511,7 @@ class _ThemeEditorDialogState extends State<_ThemeEditorDialog> {
                 ),
                 const SizedBox(width: 6),
                 Text(
-                  'Preview',
+                  l10n.preview,
                   style: TextStyle(
                     fontSize: 11,
                     color: _currentTheme.primaryAccent,
@@ -524,7 +530,7 @@ class _ThemeEditorDialogState extends State<_ThemeEditorDialog> {
             padding: const EdgeInsets.only(bottom: 16),
             child: TextBox(
               controller: _nameController,
-              placeholder: 'Theme Name',
+              placeholder: l10n.themeName,
               prefix: const Padding(
                 padding: EdgeInsets.only(left: 8),
                 child: Icon(FluentIcons.tag, size: 14),
@@ -538,21 +544,21 @@ class _ThemeEditorDialogState extends State<_ThemeEditorDialog> {
             child: Row(
               children: [
                 _TabButton(
-                  label: 'Brand Colors',
+                  label: l10n.brandColors,
                   icon: FluentIcons.color,
                   isSelected: _selectedTabIndex == 0,
                   onTap: () => setState(() => _selectedTabIndex = 0),
                 ),
                 const SizedBox(width: 8),
                 _TabButton(
-                  label: 'Light Theme',
+                  label: l10n.lightTheme,
                   icon: FluentIcons.sunny,
                   isSelected: _selectedTabIndex == 1,
                   onTap: () => setState(() => _selectedTabIndex = 1),
                 ),
                 const SizedBox(width: 8),
                 _TabButton(
-                  label: 'Dark Theme',
+                  label: l10n.darkTheme,
                   icon: FluentIcons.clear_night,
                   isSelected: _selectedTabIndex == 2,
                   onTap: () => setState(() => _selectedTabIndex = 2),
@@ -578,11 +584,11 @@ class _ThemeEditorDialogState extends State<_ThemeEditorDialog> {
       ),
       actions: [
         Button(
-          child: const Text('Cancel'),
+          child: Text(l10n.cancel),
           onPressed: () => Navigator.pop(context),
         ),
         Button(
-          child: const Text('Reset'),
+          child: Text(l10n.reset),
           onPressed: () {
             setState(() {
               _currentTheme = widget.initialTheme;
@@ -591,11 +597,11 @@ class _ThemeEditorDialogState extends State<_ThemeEditorDialog> {
           },
         ),
         FilledButton(
-          child: const Text('Save Theme'),
+          child: Text(l10n.saveTheme),
           onPressed: () {
             final updatedTheme = _currentTheme.copyWith(
               name: _nameController.text.trim().isEmpty
-                  ? 'Custom Theme'
+                  ? l10n.customTheme
                   : _nameController.text.trim(),
             );
             widget.onSave(updatedTheme);
@@ -718,46 +724,48 @@ class _BrandColorsTab extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         _ColorSectionHeader(
-          title: 'Primary Colors',
-          description: 'Main accent colors used throughout the app',
+          title: l10n.primaryColors,
+          description: l10n.primaryColorsDesc,
         ),
         _ColorPickerRow(
-          label: 'Primary Accent',
-          description: 'Main brand color, buttons, links',
+          label: l10n.primaryAccent,
+          description: l10n.primaryAccentDesc,
           color: theme.primaryAccent,
           onColorChanged: (c) => onColorChange('primaryAccent', c),
         ),
         _ColorPickerRow(
-          label: 'Secondary Accent',
-          description: 'Complementary accent for gradients',
+          label: l10n.secondaryAccent,
+          description: l10n.secondaryAccentDesc,
           color: theme.secondaryAccent,
           onColorChanged: (c) => onColorChange('secondaryAccent', c),
         ),
 
         const SizedBox(height: 20),
         _ColorSectionHeader(
-          title: 'Semantic Colors',
-          description: 'Colors that convey meaning and status',
+          title: l10n.semanticColors,
+          description: l10n.semanticColorsDesc,
         ),
         _ColorPickerRow(
-          label: 'Success Color',
-          description: 'Positive actions, confirmations',
+          label: l10n.successColor,
+          description: l10n.successColorDesc,
           color: theme.successColor,
           onColorChanged: (c) => onColorChange('successColor', c),
         ),
         _ColorPickerRow(
-          label: 'Warning Color',
-          description: 'Caution, pending states',
+          label: l10n.warningColor,
+          description: l10n.warningColorDesc,
           color: theme.warningColor,
           onColorChanged: (c) => onColorChange('warningColor', c),
         ),
         _ColorPickerRow(
-          label: 'Error Color',
-          description: 'Errors, destructive actions',
+          label: l10n.errorColor,
+          description: l10n.errorColorDesc,
           color: theme.errorColor,
           onColorChanged: (c) => onColorChange('errorColor', c),
         ),
@@ -784,52 +792,54 @@ class _LightThemeTab extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         _ColorSectionHeader(
-          title: 'Background Colors',
-          description: 'Main background surfaces for light mode',
+          title: l10n.backgroundColors,
+          description: l10n.backgroundColorsLightDesc,
         ),
         _ColorPickerRow(
-          label: 'Background',
-          description: 'Main app background',
+          label: l10n.background,
+          description: l10n.backgroundDesc,
           color: theme.lightBackground,
           onColorChanged: (c) => onColorChange('lightBackground', c),
         ),
         _ColorPickerRow(
-          label: 'Surface',
-          description: 'Cards, dialogs, elevated surfaces',
+          label: l10n.surface,
+          description: l10n.surfaceDesc,
           color: theme.lightSurface,
           onColorChanged: (c) => onColorChange('lightSurface', c),
         ),
         _ColorPickerRow(
-          label: 'Surface Secondary',
-          description: 'Secondary cards, sidebars',
+          label: l10n.surfaceSecondary,
+          description: l10n.surfaceSecondaryDesc,
           color: theme.lightSurfaceSecondary,
           onColorChanged: (c) => onColorChange('lightSurfaceSecondary', c),
         ),
         _ColorPickerRow(
-          label: 'Border',
-          description: 'Dividers, card borders',
+          label: l10n.border,
+          description: l10n.borderDesc,
           color: theme.lightBorder,
           onColorChanged: (c) => onColorChange('lightBorder', c),
         ),
 
         const SizedBox(height: 20),
         _ColorSectionHeader(
-          title: 'Text Colors',
-          description: 'Typography colors for light mode',
+          title: l10n.textColors,
+          description: l10n.textColorsLightDesc,
         ),
         _ColorPickerRow(
-          label: 'Text Primary',
-          description: 'Headings, important text',
+          label: l10n.textPrimary,
+          description: l10n.textPrimaryDesc,
           color: theme.lightTextPrimary,
           onColorChanged: (c) => onColorChange('lightTextPrimary', c),
         ),
         _ColorPickerRow(
-          label: 'Text Secondary',
-          description: 'Descriptions, captions',
+          label: l10n.textSecondary,
+          description: l10n.textSecondaryDesc,
           color: theme.lightTextSecondary,
           onColorChanged: (c) => onColorChange('lightTextSecondary', c),
         ),
@@ -856,52 +866,54 @@ class _DarkThemeTab extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         _ColorSectionHeader(
-          title: 'Background Colors',
-          description: 'Main background surfaces for dark mode',
+          title: l10n.backgroundColors,
+          description: l10n.backgroundColorsDarkDesc,
         ),
         _ColorPickerRow(
-          label: 'Background',
-          description: 'Main app background',
+          label: l10n.background,
+          description: l10n.backgroundDesc,
           color: theme.darkBackground,
           onColorChanged: (c) => onColorChange('darkBackground', c),
         ),
         _ColorPickerRow(
-          label: 'Surface',
-          description: 'Cards, dialogs, elevated surfaces',
+          label: l10n.surface,
+          description: l10n.surfaceDesc,
           color: theme.darkSurface,
           onColorChanged: (c) => onColorChange('darkSurface', c),
         ),
         _ColorPickerRow(
-          label: 'Surface Secondary',
-          description: 'Secondary cards, sidebars',
+          label: l10n.surfaceSecondary,
+          description: l10n.surfaceSecondaryDesc,
           color: theme.darkSurfaceSecondary,
           onColorChanged: (c) => onColorChange('darkSurfaceSecondary', c),
         ),
         _ColorPickerRow(
-          label: 'Border',
-          description: 'Dividers, card borders',
+          label: l10n.border,
+          description: l10n.borderDesc,
           color: theme.darkBorder,
           onColorChanged: (c) => onColorChange('darkBorder', c),
         ),
 
         const SizedBox(height: 20),
         _ColorSectionHeader(
-          title: 'Text Colors',
-          description: 'Typography colors for dark mode',
+          title: l10n.textColors,
+          description: l10n.textColorsDarkDesc,
         ),
         _ColorPickerRow(
-          label: 'Text Primary',
-          description: 'Headings, important text',
+          label: l10n.textPrimary,
+          description: l10n.textPrimaryDesc,
           color: theme.darkTextPrimary,
           onColorChanged: (c) => onColorChange('darkTextPrimary', c),
         ),
         _ColorPickerRow(
-          label: 'Text Secondary',
-          description: 'Descriptions, captions',
+          label: l10n.textSecondary,
+          description: l10n.textSecondaryDesc,
           color: theme.darkTextSecondary,
           onColorChanged: (c) => onColorChange('darkTextSecondary', c),
         ),
@@ -1091,6 +1103,7 @@ class _ThemePreviewCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     final background = isDark ? theme.darkBackground : theme.lightBackground;
     final surface = isDark ? theme.darkSurface : theme.lightSurface;
     final border = isDark ? theme.darkBorder : theme.lightBorder;
@@ -1109,7 +1122,7 @@ class _ThemePreviewCard extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            'Preview: ${isDark ? "Dark" : "Light"} Mode',
+            l10n.previewMode(isDark ? l10n.dark : l10n.light),
             style: TextStyle(
               fontSize: 13,
               fontWeight: FontWeight.w600,
@@ -1130,7 +1143,7 @@ class _ThemePreviewCard extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  'Sample Card Title',
+                  l10n.sampleCardTitle,
                   style: TextStyle(
                     fontSize: 12,
                     fontWeight: FontWeight.w600,
@@ -1139,7 +1152,7 @@ class _ThemePreviewCard extends StatelessWidget {
                 ),
                 const SizedBox(height: 4),
                 Text(
-                  'This is secondary text that appears below.',
+                  l10n.sampleSecondaryText,
                   style: TextStyle(
                     fontSize: 11,
                     color: textSecondary,
@@ -1150,17 +1163,17 @@ class _ThemePreviewCard extends StatelessWidget {
                   children: [
                     _PreviewButton(
                       color: theme.primaryAccent,
-                      label: 'Primary',
+                      label: l10n.primary,
                     ),
                     const SizedBox(width: 8),
                     _PreviewButton(
                       color: theme.successColor,
-                      label: 'Success',
+                      label: l10n.success,
                     ),
                     const SizedBox(width: 8),
                     _PreviewButton(
                       color: theme.errorColor,
-                      label: 'Error',
+                      label: l10n.error,
                     ),
                   ],
                 ),
@@ -1173,11 +1186,12 @@ class _ThemePreviewCard extends StatelessWidget {
           // Color Swatches Row
           Row(
             children: [
-              _PreviewSwatch(color: theme.primaryAccent, label: 'Primary'),
-              _PreviewSwatch(color: theme.secondaryAccent, label: 'Secondary'),
-              _PreviewSwatch(color: theme.successColor, label: 'Success'),
-              _PreviewSwatch(color: theme.warningColor, label: 'Warning'),
-              _PreviewSwatch(color: theme.errorColor, label: 'Error'),
+              _PreviewSwatch(color: theme.primaryAccent, label: l10n.primary),
+              _PreviewSwatch(
+                  color: theme.secondaryAccent, label: l10n.secondary),
+              _PreviewSwatch(color: theme.successColor, label: l10n.success),
+              _PreviewSwatch(color: theme.warningColor, label: l10n.warning),
+              _PreviewSwatch(color: theme.errorColor, label: l10n.error),
             ],
           ),
         ],

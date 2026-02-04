@@ -1414,5 +1414,333 @@
   "voiceGenderTitle": "Voice Gender",
   "voiceGenderDescription": "Choose the voice gender for timer notifications",
   "voiceGenderMale": "Male",
-  "voiceGenderFemale": "Female"
+  "voiceGenderFemale": "Female",
+
+  "alertsLimitsSubtitle": "Manage your screen time limits and notifications",
+  
+  "applicationsSubtitle": "Manage your tracked applications",
+  "applicationCount": "{count, plural, =1{1 application} other{{count} applications}}",
+  "@applicationCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "refresh": "Refresh",
+  "noApplicationsFound": "No applications found",
+  "tryAdjustingFilters": "Try adjusting your filters",
+  "configureAppSettings": "Configure application settings",
+  "behaviorSection": "Behavior",
+  
+  "helpSubtitle": "{count, plural, =1{1 question across 7 categories} other{{count} questions across 7 categories}}",
+  "@helpSubtitle": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "searchForHelp": "Search for help...",
+  "quickNavGeneral": "General",
+  "quickNavApps": "Apps",
+  "quickNavReports": "Reports",
+  "quickNavFocus": "Focus",
+  "noResultsFound": "No results found",
+  "tryDifferentKeywords": "Try searching with different keywords",
+  "clearSearch": "Clear search",
+  
+  "greetingMorning": "Good morning! Here's your activity summary.",
+  "greetingAfternoon": "Good afternoon! Here's your activity summary.",
+  "greetingEvening": "Good evening! Here's your activity summary.",
+  "screenTimeProgress": "Screen\nTime",
+  "productiveScoreProgress": "Productive\nScore",
+  
+  "sectionLabel": "{title} section",
+  "@sectionLabel": {
+    "placeholders": {
+      "title": {
+        "type": "String"
+      }
+    }
+  },
+  
+  "focusModeSubtitle": "Stay focused, be productive",
+  "thisWeek": "This Week",
+  "sessions": "Sessions",
+  "totalTime": "Total Time",
+  "avgLength": "Avg Length",
+  "focusTime": "Focus Time",
+  "paused": "Paused",
+  "shortBreakStatus": "Short Break",
+  "longBreakStatus": "Long Break",
+  "readyToFocus": "Ready to Focus",
+  "focus": "Focus",
+  "shortBreakLabel": "Short Break",
+  "longBreakLabel": "Long Break",
+  "restartSession": "Restart Session",
+  "skipToNext": "Skip to Next",
+  "settings": "Settings",
+  "sessionsCompleted": "{count, plural, =1{1 session completed} other{{count} sessions completed}}",
+  "@sessionsCompleted": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "focusModePreset": "Focus Mode Preset",
+  "focusDuration": "Focus Duration",
+  "minutesFormat": "{minutes} min",
+  "@minutesFormat": {
+    "placeholders": {
+      "minutes": {
+        "type": "int"
+      }
+    }
+  },
+  "shortBreakDuration": "Short Break",
+  "longBreakDuration": "Long Break",
+  "enableSounds": "Enable Sounds",
+  "focus_mode_this_week": "This Week",
+  "focus_mode_best_day": "Best Day",
+  "focus_mode_sessions_count": "{count, plural, =0{0 sessions} =1{1 session} other{{count} sessions}}",
+  "@focus_mode_sessions_count": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "focus_mode_no_data_yet": "No data yet",
+  "chart_current": "Current",
+  "chart_previous": "Previous",
+  "permission_error": "Permission Error",
+  "notification_permission_denied": "Notification Permission Denied",
+  "notification_permission_denied_message": "ScreenTime needs notification permission to send you alerts and reminders.\n\nWould you like to open System Settings to enable notifications?",
+  "notification_permission_denied_hint": "Open System Settings to enable notifications for ScreenTime.",
+  "notification_permission_required": "Notification Permission Required",
+  "notification_permission_required_message": "ScreenTime needs permission to send you notifications.",
+  "cancel": "Cancel",
+  "open_settings": "Open Settings",
+  "allow_notifications": "Allow Notifications",
+  "permission_allowed": "Allowed",
+  "permission_denied": "Denied",
+  "permission_not_set": "Not Set",
+  "on": "On",
+  "off": "Off",
+  "enable_notification_permission_hint": "Enable notification permission to receive alerts",
+  "minutes_format": "{minutes} min",
+  "@minutes_format": {
+    "placeholders": {
+      "minutes": {
+        "type": "int"
+      }
+    }
+  },
+  "chart_average": "Average",
+  "chart_peak": "Peak",
+  "chart_lowest": "Lowest",
+  "active": "Active",
+  "disabled": "Disabled",
+  "advanced_options": "Advanced Options",
+  "sync_ready": "Sync Ready",
+  "success": "Success!",
+  "error": "Error",
+  "destructive_badge": "Destructive",
+  "recommended_badge": "Recommended",
+  "safe_badge": "Safe",
+  "overview": "Overview",
+  "patterns": "Patterns",
+  "apps": "Apps",
+  "sortAscending": "Sort Ascending",
+  "sortDescending": "Sort Descending",
+  "clearSearch": "Clear Search",
+  "applicationsShowing": "{count, plural, =0{0 applications showing} =1{1 application showing} other{{count} applications showing}}",
+  "@applicationsShowing": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "totalTime": "Total Time",
+  "valueLabel": "Value: {value}",
+  "@valueLabel": {
+    "placeholders": {
+      "value": {
+        "type": "String"
+      }
+    }
+  },
+  "appsCount": "{count, plural, =0{0 apps} =1{1 app} other{{count} apps}}",
+  "@appsCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "categoriesCount": "{count, plural, =0{0 categories} =1{1 category} other{{count} categories}}",
+  "@categoriesCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "systemNotificationsDisabled": "System notifications are disabled. Enable them in System Settings for focus alerts.",
+  "openSystemSettings": "Open System Settings",
+  "appNotificationsDisabled": "Notifications are disabled in app settings. Enable them to receive focus alerts.",
+  "goToSettings": "Go to Settings",
+  "focusModeNotificationsDisabled": "Focus mode notifications are disabled. Enable them to receive session alerts.",
+  "notificationsDisabled": "Notifications Disabled",
+  "dontShowAgain": "Don't show again",
+  "systemSettingsRequired": "System Settings Required",
+  "notificationsDisabledSystemLevel": "Notifications are disabled at the system level. To enable:",
+  "step1OpenSystemSettings": "1. Open System Settings (System Preferences)",
+  "step2GoToNotifications": "2. Go to Notifications",
+  "step3FindApp": "3. Find and select TimeMark",
+  "step4EnableNotifications": "4. Enable \"Allow notifications\"",
+  "returnToAppMessage": "Then return to this app and notifications will work.",
+  "gotIt": "Got it",
+  "noSessionsYet": "No sessions yet",
+  "applicationsTracked": "{count, plural, =0{0 applications tracked} =1{1 application tracked} other{{count} applications tracked}}",
+  "@applicationsTracked": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "applicationHeader": "Application",
+  "currentUsageHeader": "Current Usage",
+  "dailyLimitHeader": "Daily Limit",
+  "edit": "Edit",
+  "showPopupNotifications": "Show popup notifications",
+  "moreFrequentReminders": "More frequent reminders",
+  "playSoundWithAlerts": "Play sound with alerts",
+  "systemTrayNotifications": "System tray notifications",
+  "screenTimeUsed": "{current} / {limit} used",
+  "@screenTimeUsed": {
+    "placeholders": {
+      "current": {
+        "type": "String"
+      },
+      "limit": {
+        "type": "String"
+      }
+    }
+  },
+  "todaysScreenTime": "Today's Screen Time",
+  "activeLimits": "Active Limits",
+  "nearLimit": "Near Limit",
+  "colorPickerSpectrum": "Spectrum",
+  "colorPickerPresets": "Presets",
+  "colorPickerSliders": "Sliders",
+  "colorPickerBasicColors": "Basic Colors",
+  "colorPickerExtendedPalette": "Extended Palette",
+  "colorPickerRed": "Red",
+  "colorPickerGreen": "Green",
+  "colorPickerBlue": "Blue",
+  "colorPickerHue": "Hue",
+  "colorPickerSaturation": "Saturation",
+  "colorPickerBrightness": "Brightness",
+  "colorPickerHexColor": "Hex Color",
+  "colorPickerHexPlaceholder": "RRGGBB",
+  "colorPickerRGB": "RGB",
+  "cancel": "Cancel",
+  "select": "Select",
+  "themeCustomization": "Theme Customization",
+  "chooseThemePreset": "Choose a Theme Preset",
+  "yourCustomThemes": "Your Custom Themes",
+  "createCustomTheme": "Create Custom Theme",
+  "designOwnColorScheme": "Design your own color scheme",
+  "newTheme": "New Theme",
+  "editCurrentTheme": "Edit Current Theme",
+  "customizeColorsFor": "Customize colors for {themeName}",
+  "@customizeColorsFor": {
+    "placeholders": {
+      "themeName": {
+        "type": "String"
+      }
+    }
+  },
+  "edit": "Edit",
+  "customThemeNumber": "Custom Theme {number}",
+  "@customThemeNumber": {
+    "placeholders": {
+      "number": {
+        "type": "int"
+      }
+    }
+  },
+  "deleteCustomTheme": "Delete Custom Theme",
+  "confirmDeleteTheme": "Are you sure you want to delete \"{themeName}\"?",
+  "@confirmDeleteTheme": {
+    "placeholders": {
+      "themeName": {
+        "type": "String"
+      }
+    }
+  },
+  "delete": "Delete",
+  "customizeTheme": "Customize Theme",
+  "preview": "Preview",
+  "themeName": "Theme Name",
+  "brandColors": "Brand Colors",
+  "lightTheme": "Light Theme",
+  "darkTheme": "Dark Theme",
+  "reset": "Reset",
+  "saveTheme": "Save Theme",
+  "customTheme": "Custom Theme",
+  "primaryColors": "Primary Colors",
+  "primaryColorsDesc": "Main accent colors used throughout the app",
+  "primaryAccent": "Primary Accent",
+  "primaryAccentDesc": "Main brand color, buttons, links",
+  "secondaryAccent": "Secondary Accent",
+  "secondaryAccentDesc": "Complementary accent for gradients",
+  "semanticColors": "Semantic Colors",
+  "semanticColorsDesc": "Colors that convey meaning and status",
+  "successColor": "Success Color",
+  "successColorDesc": "Positive actions, confirmations",
+  "warningColor": "Warning Color",
+  "warningColorDesc": "Caution, pending states",
+  "errorColor": "Error Color",
+  "errorColorDesc": "Errors, destructive actions",
+  "backgroundColors": "Background Colors",
+  "backgroundColorsLightDesc": "Main background surfaces for light mode",
+  "backgroundColorsDarkDesc": "Main background surfaces for dark mode",
+  "background": "Background",
+  "backgroundDesc": "Main app background",
+  "surface": "Surface",
+  "surfaceDesc": "Cards, dialogs, elevated surfaces",
+  "surfaceSecondary": "Surface Secondary",
+  "surfaceSecondaryDesc": "Secondary cards, sidebars",
+  "border": "Border",
+  "borderDesc": "Dividers, card borders",
+  "textColors": "Text Colors",
+  "textColorsLightDesc": "Typography colors for light mode",
+  "textColorsDarkDesc": "Typography colors for dark mode",
+  "textPrimary": "Text Primary",
+  "textPrimaryDesc": "Headings, important text",
+  "textSecondary": "Text Secondary",
+  "textSecondaryDesc": "Descriptions, captions",
+  "previewMode": "Preview: {mode} Mode",
+  "@previewMode": {
+    "placeholders": {
+      "mode": {
+        "type": "String"
+      }
+    }
+  },
+  "dark": "Dark",
+  "light": "Light",
+  "sampleCardTitle": "Sample Card Title",
+  "sampleSecondaryText": "This is secondary text that appears below.",
+  "primary": "Primary",
+  "success": "Success",
+  "error": "Error",
+  "secondary": "Secondary",
+  "warning": "Warning"
 }

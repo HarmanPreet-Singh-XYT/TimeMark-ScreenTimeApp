@@ -119,7 +119,8 @@ class OverallLimitCard extends StatelessWidget {
                   ),
                   const SizedBox(height: 8),
                   Text(
-                    '${_formatDuration(totalScreenTime)} / ${_formatDuration(limitDuration)} used',
+                    l10n.screenTimeUsed(_formatDuration(totalScreenTime),
+                        _formatDuration(limitDuration)),
                     style: TextStyle(
                       fontSize: 12,
                       color: statusColor,

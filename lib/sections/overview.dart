@@ -496,9 +496,9 @@ class _Header extends StatelessWidget {
 
   String _getGreeting(AppLocalizations l10n) {
     final hour = DateTime.now().hour;
-    if (hour < 12) return "Good morning! Here's your activity summary.";
-    if (hour < 17) return "Good afternoon! Here's your activity summary.";
-    return "Good evening! Here's your activity summary.";
+    if (hour < 12) return l10n.greetingMorning;
+    if (hour < 17) return l10n.greetingAfternoon;
+    return l10n.greetingEvening;
   }
 }
 
@@ -662,20 +662,21 @@ class _ResponsiveBottomSection extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = FluentTheme.of(context);
+    final l10n = AppLocalizations.of(context)!;
 
     if (isCompact) {
-      return _buildCompactLayout(theme);
+      return _buildCompactLayout(theme, l10n);
     }
 
     if (isMedium) {
-      return _buildMediumLayout(theme);
+      return _buildMediumLayout(theme, l10n);
     }
 
-    return _buildExpandedLayout(theme);
+    return _buildExpandedLayout(theme, l10n);
   }
 
   // Stacked vertical layout for narrow screens
-  Widget _buildCompactLayout(FluentThemeData theme) {
+  Widget _buildCompactLayout(FluentThemeData theme, AppLocalizations l10n) {
     return Column(
       children: [
         // Progress cards in a row
@@ -685,7 +686,7 @@ class _ResponsiveBottomSection extends StatelessWidget {
             children: [
               Expanded(
                 child: ProgressCard(
-                  title: 'Screen\nTime',
+                  title: l10n.screenTimeProgress,
                   value: screenTime,
                   color: const Color(0xffA855F7),
                 ),
@@ -693,7 +694,7 @@ class _ResponsiveBottomSection extends StatelessWidget {
               const SizedBox(width: 12),
               Expanded(
                 child: ProgressCard(
-                  title: 'Productive\nScore',
+                  title: l10n.productiveScoreProgress,
                   value: productiveScore,
                   color: const Color(0xff22C55E),
                 ),
@@ -712,7 +713,7 @@ class _ResponsiveBottomSection extends StatelessWidget {
   }
 
   // Two-column layout with limits on left, progress stacked on right
-  Widget _buildMediumLayout(FluentThemeData theme) {
+  Widget _buildMediumLayout(FluentThemeData theme, AppLocalizations l10n) {
     return Row(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
@@ -744,7 +745,7 @@ class _ResponsiveBottomSection extends StatelessWidget {
   }
 
   // Full horizontal layout for wide screens
-  Widget _buildExpandedLayout(FluentThemeData theme) {
+  Widget _buildExpandedLayout(FluentThemeData theme, AppLocalizations l10n) {
     return Row(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [

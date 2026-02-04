@@ -844,12 +844,12 @@ class AppLocalizationsJa extends AppLocalizations {
 
   @override
   String shortBreakLabel(int minutes) {
-    return '短い休憩: $minutes分';
+    return '短い休憩';
   }
 
   @override
   String longBreakLabel(int minutes) {
-    return '長い休憩: $minutes分';
+    return '長い休憩';
   }
 
   @override
@@ -1652,30 +1652,648 @@ class AppLocalizationsJa extends AppLocalizations {
   }
 
   @override
-  String get themeLight => 'Light';
+  String get themeLight => 'ライト';
 
   @override
-  String get themeDark => 'Dark';
+  String get themeDark => 'ダーク';
 
   @override
-  String get themeSystem => 'System';
+  String get themeSystem => 'システム';
 
   @override
   String get themeTitle => 'テーマ';
 
   @override
-  String get themeDescription => 'アプリケーションの配色テーマ（変更には再起動が必要）';
+  String get themeDescription => 'アプリケーションのカラーテーマ';
 
   @override
-  String get voiceGenderTitle => 'Voice Gender';
+  String get voiceGenderTitle => '音声の性別';
 
   @override
-  String get voiceGenderDescription =>
-      'Choose the voice gender for timer notifications';
+  String get voiceGenderDescription => 'タイマー通知の音声の性別を選択してください';
 
   @override
-  String get voiceGenderMale => 'Male';
+  String get voiceGenderMale => '男性';
 
   @override
-  String get voiceGenderFemale => 'Female';
+  String get voiceGenderFemale => '女性';
+
+  @override
+  String get alertsLimitsSubtitle => 'スクリーンタイムの制限と通知を管理する';
+
+  @override
+  String get applicationsSubtitle => '追跡されたアプリケーションを管理する';
+
+  @override
+  String applicationCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count 個のアプリケーション',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get noApplicationsFound => 'アプリケーションが見つかりません';
+
+  @override
+  String get tryAdjustingFilters => 'フィルターを調整してみてください';
+
+  @override
+  String get configureAppSettings => 'アプリケーション設定を構成する';
+
+  @override
+  String get behaviorSection => '動作';
+
+  @override
+  String helpSubtitle(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '7つのカテゴリに$count個の質問',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get searchForHelp => 'ヘルプを検索...';
+
+  @override
+  String get quickNavGeneral => '一般';
+
+  @override
+  String get quickNavApps => 'アプリ';
+
+  @override
+  String get quickNavReports => 'レポート';
+
+  @override
+  String get quickNavFocus => 'フォーカス';
+
+  @override
+  String get noResultsFound => '結果が見つかりません';
+
+  @override
+  String get tryDifferentKeywords => '別のキーワードで検索してみてください';
+
+  @override
+  String get clearSearch => '検索をクリア';
+
+  @override
+  String get greetingMorning => 'おはようございます！アクティビティの概要をご覧ください。';
+
+  @override
+  String get greetingAfternoon => 'こんにちは！アクティビティの概要をご覧ください。';
+
+  @override
+  String get greetingEvening => 'こんばんは！アクティビティの概要をご覧ください。';
+
+  @override
+  String get screenTimeProgress => 'スクリーン\nタイム';
+
+  @override
+  String get productiveScoreProgress => '生産性\nスコア';
+
+  @override
+  String get focusModeSubtitle => '集中して、生産的に';
+
+  @override
+  String get thisWeek => '今週';
+
+  @override
+  String get sessions => 'セッション';
+
+  @override
+  String get totalTime => '合計時間';
+
+  @override
+  String get avgLength => '平均時間';
+
+  @override
+  String get focusTime => '集中時間';
+
+  @override
+  String get paused => '一時停止中';
+
+  @override
+  String get shortBreakStatus => '短い休憩';
+
+  @override
+  String get longBreakStatus => '長い休憩';
+
+  @override
+  String get readyToFocus => '集中する準備完了';
+
+  @override
+  String get focus => '集中';
+
+  @override
+  String get restartSession => 'セッションを再開';
+
+  @override
+  String get skipToNext => '次へスキップ';
+
+  @override
+  String get settings => '設定';
+
+  @override
+  String sessionsCompleted(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count セッション完了',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get focusModePreset => '集中モードプリセット';
+
+  @override
+  String get focusDuration => '集中時間';
+
+  @override
+  String minutesFormat(int minutes) {
+    return '$minutes 分';
+  }
+
+  @override
+  String get shortBreakDuration => '短い休憩';
+
+  @override
+  String get longBreakDuration => '長い休憩';
+
+  @override
+  String get enableSounds => 'サウンドを有効にする';
+
+  @override
+  String get focus_mode_this_week => '今週';
+
+  @override
+  String get focus_mode_best_day => 'ベストデー';
+
+  @override
+  String focus_mode_sessions_count(int count) {
+    return '$countセッション';
+  }
+
+  @override
+  String get focus_mode_no_data_yet => 'データがまだありません';
+
+  @override
+  String get chart_current => '現在';
+
+  @override
+  String get chart_previous => '前回';
+
+  @override
+  String get permission_error => '許可エラー';
+
+  @override
+  String get notification_permission_denied => '通知の許可が拒否されました';
+
+  @override
+  String get notification_permission_denied_message =>
+      'ScreenTimeはアラートとリマインダーを送信するために通知の許可が必要です。\n\n通知を有効にするためにシステム設定を開きますか？';
+
+  @override
+  String get notification_permission_denied_hint =>
+      'ScreenTimeの通知を有効にするには、システム設定を開いてください。';
+
+  @override
+  String get notification_permission_required => '通知の許可が必要です';
+
+  @override
+  String get notification_permission_required_message =>
+      'ScreenTimeは通知を送信するために許可が必要です。';
+
+  @override
+  String get open_settings => '設定を開く';
+
+  @override
+  String get allow_notifications => '通知を許可';
+
+  @override
+  String get permission_allowed => '許可済み';
+
+  @override
+  String get permission_denied => '拒否';
+
+  @override
+  String get permission_not_set => '未設定';
+
+  @override
+  String get on => 'オン';
+
+  @override
+  String get off => 'オフ';
+
+  @override
+  String get enable_notification_permission_hint =>
+      'アラートを受信するには通知の許可を有効にしてください';
+
+  @override
+  String minutes_format(int minutes) {
+    return '$minutes分';
+  }
+
+  @override
+  String get chart_average => '平均';
+
+  @override
+  String get chart_peak => 'ピーク';
+
+  @override
+  String get chart_lowest => '最低';
+
+  @override
+  String get active => 'アクティブ';
+
+  @override
+  String get disabled => '無効';
+
+  @override
+  String get advanced_options => '詳細オプション';
+
+  @override
+  String get sync_ready => '同期準備完了';
+
+  @override
+  String get success => '成功';
+
+  @override
+  String get destructive_badge => '破壊的';
+
+  @override
+  String get recommended_badge => '推奨';
+
+  @override
+  String get safe_badge => '安全';
+
+  @override
+  String get overview => '概要';
+
+  @override
+  String get patterns => 'パターン';
+
+  @override
+  String get apps => 'アプリ';
+
+  @override
+  String get sortAscending => '昇順で並べ替え';
+
+  @override
+  String get sortDescending => '降順で並べ替え';
+
+  @override
+  String applicationsShowing(int count) {
+    return '$count個のアプリケーションを表示中';
+  }
+
+  @override
+  String valueLabel(String value) {
+    return '値：$value';
+  }
+
+  @override
+  String appsCount(int count) {
+    return '$count個のアプリ';
+  }
+
+  @override
+  String categoriesCount(int count) {
+    return '$count個のカテゴリ';
+  }
+
+  @override
+  String get systemNotificationsDisabled =>
+      'システム通知が無効になっています。フォーカスアラートのためにシステム設定で有効にしてください。';
+
+  @override
+  String get openSystemSettings => 'システム設定を開く';
+
+  @override
+  String get appNotificationsDisabled =>
+      'アプリ設定で通知が無効になっています。フォーカスアラートを受け取るには有効にしてください。';
+
+  @override
+  String get goToSettings => '設定に移動';
+
+  @override
+  String get focusModeNotificationsDisabled =>
+      'フォーカスモード通知が無効になっています。セッションアラートを受け取るには有効にしてください。';
+
+  @override
+  String get notificationsDisabled => '通知が無効';
+
+  @override
+  String get dontShowAgain => '今後表示しない';
+
+  @override
+  String get systemSettingsRequired => 'システム設定が必要';
+
+  @override
+  String get notificationsDisabledSystemLevel =>
+      'システムレベルで通知が無効になっています。有効にするには:';
+
+  @override
+  String get step1OpenSystemSettings => '1. システム設定（システム環境設定）を開く';
+
+  @override
+  String get step2GoToNotifications => '2. 通知に移動';
+
+  @override
+  String get step3FindApp => '3. TimeMarkを見つけて選択';
+
+  @override
+  String get step4EnableNotifications => '4. 「通知を許可」を有効にする';
+
+  @override
+  String get returnToAppMessage => 'その後、このアプリに戻ると通知が機能します。';
+
+  @override
+  String get gotIt => '了解';
+
+  @override
+  String get noSessionsYet => 'まだセッションがありません';
+
+  @override
+  String applicationsTracked(int count) {
+    return '$count個のアプリケーションを追跡中';
+  }
+
+  @override
+  String get applicationHeader => 'アプリケーション';
+
+  @override
+  String get currentUsageHeader => '現在の使用状況';
+
+  @override
+  String get dailyLimitHeader => '1日の制限';
+
+  @override
+  String get edit => '編集';
+
+  @override
+  String get showPopupNotifications => 'ポップアップ通知を表示';
+
+  @override
+  String get moreFrequentReminders => 'より頻繁なリマインダー';
+
+  @override
+  String get playSoundWithAlerts => 'アラートと一緒に音を再生';
+
+  @override
+  String get systemTrayNotifications => 'システムトレイ通知';
+
+  @override
+  String screenTimeUsed(String current, String limit) {
+    return '$current / $limit 使用済み';
+  }
+
+  @override
+  String get todaysScreenTime => '今日のスクリーンタイム';
+
+  @override
+  String get activeLimits => 'アクティブな制限';
+
+  @override
+  String get nearLimit => '制限に近い';
+
+  @override
+  String get colorPickerSpectrum => 'スペクトラム';
+
+  @override
+  String get colorPickerPresets => 'プリセット';
+
+  @override
+  String get colorPickerSliders => 'スライダー';
+
+  @override
+  String get colorPickerBasicColors => '基本色';
+
+  @override
+  String get colorPickerExtendedPalette => '拡張パレット';
+
+  @override
+  String get colorPickerRed => '赤';
+
+  @override
+  String get colorPickerGreen => '緑';
+
+  @override
+  String get colorPickerBlue => '青';
+
+  @override
+  String get colorPickerHue => '色相';
+
+  @override
+  String get colorPickerSaturation => '彩度';
+
+  @override
+  String get colorPickerBrightness => '明度';
+
+  @override
+  String get colorPickerHexColor => '16進数カラー';
+
+  @override
+  String get colorPickerHexPlaceholder => 'RRGGBB';
+
+  @override
+  String get colorPickerRGB => 'RGB';
+
+  @override
+  String get select => '選択';
+
+  @override
+  String get themeCustomization => 'テーマのカスタマイズ';
+
+  @override
+  String get chooseThemePreset => 'テーマプリセットを選択';
+
+  @override
+  String get yourCustomThemes => 'カスタムテーマ';
+
+  @override
+  String get createCustomTheme => 'カスタムテーマを作成';
+
+  @override
+  String get designOwnColorScheme => '独自のカラースキームをデザイン';
+
+  @override
+  String get newTheme => '新しいテーマ';
+
+  @override
+  String get editCurrentTheme => '現在のテーマを編集';
+
+  @override
+  String customizeColorsFor(String themeName) {
+    return '$themeNameの色をカスタマイズ';
+  }
+
+  @override
+  String customThemeNumber(int number) {
+    return 'カスタムテーマ $number';
+  }
+
+  @override
+  String get deleteCustomTheme => 'カスタムテーマを削除';
+
+  @override
+  String confirmDeleteTheme(String themeName) {
+    return '本当に「$themeName」を削除しますか？';
+  }
+
+  @override
+  String get delete => '削除';
+
+  @override
+  String get customizeTheme => 'テーマをカスタマイズ';
+
+  @override
+  String get preview => 'プレビュー';
+
+  @override
+  String get themeName => 'テーマ名';
+
+  @override
+  String get brandColors => 'ブランドカラー';
+
+  @override
+  String get lightTheme => 'ライトテーマ';
+
+  @override
+  String get darkTheme => 'ダークテーマ';
+
+  @override
+  String get reset => 'リセット';
+
+  @override
+  String get saveTheme => 'テーマを保存';
+
+  @override
+  String get customTheme => 'カスタムテーマ';
+
+  @override
+  String get primaryColors => 'プライマリカラー';
+
+  @override
+  String get primaryColorsDesc => 'アプリ全体で使用される主要なアクセントカラー';
+
+  @override
+  String get primaryAccent => 'プライマリアクセント';
+
+  @override
+  String get primaryAccentDesc => 'メインブランドカラー、ボタン、リンク';
+
+  @override
+  String get secondaryAccent => 'セカンダリアクセント';
+
+  @override
+  String get secondaryAccentDesc => 'グラデーション用の補完アクセント';
+
+  @override
+  String get semanticColors => 'セマンティックカラー';
+
+  @override
+  String get semanticColorsDesc => '意味とステータスを伝える色';
+
+  @override
+  String get successColor => '成功カラー';
+
+  @override
+  String get successColorDesc => 'ポジティブなアクション、確認';
+
+  @override
+  String get warningColor => '警告カラー';
+
+  @override
+  String get warningColorDesc => '注意、保留状態';
+
+  @override
+  String get errorColor => 'エラーカラー';
+
+  @override
+  String get errorColorDesc => 'エラー、破壊的なアクション';
+
+  @override
+  String get backgroundColors => '背景色';
+
+  @override
+  String get backgroundColorsLightDesc => 'ライトモード用のメイン背景サーフェス';
+
+  @override
+  String get backgroundColorsDarkDesc => 'ダークモード用のメイン背景サーフェス';
+
+  @override
+  String get background => '背景';
+
+  @override
+  String get backgroundDesc => 'メインアプリの背景';
+
+  @override
+  String get surface => 'サーフェス';
+
+  @override
+  String get surfaceDesc => 'カード、ダイアログ、高さのあるサーフェス';
+
+  @override
+  String get surfaceSecondary => 'セカンダリサーフェス';
+
+  @override
+  String get surfaceSecondaryDesc => 'セカンダリカード、サイドバー';
+
+  @override
+  String get border => 'ボーダー';
+
+  @override
+  String get borderDesc => '区切り線、カードのボーダー';
+
+  @override
+  String get textColors => 'テキストカラー';
+
+  @override
+  String get textColorsLightDesc => 'ライトモード用のタイポグラフィカラー';
+
+  @override
+  String get textColorsDarkDesc => 'ダークモード用のタイポグラフィカラー';
+
+  @override
+  String get textPrimary => 'プライマリテキスト';
+
+  @override
+  String get textPrimaryDesc => '見出し、重要なテキスト';
+
+  @override
+  String get textSecondary => 'セカンダリテキスト';
+
+  @override
+  String get textSecondaryDesc => '説明、キャプション';
+
+  @override
+  String previewMode(String mode) {
+    return 'プレビュー：$modeモード';
+  }
+
+  @override
+  String get dark => 'ダーク';
+
+  @override
+  String get light => 'ライト';
+
+  @override
+  String get sampleCardTitle => 'サンプルカードタイトル';
+
+  @override
+  String get sampleSecondaryText => 'これは下に表示されるセカンダリテキストです。';
+
+  @override
+  String get primary => 'プライマリ';
+
+  @override
+  String get secondary => 'セカンダリ';
+
+  @override
+  String get warning => '警告';
 }

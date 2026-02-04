@@ -796,7 +796,7 @@ abstract class AppLocalizations {
   /// **'No data available'**
   String get noDataAvailable;
 
-  /// Accessibility label for sections
+  /// No description provided for @sectionLabel.
   ///
   /// In en, this message translates to:
   /// **'{title} section'**
@@ -1645,13 +1645,13 @@ abstract class AppLocalizations {
   /// No description provided for @shortBreakLabel.
   ///
   /// In en, this message translates to:
-  /// **'Short Break: {minutes} min'**
+  /// **'Short Break'**
   String shortBreakLabel(int minutes);
 
   /// No description provided for @longBreakLabel.
   ///
   /// In en, this message translates to:
-  /// **'Long Break: {minutes} min'**
+  /// **'Long Break'**
   String longBreakLabel(int minutes);
 
   /// No description provided for @autoStartNextSession.
@@ -3219,6 +3219,1134 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Female'**
   String get voiceGenderFemale;
+
+  /// No description provided for @alertsLimitsSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Manage your screen time limits and notifications'**
+  String get alertsLimitsSubtitle;
+
+  /// No description provided for @applicationsSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Manage your tracked applications'**
+  String get applicationsSubtitle;
+
+  /// No description provided for @applicationCount.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{1 application} other{{count} applications}}'**
+  String applicationCount(int count);
+
+  /// No description provided for @noApplicationsFound.
+  ///
+  /// In en, this message translates to:
+  /// **'No applications found'**
+  String get noApplicationsFound;
+
+  /// No description provided for @tryAdjustingFilters.
+  ///
+  /// In en, this message translates to:
+  /// **'Try adjusting your filters'**
+  String get tryAdjustingFilters;
+
+  /// No description provided for @configureAppSettings.
+  ///
+  /// In en, this message translates to:
+  /// **'Configure application settings'**
+  String get configureAppSettings;
+
+  /// No description provided for @behaviorSection.
+  ///
+  /// In en, this message translates to:
+  /// **'Behavior'**
+  String get behaviorSection;
+
+  /// No description provided for @helpSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{1 question across 7 categories} other{{count} questions across 7 categories}}'**
+  String helpSubtitle(int count);
+
+  /// No description provided for @searchForHelp.
+  ///
+  /// In en, this message translates to:
+  /// **'Search for help...'**
+  String get searchForHelp;
+
+  /// No description provided for @quickNavGeneral.
+  ///
+  /// In en, this message translates to:
+  /// **'General'**
+  String get quickNavGeneral;
+
+  /// No description provided for @quickNavApps.
+  ///
+  /// In en, this message translates to:
+  /// **'Apps'**
+  String get quickNavApps;
+
+  /// No description provided for @quickNavReports.
+  ///
+  /// In en, this message translates to:
+  /// **'Reports'**
+  String get quickNavReports;
+
+  /// No description provided for @quickNavFocus.
+  ///
+  /// In en, this message translates to:
+  /// **'Focus'**
+  String get quickNavFocus;
+
+  /// No description provided for @noResultsFound.
+  ///
+  /// In en, this message translates to:
+  /// **'No results found'**
+  String get noResultsFound;
+
+  /// No description provided for @tryDifferentKeywords.
+  ///
+  /// In en, this message translates to:
+  /// **'Try searching with different keywords'**
+  String get tryDifferentKeywords;
+
+  /// No description provided for @clearSearch.
+  ///
+  /// In en, this message translates to:
+  /// **'Clear Search'**
+  String get clearSearch;
+
+  /// No description provided for @greetingMorning.
+  ///
+  /// In en, this message translates to:
+  /// **'Good morning! Here\'s your activity summary.'**
+  String get greetingMorning;
+
+  /// No description provided for @greetingAfternoon.
+  ///
+  /// In en, this message translates to:
+  /// **'Good afternoon! Here\'s your activity summary.'**
+  String get greetingAfternoon;
+
+  /// No description provided for @greetingEvening.
+  ///
+  /// In en, this message translates to:
+  /// **'Good evening! Here\'s your activity summary.'**
+  String get greetingEvening;
+
+  /// No description provided for @screenTimeProgress.
+  ///
+  /// In en, this message translates to:
+  /// **'Screen\nTime'**
+  String get screenTimeProgress;
+
+  /// No description provided for @productiveScoreProgress.
+  ///
+  /// In en, this message translates to:
+  /// **'Productive\nScore'**
+  String get productiveScoreProgress;
+
+  /// No description provided for @focusModeSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Stay focused, be productive'**
+  String get focusModeSubtitle;
+
+  /// No description provided for @thisWeek.
+  ///
+  /// In en, this message translates to:
+  /// **'This Week'**
+  String get thisWeek;
+
+  /// No description provided for @sessions.
+  ///
+  /// In en, this message translates to:
+  /// **'Sessions'**
+  String get sessions;
+
+  /// No description provided for @totalTime.
+  ///
+  /// In en, this message translates to:
+  /// **'Total Time'**
+  String get totalTime;
+
+  /// No description provided for @avgLength.
+  ///
+  /// In en, this message translates to:
+  /// **'Avg Length'**
+  String get avgLength;
+
+  /// No description provided for @focusTime.
+  ///
+  /// In en, this message translates to:
+  /// **'Focus Time'**
+  String get focusTime;
+
+  /// No description provided for @paused.
+  ///
+  /// In en, this message translates to:
+  /// **'Paused'**
+  String get paused;
+
+  /// No description provided for @shortBreakStatus.
+  ///
+  /// In en, this message translates to:
+  /// **'Short Break'**
+  String get shortBreakStatus;
+
+  /// No description provided for @longBreakStatus.
+  ///
+  /// In en, this message translates to:
+  /// **'Long Break'**
+  String get longBreakStatus;
+
+  /// No description provided for @readyToFocus.
+  ///
+  /// In en, this message translates to:
+  /// **'Ready to Focus'**
+  String get readyToFocus;
+
+  /// No description provided for @focus.
+  ///
+  /// In en, this message translates to:
+  /// **'Focus'**
+  String get focus;
+
+  /// No description provided for @restartSession.
+  ///
+  /// In en, this message translates to:
+  /// **'Restart Session'**
+  String get restartSession;
+
+  /// No description provided for @skipToNext.
+  ///
+  /// In en, this message translates to:
+  /// **'Skip to Next'**
+  String get skipToNext;
+
+  /// No description provided for @settings.
+  ///
+  /// In en, this message translates to:
+  /// **'Settings'**
+  String get settings;
+
+  /// No description provided for @sessionsCompleted.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{1 session completed} other{{count} sessions completed}}'**
+  String sessionsCompleted(int count);
+
+  /// No description provided for @focusModePreset.
+  ///
+  /// In en, this message translates to:
+  /// **'Focus Mode Preset'**
+  String get focusModePreset;
+
+  /// No description provided for @focusDuration.
+  ///
+  /// In en, this message translates to:
+  /// **'Focus Duration'**
+  String get focusDuration;
+
+  /// No description provided for @minutesFormat.
+  ///
+  /// In en, this message translates to:
+  /// **'{minutes} min'**
+  String minutesFormat(int minutes);
+
+  /// No description provided for @shortBreakDuration.
+  ///
+  /// In en, this message translates to:
+  /// **'Short Break'**
+  String get shortBreakDuration;
+
+  /// No description provided for @longBreakDuration.
+  ///
+  /// In en, this message translates to:
+  /// **'Long Break'**
+  String get longBreakDuration;
+
+  /// No description provided for @enableSounds.
+  ///
+  /// In en, this message translates to:
+  /// **'Enable Sounds'**
+  String get enableSounds;
+
+  /// No description provided for @focus_mode_this_week.
+  ///
+  /// In en, this message translates to:
+  /// **'This Week'**
+  String get focus_mode_this_week;
+
+  /// No description provided for @focus_mode_best_day.
+  ///
+  /// In en, this message translates to:
+  /// **'Best Day'**
+  String get focus_mode_best_day;
+
+  /// No description provided for @focus_mode_sessions_count.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =0{0 sessions} =1{1 session} other{{count} sessions}}'**
+  String focus_mode_sessions_count(int count);
+
+  /// No description provided for @focus_mode_no_data_yet.
+  ///
+  /// In en, this message translates to:
+  /// **'No data yet'**
+  String get focus_mode_no_data_yet;
+
+  /// No description provided for @chart_current.
+  ///
+  /// In en, this message translates to:
+  /// **'Current'**
+  String get chart_current;
+
+  /// No description provided for @chart_previous.
+  ///
+  /// In en, this message translates to:
+  /// **'Previous'**
+  String get chart_previous;
+
+  /// No description provided for @permission_error.
+  ///
+  /// In en, this message translates to:
+  /// **'Permission Error'**
+  String get permission_error;
+
+  /// No description provided for @notification_permission_denied.
+  ///
+  /// In en, this message translates to:
+  /// **'Notification Permission Denied'**
+  String get notification_permission_denied;
+
+  /// No description provided for @notification_permission_denied_message.
+  ///
+  /// In en, this message translates to:
+  /// **'ScreenTime needs notification permission to send you alerts and reminders.\n\nWould you like to open System Settings to enable notifications?'**
+  String get notification_permission_denied_message;
+
+  /// No description provided for @notification_permission_denied_hint.
+  ///
+  /// In en, this message translates to:
+  /// **'Open System Settings to enable notifications for ScreenTime.'**
+  String get notification_permission_denied_hint;
+
+  /// No description provided for @notification_permission_required.
+  ///
+  /// In en, this message translates to:
+  /// **'Notification Permission Required'**
+  String get notification_permission_required;
+
+  /// No description provided for @notification_permission_required_message.
+  ///
+  /// In en, this message translates to:
+  /// **'ScreenTime needs permission to send you notifications.'**
+  String get notification_permission_required_message;
+
+  /// No description provided for @open_settings.
+  ///
+  /// In en, this message translates to:
+  /// **'Open Settings'**
+  String get open_settings;
+
+  /// No description provided for @allow_notifications.
+  ///
+  /// In en, this message translates to:
+  /// **'Allow Notifications'**
+  String get allow_notifications;
+
+  /// No description provided for @permission_allowed.
+  ///
+  /// In en, this message translates to:
+  /// **'Allowed'**
+  String get permission_allowed;
+
+  /// No description provided for @permission_denied.
+  ///
+  /// In en, this message translates to:
+  /// **'Denied'**
+  String get permission_denied;
+
+  /// No description provided for @permission_not_set.
+  ///
+  /// In en, this message translates to:
+  /// **'Not Set'**
+  String get permission_not_set;
+
+  /// No description provided for @on.
+  ///
+  /// In en, this message translates to:
+  /// **'On'**
+  String get on;
+
+  /// No description provided for @off.
+  ///
+  /// In en, this message translates to:
+  /// **'Off'**
+  String get off;
+
+  /// No description provided for @enable_notification_permission_hint.
+  ///
+  /// In en, this message translates to:
+  /// **'Enable notification permission to receive alerts'**
+  String get enable_notification_permission_hint;
+
+  /// No description provided for @minutes_format.
+  ///
+  /// In en, this message translates to:
+  /// **'{minutes} min'**
+  String minutes_format(int minutes);
+
+  /// No description provided for @chart_average.
+  ///
+  /// In en, this message translates to:
+  /// **'Average'**
+  String get chart_average;
+
+  /// No description provided for @chart_peak.
+  ///
+  /// In en, this message translates to:
+  /// **'Peak'**
+  String get chart_peak;
+
+  /// No description provided for @chart_lowest.
+  ///
+  /// In en, this message translates to:
+  /// **'Lowest'**
+  String get chart_lowest;
+
+  /// No description provided for @active.
+  ///
+  /// In en, this message translates to:
+  /// **'Active'**
+  String get active;
+
+  /// No description provided for @disabled.
+  ///
+  /// In en, this message translates to:
+  /// **'Disabled'**
+  String get disabled;
+
+  /// No description provided for @advanced_options.
+  ///
+  /// In en, this message translates to:
+  /// **'Advanced Options'**
+  String get advanced_options;
+
+  /// No description provided for @sync_ready.
+  ///
+  /// In en, this message translates to:
+  /// **'Sync Ready'**
+  String get sync_ready;
+
+  /// No description provided for @success.
+  ///
+  /// In en, this message translates to:
+  /// **'Success'**
+  String get success;
+
+  /// No description provided for @destructive_badge.
+  ///
+  /// In en, this message translates to:
+  /// **'Destructive'**
+  String get destructive_badge;
+
+  /// No description provided for @recommended_badge.
+  ///
+  /// In en, this message translates to:
+  /// **'Recommended'**
+  String get recommended_badge;
+
+  /// No description provided for @safe_badge.
+  ///
+  /// In en, this message translates to:
+  /// **'Safe'**
+  String get safe_badge;
+
+  /// No description provided for @overview.
+  ///
+  /// In en, this message translates to:
+  /// **'Overview'**
+  String get overview;
+
+  /// No description provided for @patterns.
+  ///
+  /// In en, this message translates to:
+  /// **'Patterns'**
+  String get patterns;
+
+  /// No description provided for @apps.
+  ///
+  /// In en, this message translates to:
+  /// **'Apps'**
+  String get apps;
+
+  /// No description provided for @sortAscending.
+  ///
+  /// In en, this message translates to:
+  /// **'Sort Ascending'**
+  String get sortAscending;
+
+  /// No description provided for @sortDescending.
+  ///
+  /// In en, this message translates to:
+  /// **'Sort Descending'**
+  String get sortDescending;
+
+  /// No description provided for @applicationsShowing.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =0{0 applications showing} =1{1 application showing} other{{count} applications showing}}'**
+  String applicationsShowing(int count);
+
+  /// No description provided for @valueLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Value: {value}'**
+  String valueLabel(String value);
+
+  /// No description provided for @appsCount.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =0{0 apps} =1{1 app} other{{count} apps}}'**
+  String appsCount(int count);
+
+  /// No description provided for @categoriesCount.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =0{0 categories} =1{1 category} other{{count} categories}}'**
+  String categoriesCount(int count);
+
+  /// No description provided for @systemNotificationsDisabled.
+  ///
+  /// In en, this message translates to:
+  /// **'System notifications are disabled. Enable them in System Settings for focus alerts.'**
+  String get systemNotificationsDisabled;
+
+  /// No description provided for @openSystemSettings.
+  ///
+  /// In en, this message translates to:
+  /// **'Open System Settings'**
+  String get openSystemSettings;
+
+  /// No description provided for @appNotificationsDisabled.
+  ///
+  /// In en, this message translates to:
+  /// **'Notifications are disabled in app settings. Enable them to receive focus alerts.'**
+  String get appNotificationsDisabled;
+
+  /// No description provided for @goToSettings.
+  ///
+  /// In en, this message translates to:
+  /// **'Go to Settings'**
+  String get goToSettings;
+
+  /// No description provided for @focusModeNotificationsDisabled.
+  ///
+  /// In en, this message translates to:
+  /// **'Focus mode notifications are disabled. Enable them to receive session alerts.'**
+  String get focusModeNotificationsDisabled;
+
+  /// No description provided for @notificationsDisabled.
+  ///
+  /// In en, this message translates to:
+  /// **'Notifications Disabled'**
+  String get notificationsDisabled;
+
+  /// No description provided for @dontShowAgain.
+  ///
+  /// In en, this message translates to:
+  /// **'Don\'t show again'**
+  String get dontShowAgain;
+
+  /// No description provided for @systemSettingsRequired.
+  ///
+  /// In en, this message translates to:
+  /// **'System Settings Required'**
+  String get systemSettingsRequired;
+
+  /// No description provided for @notificationsDisabledSystemLevel.
+  ///
+  /// In en, this message translates to:
+  /// **'Notifications are disabled at the system level. To enable:'**
+  String get notificationsDisabledSystemLevel;
+
+  /// No description provided for @step1OpenSystemSettings.
+  ///
+  /// In en, this message translates to:
+  /// **'1. Open System Settings (System Preferences)'**
+  String get step1OpenSystemSettings;
+
+  /// No description provided for @step2GoToNotifications.
+  ///
+  /// In en, this message translates to:
+  /// **'2. Go to Notifications'**
+  String get step2GoToNotifications;
+
+  /// No description provided for @step3FindApp.
+  ///
+  /// In en, this message translates to:
+  /// **'3. Find and select TimeMark'**
+  String get step3FindApp;
+
+  /// No description provided for @step4EnableNotifications.
+  ///
+  /// In en, this message translates to:
+  /// **'4. Enable \"Allow notifications\"'**
+  String get step4EnableNotifications;
+
+  /// No description provided for @returnToAppMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'Then return to this app and notifications will work.'**
+  String get returnToAppMessage;
+
+  /// No description provided for @gotIt.
+  ///
+  /// In en, this message translates to:
+  /// **'Got it'**
+  String get gotIt;
+
+  /// No description provided for @noSessionsYet.
+  ///
+  /// In en, this message translates to:
+  /// **'No sessions yet'**
+  String get noSessionsYet;
+
+  /// No description provided for @applicationsTracked.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =0{0 applications tracked} =1{1 application tracked} other{{count} applications tracked}}'**
+  String applicationsTracked(int count);
+
+  /// No description provided for @applicationHeader.
+  ///
+  /// In en, this message translates to:
+  /// **'Application'**
+  String get applicationHeader;
+
+  /// No description provided for @currentUsageHeader.
+  ///
+  /// In en, this message translates to:
+  /// **'Current Usage'**
+  String get currentUsageHeader;
+
+  /// No description provided for @dailyLimitHeader.
+  ///
+  /// In en, this message translates to:
+  /// **'Daily Limit'**
+  String get dailyLimitHeader;
+
+  /// No description provided for @edit.
+  ///
+  /// In en, this message translates to:
+  /// **'Edit'**
+  String get edit;
+
+  /// No description provided for @showPopupNotifications.
+  ///
+  /// In en, this message translates to:
+  /// **'Show popup notifications'**
+  String get showPopupNotifications;
+
+  /// No description provided for @moreFrequentReminders.
+  ///
+  /// In en, this message translates to:
+  /// **'More frequent reminders'**
+  String get moreFrequentReminders;
+
+  /// No description provided for @playSoundWithAlerts.
+  ///
+  /// In en, this message translates to:
+  /// **'Play sound with alerts'**
+  String get playSoundWithAlerts;
+
+  /// No description provided for @systemTrayNotifications.
+  ///
+  /// In en, this message translates to:
+  /// **'System tray notifications'**
+  String get systemTrayNotifications;
+
+  /// No description provided for @screenTimeUsed.
+  ///
+  /// In en, this message translates to:
+  /// **'{current} / {limit} used'**
+  String screenTimeUsed(String current, String limit);
+
+  /// No description provided for @todaysScreenTime.
+  ///
+  /// In en, this message translates to:
+  /// **'Today\'s Screen Time'**
+  String get todaysScreenTime;
+
+  /// No description provided for @activeLimits.
+  ///
+  /// In en, this message translates to:
+  /// **'Active Limits'**
+  String get activeLimits;
+
+  /// No description provided for @nearLimit.
+  ///
+  /// In en, this message translates to:
+  /// **'Near Limit'**
+  String get nearLimit;
+
+  /// No description provided for @colorPickerSpectrum.
+  ///
+  /// In en, this message translates to:
+  /// **'Spectrum'**
+  String get colorPickerSpectrum;
+
+  /// No description provided for @colorPickerPresets.
+  ///
+  /// In en, this message translates to:
+  /// **'Presets'**
+  String get colorPickerPresets;
+
+  /// No description provided for @colorPickerSliders.
+  ///
+  /// In en, this message translates to:
+  /// **'Sliders'**
+  String get colorPickerSliders;
+
+  /// No description provided for @colorPickerBasicColors.
+  ///
+  /// In en, this message translates to:
+  /// **'Basic Colors'**
+  String get colorPickerBasicColors;
+
+  /// No description provided for @colorPickerExtendedPalette.
+  ///
+  /// In en, this message translates to:
+  /// **'Extended Palette'**
+  String get colorPickerExtendedPalette;
+
+  /// No description provided for @colorPickerRed.
+  ///
+  /// In en, this message translates to:
+  /// **'Red'**
+  String get colorPickerRed;
+
+  /// No description provided for @colorPickerGreen.
+  ///
+  /// In en, this message translates to:
+  /// **'Green'**
+  String get colorPickerGreen;
+
+  /// No description provided for @colorPickerBlue.
+  ///
+  /// In en, this message translates to:
+  /// **'Blue'**
+  String get colorPickerBlue;
+
+  /// No description provided for @colorPickerHue.
+  ///
+  /// In en, this message translates to:
+  /// **'Hue'**
+  String get colorPickerHue;
+
+  /// No description provided for @colorPickerSaturation.
+  ///
+  /// In en, this message translates to:
+  /// **'Saturation'**
+  String get colorPickerSaturation;
+
+  /// No description provided for @colorPickerBrightness.
+  ///
+  /// In en, this message translates to:
+  /// **'Brightness'**
+  String get colorPickerBrightness;
+
+  /// No description provided for @colorPickerHexColor.
+  ///
+  /// In en, this message translates to:
+  /// **'Hex Color'**
+  String get colorPickerHexColor;
+
+  /// No description provided for @colorPickerHexPlaceholder.
+  ///
+  /// In en, this message translates to:
+  /// **'RRGGBB'**
+  String get colorPickerHexPlaceholder;
+
+  /// No description provided for @colorPickerRGB.
+  ///
+  /// In en, this message translates to:
+  /// **'RGB'**
+  String get colorPickerRGB;
+
+  /// No description provided for @select.
+  ///
+  /// In en, this message translates to:
+  /// **'Select'**
+  String get select;
+
+  /// No description provided for @themeCustomization.
+  ///
+  /// In en, this message translates to:
+  /// **'Theme Customization'**
+  String get themeCustomization;
+
+  /// No description provided for @chooseThemePreset.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose a Theme Preset'**
+  String get chooseThemePreset;
+
+  /// No description provided for @yourCustomThemes.
+  ///
+  /// In en, this message translates to:
+  /// **'Your Custom Themes'**
+  String get yourCustomThemes;
+
+  /// No description provided for @createCustomTheme.
+  ///
+  /// In en, this message translates to:
+  /// **'Create Custom Theme'**
+  String get createCustomTheme;
+
+  /// No description provided for @designOwnColorScheme.
+  ///
+  /// In en, this message translates to:
+  /// **'Design your own color scheme'**
+  String get designOwnColorScheme;
+
+  /// No description provided for @newTheme.
+  ///
+  /// In en, this message translates to:
+  /// **'New Theme'**
+  String get newTheme;
+
+  /// No description provided for @editCurrentTheme.
+  ///
+  /// In en, this message translates to:
+  /// **'Edit Current Theme'**
+  String get editCurrentTheme;
+
+  /// No description provided for @customizeColorsFor.
+  ///
+  /// In en, this message translates to:
+  /// **'Customize colors for {themeName}'**
+  String customizeColorsFor(String themeName);
+
+  /// No description provided for @customThemeNumber.
+  ///
+  /// In en, this message translates to:
+  /// **'Custom Theme {number}'**
+  String customThemeNumber(int number);
+
+  /// No description provided for @deleteCustomTheme.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete Custom Theme'**
+  String get deleteCustomTheme;
+
+  /// No description provided for @confirmDeleteTheme.
+  ///
+  /// In en, this message translates to:
+  /// **'Are you sure you want to delete \"{themeName}\"?'**
+  String confirmDeleteTheme(String themeName);
+
+  /// No description provided for @delete.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete'**
+  String get delete;
+
+  /// No description provided for @customizeTheme.
+  ///
+  /// In en, this message translates to:
+  /// **'Customize Theme'**
+  String get customizeTheme;
+
+  /// No description provided for @preview.
+  ///
+  /// In en, this message translates to:
+  /// **'Preview'**
+  String get preview;
+
+  /// No description provided for @themeName.
+  ///
+  /// In en, this message translates to:
+  /// **'Theme Name'**
+  String get themeName;
+
+  /// No description provided for @brandColors.
+  ///
+  /// In en, this message translates to:
+  /// **'Brand Colors'**
+  String get brandColors;
+
+  /// No description provided for @lightTheme.
+  ///
+  /// In en, this message translates to:
+  /// **'Light Theme'**
+  String get lightTheme;
+
+  /// No description provided for @darkTheme.
+  ///
+  /// In en, this message translates to:
+  /// **'Dark Theme'**
+  String get darkTheme;
+
+  /// No description provided for @reset.
+  ///
+  /// In en, this message translates to:
+  /// **'Reset'**
+  String get reset;
+
+  /// No description provided for @saveTheme.
+  ///
+  /// In en, this message translates to:
+  /// **'Save Theme'**
+  String get saveTheme;
+
+  /// No description provided for @customTheme.
+  ///
+  /// In en, this message translates to:
+  /// **'Custom Theme'**
+  String get customTheme;
+
+  /// No description provided for @primaryColors.
+  ///
+  /// In en, this message translates to:
+  /// **'Primary Colors'**
+  String get primaryColors;
+
+  /// No description provided for @primaryColorsDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Main accent colors used throughout the app'**
+  String get primaryColorsDesc;
+
+  /// No description provided for @primaryAccent.
+  ///
+  /// In en, this message translates to:
+  /// **'Primary Accent'**
+  String get primaryAccent;
+
+  /// No description provided for @primaryAccentDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Main brand color, buttons, links'**
+  String get primaryAccentDesc;
+
+  /// No description provided for @secondaryAccent.
+  ///
+  /// In en, this message translates to:
+  /// **'Secondary Accent'**
+  String get secondaryAccent;
+
+  /// No description provided for @secondaryAccentDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Complementary accent for gradients'**
+  String get secondaryAccentDesc;
+
+  /// No description provided for @semanticColors.
+  ///
+  /// In en, this message translates to:
+  /// **'Semantic Colors'**
+  String get semanticColors;
+
+  /// No description provided for @semanticColorsDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Colors that convey meaning and status'**
+  String get semanticColorsDesc;
+
+  /// No description provided for @successColor.
+  ///
+  /// In en, this message translates to:
+  /// **'Success Color'**
+  String get successColor;
+
+  /// No description provided for @successColorDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Positive actions, confirmations'**
+  String get successColorDesc;
+
+  /// No description provided for @warningColor.
+  ///
+  /// In en, this message translates to:
+  /// **'Warning Color'**
+  String get warningColor;
+
+  /// No description provided for @warningColorDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Caution, pending states'**
+  String get warningColorDesc;
+
+  /// No description provided for @errorColor.
+  ///
+  /// In en, this message translates to:
+  /// **'Error Color'**
+  String get errorColor;
+
+  /// No description provided for @errorColorDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Errors, destructive actions'**
+  String get errorColorDesc;
+
+  /// No description provided for @backgroundColors.
+  ///
+  /// In en, this message translates to:
+  /// **'Background Colors'**
+  String get backgroundColors;
+
+  /// No description provided for @backgroundColorsLightDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Main background surfaces for light mode'**
+  String get backgroundColorsLightDesc;
+
+  /// No description provided for @backgroundColorsDarkDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Main background surfaces for dark mode'**
+  String get backgroundColorsDarkDesc;
+
+  /// No description provided for @background.
+  ///
+  /// In en, this message translates to:
+  /// **'Background'**
+  String get background;
+
+  /// No description provided for @backgroundDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Main app background'**
+  String get backgroundDesc;
+
+  /// No description provided for @surface.
+  ///
+  /// In en, this message translates to:
+  /// **'Surface'**
+  String get surface;
+
+  /// No description provided for @surfaceDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Cards, dialogs, elevated surfaces'**
+  String get surfaceDesc;
+
+  /// No description provided for @surfaceSecondary.
+  ///
+  /// In en, this message translates to:
+  /// **'Surface Secondary'**
+  String get surfaceSecondary;
+
+  /// No description provided for @surfaceSecondaryDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Secondary cards, sidebars'**
+  String get surfaceSecondaryDesc;
+
+  /// No description provided for @border.
+  ///
+  /// In en, this message translates to:
+  /// **'Border'**
+  String get border;
+
+  /// No description provided for @borderDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Dividers, card borders'**
+  String get borderDesc;
+
+  /// No description provided for @textColors.
+  ///
+  /// In en, this message translates to:
+  /// **'Text Colors'**
+  String get textColors;
+
+  /// No description provided for @textColorsLightDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Typography colors for light mode'**
+  String get textColorsLightDesc;
+
+  /// No description provided for @textColorsDarkDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Typography colors for dark mode'**
+  String get textColorsDarkDesc;
+
+  /// No description provided for @textPrimary.
+  ///
+  /// In en, this message translates to:
+  /// **'Text Primary'**
+  String get textPrimary;
+
+  /// No description provided for @textPrimaryDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Headings, important text'**
+  String get textPrimaryDesc;
+
+  /// No description provided for @textSecondary.
+  ///
+  /// In en, this message translates to:
+  /// **'Text Secondary'**
+  String get textSecondary;
+
+  /// No description provided for @textSecondaryDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Descriptions, captions'**
+  String get textSecondaryDesc;
+
+  /// No description provided for @previewMode.
+  ///
+  /// In en, this message translates to:
+  /// **'Preview: {mode} Mode'**
+  String previewMode(String mode);
+
+  /// No description provided for @dark.
+  ///
+  /// In en, this message translates to:
+  /// **'Dark'**
+  String get dark;
+
+  /// No description provided for @light.
+  ///
+  /// In en, this message translates to:
+  /// **'Light'**
+  String get light;
+
+  /// No description provided for @sampleCardTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Sample Card Title'**
+  String get sampleCardTitle;
+
+  /// No description provided for @sampleSecondaryText.
+  ///
+  /// In en, this message translates to:
+  /// **'This is secondary text that appears below.'**
+  String get sampleSecondaryText;
+
+  /// No description provided for @primary.
+  ///
+  /// In en, this message translates to:
+  /// **'Primary'**
+  String get primary;
+
+  /// No description provided for @secondary.
+  ///
+  /// In en, this message translates to:
+  /// **'Secondary'**
+  String get secondary;
+
+  /// No description provided for @warning.
+  ///
+  /// In en, this message translates to:
+  /// **'Warning'**
+  String get warning;
 }
 
 class _AppLocalizationsDelegate

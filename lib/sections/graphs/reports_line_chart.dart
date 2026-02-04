@@ -538,13 +538,15 @@ class _EnhancedLineChartState extends State<EnhancedLineChart> {
   }
 
   Widget _buildControls() {
+    final l10n = AppLocalizations.of(context)!;
+
     return Padding(
       padding: const EdgeInsets.only(bottom: 8),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.end,
         children: [
           _buildToggleChip(
-            label: 'Average',
+            label: l10n.chart_average,
             isSelected: _showAverage,
             onTap: () => setState(() => _showAverage = !_showAverage),
             color: const Color(0xFF60A5FA),
@@ -612,6 +614,7 @@ class _EnhancedLineChartState extends State<EnhancedLineChart> {
         data.map((d) => d.screenTime.inMinutes).reduce((a, b) => a > b ? a : b);
     final minMinutes =
         data.map((d) => d.screenTime.inMinutes).reduce((a, b) => a < b ? a : b);
+    final l10n = AppLocalizations.of(context)!;
 
     return Padding(
       padding: const EdgeInsets.only(top: 16),
@@ -619,19 +622,19 @@ class _EnhancedLineChartState extends State<EnhancedLineChart> {
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
           _buildStatItem(
-            label: 'Average',
+            label: l10n.chart_average,
             value: _formatMinutes(avgMinutes),
             color: const Color(0xFF60A5FA),
           ),
           _buildDivider(),
           _buildStatItem(
-            label: 'Peak',
+            label: l10n.chart_peak,
             value: _formatMinutes(maxMinutes),
             color: const Color(0xFFF87171),
           ),
           _buildDivider(),
           _buildStatItem(
-            label: 'Lowest',
+            label: l10n.chart_lowest,
             value: _formatMinutes(minMinutes),
             color: const Color(0xFF34D399),
           ),

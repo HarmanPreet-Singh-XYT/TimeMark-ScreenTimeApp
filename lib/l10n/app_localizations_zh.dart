@@ -836,12 +836,12 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String shortBreakLabel(int minutes) {
-    return '短休息：$minutes分钟';
+    return '短休息';
   }
 
   @override
   String longBreakLabel(int minutes) {
-    return '长休息：$minutes分钟';
+    return '长休息';
   }
 
   @override
@@ -1638,30 +1638,642 @@ class AppLocalizationsZh extends AppLocalizations {
   }
 
   @override
-  String get themeLight => 'Light';
+  String get themeLight => '浅色';
 
   @override
-  String get themeDark => 'Dark';
+  String get themeDark => '深色';
 
   @override
-  String get themeSystem => 'System';
+  String get themeSystem => '系统';
 
   @override
   String get themeTitle => '主题';
 
   @override
-  String get themeDescription => '应用程序的颜色主题（更改需要重启）';
+  String get themeDescription => '应用程序的颜色主题';
 
   @override
-  String get voiceGenderTitle => 'Voice Gender';
+  String get voiceGenderTitle => '语音性别';
 
   @override
-  String get voiceGenderDescription =>
-      'Choose the voice gender for timer notifications';
+  String get voiceGenderDescription => '选择计时器通知的语音性别';
 
   @override
-  String get voiceGenderMale => 'Male';
+  String get voiceGenderMale => '男性';
 
   @override
-  String get voiceGenderFemale => 'Female';
+  String get voiceGenderFemale => '女性';
+
+  @override
+  String get alertsLimitsSubtitle => '管理您的屏幕时间限制和通知';
+
+  @override
+  String get applicationsSubtitle => '管理您跟踪的应用程序';
+
+  @override
+  String applicationCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count 个应用程序',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get noApplicationsFound => '未找到应用程序';
+
+  @override
+  String get tryAdjustingFilters => '尝试调整您的筛选条件';
+
+  @override
+  String get configureAppSettings => '配置应用程序设置';
+
+  @override
+  String get behaviorSection => '行为';
+
+  @override
+  String helpSubtitle(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '跨 7 个类别的 $count 个问题',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get searchForHelp => '搜索帮助...';
+
+  @override
+  String get quickNavGeneral => '常规';
+
+  @override
+  String get quickNavApps => '应用';
+
+  @override
+  String get quickNavReports => '报告';
+
+  @override
+  String get quickNavFocus => '专注';
+
+  @override
+  String get noResultsFound => '未找到结果';
+
+  @override
+  String get tryDifferentKeywords => '尝试使用不同的关键词搜索';
+
+  @override
+  String get clearSearch => '清除搜索';
+
+  @override
+  String get greetingMorning => '早上好！这是您的活动摘要。';
+
+  @override
+  String get greetingAfternoon => '下午好！这是您的活动摘要。';
+
+  @override
+  String get greetingEvening => '晚上好！这是您的活动摘要。';
+
+  @override
+  String get screenTimeProgress => '屏幕\n时间';
+
+  @override
+  String get productiveScoreProgress => '生产力\n分数';
+
+  @override
+  String get focusModeSubtitle => '保持专注，提高效率';
+
+  @override
+  String get thisWeek => '本周';
+
+  @override
+  String get sessions => '会话';
+
+  @override
+  String get totalTime => '总时间';
+
+  @override
+  String get avgLength => '平均时长';
+
+  @override
+  String get focusTime => '专注时间';
+
+  @override
+  String get paused => '已暂停';
+
+  @override
+  String get shortBreakStatus => '短休息';
+
+  @override
+  String get longBreakStatus => '长休息';
+
+  @override
+  String get readyToFocus => '准备专注';
+
+  @override
+  String get focus => '专注';
+
+  @override
+  String get restartSession => '重新开始会话';
+
+  @override
+  String get skipToNext => '跳到下一个';
+
+  @override
+  String get settings => '设置';
+
+  @override
+  String sessionsCompleted(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '已完成 $count 个会话',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get focusModePreset => '专注模式预设';
+
+  @override
+  String get focusDuration => '专注时长';
+
+  @override
+  String minutesFormat(int minutes) {
+    return '$minutes 分钟';
+  }
+
+  @override
+  String get shortBreakDuration => '短休息';
+
+  @override
+  String get longBreakDuration => '长休息';
+
+  @override
+  String get enableSounds => '启用声音';
+
+  @override
+  String get focus_mode_this_week => '本周';
+
+  @override
+  String get focus_mode_best_day => '最佳日';
+
+  @override
+  String focus_mode_sessions_count(int count) {
+    return '$count 个会话';
+  }
+
+  @override
+  String get focus_mode_no_data_yet => '暂无数据';
+
+  @override
+  String get chart_current => '当前';
+
+  @override
+  String get chart_previous => '之前';
+
+  @override
+  String get permission_error => '权限错误';
+
+  @override
+  String get notification_permission_denied => '通知权限被拒绝';
+
+  @override
+  String get notification_permission_denied_message =>
+      'ScreenTime 需要通知权限来向您发送提醒和警报。\n\n您想打开系统设置以启用通知吗？';
+
+  @override
+  String get notification_permission_denied_hint => '打开系统设置以启用 ScreenTime 的通知。';
+
+  @override
+  String get notification_permission_required => '需要通知权限';
+
+  @override
+  String get notification_permission_required_message =>
+      'ScreenTime 需要权限才能向您发送通知。';
+
+  @override
+  String get open_settings => '打开设置';
+
+  @override
+  String get allow_notifications => '允许通知';
+
+  @override
+  String get permission_allowed => '已允许';
+
+  @override
+  String get permission_denied => '已拒绝';
+
+  @override
+  String get permission_not_set => '未设置';
+
+  @override
+  String get on => '开';
+
+  @override
+  String get off => '关';
+
+  @override
+  String get enable_notification_permission_hint => '启用通知权限以接收提醒';
+
+  @override
+  String minutes_format(int minutes) {
+    return '$minutes 分钟';
+  }
+
+  @override
+  String get chart_average => '平均';
+
+  @override
+  String get chart_peak => '峰值';
+
+  @override
+  String get chart_lowest => '最低';
+
+  @override
+  String get active => '活跃';
+
+  @override
+  String get disabled => '已禁用';
+
+  @override
+  String get advanced_options => '高级选项';
+
+  @override
+  String get sync_ready => '同步就绪';
+
+  @override
+  String get success => '成功';
+
+  @override
+  String get destructive_badge => '破坏性';
+
+  @override
+  String get recommended_badge => '推荐';
+
+  @override
+  String get safe_badge => '安全';
+
+  @override
+  String get overview => '概览';
+
+  @override
+  String get patterns => '模式';
+
+  @override
+  String get apps => '应用';
+
+  @override
+  String get sortAscending => '升序排序';
+
+  @override
+  String get sortDescending => '降序排序';
+
+  @override
+  String applicationsShowing(int count) {
+    return '显示 $count 个应用程序';
+  }
+
+  @override
+  String valueLabel(String value) {
+    return '值：$value';
+  }
+
+  @override
+  String appsCount(int count) {
+    return '$count 个应用';
+  }
+
+  @override
+  String categoriesCount(int count) {
+    return '$count 个类别';
+  }
+
+  @override
+  String get systemNotificationsDisabled => '系统通知已禁用。在系统设置中启用它们以接收专注提醒。';
+
+  @override
+  String get openSystemSettings => '打开系统设置';
+
+  @override
+  String get appNotificationsDisabled => '应用设置中已禁用通知。启用它们以接收专注提醒。';
+
+  @override
+  String get goToSettings => '前往设置';
+
+  @override
+  String get focusModeNotificationsDisabled => '专注模式通知已禁用。启用它们以接收会话提醒。';
+
+  @override
+  String get notificationsDisabled => '通知已禁用';
+
+  @override
+  String get dontShowAgain => '不再显示';
+
+  @override
+  String get systemSettingsRequired => '需要系统设置';
+
+  @override
+  String get notificationsDisabledSystemLevel => '系统级别已禁用通知。要启用：';
+
+  @override
+  String get step1OpenSystemSettings => '1. 打开系统设置（系统偏好设置）';
+
+  @override
+  String get step2GoToNotifications => '2. 前往通知';
+
+  @override
+  String get step3FindApp => '3. 查找并选择 TimeMark';
+
+  @override
+  String get step4EnableNotifications => '4. 启用\"允许通知\"';
+
+  @override
+  String get returnToAppMessage => '然后返回此应用，通知将正常工作。';
+
+  @override
+  String get gotIt => '知道了';
+
+  @override
+  String get noSessionsYet => '暂无会话';
+
+  @override
+  String applicationsTracked(int count) {
+    return '已跟踪 $count 个应用程序';
+  }
+
+  @override
+  String get applicationHeader => '应用程序';
+
+  @override
+  String get currentUsageHeader => '当前使用';
+
+  @override
+  String get dailyLimitHeader => '每日限制';
+
+  @override
+  String get edit => '编辑';
+
+  @override
+  String get showPopupNotifications => '显示弹出通知';
+
+  @override
+  String get moreFrequentReminders => '更频繁的提醒';
+
+  @override
+  String get playSoundWithAlerts => '播放提醒声音';
+
+  @override
+  String get systemTrayNotifications => '系统托盘通知';
+
+  @override
+  String screenTimeUsed(String current, String limit) {
+    return '已使用 $current / $limit';
+  }
+
+  @override
+  String get todaysScreenTime => '今日屏幕时间';
+
+  @override
+  String get activeLimits => '活跃限制';
+
+  @override
+  String get nearLimit => '接近限制';
+
+  @override
+  String get colorPickerSpectrum => '色谱';
+
+  @override
+  String get colorPickerPresets => '预设';
+
+  @override
+  String get colorPickerSliders => '滑块';
+
+  @override
+  String get colorPickerBasicColors => '基本颜色';
+
+  @override
+  String get colorPickerExtendedPalette => '扩展调色板';
+
+  @override
+  String get colorPickerRed => '红色';
+
+  @override
+  String get colorPickerGreen => '绿色';
+
+  @override
+  String get colorPickerBlue => '蓝色';
+
+  @override
+  String get colorPickerHue => '色调';
+
+  @override
+  String get colorPickerSaturation => '饱和度';
+
+  @override
+  String get colorPickerBrightness => '亮度';
+
+  @override
+  String get colorPickerHexColor => '十六进制颜色';
+
+  @override
+  String get colorPickerHexPlaceholder => 'RRGGBB';
+
+  @override
+  String get colorPickerRGB => 'RGB';
+
+  @override
+  String get select => '选择';
+
+  @override
+  String get themeCustomization => '主题自定义';
+
+  @override
+  String get chooseThemePreset => '选择主题预设';
+
+  @override
+  String get yourCustomThemes => '您的自定义主题';
+
+  @override
+  String get createCustomTheme => '创建自定义主题';
+
+  @override
+  String get designOwnColorScheme => '设计您自己的配色方案';
+
+  @override
+  String get newTheme => '新主题';
+
+  @override
+  String get editCurrentTheme => '编辑当前主题';
+
+  @override
+  String customizeColorsFor(String themeName) {
+    return '自定义 $themeName 的颜色';
+  }
+
+  @override
+  String customThemeNumber(int number) {
+    return '自定义主题 $number';
+  }
+
+  @override
+  String get deleteCustomTheme => '删除自定义主题';
+
+  @override
+  String confirmDeleteTheme(String themeName) {
+    return '您确定要删除 \"$themeName\" 吗？';
+  }
+
+  @override
+  String get delete => '删除';
+
+  @override
+  String get customizeTheme => '自定义主题';
+
+  @override
+  String get preview => '预览';
+
+  @override
+  String get themeName => '主题名称';
+
+  @override
+  String get brandColors => '品牌颜色';
+
+  @override
+  String get lightTheme => '浅色主题';
+
+  @override
+  String get darkTheme => '深色主题';
+
+  @override
+  String get reset => '重置';
+
+  @override
+  String get saveTheme => '保存主题';
+
+  @override
+  String get customTheme => '自定义主题';
+
+  @override
+  String get primaryColors => '主要颜色';
+
+  @override
+  String get primaryColorsDesc => '整个应用中使用的主要强调色';
+
+  @override
+  String get primaryAccent => '主要强调色';
+
+  @override
+  String get primaryAccentDesc => '主要品牌颜色、按钮、链接';
+
+  @override
+  String get secondaryAccent => '次要强调色';
+
+  @override
+  String get secondaryAccentDesc => '渐变的补充强调色';
+
+  @override
+  String get semanticColors => '语义颜色';
+
+  @override
+  String get semanticColorsDesc => '传达含义和状态的颜色';
+
+  @override
+  String get successColor => '成功颜色';
+
+  @override
+  String get successColorDesc => '积极操作、确认';
+
+  @override
+  String get warningColor => '警告颜色';
+
+  @override
+  String get warningColorDesc => '注意、待处理状态';
+
+  @override
+  String get errorColor => '错误颜色';
+
+  @override
+  String get errorColorDesc => '错误、破坏性操作';
+
+  @override
+  String get backgroundColors => '背景颜色';
+
+  @override
+  String get backgroundColorsLightDesc => '浅色模式的主要背景表面';
+
+  @override
+  String get backgroundColorsDarkDesc => '深色模式的主要背景表面';
+
+  @override
+  String get background => '背景';
+
+  @override
+  String get backgroundDesc => '主应用背景';
+
+  @override
+  String get surface => '表面';
+
+  @override
+  String get surfaceDesc => '卡片、对话框、升高的表面';
+
+  @override
+  String get surfaceSecondary => '次要表面';
+
+  @override
+  String get surfaceSecondaryDesc => '次要卡片、侧边栏';
+
+  @override
+  String get border => '边框';
+
+  @override
+  String get borderDesc => '分隔线、卡片边框';
+
+  @override
+  String get textColors => '文本颜色';
+
+  @override
+  String get textColorsLightDesc => '浅色模式的排版颜色';
+
+  @override
+  String get textColorsDarkDesc => '深色模式的排版颜色';
+
+  @override
+  String get textPrimary => '主要文本';
+
+  @override
+  String get textPrimaryDesc => '标题、重要文本';
+
+  @override
+  String get textSecondary => '次要文本';
+
+  @override
+  String get textSecondaryDesc => '描述、说明';
+
+  @override
+  String previewMode(String mode) {
+    return '预览：$mode模式';
+  }
+
+  @override
+  String get dark => '深色';
+
+  @override
+  String get light => '浅色';
+
+  @override
+  String get sampleCardTitle => '示例卡片标题';
+
+  @override
+  String get sampleSecondaryText => '这是下方显示的次要文本。';
+
+  @override
+  String get primary => '主要';
+
+  @override
+  String get secondary => '次要';
+
+  @override
+  String get warning => '警告';
 }

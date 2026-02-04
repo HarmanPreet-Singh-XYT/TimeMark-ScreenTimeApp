@@ -2,6 +2,7 @@
 import 'package:fl_chart/fl_chart.dart';
 import 'package:fluent_ui/fluent_ui.dart' hide Colors;
 import 'package:flutter/material.dart' show Colors;
+import 'package:screentime/l10n/app_localizations.dart';
 
 class FocusModePieChart extends StatefulWidget {
   final Map<String, double> dataMap;
@@ -78,6 +79,7 @@ class _FocusModePieChartState extends State<FocusModePieChart> {
   }
 
   Widget _buildEmptyState(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Center(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -89,7 +91,7 @@ class _FocusModePieChartState extends State<FocusModePieChart> {
           ),
           const SizedBox(height: 12),
           Text(
-            'No data yet',
+            l10n.focus_mode_no_data_yet,
             style: FluentTheme.of(context).typography.caption?.copyWith(
                   color: FluentTheme.of(context)
                       .typography

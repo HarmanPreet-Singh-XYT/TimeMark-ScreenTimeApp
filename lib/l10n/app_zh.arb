@@ -1337,5 +1337,282 @@
   "timeFormatSeconds": "{seconds}秒",
   "timeFormatMinute": "1分钟",
   "timeFormatMinutes": "{minutes}分钟",
-  "timeFormatMinutesSeconds": "{minutes}分{seconds}秒"
+  "timeFormatMinutesSeconds": "{minutes}分{seconds}秒",
+  "alertsLimitsSubtitle": "管理您的屏幕时间限制和通知",
+  
+  "applicationsSubtitle": "管理您跟踪的应用程序",
+  "applicationCount": "{count, plural, other{{count} 个应用程序}}",
+  "@applicationCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "refresh": "刷新",
+  "noApplicationsFound": "未找到应用程序",
+  "tryAdjustingFilters": "尝试调整您的筛选条件",
+  "configureAppSettings": "配置应用程序设置",
+  "behaviorSection": "行为",
+  
+  "helpSubtitle": "{count, plural, other{跨 7 个类别的 {count} 个问题}}",
+  "@helpSubtitle": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "searchForHelp": "搜索帮助...",
+  "quickNavGeneral": "常规",
+  "quickNavApps": "应用",
+  "quickNavReports": "报告",
+  "quickNavFocus": "专注",
+  "noResultsFound": "未找到结果",
+  "tryDifferentKeywords": "尝试使用不同的关键词搜索",
+  "clearSearch": "清除搜索",
+  
+  "greetingMorning": "早上好！这是您的活动摘要。",
+  "greetingAfternoon": "下午好！这是您的活动摘要。",
+  "greetingEvening": "晚上好！这是您的活动摘要。",
+  "screenTimeProgress": "屏幕\n时间",
+  "productiveScoreProgress": "生产力\n分数",
+  
+  "sectionLabel": "{title}部分",
+  "@sectionLabel": {
+    "placeholders": {
+      "title": {
+        "type": "String"
+      }
+    }
+  },
+  
+  "focusModeSubtitle": "保持专注，提高效率",
+  "thisWeek": "本周",
+  "sessions": "会话",
+  "totalTime": "总时间",
+  "avgLength": "平均时长",
+  "focusTime": "专注时间",
+  "paused": "已暂停",
+  "shortBreakStatus": "短休息",
+  "longBreakStatus": "长休息",
+  "readyToFocus": "准备专注",
+  "focus": "专注",
+  "shortBreakLabel": "短休息",
+  "longBreakLabel": "长休息",
+  "restartSession": "重新开始会话",
+  "skipToNext": "跳到下一个",
+  "settings": "设置",
+  "sessionsCompleted": "{count, plural, other{已完成 {count} 个会话}}",
+  "@sessionsCompleted": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "focusModePreset": "专注模式预设",
+  "focusDuration": "专注时长",
+  "minutesFormat": "{minutes} 分钟",
+  "@minutesFormat": {
+    "placeholders": {
+      "minutes": {
+        "type": "int"
+      }
+    }
+  },
+  "shortBreakDuration": "短休息",
+  "longBreakDuration": "长休息",
+  "enableSounds": "启用声音",
+  "themeLight": "浅色",
+  "themeDark": "深色",
+  "themeSystem": "系统",
+  "themeTitle": "主题",
+  "themeDescription": "应用程序的颜色主题",
+  "voiceGenderTitle": "语音性别",
+  "voiceGenderDescription": "选择计时器通知的语音性别",
+  "voiceGenderMale": "男性",
+  "voiceGenderFemale": "女性",
+  "focus_mode_this_week": "本周",
+  "focus_mode_best_day": "最佳日",
+  "focus_mode_sessions_count": "{count} 个会话",
+  "focus_mode_no_data_yet": "暂无数据",
+  "chart_current": "当前",
+  "chart_previous": "之前",
+  "permission_error": "权限错误",
+  "notification_permission_denied": "通知权限被拒绝",
+  "notification_permission_denied_message": "ScreenTime 需要通知权限来向您发送提醒和警报。\n\n您想打开系统设置以启用通知吗？",
+  "notification_permission_denied_hint": "打开系统设置以启用 ScreenTime 的通知。",
+  "notification_permission_required": "需要通知权限",
+  "notification_permission_required_message": "ScreenTime 需要权限才能向您发送通知。",
+  "cancel": "取消",
+  "open_settings": "打开设置",
+  "allow_notifications": "允许通知",
+  "permission_allowed": "已允许",
+  "permission_denied": "已拒绝",
+  "permission_not_set": "未设置",
+  "on": "开",
+  "off": "关",
+  "enable_notification_permission_hint": "启用通知权限以接收提醒",
+  "minutes_format": "{minutes} 分钟",
+  "chart_average": "平均",
+  "chart_peak": "峰值",
+  "chart_lowest": "最低",
+  "active": "活跃",
+  "disabled": "已禁用",
+  "advanced_options": "高级选项",
+  "sync_ready": "同步就绪",
+  "success": "成功！",
+  "error": "错误",
+  "destructive_badge": "破坏性",
+  "recommended_badge": "推荐",
+  "safe_badge": "安全",
+  "overview": "概览",
+  "patterns": "模式",
+  "apps": "应用",
+  "sortAscending": "升序排序",
+  "sortDescending": "降序排序",
+  "clearSearch": "清除搜索",
+  "applicationsShowing": "显示 {count} 个应用程序",
+  "totalTime": "总时间",
+  "valueLabel": "值：{value}",
+  "appsCount": "{count} 个应用",
+  "categoriesCount": "{count} 个类别",
+  "systemNotificationsDisabled": "系统通知已禁用。在系统设置中启用它们以接收专注提醒。",
+  "openSystemSettings": "打开系统设置",
+  "appNotificationsDisabled": "应用设置中已禁用通知。启用它们以接收专注提醒。",
+  "goToSettings": "前往设置",
+  "focusModeNotificationsDisabled": "专注模式通知已禁用。启用它们以接收会话提醒。",
+  "notificationsDisabled": "通知已禁用",
+  "dontShowAgain": "不再显示",
+  "systemSettingsRequired": "需要系统设置",
+  "notificationsDisabledSystemLevel": "系统级别已禁用通知。要启用：",
+  "step1OpenSystemSettings": "1. 打开系统设置（系统偏好设置）",
+  "step2GoToNotifications": "2. 前往通知",
+  "step3FindApp": "3. 查找并选择 TimeMark",
+  "step4EnableNotifications": "4. 启用\"允许通知\"",
+  "returnToAppMessage": "然后返回此应用，通知将正常工作。",
+  "gotIt": "知道了",
+  "noSessionsYet": "暂无会话",
+  "applicationsTracked": "已跟踪 {count} 个应用程序",
+  "applicationHeader": "应用程序",
+  "currentUsageHeader": "当前使用",
+  "dailyLimitHeader": "每日限制",
+  "edit": "编辑",
+  "showPopupNotifications": "显示弹出通知",
+  "moreFrequentReminders": "更频繁的提醒",
+  "playSoundWithAlerts": "播放提醒声音",
+  "systemTrayNotifications": "系统托盘通知",
+  "screenTimeUsed": "已使用 {current} / {limit}",
+  "todaysScreenTime": "今日屏幕时间",
+  "activeLimits": "活跃限制",
+  "nearLimit": "接近限制",
+  "colorPickerSpectrum": "色谱",
+  "colorPickerPresets": "预设",
+  "colorPickerSliders": "滑块",
+  "colorPickerBasicColors": "基本颜色",
+  "colorPickerExtendedPalette": "扩展调色板",
+  "colorPickerRed": "红色",
+  "colorPickerGreen": "绿色",
+  "colorPickerBlue": "蓝色",
+  "colorPickerHue": "色调",
+  "colorPickerSaturation": "饱和度",
+  "colorPickerBrightness": "亮度",
+  "colorPickerHexColor": "十六进制颜色",
+  "colorPickerHexPlaceholder": "RRGGBB",
+  "colorPickerRGB": "RGB",
+  "cancel": "取消",
+  "select": "选择",
+  "themeCustomization": "主题自定义",
+  "chooseThemePreset": "选择主题预设",
+  "yourCustomThemes": "您的自定义主题",
+  "createCustomTheme": "创建自定义主题",
+  "designOwnColorScheme": "设计您自己的配色方案",
+  "newTheme": "新主题",
+  "editCurrentTheme": "编辑当前主题",
+  "customizeColorsFor": "自定义 {themeName} 的颜色",
+  "@customizeColorsFor": {
+    "placeholders": {
+      "themeName": {
+        "type": "String"
+      }
+    }
+  },
+  "edit": "编辑",
+  "customThemeNumber": "自定义主题 {number}",
+  "@customThemeNumber": {
+    "placeholders": {
+      "number": {
+        "type": "int"
+      }
+    }
+  },
+  "deleteCustomTheme": "删除自定义主题",
+  "confirmDeleteTheme": "您确定要删除 \"{themeName}\" 吗？",
+  "@confirmDeleteTheme": {
+    "placeholders": {
+      "themeName": {
+        "type": "String"
+      }
+    }
+  },
+  "delete": "删除",
+  "customizeTheme": "自定义主题",
+  "preview": "预览",
+  "themeName": "主题名称",
+  "brandColors": "品牌颜色",
+  "lightTheme": "浅色主题",
+  "darkTheme": "深色主题",
+  "reset": "重置",
+  "saveTheme": "保存主题",
+  "customTheme": "自定义主题",
+  "primaryColors": "主要颜色",
+  "primaryColorsDesc": "整个应用中使用的主要强调色",
+  "primaryAccent": "主要强调色",
+  "primaryAccentDesc": "主要品牌颜色、按钮、链接",
+  "secondaryAccent": "次要强调色",
+  "secondaryAccentDesc": "渐变的补充强调色",
+  "semanticColors": "语义颜色",
+  "semanticColorsDesc": "传达含义和状态的颜色",
+  "successColor": "成功颜色",
+  "successColorDesc": "积极操作、确认",
+  "warningColor": "警告颜色",
+  "warningColorDesc": "注意、待处理状态",
+  "errorColor": "错误颜色",
+  "errorColorDesc": "错误、破坏性操作",
+  "backgroundColors": "背景颜色",
+  "backgroundColorsLightDesc": "浅色模式的主要背景表面",
+  "backgroundColorsDarkDesc": "深色模式的主要背景表面",
+  "background": "背景",
+  "backgroundDesc": "主应用背景",
+  "surface": "表面",
+  "surfaceDesc": "卡片、对话框、升高的表面",
+  "surfaceSecondary": "次要表面",
+  "surfaceSecondaryDesc": "次要卡片、侧边栏",
+  "border": "边框",
+  "borderDesc": "分隔线、卡片边框",
+  "textColors": "文本颜色",
+  "textColorsLightDesc": "浅色模式的排版颜色",
+  "textColorsDarkDesc": "深色模式的排版颜色",
+  "textPrimary": "主要文本",
+  "textPrimaryDesc": "标题、重要文本",
+  "textSecondary": "次要文本",
+  "textSecondaryDesc": "描述、说明",
+  "previewMode": "预览：{mode}模式",
+  "@previewMode": {
+    "placeholders": {
+      "mode": {
+        "type": "String"
+      }
+    }
+  },
+  "dark": "深色",
+  "light": "浅色",
+  "sampleCardTitle": "示例卡片标题",
+  "sampleSecondaryText": "这是下方显示的次要文本。",
+  "primary": "主要",
+  "success": "成功",
+  "error": "错误",
+  "secondary": "次要",
+  "warning": "警告"
 }

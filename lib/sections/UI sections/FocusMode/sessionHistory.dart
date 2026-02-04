@@ -69,7 +69,7 @@ class SessionHistory extends StatelessWidget {
                         ),
                         const SizedBox(height: 8),
                         Text(
-                          'No sessions yet',
+                          l10n.noSessionsYet,
                           style: FluentTheme.of(context)
                               .typography
                               .caption

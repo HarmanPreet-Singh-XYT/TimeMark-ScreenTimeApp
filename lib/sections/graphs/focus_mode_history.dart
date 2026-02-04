@@ -33,14 +33,14 @@ class FocusModeHistoryChartState extends State<FocusModeHistoryChart> {
             children: [
               _buildSummaryChip(
                 context,
-                label: 'This Week',
+                label: l10n.focus_mode_this_week,
                 value: '$totalSessions sessions',
                 color: const Color(0xFF42A5F5),
               ),
               const SizedBox(width: 12),
               _buildSummaryChip(
                 context,
-                label: 'Best Day',
+                label: l10n.focus_mode_best_day,
                 value: _getBestDay(l10n),
                 color: const Color(0xFF4CAF50),
               ),
@@ -81,7 +81,7 @@ class FocusModeHistoryChartState extends State<FocusModeHistoryChart> {
                       ),
                       children: [
                         TextSpan(
-                          text: '${rod.toY.toInt()} sessions',
+                          text: l10n.focus_mode_sessions_count(rod.toY.toInt()),
                           style: const TextStyle(
                             color: Color(0xFF4CAF50),
                             fontWeight: FontWeight.bold,

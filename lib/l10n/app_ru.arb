@@ -1339,5 +1339,282 @@
   "timeFormatSeconds": "{seconds}с",
   "timeFormatMinute": "1 мин",
   "timeFormatMinutes": "{minutes} мин",
-  "timeFormatMinutesSeconds": "{minutes} мин {seconds}с"
+  "timeFormatMinutesSeconds": "{minutes} мин {seconds}с",
+  "alertsLimitsSubtitle": "Управляйте лимитами экранного времени и уведомлениями",
+  "themeLight": "Светлая",
+  "themeDark": "Тёмная",
+  "themeSystem": "Системная",
+  "themeTitle": "Тема",
+  "themeDescription": "Цветовая тема приложения",
+  "voiceGenderTitle": "Пол голоса",
+  "voiceGenderDescription": "Выберите пол голоса для уведомлений таймера",
+  "voiceGenderMale": "Мужской",
+  "voiceGenderFemale": "Женский",
+
+  "applicationsSubtitle": "Управляйте отслеживаемыми приложениями",
+  "applicationCount": "{count, plural, =1{1 приложение} few{{count} приложения} other{{count} приложений}}",
+  "@applicationCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "refresh": "Обновить",
+  "noApplicationsFound": "Приложения не найдены",
+  "tryAdjustingFilters": "Попробуйте настроить фильтры",
+  "configureAppSettings": "Настроить параметры приложения",
+  "behaviorSection": "Поведение",
+  
+  "helpSubtitle": "{count, plural, =1{1 вопрос в 7 категориях} few{{count} вопроса в 7 категориях} other{{count} вопросов в 7 категориях}}",
+  "@helpSubtitle": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "searchForHelp": "Поиск справки...",
+  "quickNavGeneral": "Общие",
+  "quickNavApps": "Приложения",
+  "quickNavReports": "Отчеты",
+  "quickNavFocus": "Фокус",
+  "noResultsFound": "Результаты не найдены",
+  "tryDifferentKeywords": "Попробуйте поискать с другими ключевыми словами",
+  "clearSearch": "Очистить поиск",
+  
+  "greetingMorning": "Доброе утро! Вот краткая информация о вашей активности.",
+  "greetingAfternoon": "Добрый день! Вот краткая информация о вашей активности.",
+  "greetingEvening": "Добрый вечер! Вот краткая информация о вашей активности.",
+  "screenTimeProgress": "Экранное\nВремя",
+  "productiveScoreProgress": "Показатель\nПродуктивности",
+  
+  "sectionLabel": "Раздел {title}",
+  "@sectionLabel": {
+    "placeholders": {
+      "title": {
+        "type": "String"
+      }
+    }
+  },
+  
+  "focusModeSubtitle": "Оставайтесь сосредоточенными, будьте продуктивны",
+  "thisWeek": "На этой неделе",
+  "sessions": "Сессии",
+  "totalTime": "Общее время",
+  "avgLength": "Средняя длительность",
+  "focusTime": "Время фокуса",
+  "paused": "Приостановлено",
+  "shortBreakStatus": "Короткий перерыв",
+  "longBreakStatus": "Длинный перерыв",
+  "readyToFocus": "Готов к фокусировке",
+  "focus": "Фокус",
+  "shortBreakLabel": "Короткий перерыв",
+  "longBreakLabel": "Длинный перерыв",
+  "restartSession": "Перезапустить сессию",
+  "skipToNext": "Перейти к следующему",
+  "settings": "Настройки",
+  "sessionsCompleted": "{count, plural, =1{1 сессия завершена} few{{count} сессии завершены} other{{count} сессий завершено}}",
+  "@sessionsCompleted": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "focusModePreset": "Предустановка режима фокуса",
+  "focusDuration": "Продолжительность фокуса",
+  "minutesFormat": "{minutes} мин",
+  "@minutesFormat": {
+    "placeholders": {
+      "minutes": {
+        "type": "int"
+      }
+    }
+  },
+  "shortBreakDuration": "Короткий перерыв",
+  "longBreakDuration": "Длинный перерыв",
+  "enableSounds": "Включить звуки",
+  "focus_mode_this_week": "На этой неделе",
+  "focus_mode_best_day": "Лучший день",
+  "focus_mode_sessions_count": "{count, plural, =1{1 сеанс} few{{count} сеанса} many{{count} сеансов} other{{count} сеанса}}",
+  "focus_mode_no_data_yet": "Данных пока нет",
+  "chart_current": "Текущий",
+  "chart_previous": "Предыдущий",
+  "permission_error": "Ошибка разрешения",
+  "notification_permission_denied": "Разрешение на уведомления отклонено",
+  "notification_permission_denied_message": "ScreenTime требуется разрешение на уведомления для отправки предупреждений и напоминаний.\n\nХотите открыть системные настройки, чтобы включить уведомления?",
+  "notification_permission_denied_hint": "Откройте системные настройки, чтобы включить уведомления для ScreenTime.",
+  "notification_permission_required": "Требуется разрешение на уведомления",
+  "notification_permission_required_message": "ScreenTime требуется разрешение для отправки уведомлений.",
+  "cancel": "Отмена",
+  "open_settings": "Открыть настройки",
+  "allow_notifications": "Разрешить уведомления",
+  "permission_allowed": "Разрешено",
+  "permission_denied": "Отклонено",
+  "permission_not_set": "Не установлено",
+  "on": "Вкл",
+  "off": "Выкл",
+  "enable_notification_permission_hint": "Включите разрешение на уведомления для получения оповещений",
+  "minutes_format": "{minutes} мин",
+  "chart_average": "Средний",
+  "chart_peak": "Пик",
+  "chart_lowest": "Самый низкий",
+  "active": "Активно",
+  "disabled": "Отключено",
+  "advanced_options": "Расширенные параметры",
+  "sync_ready": "Синхронизация готова",
+  "success": "Успешно!",
+  "error": "Ошибка",
+  "destructive_badge": "Деструктивный",
+  "recommended_badge": "Рекомендуется",
+  "safe_badge": "Безопасный",
+  "overview": "Обзор",
+  "patterns": "Шаблоны",
+  "apps": "Приложения",
+  "sortAscending": "Сортировать по возрастанию",
+  "sortDescending": "Сортировать по убыванию",
+  "clearSearch": "Очистить поиск",
+  "applicationsShowing": "{count, plural, =1{Показано {count} приложение} few{Показано {count} приложения} many{Показано {count} приложений} other{Показано {count} приложения}}",
+  "totalTime": "Общее время",
+  "valueLabel": "Значение: {value}",
+  "appsCount": "{count, plural, =1{1 приложение} few{{count} приложения} many{{count} приложений} other{{count} приложения}}",
+  "categoriesCount": "{count, plural, =1{1 категория} few{{count} категории} many{{count} категорий} other{{count} категории}}",
+  "systemNotificationsDisabled": "Системные уведомления отключены. Включите их в системных настройках для оповещений о фокусе.",
+  "openSystemSettings": "Открыть Системные Настройки",
+  "appNotificationsDisabled": "Уведомления отключены в настройках приложения. Включите их для получения оповещений о фокусе.",
+  "goToSettings": "Перейти в Настройки",
+  "focusModeNotificationsDisabled": "Уведомления режима фокусировки отключены. Включите их для получения оповещений о сеансах.",
+  "notificationsDisabled": "Уведомления Отключены",
+  "dontShowAgain": "Больше не показывать",
+  "systemSettingsRequired": "Требуются Системные Настройки",
+  "notificationsDisabledSystemLevel": "Уведомления отключены на системном уровне. Чтобы включить:",
+  "step1OpenSystemSettings": "1. Откройте Системные Настройки (Системные Параметры)",
+  "step2GoToNotifications": "2. Перейдите в Уведомления",
+  "step3FindApp": "3. Найдите и выберите TimeMark",
+  "step4EnableNotifications": "4. Включите \"Разрешить уведомления\"",
+  "returnToAppMessage": "Затем вернитесь в это приложение, и уведомления будут работать.",
+  "gotIt": "Понятно",
+  "noSessionsYet": "Пока нет сеансов",
+  "applicationsTracked": "{count, plural, =1{Отслеживается {count} приложение} few{Отслеживается {count} приложения} many{Отслеживается {count} приложений} other{Отслеживается {count} приложения}}",
+  "applicationHeader": "Приложение",
+  "currentUsageHeader": "Текущее использование",
+  "dailyLimitHeader": "Дневной лимит",
+  "edit": "Изменить",
+  "showPopupNotifications": "Показывать всплывающие уведомления",
+  "moreFrequentReminders": "Более частые напоминания",
+  "playSoundWithAlerts": "Воспроизводить звук с оповещениями",
+  "systemTrayNotifications": "Уведомления в системном трее",
+  "screenTimeUsed": "{current} / {limit} использовано",
+  "todaysScreenTime": "Время экрана сегодня",
+  "activeLimits": "Активные лимиты",
+  "nearLimit": "Близко к лимиту",
+  "colorPickerSpectrum": "Спектр",
+  "colorPickerPresets": "Пресеты",
+  "colorPickerSliders": "Ползунки",
+  "colorPickerBasicColors": "Основные цвета",
+  "colorPickerExtendedPalette": "Расширенная палитра",
+  "colorPickerRed": "Красный",
+  "colorPickerGreen": "Зеленый",
+  "colorPickerBlue": "Синий",
+  "colorPickerHue": "Оттенок",
+  "colorPickerSaturation": "Насыщенность",
+  "colorPickerBrightness": "Яркость",
+  "colorPickerHexColor": "Шестнадцатеричный цвет",
+  "colorPickerHexPlaceholder": "RRGGBB",
+  "colorPickerRGB": "RGB",
+  "cancel": "Отмена",
+  "select": "Выбрать",
+  "themeCustomization": "Настройка темы",
+  "chooseThemePreset": "Выбрать пресет темы",
+  "yourCustomThemes": "Ваши пользовательские темы",
+  "createCustomTheme": "Создать пользовательскую тему",
+  "designOwnColorScheme": "Создайте свою собственную цветовую схему",
+  "newTheme": "Новая тема",
+  "editCurrentTheme": "Редактировать текущую тему",
+  "customizeColorsFor": "Настроить цвета для {themeName}",
+  "@customizeColorsFor": {
+    "placeholders": {
+      "themeName": {
+        "type": "String"
+      }
+    }
+  },
+  "edit": "Редактировать",
+  "customThemeNumber": "Пользовательская тема {number}",
+  "@customThemeNumber": {
+    "placeholders": {
+      "number": {
+        "type": "int"
+      }
+    }
+  },
+  "deleteCustomTheme": "Удалить пользовательскую тему",
+  "confirmDeleteTheme": "Вы уверены, что хотите удалить \"{themeName}\"?",
+  "@confirmDeleteTheme": {
+    "placeholders": {
+      "themeName": {
+        "type": "String"
+      }
+    }
+  },
+  "delete": "Удалить",
+  "customizeTheme": "Настроить тему",
+  "preview": "Предпросмотр",
+  "themeName": "Название темы",
+  "brandColors": "Фирменные цвета",
+  "lightTheme": "Светлая тема",
+  "darkTheme": "Темная тема",
+  "reset": "Сбросить",
+  "saveTheme": "Сохранить тему",
+  "customTheme": "Пользовательская тема",
+  "primaryColors": "Основные цвета",
+  "primaryColorsDesc": "Основные акцентные цвета, используемые во всем приложении",
+  "primaryAccent": "Основной акцент",
+  "primaryAccentDesc": "Основной фирменный цвет, кнопки, ссылки",
+  "secondaryAccent": "Вторичный акцент",
+  "secondaryAccentDesc": "Дополнительный акцент для градиентов",
+  "semanticColors": "Семантические цвета",
+  "semanticColorsDesc": "Цвета, передающие смысл и состояние",
+  "successColor": "Цвет успеха",
+  "successColorDesc": "Положительные действия, подтверждения",
+  "warningColor": "Цвет предупреждения",
+  "warningColorDesc": "Осторожность, ожидающие состояния",
+  "errorColor": "Цвет ошибки",
+  "errorColorDesc": "Ошибки, разрушительные действия",
+  "backgroundColors": "Цвета фона",
+  "backgroundColorsLightDesc": "Основные фоновые поверхности для светлого режима",
+  "backgroundColorsDarkDesc": "Основные фоновые поверхности для темного режима",
+  "background": "Фон",
+  "backgroundDesc": "Основной фон приложения",
+  "surface": "Поверхность",
+  "surfaceDesc": "Карточки, диалоги, приподнятые поверхности",
+  "surfaceSecondary": "Вторичная поверхность",
+  "surfaceSecondaryDesc": "Вторичные карточки, боковые панели",
+  "border": "Граница",
+  "borderDesc": "Разделители, границы карточек",
+  "textColors": "Цвета текста",
+  "textColorsLightDesc": "Типографические цвета для светлого режима",
+  "textColorsDarkDesc": "Типографические цвета для темного режима",
+  "textPrimary": "Основной текст",
+  "textPrimaryDesc": "Заголовки, важный текст",
+  "textSecondary": "Вторичный текст",
+  "textSecondaryDesc": "Описания, подписи",
+  "previewMode": "Предпросмотр: режим {mode}",
+  "@previewMode": {
+    "placeholders": {
+      "mode": {
+        "type": "String"
+      }
+    }
+  },
+  "dark": "Темный",
+  "light": "Светлый",
+  "sampleCardTitle": "Название примерной карточки",
+  "sampleSecondaryText": "Это вторичный текст, который отображается ниже.",
+  "primary": "Основной",
+  "success": "Успех",
+  "error": "Ошибка",
+  "secondary": "Вторичный",
+  "warning": "Предупреждение"
 }

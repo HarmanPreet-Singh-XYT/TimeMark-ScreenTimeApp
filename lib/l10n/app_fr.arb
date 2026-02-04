@@ -1337,5 +1337,283 @@
   "timeFormatSeconds": "{seconds}s",
   "timeFormatMinute": "1 min",
   "timeFormatMinutes": "{minutes} min",
-  "timeFormatMinutesSeconds": "{minutes} min {seconds}s"
+  "timeFormatMinutesSeconds": "{minutes} min {seconds}s",
+
+  "alertsLimitsSubtitle": "Gérez vos limites de temps d'écran et vos notifications",
+  "themeLight": "Clair",
+  "themeDark": "Sombre",
+  "themeSystem": "Système",
+  "themeTitle": "Thème",
+  "themeDescription": "Thème de couleur de l'application",
+  "voiceGenderTitle": "Genre de la voix",
+  "voiceGenderDescription": "Choisissez le genre de la voix pour les notifications du minuteur",
+  "voiceGenderMale": "Homme",
+  "voiceGenderFemale": "Femme",
+
+  "applicationsSubtitle": "Gérez vos applications suivies",
+  "applicationCount": "{count, plural, =1{1 application} other{{count} applications}}",
+  "@applicationCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "refresh": "Actualiser",
+  "noApplicationsFound": "Aucune application trouvée",
+  "tryAdjustingFilters": "Essayez d'ajuster vos filtres",
+  "configureAppSettings": "Configurer les paramètres de l'application",
+  "behaviorSection": "Comportement",
+  
+  "helpSubtitle": "{count, plural, =1{1 question dans 7 catégories} other{{count} questions dans 7 catégories}}",
+  "@helpSubtitle": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "searchForHelp": "Rechercher de l'aide...",
+  "quickNavGeneral": "Général",
+  "quickNavApps": "Applications",
+  "quickNavReports": "Rapports",
+  "quickNavFocus": "Focus",
+  "noResultsFound": "Aucun résultat trouvé",
+  "tryDifferentKeywords": "Essayez de rechercher avec différents mots-clés",
+  "clearSearch": "Effacer la recherche",
+  
+  "greetingMorning": "Bonjour ! Voici votre résumé d'activité.",
+  "greetingAfternoon": "Bon après-midi ! Voici votre résumé d'activité.",
+  "greetingEvening": "Bonsoir ! Voici votre résumé d'activité.",
+  "screenTimeProgress": "Temps\nd'Écran",
+  "productiveScoreProgress": "Score de\nProductivité",
+  
+  "sectionLabel": "Section {title}",
+  "@sectionLabel": {
+    "placeholders": {
+      "title": {
+        "type": "String"
+      }
+    }
+  },
+  
+  "focusModeSubtitle": "Restez concentré, soyez productif",
+  "thisWeek": "Cette Semaine",
+  "sessions": "Sessions",
+  "totalTime": "Temps Total",
+  "avgLength": "Durée Moyenne",
+  "focusTime": "Temps de Concentration",
+  "paused": "En Pause",
+  "shortBreakStatus": "Courte Pause",
+  "longBreakStatus": "Longue Pause",
+  "readyToFocus": "Prêt à se Concentrer",
+  "focus": "Concentration",
+  "shortBreakLabel": "Courte Pause",
+  "longBreakLabel": "Longue Pause",
+  "restartSession": "Redémarrer la Session",
+  "skipToNext": "Passer au Suivant",
+  "settings": "Paramètres",
+  "sessionsCompleted": "{count, plural, =1{1 session terminée} other{{count} sessions terminées}}",
+  "@sessionsCompleted": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "focusModePreset": "Préréglage du Mode Focus",
+  "focusDuration": "Durée de Concentration",
+  "minutesFormat": "{minutes} min",
+  "@minutesFormat": {
+    "placeholders": {
+      "minutes": {
+        "type": "int"
+      }
+    }
+  },
+  "shortBreakDuration": "Courte Pause",
+  "longBreakDuration": "Longue Pause",
+  "enableSounds": "Activer les Sons",
+  "focus_mode_this_week": "Cette Semaine",
+  "focus_mode_best_day": "Meilleur Jour",
+  "focus_mode_sessions_count": "{count, plural, =0{0 session} =1{1 session} other{{count} sessions}}",
+  "focus_mode_no_data_yet": "Aucune donnée pour le moment",
+  "chart_current": "Actuel",
+  "chart_previous": "Précédent",
+  "permission_error": "Erreur d'Autorisation",
+  "notification_permission_denied": "Autorisation de Notification Refusée",
+  "notification_permission_denied_message": "ScreenTime a besoin de l'autorisation de notification pour vous envoyer des alertes et des rappels.\n\nSouhaitez-vous ouvrir les Paramètres Système pour activer les notifications?",
+  "notification_permission_denied_hint": "Ouvrez les Paramètres Système pour activer les notifications de ScreenTime.",
+  "notification_permission_required": "Autorisation de Notification Requise",
+  "notification_permission_required_message": "ScreenTime a besoin de l'autorisation pour vous envoyer des notifications.",
+  "cancel": "Annuler",
+  "open_settings": "Ouvrir les Paramètres",
+  "allow_notifications": "Autoriser les Notifications",
+  "permission_allowed": "Autorisé",
+  "permission_denied": "Refusé",
+  "permission_not_set": "Non Défini",
+  "on": "Activé",
+  "off": "Désactivé",
+  "enable_notification_permission_hint": "Activez l'autorisation de notification pour recevoir des alertes",
+  "minutes_format": "{minutes} min",
+  "chart_average": "Moyenne",
+  "chart_peak": "Pic",
+  "chart_lowest": "Le plus bas",
+  "active": "Actif",
+  "disabled": "Désactivé",
+  "advanced_options": "Options Avancées",
+  "sync_ready": "Synchronisation Prête",
+  "success": "Succès !",
+  "error": "Erreur",
+  "destructive_badge": "Destructif",
+  "recommended_badge": "Recommandé",
+  "safe_badge": "Sûr",
+  "overview": "Aperçu",
+  "patterns": "Modèles",
+  "apps": "Applications",
+  "sortAscending": "Trier Croissant",
+  "sortDescending": "Trier Décroissant",
+  "clearSearch": "Effacer la Recherche",
+  "applicationsShowing": "{count, plural, =0{0 application affichée} =1{1 application affichée} other{{count} applications affichées}}",
+  "totalTime": "Temps Total",
+  "valueLabel": "Valeur : {value}",
+  "appsCount": "{count, plural, =0{0 application} =1{1 application} other{{count} applications}}",
+  "categoriesCount": "{count, plural, =0{0 catégorie} =1{1 catégorie} other{{count} catégories}}",
+  "systemNotificationsDisabled": "Les notifications système sont désactivées. Activez-les dans les Réglages système pour les alertes de concentration.",
+  "openSystemSettings": "Ouvrir les Réglages Système",
+  "appNotificationsDisabled": "Les notifications sont désactivées dans les paramètres de l'application. Activez-les pour recevoir des alertes de concentration.",
+  "goToSettings": "Aller aux Paramètres",
+  "focusModeNotificationsDisabled": "Les notifications du mode concentration sont désactivées. Activez-les pour recevoir des alertes de session.",
+  "notificationsDisabled": "Notifications Désactivées",
+  "dontShowAgain": "Ne plus afficher",
+  "systemSettingsRequired": "Réglages Système Requis",
+  "notificationsDisabledSystemLevel": "Les notifications sont désactivées au niveau du système. Pour activer :",
+  "step1OpenSystemSettings": "1. Ouvrir les Réglages Système (Préférences Système)",
+  "step2GoToNotifications": "2. Aller aux Notifications",
+  "step3FindApp": "3. Trouver et sélectionner TimeMark",
+  "step4EnableNotifications": "4. Activer \"Autoriser les notifications\"",
+  "returnToAppMessage": "Puis revenez à cette application et les notifications fonctionneront.",
+  "gotIt": "Compris",
+  "noSessionsYet": "Aucune session pour le moment",
+  "applicationsTracked": "{count, plural, =0{0 application suivie} =1{1 application suivie} other{{count} applications suivies}}",
+  "applicationHeader": "Application",
+  "currentUsageHeader": "Utilisation Actuelle",
+  "dailyLimitHeader": "Limite Quotidienne",
+  "edit": "Modifier",
+  "showPopupNotifications": "Afficher les notifications contextuelles",
+  "moreFrequentReminders": "Rappels plus fréquents",
+  "playSoundWithAlerts": "Jouer un son avec les alertes",
+  "systemTrayNotifications": "Notifications dans la barre système",
+  "screenTimeUsed": "{current} / {limit} utilisé",
+  "todaysScreenTime": "Temps d'Écran Aujourd'hui",
+  "activeLimits": "Limites Actives",
+  "nearLimit": "Proche de la Limite",
+  "colorPickerSpectrum": "Spectre",
+  "colorPickerPresets": "Préréglages",
+  "colorPickerSliders": "Curseurs",
+  "colorPickerBasicColors": "Couleurs de Base",
+  "colorPickerExtendedPalette": "Palette Étendue",
+  "colorPickerRed": "Rouge",
+  "colorPickerGreen": "Vert",
+  "colorPickerBlue": "Bleu",
+  "colorPickerHue": "Teinte",
+  "colorPickerSaturation": "Saturation",
+  "colorPickerBrightness": "Luminosité",
+  "colorPickerHexColor": "Couleur Hexadécimale",
+  "colorPickerHexPlaceholder": "RRVVBB",
+  "colorPickerRGB": "RVB",
+  "cancel": "Annuler",
+  "select": "Sélectionner",
+  "themeCustomization": "Personnalisation du Thème",
+  "chooseThemePreset": "Choisir un Thème Prédéfini",
+  "yourCustomThemes": "Vos Thèmes Personnalisés",
+  "createCustomTheme": "Créer un Thème Personnalisé",
+  "designOwnColorScheme": "Concevez votre propre palette de couleurs",
+  "newTheme": "Nouveau Thème",
+  "editCurrentTheme": "Modifier le Thème Actuel",
+  "customizeColorsFor": "Personnaliser les couleurs pour {themeName}",
+  "@customizeColorsFor": {
+    "placeholders": {
+      "themeName": {
+        "type": "String"
+      }
+    }
+  },
+  "edit": "Modifier",
+  "customThemeNumber": "Thème Personnalisé {number}",
+  "@customThemeNumber": {
+    "placeholders": {
+      "number": {
+        "type": "int"
+      }
+    }
+  },
+  "deleteCustomTheme": "Supprimer le Thème Personnalisé",
+  "confirmDeleteTheme": "Êtes-vous sûr de vouloir supprimer \"{themeName}\" ?",
+  "@confirmDeleteTheme": {
+    "placeholders": {
+      "themeName": {
+        "type": "String"
+      }
+    }
+  },
+  "delete": "Supprimer",
+  "customizeTheme": "Personnaliser le Thème",
+  "preview": "Aperçu",
+  "themeName": "Nom du Thème",
+  "brandColors": "Couleurs de Marque",
+  "lightTheme": "Thème Clair",
+  "darkTheme": "Thème Sombre",
+  "reset": "Réinitialiser",
+  "saveTheme": "Enregistrer le Thème",
+  "customTheme": "Thème Personnalisé",
+  "primaryColors": "Couleurs Principales",
+  "primaryColorsDesc": "Couleurs d'accentuation principales utilisées dans toute l'application",
+  "primaryAccent": "Accent Principal",
+  "primaryAccentDesc": "Couleur de marque principale, boutons, liens",
+  "secondaryAccent": "Accent Secondaire",
+  "secondaryAccentDesc": "Accent complémentaire pour les dégradés",
+  "semanticColors": "Couleurs Sémantiques",
+  "semanticColorsDesc": "Couleurs qui transmettent un sens et un état",
+  "successColor": "Couleur de Succès",
+  "successColorDesc": "Actions positives, confirmations",
+  "warningColor": "Couleur d'Avertissement",
+  "warningColorDesc": "Prudence, états en attente",
+  "errorColor": "Couleur d'Erreur",
+  "errorColorDesc": "Erreurs, actions destructrices",
+  "backgroundColors": "Couleurs d'Arrière-plan",
+  "backgroundColorsLightDesc": "Surfaces d'arrière-plan principales pour le mode clair",
+  "backgroundColorsDarkDesc": "Surfaces d'arrière-plan principales pour le mode sombre",
+  "background": "Arrière-plan",
+  "backgroundDesc": "Arrière-plan principal de l'application",
+  "surface": "Surface",
+  "surfaceDesc": "Cartes, dialogues, surfaces élevées",
+  "surfaceSecondary": "Surface Secondaire",
+  "surfaceSecondaryDesc": "Cartes secondaires, barres latérales",
+  "border": "Bordure",
+  "borderDesc": "Diviseurs, bordures de cartes",
+  "textColors": "Couleurs de Texte",
+  "textColorsLightDesc": "Couleurs de typographie pour le mode clair",
+  "textColorsDarkDesc": "Couleurs de typographie pour le mode sombre",
+  "textPrimary": "Texte Principal",
+  "textPrimaryDesc": "Titres, texte important",
+  "textSecondary": "Texte Secondaire",
+  "textSecondaryDesc": "Descriptions, légendes",
+  "previewMode": "Aperçu : Mode {mode}",
+  "@previewMode": {
+    "placeholders": {
+      "mode": {
+        "type": "String"
+      }
+    }
+  },
+  "dark": "Sombre",
+  "light": "Clair",
+  "sampleCardTitle": "Titre de Carte Exemple",
+  "sampleSecondaryText": "Ceci est un texte secondaire qui apparaît en dessous.",
+  "primary": "Principal",
+  "success": "Succès",
+  "error": "Erreur",
+  "secondary": "Secondaire",
+  "warning": "Avertissement"
 }
