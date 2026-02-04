@@ -33,16 +33,33 @@ import 'package:screentime/sections/UI sections/FocusMode/audio.dart';
 // NAVIGATION STATE - Add this near the top of the file
 // ============================================================================
 
+// In main.dart - Update NavigationState class
 class NavigationState extends ChangeNotifier {
   int _selectedIndex = 0;
+  Map<String, dynamic>? _navigationParams;
 
   int get selectedIndex => _selectedIndex;
+  Map<String, dynamic>? get navigationParams => _navigationParams;
 
-  void changeIndex(int value) {
-    if (_selectedIndex != value) {
+  void changeIndex(int value, {Map<String, dynamic>? params}) {
+    if (_selectedIndex != value || params != null) {
       _selectedIndex = value;
+      _navigationParams = params;
       notifyListeners();
+
+      // Clear params after a short delay so they're consumed
+      if (params != null) {
+        Future.delayed(const Duration(milliseconds: 100), () {
+          _navigationParams = null;
+          notifyListeners();
+        });
+      }
     }
+  }
+
+  void clearParams() {
+    _navigationParams = null;
+    notifyListeners();
   }
 }
 

@@ -552,7 +552,6 @@ class _MeterState extends State<Meter> with TickerProviderStateMixin {
   double _percentComplete = 1.0;
   bool _isRunning = false;
   TimerState _currentTimerState = TimerState.idle;
-  Timer? _uiUpdateTimer;
 
   // Track completed sessions locally
   int _completedWorkSessions = 0;
@@ -666,22 +665,22 @@ class _MeterState extends State<Meter> with TickerProviderStateMixin {
     _updateDisplayTime();
   }
 
-  void _startUiUpdateTimer() {
-    _uiUpdateTimer = Timer.periodic(const Duration(seconds: 1), (_) {
-      if (mounted) {
-        setState(() {
-          _updateDisplayTime();
-          // Handle pulse animation
-          if (_isRunning && !_pulseController.isAnimating) {
-            _pulseController.repeat(reverse: true);
-          } else if (!_isRunning && _pulseController.isAnimating) {
-            _pulseController.stop();
-            _pulseController.reset();
-          }
-        });
-      }
-    });
-  }
+  // void _startUiUpdateTimer() {
+  //   _uiUpdateTimer = Timer.periodic(const Duration(seconds: 1), (_) {
+  //     if (mounted) {
+  //       setState(() {
+  //         _updateDisplayTime();
+  //         // Handle pulse animation
+  //         if (_isRunning && !_pulseController.isAnimating) {
+  //           _pulseController.repeat(reverse: true);
+  //         } else if (!_isRunning && _pulseController.isAnimating) {
+  //           _pulseController.stop();
+  //           _pulseController.reset();
+  //         }
+  //       });
+  //     }
+  //   });
+  // }
 
   void _updateDisplayTime() {
     int minutes = _timerService.minutesRemaining;

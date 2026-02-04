@@ -1,5 +1,7 @@
 import 'package:fluent_ui/fluent_ui.dart';
+import 'package:provider/provider.dart';
 import 'package:screentime/l10n/app_localizations.dart';
+import 'package:screentime/main.dart';
 import '../../controller/notification_controller.dart';
 import '../../controller/settings_data_controller.dart';
 import 'dart:io' show Platform;
@@ -85,7 +87,11 @@ class _NotificationPermissionBannerState
 
   Future<void> _navigateToSettings() async {
     // Navigate to settings screen
-    final result = await Navigator.pushNamed(context, '/settings');
+    // Get the navigation state provider
+    context.read<NavigationState>().changeIndex(5, params: {
+      'highlightSection': 'notifications',
+      'reason': 'enable_notifications',
+    });
 
     // When returning from settings, check permission again
     if (mounted) {
@@ -409,6 +415,10 @@ class _CompactNotificationBannerState extends State<CompactNotificationBanner> {
 
   Future<void> _navigateToSettings() async {
     // Navigate to settings screen
+    context.read<NavigationState>().changeIndex(5, params: {
+      'highlightSection': 'notifications',
+      'reason': 'enable_notifications',
+    });
 
     // When returning from settings, check permission again
     if (mounted) {

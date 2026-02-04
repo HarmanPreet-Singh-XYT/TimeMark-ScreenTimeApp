@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:screentime/l10n/app_localizations.dart';
 import 'package:provider/provider.dart';
+import 'package:screentime/main.dart';
 import 'package:screentime/sections/controller/app_data_controller.dart';
 import 'package:screentime/sections/controller/settings_data_controller.dart';
 import 'package:screentime/sections/controller/application_controller.dart';
@@ -272,6 +273,7 @@ class SettingsContent extends StatefulWidget {
 }
 
 class _SettingsContentState extends State<SettingsContent> {
+  String? _highlightedSection;
   Future<void> launchAppropriateUrl(String url) async {
     if (Platform.isWindows) {
       // Windows-specific implementation
@@ -305,6 +307,15 @@ class _SettingsContentState extends State<SettingsContent> {
       'https://harmanita.com/details/screentime?intent=feedback';
   final String github =
       'https://github.com/HarmanPreet-Singh-XYT/TimeMark-ScreenTimeApp';
+
+  @override
+  void initState() {
+    super.initState();
+    // Check for navigation params after frame is built
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _checkNavigationParams();
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -370,7 +381,9 @@ class _SettingsContentState extends State<SettingsContent> {
                               children: [
                                 GeneralSection(setLocale: widget.setLocale),
                                 const SizedBox(height: 20),
-                                const NotificationSection(),
+                                NotificationSection(
+                                    isHighlighted:
+                                        _highlightedSection == 'notifications'),
                                 const SizedBox(height: 20),
                                 const DataSection(),
                               ],
@@ -400,7 +413,9 @@ class _SettingsContentState extends State<SettingsContent> {
                         const SizedBox(height: 20),
                         const TrackingSection(),
                         const SizedBox(height: 20),
-                        const NotificationSection(),
+                        NotificationSection(
+                            isHighlighted:
+                                _highlightedSection == 'notifications'),
                         const SizedBox(height: 20),
                         const DataSection(),
                         const SizedBox(height: 20),
@@ -462,6 +477,32 @@ class _SettingsContentState extends State<SettingsContent> {
         ],
       ),
     );
+  }
+
+  void _checkNavigationParams() {
+    final navState = context.read<NavigationState>();
+    final params = navState.navigationParams;
+
+    if (params != null && params['highlightSection'] == 'notifications') {
+      setState(() {
+        _highlightedSection = 'notifications';
+      });
+
+      // Auto-scroll to notifications section if needed
+      // _scrollToNotifications();
+
+      // Clear highlight after a few seconds
+      Future.delayed(const Duration(seconds: 3), () {
+        if (mounted) {
+          setState(() {
+            _highlightedSection = null;
+          });
+        }
+      });
+
+      // Clear params
+      navState.clearParams();
+    }
   }
 }
 
