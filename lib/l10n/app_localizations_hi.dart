@@ -1699,4 +1699,17 @@ class AppLocalizationsHi extends AppLocalizations {
   @override
   String get themeDescription =>
       'एप्लिकेशन की रंग थीम (बदलाव के लिए पुनरारंभ आवश्यक)';
+
+  @override
+  String get voiceGenderTitle => 'Voice Gender';
+
+  @override
+  String get voiceGenderDescription =>
+      'Choose the voice gender for timer notifications';
+
+  @override
+  String get voiceGenderMale => 'Male';
+
+  @override
+  String get voiceGenderFemale => 'Female';
 }

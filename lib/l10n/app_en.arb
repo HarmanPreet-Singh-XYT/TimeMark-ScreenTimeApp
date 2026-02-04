@@ -1405,10 +1405,14 @@
 
 
 
-  
+
   "themeLight": "Light",
   "themeDark": "Dark",
   "themeSystem": "System",
   "themeTitle": "Theme",
-  "themeDescription": "Color theme of the application"
+  "themeDescription": "Color theme of the application",
+  "voiceGenderTitle": "Voice Gender",
+  "voiceGenderDescription": "Choose the voice gender for timer notifications",
+  "voiceGenderMale": "Male",
+  "voiceGenderFemale": "Female"
 }

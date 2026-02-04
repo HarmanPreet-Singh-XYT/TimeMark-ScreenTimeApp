@@ -40,6 +40,8 @@ class SettingsProvider extends ChangeNotifier {
   bool _monitorHIDDevices = true;
   double _audioThreshold = 0.001;
 
+  String _voiceGender = VoiceGenderOptions.defaultGender; // ADD THIS
+
   // All getters remain the same...
   String get theme => _theme;
   String get language => _language;
@@ -58,11 +60,16 @@ class SettingsProvider extends ChangeNotifier {
   bool get monitorHIDDevices => _monitorHIDDevices;
   double get audioThreshold => _audioThreshold;
 
+  String get voiceGender => _voiceGender; // ADD THIS
+
   List<dynamic> get themeOptions => _settingsManager.getAvailableThemes();
   List<Map<String, String>> get languageOptions =>
       _settingsManager.getAvailableLanguages();
   List<Map<String, dynamic>> get idleTimeoutPresets =>
       _settingsManager.getIdleTimeoutPresets();
+  List<Map<String, String>> get voiceGenderOptions => // ADD THIS
+      _settingsManager.getAvailableVoiceGenders();
+
   int _reminderFrequency = 60;
   int get reminderFrequency => _reminderFrequency;
 
@@ -99,6 +106,10 @@ class SettingsProvider extends ChangeNotifier {
         _settingsManager.getSetting("tracking.monitorHIDDevices") ?? true;
     _audioThreshold =
         _settingsManager.getSetting("tracking.audioThreshold") ?? 0.001;
+
+    _voiceGender = // ADD THIS
+        _settingsManager.getSetting("focusModeSettings.voiceGender") ??
+            VoiceGenderOptions.defaultGender;
   }
 
   Future<void> updateSetting(String key, dynamic value,
@@ -140,6 +151,10 @@ class SettingsProvider extends ChangeNotifier {
         _reminderFrequency = value;
         _settingsManager.updateSetting(
             "notificationController.reminderFrequency", value);
+        break;
+      case 'voiceGender': // ADD THIS CASE
+        _voiceGender = value;
+        _settingsManager.updateSetting("focusModeSettings.voiceGender", value);
         break;
       case 'idleDetectionEnabled':
         _idleDetectionEnabled = value;

@@ -3195,6 +3195,30 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Color theme of the application'**
   String get themeDescription;
+
+  /// No description provided for @voiceGenderTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Voice Gender'**
+  String get voiceGenderTitle;
+
+  /// No description provided for @voiceGenderDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose the voice gender for timer notifications'**
+  String get voiceGenderDescription;
+
+  /// No description provided for @voiceGenderMale.
+  ///
+  /// In en, this message translates to:
+  /// **'Male'**
+  String get voiceGenderMale;
+
+  /// No description provided for @voiceGenderFemale.
+  ///
+  /// In en, this message translates to:
+  /// **'Female'**
+  String get voiceGenderFemale;
 }
 
 class _AppLocalizationsDelegate

@@ -1705,4 +1705,17 @@ class AppLocalizationsRu extends AppLocalizations {
   @override
   String get themeDescription =>
       'Цветовая тема приложения (требуется перезапуск)';
+
+  @override
+  String get voiceGenderTitle => 'Voice Gender';
+
+  @override
+  String get voiceGenderDescription =>
+      'Choose the voice gender for timer notifications';
+
+  @override
+  String get voiceGenderMale => 'Male';
+
+  @override
+  String get voiceGenderFemale => 'Female';
 }

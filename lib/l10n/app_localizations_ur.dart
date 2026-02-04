@@ -1693,4 +1693,17 @@ class AppLocalizationsUr extends AppLocalizations {
   @override
   String get themeDescription =>
       'ایپلیکیشن کی رنگ سکیم (تبدیلی کے لیے دوبارہ شروع کرنا ضروری ہے)';
+
+  @override
+  String get voiceGenderTitle => 'Voice Gender';
+
+  @override
+  String get voiceGenderDescription =>
+      'Choose the voice gender for timer notifications';
+
+  @override
+  String get voiceGenderMale => 'Male';
+
+  @override
+  String get voiceGenderFemale => 'Female';
 }

@@ -179,6 +179,9 @@ class SoundManager {
   /// [context]: BuildContext to get the current locale
   /// [soundType]: 'work_start', 'break_start', 'long_break_start', or 'timer_complete'
   /// [voiceGender]: 'male' or 'female'
+  // Keep track of playing instances to allow stopping if needed
+  static final List<AudioPlayer> _activePlayers = [];
+
   static Future<void> playSound({
     required BuildContext context,
     required String soundType,
@@ -196,19 +199,34 @@ class SoundManager {
 
       debugPrint(
           'Playing sound: sounds/$soundFile (detected language: $language)');
-      await _audioPlayer.play(AssetSource('sounds/$soundFile'));
+
+      // Create a new player for each sound
+      final player = AudioPlayer();
+      _activePlayers.add(player);
+
+      // Clean up when sound completes
+      player.onPlayerComplete.listen((_) {
+        player.dispose();
+        _activePlayers.remove(player);
+      });
+
+      await player.play(AssetSource('sounds/$soundFile'));
     } catch (e) {
       debugPrint('Error playing sound: $e');
     }
   }
 
-  /// Stop currently playing sound
-  static Future<void> stopSound() async {
-    await _audioPlayer.stop();
+  /// Stop all currently playing sounds
+  static Future<void> stopAllSounds() async {
+    for (final player in _activePlayers) {
+      await player.stop();
+      await player.dispose();
+    }
+    _activePlayers.clear();
   }
 
-  /// Dispose audio player (call when app is closing)
-  static void dispose() {
-    _audioPlayer.dispose();
+  /// Dispose all audio players (call when app is closing)
+  static Future<void> dispose() async {
+    await stopAllSounds();
   }
 }

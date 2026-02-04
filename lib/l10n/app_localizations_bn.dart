@@ -1700,4 +1700,17 @@ class AppLocalizationsBn extends AppLocalizations {
   @override
   String get themeDescription =>
       'অ্যাপ্লিকেশনের রঙের থিম (পরিবর্তনের জন্য পুনরায় চালু করা প্রয়োজন)';
+
+  @override
+  String get voiceGenderTitle => 'Voice Gender';
+
+  @override
+  String get voiceGenderDescription =>
+      'Choose the voice gender for timer notifications';
+
+  @override
+  String get voiceGenderMale => 'Male';
+
+  @override
+  String get voiceGenderFemale => 'Female';
 }

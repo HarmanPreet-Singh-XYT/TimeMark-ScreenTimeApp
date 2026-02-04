@@ -42,7 +42,6 @@ class GeneralSection extends StatelessWidget {
         SettingRow(
           title: l10n.languageTitle,
           description: l10n.languageDescription,
-          showDivider: Platform.isWindows ? true : false,
           control: SizedBox(
             width: 160,
             child: ComboBox<String>(
@@ -58,6 +57,34 @@ class GeneralSection extends StatelessWidget {
                 if (value != null) {
                   settings.updateSetting('language', value);
                   setLocale(Locale(value));
+                }
+              },
+            ),
+          ),
+        ),
+        SettingRow(
+          title: l10n.voiceGenderTitle, // ADD LOCALIZATION KEY
+          description: l10n.voiceGenderDescription, // ADD LOCALIZATION KEY
+          showDivider: Platform.isWindows ? true : false,
+          control: SizedBox(
+            width: 160,
+            child: ComboBox<String>(
+              value: settings.voiceGender,
+              isExpanded: true,
+              items: settings.voiceGenderOptions.map((gender) {
+                return ComboBoxItem<String>(
+                  value: gender['value']!,
+                  child: Text(
+                    // Use localization for labels
+                    gender['labelKey'] == 'voiceGenderMale'
+                        ? l10n.voiceGenderMale
+                        : l10n.voiceGenderFemale,
+                  ),
+                );
+              }).toList(),
+              onChanged: (value) {
+                if (value != null) {
+                  settings.updateSetting('voiceGender', value);
                 }
               },
             ),

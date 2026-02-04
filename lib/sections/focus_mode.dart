@@ -79,7 +79,8 @@ class _FocusModeState extends State<FocusMode>
 
     try {
       final DateTime now = DateTime.now();
-      final DateTime startDate = DateTime(now.year, now.month - 1, now.day);
+      final DateTime startDate = DateTime(now.year, now.month, now.day)
+          .subtract(const Duration(days: 30));
       final DateTime endDate = now;
 
       final timeDistribution = _analyticsService.getTimeDistribution(
@@ -410,8 +411,14 @@ class _FocusModeState extends State<FocusMode>
 
   Widget _buildWeeklySummaryCard(BuildContext context, AppLocalizations l10n) {
     final totalSessions = weeklySummary['totalSessions'] ?? 0;
-    final totalMinutes = weeklySummary['totalMinutes'] ?? 0;
-    final avgSessionLength = weeklySummary['avgSessionLength'] ?? 0;
+    final sessions =
+        weeklySummary['sessions'] as List<Map<String, dynamic>>? ?? [];
+
+    // Calculate from sessions list
+    final totalMinutes = sessions.fold<int>(
+        0, (sum, session) => sum + (session['totalMinutes'] as int? ?? 0));
+    final avgSessionLength =
+        totalSessions > 0 ? (totalMinutes / totalSessions).round() : 0;
 
     return _AnimatedCard(
       child: Padding(
@@ -655,7 +662,9 @@ class _MeterState extends State<Meter> with TickerProviderStateMixin {
     _currentTimerState = _timerService.currentState;
   }
 
-  String selectedVoiceGender = 'male';
+  String selectedVoiceGender =
+      SettingsManager().getSetting("focusModeSettings.voiceGender") ??
+          VoiceGenderOptions.defaultGender;
 
   void _onWorkSessionStart() {
     debugPrint('Work session started');
@@ -709,16 +718,39 @@ class _MeterState extends State<Meter> with TickerProviderStateMixin {
   }
 
   void _handlePlayPausePressed() {
+    debugPrint(
+        '🔵 Play/Pause - State: ${_timerService.currentState}, Running: $_isRunning');
+
     _buttonScaleController
         .forward()
         .then((_) => _buttonScaleController.reverse());
+
+    final wasIdle = _timerService.currentState == TimerState.idle;
+    final wasRunning = _isRunning;
+
+    // Play sound BEFORE starting timer if starting from idle
+    if (!wasRunning && wasIdle && enableSounds && mounted) {
+      debugPrint('🔊 Playing sound before timer start');
+      SoundManager.playSound(
+        context: context,
+        soundType: 'work_start',
+        voiceGender: selectedVoiceGender,
+      ).catchError((e) {
+        debugPrint('❌ Sound error: $e');
+      });
+    }
+
     setState(() {
-      if (_isRunning) {
+      if (wasRunning) {
         _timerService.pauseTimer();
       } else {
-        if (_timerService.currentState == TimerState.idle) {
+        if (wasIdle || _timerService.secondsRemaining == 0) {
+          // Always start a fresh work session if idle OR timer is at 0
+          debugPrint('▶️ Starting fresh work session');
           _timerService.startWorkSession();
         } else {
+          // Resume existing timer
+          debugPrint('▶️ Resuming timer');
           _timerService.resumeTimer();
         }
       }
@@ -728,9 +760,9 @@ class _MeterState extends State<Meter> with TickerProviderStateMixin {
   void _handleReloadPressed() {
     setState(() {
       _timerService.resetTimer();
-      if (_timerService.currentState == TimerState.idle) {
-        _timerService.startWorkSession();
-      }
+      // if (_timerService.currentState == TimerState.idle) {
+      //   _timerService.startWorkSession();
+      // }
     });
   }
 
@@ -754,7 +786,7 @@ class _MeterState extends State<Meter> with TickerProviderStateMixin {
 
   void _resetAllSessions() {
     setState(() {
-      _completedWorkSessions = 0;
+      _timerService.resetStats(); // ← This resets the service counter
       _timerService.resetTimer();
     });
   }
@@ -995,7 +1027,7 @@ class _MeterState extends State<Meter> with TickerProviderStateMixin {
     // Show 4 dots representing sessions until long break
     final sessionsUntilLongBreak = 4;
     final currentCycleProgress =
-        _completedWorkSessions % sessionsUntilLongBreak;
+        _timerService.completedSessions % sessionsUntilLongBreak;
 
     return Column(
       children: [
@@ -1006,7 +1038,6 @@ class _MeterState extends State<Meter> with TickerProviderStateMixin {
             final isCurrent = index == currentCycleProgress &&
                 (_currentTimerState == TimerState.work ||
                     _currentTimerState == TimerState.idle);
-
             return Padding(
               padding: const EdgeInsets.symmetric(horizontal: 6),
               child: AnimatedContainer(
@@ -1038,7 +1069,7 @@ class _MeterState extends State<Meter> with TickerProviderStateMixin {
         ),
         const SizedBox(height: 8),
         Text(
-          '$_completedWorkSessions sessions completed',
+          '${_timerService.completedSessions} sessions completed', // ← Use service counter
           style: FluentTheme.of(context).typography.caption?.copyWith(
                 color: FluentTheme.of(context)
                     .typography

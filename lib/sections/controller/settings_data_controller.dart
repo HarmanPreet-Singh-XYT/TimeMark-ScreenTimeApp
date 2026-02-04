@@ -33,6 +33,16 @@ class LanguageOptions {
   static const String defaultLanguage = "en";
 }
 
+class VoiceGenderOptions {
+  static const String male = "male";
+  static const String female = "female";
+  static const List<Map<String, String>> available = [
+    {'value': male, 'labelKey': 'voiceGenderMale'},
+    {'value': female, 'labelKey': 'voiceGenderFemale'},
+  ];
+  static const String defaultGender = female;
+}
+
 // Focus mode constants
 class FocusModeOptions {
   static const String custom = "Custom";
@@ -119,12 +129,13 @@ class SettingsManager {
           "longBreak": 15.0,
           "autoStart": false,
           "blockDistractions": false,
-          "enableSoundsNotifications": !_isMacOS // Disabled by default on macOS
+          "enableSoundsNotifications": true,
+          "voiceGender": VoiceGenderOptions.defaultGender,
+          "notificationBannerDismissed": false, // ADD THIS LINE
         },
         "notificationController": {
           "reminderFrequency": 5, // minutes
         },
-        // All tracking settings default to true
         "tracking": {
           "idleDetection": true,
           "idleTimeout": IdleTimeoutOptions.defaultTimeout,
@@ -138,7 +149,7 @@ class SettingsManager {
   late Map<String, dynamic> settings;
 
   Map<String, String> versionInfo = {
-    "version": "1.2.2",
+    "version": "2.0.0",
     "type": "Stable Build"
   };
 
@@ -377,5 +388,10 @@ class SettingsManager {
     if (_isMacOS) {
       debugPrint("🍎 macOS detected - notifications reset to disabled");
     }
+  }
+
+  // Get available voice gender options
+  List<Map<String, String>> getAvailableVoiceGenders() {
+    return VoiceGenderOptions.available;
   }
 }

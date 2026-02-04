@@ -1701,4 +1701,17 @@ class AppLocalizationsId extends AppLocalizations {
   @override
   String get themeDescription =>
       'Tema warna aplikasi (Perubahan Memerlukan Mulai Ulang)';
+
+  @override
+  String get voiceGenderTitle => 'Voice Gender';
+
+  @override
+  String get voiceGenderDescription =>
+      'Choose the voice gender for timer notifications';
+
+  @override
+  String get voiceGenderMale => 'Male';
+
+  @override
+  String get voiceGenderFemale => 'Female';
 }

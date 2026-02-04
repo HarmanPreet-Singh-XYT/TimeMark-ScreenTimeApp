@@ -1665,4 +1665,17 @@ class AppLocalizationsJa extends AppLocalizations {
 
   @override
   String get themeDescription => 'アプリケーションの配色テーマ（変更には再起動が必要）';
+
+  @override
+  String get voiceGenderTitle => 'Voice Gender';
+
+  @override
+  String get voiceGenderDescription =>
+      'Choose the voice gender for timer notifications';
+
+  @override
+  String get voiceGenderMale => 'Male';
+
+  @override
+  String get voiceGenderFemale => 'Female';
 }
