@@ -536,6 +536,7 @@ class Meter extends StatefulWidget {
 }
 
 class _MeterState extends State<Meter> with TickerProviderStateMixin {
+  StreamSubscription<TimerUpdate>? _timerSubscription;
   SettingsManager settingsManager = SettingsManager();
   final AudioPlayer _audioPlayer = AudioPlayer();
   double workDuration = 25;
@@ -567,8 +568,57 @@ class _MeterState extends State<Meter> with TickerProviderStateMixin {
     super.initState();
     _loadSettings();
     _initializeTimerService();
-    _startUiUpdateTimer();
     _initAnimations();
+
+    // Subscribe to timer updates instead of using periodic timer
+    _timerSubscription = _timerService.timerUpdates.listen((update) {
+      if (mounted) {
+        setState(() {
+          _updateFromTimerUpdate(update);
+        });
+      }
+    });
+
+    // Initial sync
+    _updateDisplayTime();
+  }
+
+  void _updateFromTimerUpdate(TimerUpdate update) {
+    _currentTimerState = update.state;
+    _isRunning = update.isRunning;
+
+    int minutes = update.secondsRemaining ~/ 60;
+    int seconds = update.secondsRemaining % 60;
+    _displayTime =
+        "${minutes.toString().padLeft(2, '0')}:${seconds.toString().padLeft(2, '0')}";
+
+    double totalSeconds;
+    switch (update.state) {
+      case TimerState.work:
+        totalSeconds = workDuration * 60;
+        break;
+      case TimerState.shortBreak:
+        totalSeconds = shortBreak * 60;
+        break;
+      case TimerState.longBreak:
+        totalSeconds = longBreak * 60;
+        break;
+      case TimerState.idle:
+        totalSeconds = workDuration * 60;
+        break;
+    }
+
+    _percentComplete = update.secondsRemaining > 0
+        ? (update.secondsRemaining / totalSeconds)
+        : 1.0;
+
+    // Handle pulse animation
+    if (_isRunning && !_pulseController.isAnimating) {
+      _pulseController.repeat(reverse: true);
+    } else if (!_isRunning && _pulseController.isAnimating) {
+      _pulseController.stop();
+      _pulseController.reset();
+    }
   }
 
   void _loadSettings() {
@@ -818,8 +868,8 @@ class _MeterState extends State<Meter> with TickerProviderStateMixin {
 
   @override
   void dispose() {
-    _timerService.dispose();
-    _uiUpdateTimer?.cancel();
+    // _timerService.dispose();
+    // _uiUpdateTimer?.cancel();
     _pulseController.dispose();
     _buttonScaleController.dispose();
     _audioPlayer.dispose();

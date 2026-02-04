@@ -14,6 +14,11 @@ class PomodoroTimerService {
   final NotificationController _notificationController =
       NotificationController(); // Instance of notification controller
 
+  final StreamController<TimerUpdate> _stateController =
+      StreamController<TimerUpdate>.broadcast();
+
+  Stream<TimerUpdate> get timerUpdates => _stateController.stream;
+
   // Factory constructor
   factory PomodoroTimerService({
     required int workDuration,
@@ -102,18 +107,50 @@ class PomodoroTimerService {
     _onTimerComplete = onTimerComplete ?? _onTimerComplete;
   }
 
-  // Start a work session
+  // Timer callback function - notify listeners
+  void _timerCallback(Timer timer) {
+    if (_secondsRemaining > 0) {
+      _secondsRemaining--;
+
+      // Notify all listeners of the update
+      _stateController.add(TimerUpdate(
+        state: _currentState,
+        secondsRemaining: _secondsRemaining,
+        isRunning: isRunning,
+        completedSessions: _completedSessions,
+      ));
+
+      if (_enableNotifications && _secondsRemaining == 60) {
+        _notificationController.showPopupAlert('1 Minute Remaining',
+            'Your ${_getSessionTypeName()} session will end in 1 minute.');
+      }
+    } else {
+      timer.cancel();
+      _timer = null;
+      _handleTimerComplete();
+    }
+  }
+
+  // Also emit when state changes (start, pause, reset, etc.)
+  void _emitUpdate() {
+    _stateController.add(TimerUpdate(
+      state: _currentState,
+      secondsRemaining: _secondsRemaining,
+      isRunning: isRunning,
+      completedSessions: _completedSessions,
+    ));
+  }
+
+  // Update startWorkSession, pauseTimer, etc. to call _emitUpdate()
   void startWorkSession() {
     _currentState = TimerState.work;
     _secondsRemaining = _workDuration * 60;
     _startTimer();
+    _emitUpdate(); // Add this
 
-    // Send notification for work session start
     if (_enableNotifications) {
       _notificationController.sendFocusNotification('Pomodoro Work', false);
-      if (_onWorkSessionStart != null) {
-        _onWorkSessionStart!();
-      }
+      _onWorkSessionStart?.call();
     }
   }
 
@@ -183,8 +220,8 @@ class PomodoroTimerService {
   void pauseTimer() {
     _timer?.cancel();
     _timer = null;
+    _emitUpdate(); // Add this
 
-    // Optional: Send a notification for paused timer
     if (_enableNotifications && _currentState != TimerState.idle) {
       _notificationController.showPopupAlert('Pomodoro Paused',
           'Your ${_getSessionTypeName()} session has been paused.');
@@ -233,22 +270,22 @@ class PomodoroTimerService {
     }
   }
 
-  // Timer callback function
-  void _timerCallback(Timer timer) {
-    if (_secondsRemaining > 0) {
-      _secondsRemaining--;
+  // // Timer callback function
+  // void _timerCallback(Timer timer) {
+  //   if (_secondsRemaining > 0) {
+  //     _secondsRemaining--;
 
-      // Optional: Send a notification when time is almost up (e.g., 1 minute remaining)
-      if (_enableNotifications && _secondsRemaining == 60) {
-        _notificationController.showPopupAlert('1 Minute Remaining',
-            'Your ${_getSessionTypeName()} session will end in 1 minute.');
-      }
-    } else {
-      timer.cancel();
-      _timer = null;
-      _handleTimerComplete();
-    }
-  }
+  //     // Optional: Send a notification when time is almost up (e.g., 1 minute remaining)
+  //     if (_enableNotifications && _secondsRemaining == 60) {
+  //       _notificationController.showPopupAlert('1 Minute Remaining',
+  //           'Your ${_getSessionTypeName()} session will end in 1 minute.');
+  //     }
+  //   } else {
+  //     timer.cancel();
+  //     _timer = null;
+  //     _handleTimerComplete();
+  //   }
+  // }
 
   // Handle timer completion
   void _handleTimerComplete() {
@@ -411,4 +448,18 @@ class PomodoroTimerService {
     _timer?.cancel();
     _timer = null;
   }
+}
+
+class TimerUpdate {
+  final TimerState state;
+  final int secondsRemaining;
+  final bool isRunning;
+  final int completedSessions;
+
+  TimerUpdate({
+    required this.state,
+    required this.secondsRemaining,
+    required this.isRunning,
+    required this.completedSessions,
+  });
 }
