@@ -1612,5 +1612,22 @@
   "success": "Sucesso",
   "error": "Erro",
   "secondary": "Secundário",
-  "warning": "Aviso"
+  "warning": "Aviso",
+  "launchAtStartupTitle": "Iniciar na inicialização",
+  "launchAtStartupDescription": "Iniciar automaticamente o TimeMark quando você fizer login no seu computador",
+  "inputMonitoringPermissionTitle": "Monitoramento do teclado indisponível",
+  "inputMonitoringPermissionDescription": "Ative a permissão de monitoramento de entrada para rastrear a atividade do teclado. No momento, apenas o mouse está sendo monitorado.",
+  "openSettings": "Abrir ajustes",
+  "permissionGrantedTitle": "Permissão concedida",
+  "permissionGrantedDescription": "O aplicativo precisa ser reiniciado para que o monitoramento de entrada entre em vigor.",
+  "continueButton": "Continuar",
+  "restartRequiredTitle": "Reinício necessário",
+  "restartRequiredDescription": "Para ativar o monitoramento do teclado, o aplicativo precisa ser reiniciado. Isso é exigido pelo macOS.",
+  "restartNote": "O aplicativo será reaberto automaticamente após o reinício.",
+  "restartNow": "Reiniciar agora",
+  "restartLater": "Reiniciar mais tarde",
+  "restartFailedTitle": "Falha ao reiniciar",
+  "restartFailedMessage": "Não foi possível reiniciar o aplicativo automaticamente. Encerre (Cmd+Q) e abra novamente manualmente.",
+  "ok": "OK",
+  "error": "Erro"
 }

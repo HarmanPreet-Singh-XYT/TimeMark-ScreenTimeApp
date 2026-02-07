@@ -1621,5 +1621,22 @@
   "success": "সফলতা",
   "error": "ত্রুটি",
   "secondary": "গৌণ",
-  "warning": "সতর্কতা"
+  "warning": "সতর্কতা",
+  "launchAtStartupTitle": "স্টার্টআপে চালু করুন",
+  "launchAtStartupDescription": "আপনার কম্পিউটারে লগ ইন করার সময় স্বয়ংক্রিয়ভাবে TimeMark শুরু করুন",
+  "inputMonitoringPermissionTitle": "কীবোর্ড মনিটরিং উপলব্ধ নয়",
+  "inputMonitoringPermissionDescription": "কীবোর্ড কার্যকলাপ ট্র্যাক করতে ইনপুট মনিটরিং অনুমতি সক্রিয় করুন। বর্তমানে শুধুমাত্র মাউস ইনপুট মনিটর করা হচ্ছে।",
+  "openSettings": "সেটিংস খুলুন",
+  "permissionGrantedTitle": "অনুমতি দেওয়া হয়েছে",
+  "permissionGrantedDescription": "ইনপুট মনিটরিং কার্যকর করতে অ্যাপটি পুনরায় চালু করতে হবে।",
+  "continueButton": "চালিয়ে যান",
+  "restartRequiredTitle": "পুনরায় চালু প্রয়োজন",
+  "restartRequiredDescription": "কীবোর্ড মনিটরিং সক্ষম করতে অ্যাপটি পুনরায় চালু করা প্রয়োজন। এটি macOS দ্বারা প্রয়োজনীয়।",
+  "restartNote": "পুনরায় চালু হওয়ার পর অ্যাপটি স্বয়ংক্রিয়ভাবে আবার খুলবে।",
+  "restartNow": "এখনই পুনরায় চালু করুন",
+  "restartLater": "পরে পুনরায় চালু করুন",
+  "restartFailedTitle": "পুনরায় চালু ব্যর্থ",
+  "restartFailedMessage": "অ্যাপটি স্বয়ংক্রিয়ভাবে পুনরায় চালু করা যায়নি। অনুগ্রহ করে বের হয়ে (Cmd+Q) ম্যানুয়ালি আবার চালু করুন।",
+  "ok": "ঠিক আছে",
+  "error": "ত্রুটি"
 }

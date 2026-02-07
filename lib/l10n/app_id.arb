@@ -1612,5 +1612,22 @@
   "success": "Sukses",
   "error": "Error",
   "secondary": "Sekunder",
-  "warning": "Peringatan"
+  "warning": "Peringatan",
+  "launchAtStartupTitle": "Jalankan saat startup",
+  "launchAtStartupDescription": "Mulai TimeMark secara otomatis saat Anda masuk ke komputer Anda",
+  "inputMonitoringPermissionTitle": "Pemantauan keyboard tidak tersedia",
+  "inputMonitoringPermissionDescription": "Aktifkan izin pemantauan input untuk melacak aktivitas keyboard. Saat ini hanya input mouse yang dipantau.",
+  "openSettings": "Buka Pengaturan",
+  "permissionGrantedTitle": "Izin diberikan",
+  "permissionGrantedDescription": "Aplikasi perlu dimulai ulang agar pemantauan input berlaku.",
+  "continueButton": "Lanjutkan",
+  "restartRequiredTitle": "Perlu dimulai ulang",
+  "restartRequiredDescription": "Untuk mengaktifkan pemantauan keyboard, aplikasi perlu dimulai ulang. Ini diwajibkan oleh macOS.",
+  "restartNote": "Aplikasi akan terbuka kembali secara otomatis setelah dimulai ulang.",
+  "restartNow": "Mulai ulang sekarang",
+  "restartLater": "Mulai ulang nanti",
+  "restartFailedTitle": "Gagal memulai ulang",
+  "restartFailedMessage": "Aplikasi tidak dapat dimulai ulang secara otomatis. Silakan keluar (Cmd+Q) dan buka kembali secara manual.",
+  "ok": "OK",
+  "error": "Kesalahan"
 }

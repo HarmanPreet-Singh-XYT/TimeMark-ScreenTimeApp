@@ -1615,5 +1615,22 @@
   "success": "Éxito",
   "error": "Error",
   "secondary": "Secundario",
-  "warning": "Advertencia"
+  "warning": "Advertencia",
+  "launchAtStartupTitle": "Iniciar al arrancar",
+  "launchAtStartupDescription": "Iniciar TimeMark automáticamente al iniciar sesión en tu computadora",
+   "inputMonitoringPermissionTitle": "Supervisión del teclado no disponible",
+  "inputMonitoringPermissionDescription": "Activa el permiso de supervisión de entrada para registrar la actividad del teclado. Actualmente solo se supervisa el ratón.",
+  "openSettings": "Abrir ajustes",
+  "permissionGrantedTitle": "Permiso concedido",
+  "permissionGrantedDescription": "La aplicación necesita reiniciarse para que la supervisión de entrada tenga efecto.",
+  "continueButton": "Continuar",
+  "restartRequiredTitle": "Reinicio necesario",
+  "restartRequiredDescription": "Para activar la supervisión del teclado, la aplicación debe reiniciarse. Esto es obligatorio en macOS.",
+  "restartNote": "La aplicación se volverá a abrir automáticamente después del reinicio.",
+  "restartNow": "Reiniciar ahora",
+  "restartLater": "Reiniciar más tarde",
+  "restartFailedTitle": "Error al reiniciar",
+  "restartFailedMessage": "No se pudo reiniciar la aplicación automáticamente. Sal (Cmd+Q) y ábrela de nuevo manualmente.",
+  "ok": "Aceptar",
+  "error": "Error"
 }

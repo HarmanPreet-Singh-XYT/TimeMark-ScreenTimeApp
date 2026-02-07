@@ -341,7 +341,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get apply => 'تطبيق';
 
   @override
-  String get ok => 'موافق';
+  String get ok => 'حسنًا';
 
   @override
   String get invalidDateRange => 'نطاق تاريخ غير صالح';
@@ -2315,4 +2315,55 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get warning => 'تحذير';
+
+  @override
+  String get launchAtStartupTitle => 'التشغيل عند بدء التشغيل';
+
+  @override
+  String get launchAtStartupDescription =>
+      'بدء TimeMark تلقائيًا عند تسجيل الدخول إلى جهاز الكمبيوتر الخاص بك';
+
+  @override
+  String get inputMonitoringPermissionTitle => 'مراقبة لوحة المفاتيح غير متاحة';
+
+  @override
+  String get inputMonitoringPermissionDescription =>
+      'يرجى تمكين إذن مراقبة الإدخال لتتبع نشاط لوحة المفاتيح. يتم حاليًا مراقبة إدخال الماوس فقط.';
+
+  @override
+  String get openSettings => 'فتح الإعدادات';
+
+  @override
+  String get permissionGrantedTitle => 'تم منح الإذن';
+
+  @override
+  String get permissionGrantedDescription =>
+      'يجب إعادة تشغيل التطبيق لتفعيل مراقبة الإدخال.';
+
+  @override
+  String get continueButton => 'متابعة';
+
+  @override
+  String get restartRequiredTitle => 'إعادة التشغيل مطلوبة';
+
+  @override
+  String get restartRequiredDescription =>
+      'لتفعيل مراقبة لوحة المفاتيح، يجب إعادة تشغيل التطبيق. هذا مطلوب من قبل macOS.';
+
+  @override
+  String get restartNote =>
+      'سيتم إعادة تشغيل التطبيق تلقائيًا بعد إعادة التشغيل.';
+
+  @override
+  String get restartNow => 'إعادة التشغيل الآن';
+
+  @override
+  String get restartLater => 'إعادة التشغيل لاحقًا';
+
+  @override
+  String get restartFailedTitle => 'فشل إعادة التشغيل';
+
+  @override
+  String get restartFailedMessage =>
+      'تعذر إعادة تشغيل التطبيق تلقائيًا. يرجى الخروج (Cmd+Q) وإعادة تشغيله يدويًا.';
 }

@@ -2340,4 +2340,55 @@ class AppLocalizationsHi extends AppLocalizations {
 
   @override
   String get warning => 'चेतावनी';
+
+  @override
+  String get launchAtStartupTitle => 'स्टार्टअप पर लॉन्च करें';
+
+  @override
+  String get launchAtStartupDescription =>
+      'जब आप अपने कंप्यूटर में लॉग इन करें तो स्वचालित रूप से TimeMark प्रारंभ करें';
+
+  @override
+  String get inputMonitoringPermissionTitle =>
+      'कीबोर्ड मॉनिटरिंग उपलब्ध नहीं है';
+
+  @override
+  String get inputMonitoringPermissionDescription =>
+      'कीबोर्ड गतिविधि ट्रैक करने के लिए इनपुट मॉनिटरिंग अनुमति सक्षम करें। फिलहाल केवल माउस इनपुट मॉनिटर किया जा रहा है।';
+
+  @override
+  String get openSettings => 'सेटिंग्स खोलें';
+
+  @override
+  String get permissionGrantedTitle => 'अनुमति प्रदान की गई';
+
+  @override
+  String get permissionGrantedDescription =>
+      'इनपुट मॉनिटरिंग लागू करने के लिए ऐप को पुनः प्रारंभ करना होगा।';
+
+  @override
+  String get continueButton => 'जारी रखें';
+
+  @override
+  String get restartRequiredTitle => 'पुनः प्रारंभ आवश्यक';
+
+  @override
+  String get restartRequiredDescription =>
+      'कीबोर्ड मॉनिटरिंग सक्षम करने के लिए ऐप को पुनः प्रारंभ करना आवश्यक है। यह macOS द्वारा आवश्यक है।';
+
+  @override
+  String get restartNote => 'पुनः प्रारंभ के बाद ऐप स्वतः फिर से खुलेगा।';
+
+  @override
+  String get restartNow => 'अभी पुनः प्रारंभ करें';
+
+  @override
+  String get restartLater => 'बाद में पुनः प्रारंभ करें';
+
+  @override
+  String get restartFailedTitle => 'पुनः प्रारंभ विफल';
+
+  @override
+  String get restartFailedMessage =>
+      'ऐप स्वतः पुनः प्रारंभ नहीं हो सका। कृपया बाहर निकलें (Cmd+Q) और मैन्युअल रूप से फिर से खोलें।';
 }

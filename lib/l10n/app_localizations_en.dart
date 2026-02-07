@@ -2365,4 +2365,56 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get warning => 'Warning';
+
+  @override
+  String get launchAtStartupTitle => 'Launch at startup';
+
+  @override
+  String get launchAtStartupDescription =>
+      'Automatically start TimeMark when you log in to your computer';
+
+  @override
+  String get inputMonitoringPermissionTitle =>
+      'Keyboard Monitoring Unavailable';
+
+  @override
+  String get inputMonitoringPermissionDescription =>
+      'Enable Input Monitoring permission to track keyboard activity. Currently only mouse input is monitored.';
+
+  @override
+  String get openSettings => 'Open Settings';
+
+  @override
+  String get permissionGrantedTitle => 'Permission Granted';
+
+  @override
+  String get permissionGrantedDescription =>
+      'The app needs to restart for Input Monitoring to take effect.';
+
+  @override
+  String get continueButton => 'Continue';
+
+  @override
+  String get restartRequiredTitle => 'Restart Required';
+
+  @override
+  String get restartRequiredDescription =>
+      'To enable keyboard monitoring, the app needs to restart. This is required by macOS.';
+
+  @override
+  String get restartNote =>
+      'The app will automatically relaunch after restarting.';
+
+  @override
+  String get restartNow => 'Restart Now';
+
+  @override
+  String get restartLater => 'Restart Later';
+
+  @override
+  String get restartFailedTitle => 'Restart Failed';
+
+  @override
+  String get restartFailedMessage =>
+      'Could not restart the app automatically. Please quit (Cmd+Q) and relaunch manually.';
 }

@@ -2296,4 +2296,52 @@ class AppLocalizationsJa extends AppLocalizations {
 
   @override
   String get warning => '警告';
+
+  @override
+  String get launchAtStartupTitle => 'スタートアップ時に起動';
+
+  @override
+  String get launchAtStartupDescription => 'コンピュータにログインしたときに自動的にTimeMarkを起動します';
+
+  @override
+  String get inputMonitoringPermissionTitle => 'キーボード監視は利用できません';
+
+  @override
+  String get inputMonitoringPermissionDescription =>
+      'キーボードの操作を追跡するには、入力監視の許可を有効にしてください。現在はマウス入力のみが監視されています。';
+
+  @override
+  String get openSettings => '設定を開く';
+
+  @override
+  String get permissionGrantedTitle => '許可が付与されました';
+
+  @override
+  String get permissionGrantedDescription => '入力監視を有効にするには、アプリを再起動する必要があります。';
+
+  @override
+  String get continueButton => '続行';
+
+  @override
+  String get restartRequiredTitle => '再起動が必要です';
+
+  @override
+  String get restartRequiredDescription =>
+      'キーボード監視を有効にするには、アプリを再起動する必要があります。これは macOS の仕様です。';
+
+  @override
+  String get restartNote => '再起動後、アプリは自動的に再起動します。';
+
+  @override
+  String get restartNow => '今すぐ再起動';
+
+  @override
+  String get restartLater => '後で再起動';
+
+  @override
+  String get restartFailedTitle => '再起動に失敗しました';
+
+  @override
+  String get restartFailedMessage =>
+      'アプリを自動的に再起動できませんでした。終了（Cmd+Q）して手動で再起動してください。';
 }

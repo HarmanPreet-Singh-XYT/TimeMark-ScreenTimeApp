@@ -2343,4 +2343,55 @@ class AppLocalizationsBn extends AppLocalizations {
 
   @override
   String get warning => 'সতর্কতা';
+
+  @override
+  String get launchAtStartupTitle => 'স্টার্টআপে চালু করুন';
+
+  @override
+  String get launchAtStartupDescription =>
+      'আপনার কম্পিউটারে লগ ইন করার সময় স্বয়ংক্রিয়ভাবে TimeMark শুরু করুন';
+
+  @override
+  String get inputMonitoringPermissionTitle => 'কীবোর্ড মনিটরিং উপলব্ধ নয়';
+
+  @override
+  String get inputMonitoringPermissionDescription =>
+      'কীবোর্ড কার্যকলাপ ট্র্যাক করতে ইনপুট মনিটরিং অনুমতি সক্রিয় করুন। বর্তমানে শুধুমাত্র মাউস ইনপুট মনিটর করা হচ্ছে।';
+
+  @override
+  String get openSettings => 'সেটিংস খুলুন';
+
+  @override
+  String get permissionGrantedTitle => 'অনুমতি দেওয়া হয়েছে';
+
+  @override
+  String get permissionGrantedDescription =>
+      'ইনপুট মনিটরিং কার্যকর করতে অ্যাপটি পুনরায় চালু করতে হবে।';
+
+  @override
+  String get continueButton => 'চালিয়ে যান';
+
+  @override
+  String get restartRequiredTitle => 'পুনরায় চালু প্রয়োজন';
+
+  @override
+  String get restartRequiredDescription =>
+      'কীবোর্ড মনিটরিং সক্ষম করতে অ্যাপটি পুনরায় চালু করা প্রয়োজন। এটি macOS দ্বারা প্রয়োজনীয়।';
+
+  @override
+  String get restartNote =>
+      'পুনরায় চালু হওয়ার পর অ্যাপটি স্বয়ংক্রিয়ভাবে আবার খুলবে।';
+
+  @override
+  String get restartNow => 'এখনই পুনরায় চালু করুন';
+
+  @override
+  String get restartLater => 'পরে পুনরায় চালু করুন';
+
+  @override
+  String get restartFailedTitle => 'পুনরায় চালু ব্যর্থ';
+
+  @override
+  String get restartFailedMessage =>
+      'অ্যাপটি স্বয়ংক্রিয়ভাবে পুনরায় চালু করা যায়নি। অনুগ্রহ করে বের হয়ে (Cmd+Q) ম্যানুয়ালি আবার চালু করুন।';
 }

@@ -4347,6 +4347,96 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Warning'**
   String get warning;
+
+  /// No description provided for @launchAtStartupTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Launch at startup'**
+  String get launchAtStartupTitle;
+
+  /// No description provided for @launchAtStartupDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'Automatically start TimeMark when you log in to your computer'**
+  String get launchAtStartupDescription;
+
+  /// No description provided for @inputMonitoringPermissionTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Keyboard Monitoring Unavailable'**
+  String get inputMonitoringPermissionTitle;
+
+  /// No description provided for @inputMonitoringPermissionDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'Enable Input Monitoring permission to track keyboard activity. Currently only mouse input is monitored.'**
+  String get inputMonitoringPermissionDescription;
+
+  /// No description provided for @openSettings.
+  ///
+  /// In en, this message translates to:
+  /// **'Open Settings'**
+  String get openSettings;
+
+  /// No description provided for @permissionGrantedTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Permission Granted'**
+  String get permissionGrantedTitle;
+
+  /// No description provided for @permissionGrantedDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'The app needs to restart for Input Monitoring to take effect.'**
+  String get permissionGrantedDescription;
+
+  /// No description provided for @continueButton.
+  ///
+  /// In en, this message translates to:
+  /// **'Continue'**
+  String get continueButton;
+
+  /// No description provided for @restartRequiredTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Restart Required'**
+  String get restartRequiredTitle;
+
+  /// No description provided for @restartRequiredDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'To enable keyboard monitoring, the app needs to restart. This is required by macOS.'**
+  String get restartRequiredDescription;
+
+  /// No description provided for @restartNote.
+  ///
+  /// In en, this message translates to:
+  /// **'The app will automatically relaunch after restarting.'**
+  String get restartNote;
+
+  /// No description provided for @restartNow.
+  ///
+  /// In en, this message translates to:
+  /// **'Restart Now'**
+  String get restartNow;
+
+  /// No description provided for @restartLater.
+  ///
+  /// In en, this message translates to:
+  /// **'Restart Later'**
+  String get restartLater;
+
+  /// No description provided for @restartFailedTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Restart Failed'**
+  String get restartFailedTitle;
+
+  /// No description provided for @restartFailedMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'Could not restart the app automatically. Please quit (Cmd+Q) and relaunch manually.'**
+  String get restartFailedMessage;
 }
 
 class _AppLocalizationsDelegate

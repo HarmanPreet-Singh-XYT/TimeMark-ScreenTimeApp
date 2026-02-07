@@ -1619,5 +1619,22 @@
   "success": "نجاح",
   "error": "خطأ",
   "secondary": "ثانوي",
-  "warning": "تحذير"
+  "warning": "تحذير",
+  "launchAtStartupTitle": "التشغيل عند بدء التشغيل",
+  "launchAtStartupDescription": "بدء TimeMark تلقائيًا عند تسجيل الدخول إلى جهاز الكمبيوتر الخاص بك",
+  "inputMonitoringPermissionTitle": "مراقبة لوحة المفاتيح غير متاحة",
+  "inputMonitoringPermissionDescription": "يرجى تمكين إذن مراقبة الإدخال لتتبع نشاط لوحة المفاتيح. يتم حاليًا مراقبة إدخال الماوس فقط.",
+  "openSettings": "فتح الإعدادات",
+  "permissionGrantedTitle": "تم منح الإذن",
+  "permissionGrantedDescription": "يجب إعادة تشغيل التطبيق لتفعيل مراقبة الإدخال.",
+  "continueButton": "متابعة",
+  "restartRequiredTitle": "إعادة التشغيل مطلوبة",
+  "restartRequiredDescription": "لتفعيل مراقبة لوحة المفاتيح، يجب إعادة تشغيل التطبيق. هذا مطلوب من قبل macOS.",
+  "restartNote": "سيتم إعادة تشغيل التطبيق تلقائيًا بعد إعادة التشغيل.",
+  "restartNow": "إعادة التشغيل الآن",
+  "restartLater": "إعادة التشغيل لاحقًا",
+  "restartFailedTitle": "فشل إعادة التشغيل",
+  "restartFailedMessage": "تعذر إعادة تشغيل التطبيق تلقائيًا. يرجى الخروج (Cmd+Q) وإعادة تشغيله يدويًا.",
+  "ok": "حسنًا",
+  "error": "خطأ"
 }

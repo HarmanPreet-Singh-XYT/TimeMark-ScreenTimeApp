@@ -2397,4 +2397,56 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get warning => 'Предупреждение';
+
+  @override
+  String get launchAtStartupTitle => 'Запуск при старте';
+
+  @override
+  String get launchAtStartupDescription =>
+      'Автоматически запускать TimeMark при входе в систему на вашем компьютере';
+
+  @override
+  String get inputMonitoringPermissionTitle =>
+      'Мониторинг клавиатуры недоступен';
+
+  @override
+  String get inputMonitoringPermissionDescription =>
+      'Включите разрешение на мониторинг ввода для отслеживания активности клавиатуры. В настоящее время отслеживается только ввод мыши.';
+
+  @override
+  String get openSettings => 'Открыть настройки';
+
+  @override
+  String get permissionGrantedTitle => 'Разрешение предоставлено';
+
+  @override
+  String get permissionGrantedDescription =>
+      'Для применения мониторинга ввода необходимо перезапустить приложение.';
+
+  @override
+  String get continueButton => 'Продолжить';
+
+  @override
+  String get restartRequiredTitle => 'Требуется перезапуск';
+
+  @override
+  String get restartRequiredDescription =>
+      'Чтобы включить мониторинг клавиатуры, приложение необходимо перезапустить. Это требование macOS.';
+
+  @override
+  String get restartNote =>
+      'После перезапуска приложение автоматически запустится снова.';
+
+  @override
+  String get restartNow => 'Перезапустить сейчас';
+
+  @override
+  String get restartLater => 'Перезапустить позже';
+
+  @override
+  String get restartFailedTitle => 'Ошибка перезапуска';
+
+  @override
+  String get restartFailedMessage =>
+      'Не удалось автоматически перезапустить приложение. Пожалуйста, выйдите (Cmd+Q) и запустите его вручную.';
 }

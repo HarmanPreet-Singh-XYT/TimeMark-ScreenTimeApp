@@ -713,7 +713,7 @@ class AppLocalizationsId extends AppLocalizations {
   String get add => 'Tambah';
 
   @override
-  String get error => 'Error';
+  String get error => 'Kesalahan';
 
   @override
   String get retry => 'Coba Lagi';
@@ -2340,4 +2340,56 @@ class AppLocalizationsId extends AppLocalizations {
 
   @override
   String get warning => 'Peringatan';
+
+  @override
+  String get launchAtStartupTitle => 'Jalankan saat startup';
+
+  @override
+  String get launchAtStartupDescription =>
+      'Mulai TimeMark secara otomatis saat Anda masuk ke komputer Anda';
+
+  @override
+  String get inputMonitoringPermissionTitle =>
+      'Pemantauan keyboard tidak tersedia';
+
+  @override
+  String get inputMonitoringPermissionDescription =>
+      'Aktifkan izin pemantauan input untuk melacak aktivitas keyboard. Saat ini hanya input mouse yang dipantau.';
+
+  @override
+  String get openSettings => 'Buka Pengaturan';
+
+  @override
+  String get permissionGrantedTitle => 'Izin diberikan';
+
+  @override
+  String get permissionGrantedDescription =>
+      'Aplikasi perlu dimulai ulang agar pemantauan input berlaku.';
+
+  @override
+  String get continueButton => 'Lanjutkan';
+
+  @override
+  String get restartRequiredTitle => 'Perlu dimulai ulang';
+
+  @override
+  String get restartRequiredDescription =>
+      'Untuk mengaktifkan pemantauan keyboard, aplikasi perlu dimulai ulang. Ini diwajibkan oleh macOS.';
+
+  @override
+  String get restartNote =>
+      'Aplikasi akan terbuka kembali secara otomatis setelah dimulai ulang.';
+
+  @override
+  String get restartNow => 'Mulai ulang sekarang';
+
+  @override
+  String get restartLater => 'Mulai ulang nanti';
+
+  @override
+  String get restartFailedTitle => 'Gagal memulai ulang';
+
+  @override
+  String get restartFailedMessage =>
+      'Aplikasi tidak dapat dimulai ulang secara otomatis. Silakan keluar (Cmd+Q) dan buka kembali secara manual.';
 }

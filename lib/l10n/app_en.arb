@@ -1742,5 +1742,22 @@
   "success": "Success",
   "error": "Error",
   "secondary": "Secondary",
-  "warning": "Warning"
+  "warning": "Warning",
+  "launchAtStartupTitle": "Launch at startup",
+  "launchAtStartupDescription": "Automatically start TimeMark when you log in to your computer",
+  "inputMonitoringPermissionTitle": "Keyboard Monitoring Unavailable",
+  "inputMonitoringPermissionDescription": "Enable Input Monitoring permission to track keyboard activity. Currently only mouse input is monitored.",
+  "openSettings": "Open Settings",
+  "permissionGrantedTitle": "Permission Granted",
+  "permissionGrantedDescription": "The app needs to restart for Input Monitoring to take effect.",
+  "continueButton": "Continue",
+  "restartRequiredTitle": "Restart Required",
+  "restartRequiredDescription": "To enable keyboard monitoring, the app needs to restart. This is required by macOS.",
+  "restartNote": "The app will automatically relaunch after restarting.",
+  "restartNow": "Restart Now",
+  "restartLater": "Restart Later",
+  "restartFailedTitle": "Restart Failed",
+  "restartFailedMessage": "Could not restart the app automatically. Please quit (Cmd+Q) and relaunch manually.",
+  "ok": "OK",
+  "error": "Error"
 }

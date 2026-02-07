@@ -2417,4 +2417,56 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get warning => 'Avertissement';
+
+  @override
+  String get launchAtStartupTitle => 'Lancer au démarrage';
+
+  @override
+  String get launchAtStartupDescription =>
+      'Démarrer automatiquement TimeMark lorsque vous vous connectez à votre ordinateur';
+
+  @override
+  String get inputMonitoringPermissionTitle =>
+      'Surveillance du clavier indisponible';
+
+  @override
+  String get inputMonitoringPermissionDescription =>
+      'Activez l’autorisation de surveillance des entrées pour suivre l’activité du clavier. Actuellement, seule la souris est surveillée.';
+
+  @override
+  String get openSettings => 'Ouvrir les réglages';
+
+  @override
+  String get permissionGrantedTitle => 'Autorisation accordée';
+
+  @override
+  String get permissionGrantedDescription =>
+      'L’application doit redémarrer pour que la surveillance des entrées soit effective.';
+
+  @override
+  String get continueButton => 'Continuer';
+
+  @override
+  String get restartRequiredTitle => 'Redémarrage requis';
+
+  @override
+  String get restartRequiredDescription =>
+      'Pour activer la surveillance du clavier, l’application doit redémarrer. Ceci est requis par macOS.';
+
+  @override
+  String get restartNote =>
+      'L’application se relancera automatiquement après le redémarrage.';
+
+  @override
+  String get restartNow => 'Redémarrer maintenant';
+
+  @override
+  String get restartLater => 'Redémarrer plus tard';
+
+  @override
+  String get restartFailedTitle => 'Échec du redémarrage';
+
+  @override
+  String get restartFailedMessage =>
+      'Impossible de redémarrer automatiquement l’application. Quittez-la (Cmd+Q) et relancez-la manuellement.';
 }

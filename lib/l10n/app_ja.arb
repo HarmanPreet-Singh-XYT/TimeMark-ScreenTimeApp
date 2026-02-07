@@ -1619,5 +1619,22 @@
   "success": "成功",
   "error": "エラー",
   "secondary": "セカンダリ",
-  "warning": "警告"
+  "warning": "警告",
+  "launchAtStartupTitle": "スタートアップ時に起動",
+  "launchAtStartupDescription": "コンピュータにログインしたときに自動的にTimeMarkを起動します",
+  "inputMonitoringPermissionTitle": "キーボード監視は利用できません",
+  "inputMonitoringPermissionDescription": "キーボードの操作を追跡するには、入力監視の許可を有効にしてください。現在はマウス入力のみが監視されています。",
+  "openSettings": "設定を開く",
+  "permissionGrantedTitle": "許可が付与されました",
+  "permissionGrantedDescription": "入力監視を有効にするには、アプリを再起動する必要があります。",
+  "continueButton": "続行",
+  "restartRequiredTitle": "再起動が必要です",
+  "restartRequiredDescription": "キーボード監視を有効にするには、アプリを再起動する必要があります。これは macOS の仕様です。",
+  "restartNote": "再起動後、アプリは自動的に再起動します。",
+  "restartNow": "今すぐ再起動",
+  "restartLater": "後で再起動",
+  "restartFailedTitle": "再起動に失敗しました",
+  "restartFailedMessage": "アプリを自動的に再起動できませんでした。終了（Cmd+Q）して手動で再起動してください。",
+  "ok": "OK",
+  "error": "エラー"
 }

@@ -2276,4 +2276,50 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get warning => '警告';
+
+  @override
+  String get launchAtStartupTitle => '开机启动';
+
+  @override
+  String get launchAtStartupDescription => '登录计算机时自动启动 TimeMark';
+
+  @override
+  String get inputMonitoringPermissionTitle => '键盘监控不可用';
+
+  @override
+  String get inputMonitoringPermissionDescription =>
+      '请启用“输入监控”权限以跟踪键盘活动。目前仅监控鼠标输入。';
+
+  @override
+  String get openSettings => '打开设置';
+
+  @override
+  String get permissionGrantedTitle => '权限已授予';
+
+  @override
+  String get permissionGrantedDescription => '应用需要重新启动才能使输入监控生效。';
+
+  @override
+  String get continueButton => '继续';
+
+  @override
+  String get restartRequiredTitle => '需要重新启动';
+
+  @override
+  String get restartRequiredDescription => '要启用键盘监控，应用需要重新启动。这是 macOS 的要求。';
+
+  @override
+  String get restartNote => '重新启动后，应用将自动重新打开。';
+
+  @override
+  String get restartNow => '立即重新启动';
+
+  @override
+  String get restartLater => '稍后重新启动';
+
+  @override
+  String get restartFailedTitle => '重新启动失败';
+
+  @override
+  String get restartFailedMessage => '无法自动重新启动应用。请退出（Cmd+Q）并手动重新打开。';
 }

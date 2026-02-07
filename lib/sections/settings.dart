@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:fluent_ui/fluent_ui.dart';
+import 'package:launch_at_startup/launch_at_startup.dart';
 import 'package:screentime/l10n/app_localizations.dart';
 import 'package:provider/provider.dart';
 import 'package:screentime/main.dart';
@@ -127,6 +128,16 @@ class SettingsProvider extends ChangeNotifier {
       case 'launchAtStartup':
         _launchAtStartupVar = value;
         _settingsManager.updateSetting("launchAtStartup", value);
+
+        // Sync with system on macOS
+        if (Platform.isMacOS) {
+          if (value) {
+            await launchAtStartup.enable();
+          } else {
+            await launchAtStartup.disable();
+          }
+        }
+        // On Windows, MSIX handles this through the manifest
         break;
       case 'launchAsMinimized':
         _launchAsMinimized = value;
@@ -224,6 +235,10 @@ class SettingsProvider extends ChangeNotifier {
 
   Future<void> resetSettings() async {
     await _settingsManager.resetSettings();
+    // Sync with system on macOS
+    if (Platform.isMacOS) {
+      await launchAtStartup.enable();
+    }
     _loadSettings();
     notifyListeners();
   }

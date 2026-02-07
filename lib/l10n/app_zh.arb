@@ -1614,5 +1614,22 @@
   "success": "成功",
   "error": "错误",
   "secondary": "次要",
-  "warning": "警告"
+  "warning": "警告",
+  "launchAtStartupTitle": "开机启动",
+  "launchAtStartupDescription": "登录计算机时自动启动 TimeMark",
+  "inputMonitoringPermissionTitle": "键盘监控不可用",
+  "inputMonitoringPermissionDescription": "请启用“输入监控”权限以跟踪键盘活动。目前仅监控鼠标输入。",
+  "openSettings": "打开设置",
+  "permissionGrantedTitle": "权限已授予",
+  "permissionGrantedDescription": "应用需要重新启动才能使输入监控生效。",
+  "continueButton": "继续",
+  "restartRequiredTitle": "需要重新启动",
+  "restartRequiredDescription": "要启用键盘监控，应用需要重新启动。这是 macOS 的要求。",
+  "restartNote": "重新启动后，应用将自动重新打开。",
+  "restartNow": "立即重新启动",
+  "restartLater": "稍后重新启动",
+  "restartFailedTitle": "重新启动失败",
+  "restartFailedMessage": "无法自动重新启动应用。请退出（Cmd+Q）并手动重新打开。",
+  "ok": "确定",
+  "error": "错误"
 }

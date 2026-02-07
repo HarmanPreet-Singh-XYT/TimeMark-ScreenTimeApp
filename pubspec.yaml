@@ -62,6 +62,7 @@ dependencies:
   url_launcher: ^6.3.2
   flutter_colorpicker: ^1.0.3
   audioplayers: ^6.5.1
+  launch_at_startup: ^0.5.1
   # Native Code Interaction for Foreground Window
   # You'll need to implement a custom plugin or package
   # Placeholder for your native window tracking plugin

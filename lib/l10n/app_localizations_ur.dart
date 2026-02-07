@@ -2329,4 +2329,55 @@ class AppLocalizationsUr extends AppLocalizations {
 
   @override
   String get warning => 'انتباہ';
+
+  @override
+  String get launchAtStartupTitle => 'اسٹارٹ اپ پر شروع کریں';
+
+  @override
+  String get launchAtStartupDescription =>
+      'جب آپ اپنے کمپیوٹر میں لاگ ان کریں تو خودکار طور پر TimeMark شروع کریں';
+
+  @override
+  String get inputMonitoringPermissionTitle => 'کی بورڈ مانیٹرنگ دستیاب نہیں';
+
+  @override
+  String get inputMonitoringPermissionDescription =>
+      'کی بورڈ کی سرگرمی کو ٹریک کرنے کے لیے ان پٹ مانیٹرنگ کی اجازت فعال کریں۔ فی الحال صرف ماؤس ان پٹ مانیٹر کیا جا رہا ہے۔';
+
+  @override
+  String get openSettings => 'سیٹنگز کھولیں';
+
+  @override
+  String get permissionGrantedTitle => 'اجازت دے دی گئی';
+
+  @override
+  String get permissionGrantedDescription =>
+      'ان پٹ مانیٹرنگ کے مؤثر ہونے کے لیے ایپ کو دوبارہ شروع کرنا ہوگا۔';
+
+  @override
+  String get continueButton => 'جاری رکھیں';
+
+  @override
+  String get restartRequiredTitle => 'دوبارہ شروع کرنا ضروری ہے';
+
+  @override
+  String get restartRequiredDescription =>
+      'کی بورڈ مانیٹرنگ فعال کرنے کے لیے ایپ کو دوبارہ شروع کرنا ضروری ہے۔ یہ macOS کی جانب سے لازمی ہے۔';
+
+  @override
+  String get restartNote =>
+      'دوبارہ شروع ہونے کے بعد ایپ خود بخود دوبارہ کھل جائے گی۔';
+
+  @override
+  String get restartNow => 'ابھی دوبارہ شروع کریں';
+
+  @override
+  String get restartLater => 'بعد میں دوبارہ شروع کریں';
+
+  @override
+  String get restartFailedTitle => 'دوبارہ شروع ناکام';
+
+  @override
+  String get restartFailedMessage =>
+      'ایپ خود بخود دوبارہ شروع نہیں ہو سکی۔ براہ کرم بند کریں (Cmd+Q) اور دستی طور پر دوبارہ کھولیں۔';
 }

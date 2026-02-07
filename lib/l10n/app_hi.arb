@@ -1620,5 +1620,22 @@
   "success": "सफलता",
   "error": "त्रुटि",
   "secondary": "द्वितीयक",
-  "warning": "चेतावनी"
+  "warning": "चेतावनी",
+  "launchAtStartupTitle": "स्टार्टअप पर लॉन्च करें",
+  "launchAtStartupDescription": "जब आप अपने कंप्यूटर में लॉग इन करें तो स्वचालित रूप से TimeMark प्रारंभ करें",
+  "inputMonitoringPermissionTitle": "कीबोर्ड मॉनिटरिंग उपलब्ध नहीं है",
+  "inputMonitoringPermissionDescription": "कीबोर्ड गतिविधि ट्रैक करने के लिए इनपुट मॉनिटरिंग अनुमति सक्षम करें। फिलहाल केवल माउस इनपुट मॉनिटर किया जा रहा है।",
+  "openSettings": "सेटिंग्स खोलें",
+  "permissionGrantedTitle": "अनुमति प्रदान की गई",
+  "permissionGrantedDescription": "इनपुट मॉनिटरिंग लागू करने के लिए ऐप को पुनः प्रारंभ करना होगा।",
+  "continueButton": "जारी रखें",
+  "restartRequiredTitle": "पुनः प्रारंभ आवश्यक",
+  "restartRequiredDescription": "कीबोर्ड मॉनिटरिंग सक्षम करने के लिए ऐप को पुनः प्रारंभ करना आवश्यक है। यह macOS द्वारा आवश्यक है।",
+  "restartNote": "पुनः प्रारंभ के बाद ऐप स्वतः फिर से खुलेगा।",
+  "restartNow": "अभी पुनः प्रारंभ करें",
+  "restartLater": "बाद में पुनः प्रारंभ करें",
+  "restartFailedTitle": "पुनः प्रारंभ विफल",
+  "restartFailedMessage": "ऐप स्वतः पुनः प्रारंभ नहीं हो सका। कृपया बाहर निकलें (Cmd+Q) और मैन्युअल रूप से फिर से खोलें।",
+  "ok": "ठीक है",
+  "error": "त्रुटि"
 }

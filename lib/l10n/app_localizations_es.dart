@@ -2405,4 +2405,56 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get warning => 'Advertencia';
+
+  @override
+  String get launchAtStartupTitle => 'Iniciar al arrancar';
+
+  @override
+  String get launchAtStartupDescription =>
+      'Iniciar TimeMark automáticamente al iniciar sesión en tu computadora';
+
+  @override
+  String get inputMonitoringPermissionTitle =>
+      'Supervisión del teclado no disponible';
+
+  @override
+  String get inputMonitoringPermissionDescription =>
+      'Activa el permiso de supervisión de entrada para registrar la actividad del teclado. Actualmente solo se supervisa el ratón.';
+
+  @override
+  String get openSettings => 'Abrir ajustes';
+
+  @override
+  String get permissionGrantedTitle => 'Permiso concedido';
+
+  @override
+  String get permissionGrantedDescription =>
+      'La aplicación necesita reiniciarse para que la supervisión de entrada tenga efecto.';
+
+  @override
+  String get continueButton => 'Continuar';
+
+  @override
+  String get restartRequiredTitle => 'Reinicio necesario';
+
+  @override
+  String get restartRequiredDescription =>
+      'Para activar la supervisión del teclado, la aplicación debe reiniciarse. Esto es obligatorio en macOS.';
+
+  @override
+  String get restartNote =>
+      'La aplicación se volverá a abrir automáticamente después del reinicio.';
+
+  @override
+  String get restartNow => 'Reiniciar ahora';
+
+  @override
+  String get restartLater => 'Reiniciar más tarde';
+
+  @override
+  String get restartFailedTitle => 'Error al reiniciar';
+
+  @override
+  String get restartFailedMessage =>
+      'No se pudo reiniciar la aplicación automáticamente. Sal (Cmd+Q) y ábrela de nuevo manualmente.';
 }

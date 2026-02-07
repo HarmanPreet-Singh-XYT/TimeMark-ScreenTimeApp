@@ -1615,5 +1615,23 @@
   "success": "Succès",
   "error": "Erreur",
   "secondary": "Secondaire",
-  "warning": "Avertissement"
+  "warning": "Avertissement",
+  "launchAtStartupTitle": "Lancer au démarrage",
+  "launchAtStartupDescription": "Démarrer automatiquement TimeMark lorsque vous vous connectez à votre ordinateur",
+  "inputMonitoringPermissionTitle": "Surveillance du clavier indisponible",
+  "inputMonitoringPermissionDescription": "Activez l’autorisation de surveillance des entrées pour suivre l’activité du clavier. Actuellement, seule la souris est surveillée.",
+  "openSettings": "Ouvrir les réglages",
+  "permissionGrantedTitle": "Autorisation accordée",
+  "permissionGrantedDescription": "L’application doit redémarrer pour que la surveillance des entrées soit effective.",
+  "continueButton": "Continuer",
+  "restartRequiredTitle": "Redémarrage requis",
+  "restartRequiredDescription": "Pour activer la surveillance du clavier, l’application doit redémarrer. Ceci est requis par macOS.",
+  "restartNote": "L’application se relancera automatiquement après le redémarrage.",
+  "restartNow": "Redémarrer maintenant",
+  "restartLater": "Redémarrer plus tard",
+  "restartFailedTitle": "Échec du redémarrage",
+  "restartFailedMessage": "Impossible de redémarrer automatiquement l’application. Quittez-la (Cmd+Q) et relancez-la manuellement.",
+  "ok": "OK",
+  "error": "Erreur"
+
 }

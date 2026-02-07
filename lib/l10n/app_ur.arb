@@ -1622,5 +1622,22 @@
   "success": "کامیابی",
   "error": "خرابی",
   "secondary": "ثانوی",
-  "warning": "انتباہ"
+  "warning": "انتباہ",
+  "launchAtStartupTitle": "اسٹارٹ اپ پر شروع کریں",
+  "launchAtStartupDescription": "جب آپ اپنے کمپیوٹر میں لاگ ان کریں تو خودکار طور پر TimeMark شروع کریں",
+  "inputMonitoringPermissionTitle": "کی بورڈ مانیٹرنگ دستیاب نہیں",
+  "inputMonitoringPermissionDescription": "کی بورڈ کی سرگرمی کو ٹریک کرنے کے لیے ان پٹ مانیٹرنگ کی اجازت فعال کریں۔ فی الحال صرف ماؤس ان پٹ مانیٹر کیا جا رہا ہے۔",
+  "openSettings": "سیٹنگز کھولیں",
+  "permissionGrantedTitle": "اجازت دے دی گئی",
+  "permissionGrantedDescription": "ان پٹ مانیٹرنگ کے مؤثر ہونے کے لیے ایپ کو دوبارہ شروع کرنا ہوگا۔",
+  "continueButton": "جاری رکھیں",
+  "restartRequiredTitle": "دوبارہ شروع کرنا ضروری ہے",
+  "restartRequiredDescription": "کی بورڈ مانیٹرنگ فعال کرنے کے لیے ایپ کو دوبارہ شروع کرنا ضروری ہے۔ یہ macOS کی جانب سے لازمی ہے۔",
+  "restartNote": "دوبارہ شروع ہونے کے بعد ایپ خود بخود دوبارہ کھل جائے گی۔",
+  "restartNow": "ابھی دوبارہ شروع کریں",
+  "restartLater": "بعد میں دوبارہ شروع کریں",
+  "restartFailedTitle": "دوبارہ شروع ناکام",
+  "restartFailedMessage": "ایپ خود بخود دوبارہ شروع نہیں ہو سکی۔ براہ کرم بند کریں (Cmd+Q) اور دستی طور پر دوبارہ کھولیں۔",
+  "ok": "ٹھیک ہے",
+  "error": "خرابی"
 }

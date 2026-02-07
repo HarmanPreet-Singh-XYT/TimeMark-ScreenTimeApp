@@ -29,6 +29,7 @@ import 'package:screentime/sections/UI sections/Settings/theme_customization_mod
 // IMPORTANT: Import the new dynamic AppDesign
 import 'package:screentime/app_design.dart';
 import 'package:screentime/sections/UI sections/FocusMode/audio.dart';
+import 'package:launch_at_startup/launch_at_startup.dart';
 // ============================================================================
 // NAVIGATION STATE - Add this near the top of the file
 // ============================================================================
@@ -69,18 +70,22 @@ final navigationState = NavigationState();
 // MAIN
 // ============================================================================
 
-const _launchChannel = MethodChannel('timemark/launch');
-
-Future<bool> wasLaunchedAtLoginMacOS() async {
-  if (!Platform.isMacOS) return false;
-  return await _launchChannel.invokeMethod<bool>('wasLaunchedAtLogin') ?? false;
-}
-
 void main(List<String> args) async {
   WidgetsFlutterBinding.ensureInitialized();
+  // Configure launch at startup package
+  if (Platform.isMacOS) {
+    launchAtStartup.setup(
+      appName: "TimeMark",
+      appPath: Platform.resolvedExecutable,
+    );
+  }
 
   final bool wasSystemLaunchedWindows = args.contains('--auto-launched');
-  final bool wasSystemLaunchedMacOS = await wasLaunchedAtLoginMacOS();
+  final bool wasSystemLaunchedMacOS = Platform.isMacOS &&
+      Platform.environment.containsKey('__LAUNCH_AT_LOGIN__');
+
+  final bool wasSystemLaunched =
+      wasSystemLaunchedWindows || wasSystemLaunchedMacOS;
   final singleInstance = FlutterSingleInstance();
 
   if (!await singleInstance.isFirstInstance()) {
@@ -90,6 +95,17 @@ void main(List<String> args) async {
 
   await SingleInstanceIPC.startServer();
   await SettingsManager().init();
+
+  // Initialize launch at startup based on saved setting
+  if (Platform.isMacOS) {
+    final bool shouldLaunchAtStartup =
+        await SettingsManager().getSetting("launchAtStartup") ?? false;
+    if (shouldLaunchAtStartup) {
+      await launchAtStartup.enable();
+    } else {
+      await launchAtStartup.disable();
+    }
+  }
 
   final bool isMinimizeAtLaunch =
       await SettingsManager().getSetting("launchAsMinimized") ?? false;
@@ -137,9 +153,7 @@ void main(List<String> args) async {
     win.alignment = Alignment.center;
     win.title = 'TimeMark - Track Screen Time & App Usage';
 
-    if (wasSystemLaunchedWindows ||
-        wasSystemLaunchedMacOS ||
-        isMinimizeAtLaunch) {
+    if (wasSystemLaunched || isMinimizeAtLaunch) {
       Platform.isMacOS ? await MacOSWindow.hide() : win.hide();
     } else {
       Platform.isMacOS ? await MacOSWindow.show() : win.show();

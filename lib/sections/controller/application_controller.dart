@@ -704,4 +704,48 @@ class BackgroundAppTracker {
   Map<String, AppMetadata> getMetadataCache() {
     return Map.unmodifiable(_metadataCache);
   }
+  // ============================================================
+// INPUT MONITORING PERMISSION METHODS
+// ============================================================
+
+  /// Checks if Input Monitoring permission is granted
+  ///
+  /// This permission is required on macOS to monitor keyboard input.
+  /// Without it, only mouse input can be tracked.
+  Future<bool> checkInputMonitoringPermission() async {
+    try {
+      return await _windowFocusPlugin.checkInputMonitoringPermission();
+    } catch (e) {
+      debugPrint('❌ Error checking input monitoring permission: $e');
+      return false;
+    }
+  }
+
+  /// Opens macOS System Settings to the Input Monitoring section
+  ///
+  /// Allows users to grant Input Monitoring permission to enable
+  /// keyboard activity tracking.
+  Future<void> openInputMonitoringSettings() async {
+    try {
+      await _windowFocusPlugin.openInputMonitoringSettings();
+    } catch (e) {
+      debugPrint('❌ Error opening input monitoring settings: $e');
+      rethrow;
+    }
+  }
+
+  /// Checks all required permissions (Screen Recording + Input Monitoring)
+  ///
+  /// Returns a PermissionStatus object with the status of both permissions.
+  Future<PermissionStatus> checkAllPermissions() async {
+    try {
+      return await _windowFocusPlugin.checkAllPermissions();
+    } catch (e) {
+      debugPrint('❌ Error checking permissions: $e');
+      return PermissionStatus(
+        screenRecording: false,
+        inputMonitoring: false,
+      );
+    }
+  }
 }

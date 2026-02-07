@@ -65,7 +65,7 @@ class GeneralSection extends StatelessWidget {
         SettingRow(
           title: l10n.voiceGenderTitle, // ADD LOCALIZATION KEY
           description: l10n.voiceGenderDescription, // ADD LOCALIZATION KEY
-          showDivider: Platform.isWindows ? true : false,
+          showDivider: true,
           control: SizedBox(
             width: 160,
             child: ComboBox<String>(
@@ -90,6 +90,17 @@ class GeneralSection extends StatelessWidget {
             ),
           ),
         ),
+        if (Platform.isMacOS)
+          SettingRow(
+            title: l10n.launchAtStartupTitle,
+            description: l10n.launchAtStartupDescription,
+            showDivider: Platform.isWindows ? true : false,
+            control: ToggleSwitch(
+              checked: settings.launchAtStartupVar,
+              onChanged: (value) =>
+                  settings.updateSetting('launchAtStartup', value),
+            ),
+          ),
         if (Platform.isWindows)
           SettingRow(
             title: l10n.launchMinimizedTitle,
