@@ -5,6 +5,7 @@ import 'package:hive_flutter/adapters.dart';
 import 'package:screentime/sections/controller/app_data_controller.dart';
 import 'package:screentime/sections/controller/notification_controller.dart';
 import 'package:screentime/utils/macos_window.dart';
+import 'package:window_manager/window_manager.dart';
 import './sections/overview.dart';
 import './sections/applications.dart';
 import './sections/alerts_limits.dart';
@@ -18,7 +19,6 @@ import 'package:adaptive_theme/adaptive_theme.dart';
 import 'package:bitsdojo_window/bitsdojo_window.dart';
 import 'package:tray_manager/tray_manager.dart';
 import './sections/controller/application_controller.dart';
-import 'package:flutter_single_instance/flutter_single_instance.dart';
 import 'utils/single_instance_ipc.dart';
 import 'package:flutter/services.dart';
 import 'dart:ui' show lerpDouble;
@@ -86,12 +86,6 @@ void main(List<String> args) async {
 
   final bool wasSystemLaunched =
       wasSystemLaunchedWindows || wasSystemLaunchedMacOS;
-  final singleInstance = FlutterSingleInstance();
-
-  if (!await singleInstance.isFirstInstance()) {
-    await SingleInstanceIPC.requestShow();
-    exit(0);
-  }
 
   await SingleInstanceIPC.startServer();
   await SettingsManager().init();
