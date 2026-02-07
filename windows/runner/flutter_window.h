@@ -3,15 +3,20 @@
 
 #include <flutter/dart_project.h>
 #include <flutter/flutter_view_controller.h>
+#include <flutter/method_channel.h>
+#include <flutter/standard_method_codec.h>
 
 #include <memory>
+#include <windows.h>
 
 #include "win32_window.h"
+
+// Restarts the current application.
+void RestartApplication();
 
 // A window that does nothing but host a Flutter view.
 class FlutterWindow : public Win32Window {
  public:
-  // Creates a new FlutterWindow hosting a Flutter view running |project|.
   explicit FlutterWindow(const flutter::DartProject& project);
   virtual ~FlutterWindow();
 
@@ -19,8 +24,10 @@ class FlutterWindow : public Win32Window {
   // Win32Window:
   bool OnCreate() override;
   void OnDestroy() override;
-  LRESULT MessageHandler(HWND window, UINT const message, WPARAM const wparam,
-                         LPARAM const lparam) noexcept override;
+  LRESULT MessageHandler(HWND window,
+                         UINT message,
+                         WPARAM wparam,
+                         LPARAM lparam) noexcept override;
 
  private:
   // The project to run.
@@ -28,6 +35,9 @@ class FlutterWindow : public Win32Window {
 
   // The Flutter instance hosted by this window.
   std::unique_ptr<flutter::FlutterViewController> flutter_controller_;
+
+  // Method channel for app restart
+  std::unique_ptr<flutter::MethodChannel<>> restart_channel_;
 };
 
 #endif  // RUNNER_FLUTTER_WINDOW_H_

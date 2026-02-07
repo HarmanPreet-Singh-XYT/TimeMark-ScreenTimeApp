@@ -1,3 +1,4 @@
+import 'dart:io' show Platform;
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:screentime/l10n/app_localizations.dart';
 import 'package:provider/provider.dart';
@@ -25,7 +26,12 @@ class _TrackingSectionState extends State<TrackingSection>
   void initState() {
     super.initState();
     WidgetsBinding.instance.addObserver(this);
-    _checkInputMonitoringPermission();
+    // Only check permission on macOS
+    if (Platform.isMacOS) {
+      _checkInputMonitoringPermission();
+    } else {
+      setState(() => _isCheckingPermission = false);
+    }
   }
 
   @override
@@ -38,7 +44,8 @@ class _TrackingSectionState extends State<TrackingSection>
   void didChangeAppLifecycleState(AppLifecycleState state) {
     // When app comes back to foreground, re-check permission
     // This handles cases where user changed permission in System Settings
-    if (state == AppLifecycleState.resumed) {
+    // Only on macOS
+    if (state == AppLifecycleState.resumed && Platform.isMacOS) {
       _checkInputMonitoringPermission();
     }
   }
@@ -127,8 +134,10 @@ class _TrackingSectionState extends State<TrackingSection>
         inactiveText: l10n.disabled,
       ),
       children: [
-        // Permission Banner - shown when Input Monitoring permission is missing
-        if (!_isCheckingPermission && !_hasInputMonitoringPermission)
+        // Permission Banner - shown only on macOS when Input Monitoring permission is missing
+        if (Platform.isMacOS &&
+            !_isCheckingPermission &&
+            !_hasInputMonitoringPermission)
           InputMonitoringPermissionBanner(
             onOpenSettings: _handleOpenInputMonitoringSettings,
           ),

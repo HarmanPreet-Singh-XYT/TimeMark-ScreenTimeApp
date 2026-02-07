@@ -4,10 +4,14 @@
 
 #include "flutter/generated_plugin_registrant.h"
 
+// =========================
+// FlutterWindow
+// =========================
+
 FlutterWindow::FlutterWindow(const flutter::DartProject& project)
     : project_(project) {}
 
-FlutterWindow::~FlutterWindow() {}
+FlutterWindow::~FlutterWindow() = default;
 
 bool FlutterWindow::OnCreate() {
   if (!Win32Window::OnCreate()) {
@@ -16,46 +20,60 @@ bool FlutterWindow::OnCreate() {
 
   RECT frame = GetClientArea();
 
-  // The size here must match the window dimensions to avoid unnecessary surface
-  // creation / destruction in the startup path.
   flutter_controller_ = std::make_unique<flutter::FlutterViewController>(
-      frame.right - frame.left, frame.bottom - frame.top, project_);
-  // Ensure that basic setup of the controller was successful.
+      frame.right - frame.left,
+      frame.bottom - frame.top,
+      project_);
+
   if (!flutter_controller_->engine() || !flutter_controller_->view()) {
     return false;
   }
+
   RegisterPlugins(flutter_controller_->engine());
   SetChildContent(flutter_controller_->view()->GetNativeWindow());
 
-  flutter_controller_->engine()->SetNextFrameCallback([&]() {
-    // this->Show();
+  flutter_controller_->engine()->SetNextFrameCallback([this]() {
+    // Show(); // optional
   });
 
-  // Flutter can complete the first frame before the "show window" callback is
-  // registered. The following call ensures a frame is pending to ensure the
-  // window is shown. It is a no-op if the first frame hasn't completed yet.
   flutter_controller_->ForceRedraw();
+
+  // -------------------------
+  // Restart Method Channel
+  // -------------------------
+  restart_channel_ = std::make_unique<flutter::MethodChannel<>>(
+      flutter_controller_->engine()->messenger(),
+      "app_restart",
+      &flutter::StandardMethodCodec::GetInstance());
+
+  restart_channel_->SetMethodCallHandler(
+      [](const flutter::MethodCall<>& call,
+         std::unique_ptr<flutter::MethodResult<>> result) {
+        if (call.method_name() == "restartApp") {
+          RestartApplication();
+          result->Success();
+        } else {
+          result->NotImplemented();
+        }
+      });
 
   return true;
 }
 
 void FlutterWindow::OnDestroy() {
-  if (flutter_controller_) {
-    flutter_controller_ = nullptr;
-  }
-
+  restart_channel_.reset();
+  flutter_controller_.reset();
   Win32Window::OnDestroy();
 }
 
-LRESULT
-FlutterWindow::MessageHandler(HWND hwnd, UINT const message,
-                              WPARAM const wparam,
-                              LPARAM const lparam) noexcept {
-  // Give Flutter, including plugins, an opportunity to handle window messages.
+LRESULT FlutterWindow::MessageHandler(HWND hwnd,
+                                      UINT message,
+                                      WPARAM wparam,
+                                      LPARAM lparam) noexcept {
   if (flutter_controller_) {
     std::optional<LRESULT> result =
-        flutter_controller_->HandleTopLevelWindowProc(hwnd, message, wparam,
-                                                      lparam);
+        flutter_controller_->HandleTopLevelWindowProc(
+            hwnd, message, wparam, lparam);
     if (result) {
       return *result;
     }
@@ -63,9 +81,41 @@ FlutterWindow::MessageHandler(HWND hwnd, UINT const message,
 
   switch (message) {
     case WM_FONTCHANGE:
-      flutter_controller_->engine()->ReloadSystemFonts();
+      if (flutter_controller_) {
+        flutter_controller_->engine()->ReloadSystemFonts();
+      }
       break;
   }
 
   return Win32Window::MessageHandler(hwnd, message, wparam, lparam);
+}
+
+// =========================
+// App Restart Logic
+// =========================
+
+void RestartApplication() {
+  wchar_t exePath[MAX_PATH];
+  GetModuleFileNameW(nullptr, exePath, MAX_PATH);
+
+  STARTUPINFOW si{};
+  si.cb = sizeof(si);
+  PROCESS_INFORMATION pi{};
+
+  if (CreateProcessW(
+          exePath,
+          nullptr,
+          nullptr,
+          nullptr,
+          FALSE,
+          0,
+          nullptr,
+          nullptr,
+          &si,
+          &pi)) {
+    CloseHandle(pi.hProcess);
+    CloseHandle(pi.hThread);
+  }
+
+  ExitProcess(0);
 }
