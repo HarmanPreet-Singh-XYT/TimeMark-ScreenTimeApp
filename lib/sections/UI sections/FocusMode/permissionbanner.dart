@@ -239,9 +239,7 @@ class _NotificationPermissionBannerState
                     const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
                   ),
                 ),
-                onPressed: isSystemSettings
-                    ? _showSystemSettingsInfo
-                    : _navigateToSettings,
+                onPressed: _navigateToSettings,
                 child: Row(
                   mainAxisSize: MainAxisSize.min,
                   children: [
