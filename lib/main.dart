@@ -90,6 +90,10 @@ void main(List<String> args) async {
 
   if (!await singleInstance.isFirstInstance()) {
     await SingleInstanceIPC.requestShow();
+    final err = await FlutterSingleInstance().focus();
+    if (err != null) {
+      print("Error focusing running instance: $err");
+    }
     exit(0);
   }
 
