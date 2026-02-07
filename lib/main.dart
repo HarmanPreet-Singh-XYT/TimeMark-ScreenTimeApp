@@ -18,7 +18,6 @@ import 'package:adaptive_theme/adaptive_theme.dart';
 import 'package:bitsdojo_window/bitsdojo_window.dart';
 import 'package:tray_manager/tray_manager.dart';
 import './sections/controller/application_controller.dart';
-import 'package:flutter_single_instance/flutter_single_instance.dart';
 import 'utils/single_instance_ipc.dart';
 import 'package:flutter/services.dart';
 import 'dart:ui' show lerpDouble;
@@ -30,6 +29,7 @@ import 'package:screentime/sections/UI sections/Settings/theme_customization_mod
 import 'package:screentime/app_design.dart';
 import 'package:screentime/sections/UI sections/FocusMode/audio.dart';
 import 'package:launch_at_startup/launch_at_startup.dart';
+import 'package:window_manager/window_manager.dart';
 // ============================================================================
 // NAVIGATION STATE - Add this near the top of the file
 // ============================================================================
@@ -86,17 +86,32 @@ void main(List<String> args) async {
 
   final bool wasSystemLaunched =
       wasSystemLaunchedWindows || wasSystemLaunchedMacOS;
-  final singleInstance = FlutterSingleInstance();
+  // Check if another instance is already running by trying to connect
+  bool existingInstanceFound = false;
+  try {
+    final socket = await Socket.connect(
+      InternetAddress.loopbackIPv4,
+      45999,
+      timeout: const Duration(milliseconds: 500),
+    );
+    
+    // Existing instance found, send SHOW and exit
+    socket.write('SHOW');
+    await socket.flush();
+    await socket.close();
+    debugPrint('✅ Sent SHOW to existing instance, exiting');
+    existingInstanceFound = true;
+  } catch (e) {
+    // No existing instance, we're the primary
+    debugPrint('✅ No existing instance found, starting as primary');
+    existingInstanceFound = false;
+  }
 
-  if (!await singleInstance.isFirstInstance()) {
-    await SingleInstanceIPC.requestShow();
-    final err = await FlutterSingleInstance().focus();
-    if (err != null) {
-      print("Error focusing running instance: $err");
-    }
+  if (existingInstanceFound) {
     exit(0);
   }
 
+  // We're the primary instance, start the IPC server
   await SingleInstanceIPC.startServer();
   await SettingsManager().init();
 
