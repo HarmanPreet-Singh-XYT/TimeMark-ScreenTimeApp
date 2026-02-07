@@ -4,7 +4,7 @@ publish_to: 'none'
 version: 1.0.0
 
 environment:
-  sdk: '>=3.5.4 <4.0.0'
+  sdk: ">=3.0.0 <4.0.0"
 
 dependencies:
   flutter:
@@ -13,7 +13,7 @@ dependencies:
   path_provider: ^2.1.5
   file_picker: ^10.3.8
   share_plus: ^12.0.1
-  archive: ^4.0.7
+  archive: ^3.6.1
   crypto: ^3.0.7
   
   # UI and Theming
@@ -62,6 +62,8 @@ dependencies:
   flutter_colorpicker: ^1.0.3
   audioplayers: ^6.5.1
   launch_at_startup: ^0.5.1
+  csv: ^6.0.0
+  excel: ^4.0.6
   # Native Code Interaction for Foreground Window
   # You'll need to implement a custom plugin or package
   # Placeholder for your native window tracking plugin

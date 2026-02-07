@@ -516,7 +516,7 @@ class DataExportService {
   Uint8List _compressData(List<int> data) {
     final encoder = GZipEncoder();
     final compressed = encoder.encode(data);
-    return Uint8List.fromList(compressed);
+    return Uint8List.fromList(compressed!);
   }
 
   /// Decompress GZip data

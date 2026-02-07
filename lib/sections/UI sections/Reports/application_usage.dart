@@ -641,12 +641,12 @@ class _ApplicationUsageState extends State<ApplicationUsage> {
       ),
       child: Row(
         children: [
-          Text(
-            '${apps.length} ${l10n.applicationsShowing}',
-            style: theme.typography.caption?.copyWith(
-              color: theme.inactiveColor,
-            ),
-          ),
+          // Text(
+          //   '${apps.length} ${l10n.applicationsShowing}',
+          //   style: theme.typography.caption?.copyWith(
+          //     color: theme.inactiveColor,
+          //   ),
+          // ),
           const Spacer(),
           Text(
             '${l10n.totalTime}: ',
