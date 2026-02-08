@@ -1629,5 +1629,133 @@
   "restartFailedTitle": "Falha ao reiniciar",
   "restartFailedMessage": "Não foi possível reiniciar o aplicativo automaticamente. Encerre (Cmd+Q) e abra novamente manualmente.",
   "ok": "OK",
-  "error": "Erro"
+  "error": "Erro",
+  "exportAnalyticsReport": "Exportar Relatório de Análise",
+  "chooseExportFormat": "Escolha o formato de exportação:",
+  "beautifulExcelReport": "Lindo Relatório Excel",
+  "beautifulExcelReportDescription": "Planilha colorida e linda com gráficos, emojis e insights ✨",
+  "excelReportIncludes": "O relatório Excel inclui:",
+  "summarySheetDescription": "📊 Folha de Resumo - Métricas principais com tendências",
+  "dailyBreakdownDescription": "📅 Detalhamento Diário - Padrões de uso visual",
+  "appsSheetDescription": "📱 Folha de Apps - Rankings detalhados de aplicativos",
+  "insightsDescription": "💡 Insights - Recomendações inteligentes",
+  "cancel": "Cancelar",
+  "exportSuccessful": "Exportação Bem-sucedida",
+  "beautifulExcelExportSuccess": "Lindo relatório Excel exportado com sucesso! 🎉",
+  "exportFailed": "Falha na Exportação",
+  "failedToExportReport": "Falha ao exportar relatório: {error}",
+  "exporting": "Exportando...",
+  "exportExcel": "Exportar Excel",
+  "saveAnalyticsReport": "Salvar Relatório de Análise",
+  "analyticsReportFileName": "relatorio_analitico_{timestamp}.xlsx",
+  
+  "usageAnalyticsReportTitle": "RELATÓRIO DE ANÁLISE DE USO",
+  "generated": "Gerado:",
+  "period": "Período:",
+  "dateRange": "Intervalo de Datas:",
+  "dateRangeValue": "{startDate} a {endDate}",
+  
+  "keyMetrics": "MÉTRICAS PRINCIPAIS",
+  "metric": "Métrica",
+  "value": "Valor",
+  "change": "Mudança",
+  "trend": "Tendência",
+  
+  "totalScreenTime": "Tempo de Tela Total",
+  "productiveTime": "Tempo Produtivo",
+  "productivityRate": "Taxa de Produtividade",
+  "focusSessions": "Sessões de Foco",
+  "mostUsedApp": "App Mais Usado",
+  
+  "trendUp": "Subiu",
+  "trendDown": "Desceu",
+  "trendExcellent": "Excelente",
+  "trendGood": "Bom",
+  "trendNeedsImprovement": "Precisa Melhorar",
+  "trendActive": "Ativo",
+  "trendNone": "Nenhum",
+  "trendTop": "Top",
+  
+  "categoryBreakdown": "DIVISÃO POR CATEGORIA",
+  "category": "Categoria",
+  "percentage": "Porcentagem",
+  "visual": "Visual",
+  
+  "dailyScreenTime": "TEMPO DE TELA DIÁRIO",
+  "statistics": "ESTATÍSTICAS",
+  "averageDaily": "Média Diária",
+  "highestDay": "Dia Mais Alto",
+  "lowestDay": "Dia Mais Baixo",
+  
+  "date": "Data",
+  "day": "Dia",
+  "hours": "Horas",
+  "minutes": "Minutos",
+  
+  "applicationUsageDetails": "DETALHES DE USO DE APLICATIVOS",
+  "totalApps": "Total de Apps:",
+  "productiveApps": "Apps Produtivos:",
+  
+  "rank": "Posição",
+  "application": "Aplicativo",
+  "time": "Tempo",
+  "percentOfTotal": "% do Total",
+  "type": "Tipo",
+  "usageLevel": "Nível de Uso",
+  
+  "productive": "Produtivo",
+  "leisure": "Lazer",
+  
+  "usageLevelVeryHigh": "Muito Alto ||||||||",
+  "usageLevelHigh": "Alto ||||||",
+  "usageLevelMedium": "Médio ||||",
+  "usageLevelLow": "Baixo ||",
+  
+  "keyInsightsTitle": "PRINCIPAIS INSIGHTS E RECOMENDAÇÕES",
+  "personalizedRecommendations": "RECOMENDAÇÕES PERSONALIZADAS",
+  
+  "insightHighDailyUsage": "Alto Uso Diário: Você está usando em média {hours} horas por dia de tempo de tela",
+  "insightLowDailyUsage": "Baixo Uso Diário: Você está usando em média {hours} horas por dia - ótimo equilíbrio!",
+  "insightModerateUsage": "Uso Moderado: Média de {hours} horas por dia de tempo de tela",
+  
+  "insightExcellentProductivity": "Produtividade Excelente: {percentage}% do seu tempo de tela é trabalho produtivo!",
+  "insightGoodProductivity": "Boa Produtividade: {percentage}% do seu tempo de tela é produtivo",
+  "insightLowProductivity": "Alerta de Baixa Produtividade: Apenas {percentage}% do tempo de tela é produtivo",
+  
+  "insightFocusSessions": "Sessões de Foco: Completou {count} sessões ({avgPerDay} por dia em média)",
+  "insightGreatFocusHabit": "Ótimo Hábito de Foco: Você construiu uma incrível rotina de foco com {count} sessões completadas!",
+  "insightNoFocusSessions": "Sem Sessões de Foco: Considere usar o modo foco para aumentar sua produtividade",
+  
+  "insightScreenTimeTrend": "Tendência de Tempo de Tela: Seu uso {direction} {percentage}% comparado ao período anterior",
+  "insightProductiveTimeTrend": "Tendência de Tempo Produtivo: Seu tempo produtivo {direction} {percentage}% comparado ao período anterior",
+  
+  "directionIncreased": "aumentou",
+  "directionDecreased": "diminuiu",
+  
+  "insightTopCategory": "Categoria Principal: {category} domina com {percentage}% do seu tempo total",
+  
+  "insightMostUsedApp": "App Mais Usado: {appName} representa {percentage}% do seu tempo ({duration})",
+  
+  "insightUsageVaries": "O Uso Varia Significativamente: {highDay} teve {multiplier}x mais uso que {lowDay}",
+  
+  "insightNoInsights": "Nenhum insight significativo disponível",
+  
+  "recScheduleFocusSessions": "Tente agendar mais sessões de foco ao longo do dia para aumentar a produtividade",
+  "recSetAppLimits": "Considere definir limites em aplicativos de lazer",
+  "recAimForFocusSessions": "Mire em pelo menos 1-2 sessões de foco por dia para construir um hábito consistente",
+  "recTakeBreaks": "Seu tempo de tela diário é bastante alto. Tente fazer pausas regulares usando a regra 20-20-20",
+  "recSetDailyGoals": "Considere definir metas diárias de tempo de tela para reduzir gradualmente o uso",
+  "recBalanceEntertainment": "Apps de entretenimento ocupam grande parte do seu tempo. Considere equilibrar com atividades mais produtivas",
+  "recReviewUsagePatterns": "Seu tempo de tela aumentou significativamente. Revise seus padrões de uso e estabeleça limites",
+  "recScheduleFocusedWork": "Seu tempo produtivo diminuiu. Tente agendar blocos de trabalho focado no seu calendário",
+  "recKeepUpGreatWork": "Continue assim! Seus hábitos de tempo de tela parecem saudáveis",
+  "recContinueFocusSessions": "Continue usando sessões de foco para manter a produtividade",
+  
+  "durationHoursMinutes": "{hours}h {minutes}m",
+  "durationMinutesOnly": "{minutes}m",
+  
+  "sheetSummary": "Resumo",
+  "sheetDailyBreakdown": "Detalhamento Diário",
+  "sheetApps": "Apps",
+  "sheetInsights": "Insights"
 }

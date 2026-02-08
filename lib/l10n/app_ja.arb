@@ -1636,5 +1636,133 @@
   "restartFailedTitle": "再起動に失敗しました",
   "restartFailedMessage": "アプリを自動的に再起動できませんでした。終了（Cmd+Q）して手動で再起動してください。",
   "ok": "OK",
-  "error": "エラー"
+  "error": "エラー",
+  "exportAnalyticsReport": "分析レポートをエクスポート",
+  "chooseExportFormat": "エクスポート形式を選択：",
+  "beautifulExcelReport": "美しいExcelレポート",
+  "beautifulExcelReportDescription": "チャート、絵文字、インサイト付きの華やかでカラフルなスプレッドシート ✨",
+  "excelReportIncludes": "Excelレポートに含まれるもの：",
+  "summarySheetDescription": "📊 サマリーシート - トレンド付きの主要指標",
+  "dailyBreakdownDescription": "📅 日別内訳 - 視覚的な使用パターン",
+  "appsSheetDescription": "📱 アプリシート - 詳細なアプリランキング",
+  "insightsDescription": "💡 インサイト - スマートな推奨事項",
+  "cancel": "キャンセル",
+  "exportSuccessful": "エクスポート成功",
+  "beautifulExcelExportSuccess": "美しいExcelレポートが正常にエクスポートされました！🎉",
+  "exportFailed": "エクスポート失敗",
+  "failedToExportReport": "レポートのエクスポートに失敗しました：{error}",
+  "exporting": "エクスポート中...",
+  "exportExcel": "Excelエクスポート",
+  "saveAnalyticsReport": "分析レポートを保存",
+  "analyticsReportFileName": "分析レポート_{timestamp}.xlsx",
+  
+  "usageAnalyticsReportTitle": "使用状況分析レポート",
+  "generated": "作成日時：",
+  "period": "期間：",
+  "dateRange": "日付範囲：",
+  "dateRangeValue": "{startDate} ～ {endDate}",
+  
+  "keyMetrics": "主要指標",
+  "metric": "指標",
+  "value": "値",
+  "change": "変化",
+  "trend": "傾向",
+  
+  "totalScreenTime": "合計スクリーン時間",
+  "productiveTime": "生産的時間",
+  "productivityRate": "生産性率",
+  "focusSessions": "集中セッション",
+  "mostUsedApp": "最も使用されたアプリ",
+  
+  "trendUp": "上昇",
+  "trendDown": "下降",
+  "trendExcellent": "優秀",
+  "trendGood": "良好",
+  "trendNeedsImprovement": "改善が必要",
+  "trendActive": "アクティブ",
+  "trendNone": "なし",
+  "trendTop": "トップ",
+  
+  "categoryBreakdown": "カテゴリ内訳",
+  "category": "カテゴリ",
+  "percentage": "パーセント",
+  "visual": "ビジュアル",
+  
+  "dailyScreenTime": "日別スクリーン時間",
+  "statistics": "統計",
+  "averageDaily": "日平均",
+  "highestDay": "最高の日",
+  "lowestDay": "最低の日",
+  
+  "date": "日付",
+  "day": "曜日",
+  "hours": "時間",
+  "minutes": "分",
+  
+  "applicationUsageDetails": "アプリケーション使用詳細",
+  "totalApps": "アプリ合計：",
+  "productiveApps": "生産的アプリ：",
+  
+  "rank": "順位",
+  "application": "アプリケーション",
+  "time": "時間",
+  "percentOfTotal": "合計の%",
+  "type": "タイプ",
+  "usageLevel": "使用レベル",
+  
+  "productive": "生産的",
+  "leisure": "娯楽",
+  
+  "usageLevelVeryHigh": "非常に高い ||||||||",
+  "usageLevelHigh": "高い ||||||",
+  "usageLevelMedium": "中程度 ||||",
+  "usageLevelLow": "低い ||",
+  
+  "keyInsightsTitle": "主要なインサイトと推奨事項",
+  "personalizedRecommendations": "パーソナライズされた推奨事項",
+  
+  "insightHighDailyUsage": "高い日次使用量：1日平均{hours}時間のスクリーン時間を使用しています",
+  "insightLowDailyUsage": "低い日次使用量：1日平均{hours}時間 - 素晴らしいバランスです！",
+  "insightModerateUsage": "適度な使用量：1日平均{hours}時間のスクリーン時間",
+  
+  "insightExcellentProductivity": "優れた生産性：スクリーン時間の{percentage}%が生産的な作業です！",
+  "insightGoodProductivity": "良好な生産性：スクリーン時間の{percentage}%が生産的です",
+  "insightLowProductivity": "低生産性アラート：スクリーン時間のわずか{percentage}%が生産的です",
+  
+  "insightFocusSessions": "集中セッション：{count}セッション完了（1日平均{avgPerDay}）",
+  "insightGreatFocusHabit": "素晴らしい集中習慣：{count}回の完了セッションで素晴らしい集中ルーティンを構築しました！",
+  "insightNoFocusSessions": "集中セッションなし：生産性を向上させるために集中モードの使用を検討してください",
+  
+  "insightScreenTimeTrend": "スクリーン時間の傾向：前期間と比較して使用量が{percentage}%{direction}",
+  "insightProductiveTimeTrend": "生産的時間の傾向：前期間と比較して生産的時間が{percentage}%{direction}",
+  
+  "directionIncreased": "増加しました",
+  "directionDecreased": "減少しました",
+  
+  "insightTopCategory": "トップカテゴリ：{category}が合計時間の{percentage}%を占めています",
+  
+  "insightMostUsedApp": "最も使用されたアプリ：{appName}が時間の{percentage}%（{duration}）を占めています",
+  
+  "insightUsageVaries": "使用量に大きな差：{highDay}は{lowDay}より{multiplier}倍多い使用量でした",
+  
+  "insightNoInsights": "重要なインサイトはありません",
+  
+  "recScheduleFocusSessions": "生産性を向上させるために、1日を通してより多くの集中セッションをスケジュールしてみてください",
+  "recSetAppLimits": "娯楽アプリに制限を設定することを検討してください",
+  "recAimForFocusSessions": "一貫した習慣を構築するために、1日あたり少なくとも1〜2回の集中セッションを目指してください",
+  "recTakeBreaks": "1日のスクリーン時間がかなり長いです。20-20-20ルールを使用して定期的に休憩を取ってみてください",
+  "recSetDailyGoals": "使用量を徐々に減らすために、1日のスクリーン時間目標を設定することを検討してください",
+  "recBalanceEntertainment": "娯楽アプリが時間の大部分を占めています。より生産的な活動とのバランスを検討してください",
+  "recReviewUsagePatterns": "スクリーン時間が大幅に増加しました。使用パターンを確認し、境界を設定してください",
+  "recScheduleFocusedWork": "生産的時間が減少しました。カレンダーに集中作業ブロックをスケジュールしてみてください",
+  "recKeepUpGreatWork": "その調子です！スクリーン時間の習慣は健康的に見えます",
+  "recContinueFocusSessions": "生産性を維持するために集中セッションを引き続き使用してください",
+  
+  "durationHoursMinutes": "{hours}時間{minutes}分",
+  "durationMinutesOnly": "{minutes}分",
+  
+  "sheetSummary": "サマリー",
+  "sheetDailyBreakdown": "日別内訳",
+  "sheetApps": "アプリ",
+  "sheetInsights": "インサイト"
 }

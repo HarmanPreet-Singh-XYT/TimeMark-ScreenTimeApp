@@ -2,13 +2,15 @@ import 'dart:io';
 import 'package:excel/excel.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:screentime/sections/controller/data_controllers/reports_controller.dart';
+import 'package:screentime/l10n/app_localizations.dart';
 import 'package:intl/intl.dart';
 import 'package:flutter/foundation.dart';
 
 class AnalyticsXLSXExporter {
   final UsageAnalyticsController _analyticsController;
+  final AppLocalizations l10n;
 
-  AnalyticsXLSXExporter(this._analyticsController);
+  AnalyticsXLSXExporter(this._analyticsController, this.l10n);
 
   // Beautiful color palette
   static const _primaryBlue = '#4A90E2';
@@ -32,7 +34,7 @@ class AnalyticsXLSXExporter {
     try {
       // Ask user for save location
       String? outputPath = await FilePicker.platform.saveFile(
-        dialogTitle: 'Save Analytics Report',
+        dialogTitle: l10n.saveAnalyticsReport,
         fileName: 'analytics_report_${_getFileTimestamp()}.xlsx',
         type: FileType.custom,
         allowedExtensions: ['xlsx'],
@@ -45,14 +47,16 @@ class AnalyticsXLSXExporter {
       // Create Excel workbook
       var excel = Excel.createExcel();
 
-      // Remove default sheet
-      excel.delete('Sheet1');
-
-      // Create sheets
+      // Create sheets first (this will make Summary the first sheet)
       _createSummarySheet(excel, summary, periodLabel, startDate, endDate);
       _createDailyBreakdownSheet(excel, summary);
       _createAppDetailsSheet(excel, summary);
       _createInsightsSheet(excel, summary);
+
+      // Remove default Sheet1 after creating other sheets
+      if (excel.sheets.containsKey('Sheet1')) {
+        excel.delete('Sheet1');
+      }
 
       // Save file
       var fileBytes = excel.save();
@@ -78,67 +82,74 @@ class AnalyticsXLSXExporter {
     DateTime? startDate,
     DateTime? endDate,
   ) {
-    var sheet = excel['📊 Summary'];
+    var sheet = excel[l10n.sheetSummary];
 
     int row = 0;
 
     // Title Section
-    _setCell(sheet, 0, row, 'USAGE ANALYTICS REPORT',
+    _setCell(sheet, 0, row, l10n.usageAnalyticsReportTitle,
         fontSize: 18, bold: true, fontColor: _headerBg);
     _mergeCells(sheet, row, row, 0, 3);
     row += 2;
 
     // Report Info
-    _setCell(sheet, 0, row, 'Generated:', bold: true);
+    _setCell(sheet, 0, row, l10n.generated, bold: true);
     _setCell(sheet, 1, row,
         DateFormat('yyyy-MM-dd HH:mm:ss').format(DateTime.now()));
     row++;
 
-    _setCell(sheet, 0, row, 'Period:', bold: true);
+    _setCell(sheet, 0, row, l10n.period, bold: true);
     _setCell(sheet, 1, row, periodLabel);
     row++;
 
     if (startDate != null && endDate != null) {
-      _setCell(sheet, 0, row, 'Date Range:', bold: true);
-      _setCell(sheet, 1, row,
-          '${DateFormat('yyyy-MM-dd').format(startDate)} to ${DateFormat('yyyy-MM-dd').format(endDate)}');
+      _setCell(sheet, 0, row, l10n.dateRange, bold: true);
+      _setCell(
+          sheet,
+          1,
+          row,
+          l10n.dateRangeValue(
+            DateFormat('yyyy-MM-dd').format(startDate),
+            DateFormat('yyyy-MM-dd').format(endDate),
+          ));
       row++;
     }
     row += 2;
 
     // Key Metrics Section
-    _setCell(sheet, 0, row, 'KEY METRICS',
+    _setCell(sheet, 0, row, l10n.keyMetrics,
         fontSize: 14, bold: true, bgColor: _primaryBlue, fontColor: '#FFFFFF');
     _mergeCells(sheet, row, row, 0, 3);
     row++;
 
     // Header row
-    _setCell(sheet, 0, row, 'Metric', bold: true, bgColor: _lightGray);
-    _setCell(sheet, 1, row, 'Value', bold: true, bgColor: _lightGray);
-    _setCell(sheet, 2, row, 'Change', bold: true, bgColor: _lightGray);
-    _setCell(sheet, 3, row, 'Trend', bold: true, bgColor: _lightGray);
+    _setCell(sheet, 0, row, l10n.metric, bold: true, bgColor: _lightGray);
+    _setCell(sheet, 1, row, l10n.value, bold: true, bgColor: _lightGray);
+    _setCell(sheet, 2, row, l10n.change, bold: true, bgColor: _lightGray);
+    _setCell(sheet, 3, row, l10n.trend, bold: true, bgColor: _lightGray);
     row++;
 
     // Total Screen Time
-    _setCell(sheet, 0, row, 'Total Screen Time');
+    _setCell(sheet, 0, row, l10n.totalScreenTime);
     _setCell(sheet, 1, row, _formatDuration(summary.totalScreenTime),
         bold: true);
     var screenTimeChange = summary.screenTimeComparisonPercent;
     _setCell(sheet, 2, row,
         '${screenTimeChange >= 0 ? "+" : ""}${screenTimeChange.toStringAsFixed(1)}%',
         fontColor: screenTimeChange > 0 ? _dangerRed : _successGreen);
-    _setCell(sheet, 3, row, screenTimeChange > 0 ? '📈' : '📉');
+    _setCell(
+        sheet, 3, row, screenTimeChange > 0 ? l10n.trendUp : l10n.trendDown);
     row++;
 
     // Productive Time
-    _setCell(sheet, 0, row, 'Productive Time');
+    _setCell(sheet, 0, row, l10n.productiveTime);
     _setCell(sheet, 1, row, _formatDuration(summary.productiveTime),
         bold: true, fontColor: _productiveColor);
     var prodTimeChange = summary.productiveTimeComparisonPercent;
     _setCell(sheet, 2, row,
         '${prodTimeChange >= 0 ? "+" : ""}${prodTimeChange.toStringAsFixed(1)}%',
         fontColor: prodTimeChange > 0 ? _successGreen : _dangerRed);
-    _setCell(sheet, 3, row, prodTimeChange > 0 ? '📈' : '📉');
+    _setCell(sheet, 3, row, prodTimeChange > 0 ? l10n.trendUp : l10n.trendDown);
     row++;
 
     // Productivity Percentage
@@ -147,7 +158,7 @@ class AnalyticsXLSXExporter {
             summary.totalScreenTime.inMinutes *
             100)
         : 0.0;
-    _setCell(sheet, 0, row, 'Productivity Rate');
+    _setCell(sheet, 0, row, l10n.productivityRate);
     _setCell(sheet, 1, row, '${productivityPercentage.toStringAsFixed(1)}%',
         bold: true,
         fontColor:
@@ -158,30 +169,33 @@ class AnalyticsXLSXExporter {
         3,
         row,
         productivityPercentage >= 70
-            ? '🌟'
-            : (productivityPercentage >= 50 ? '👍' : '⚠️'));
+            ? l10n.trendExcellent
+            : (productivityPercentage >= 50
+                ? l10n.trendGood
+                : l10n.trendNeedsImprovement));
     row++;
 
     // Focus Sessions
-    _setCell(sheet, 0, row, 'Focus Sessions');
+    _setCell(sheet, 0, row, l10n.focusSessions);
     _setCell(sheet, 1, row, summary.focusSessionsCount.toString(), bold: true);
     var focusChange = summary.focusSessionsComparisonPercent;
     _setCell(sheet, 2, row,
         '${focusChange >= 0 ? "+" : ""}${focusChange.toStringAsFixed(1)}%',
         fontColor: focusChange > 0 ? _successGreen : _dangerRed);
-    _setCell(sheet, 3, row, summary.focusSessionsCount > 0 ? '🎯' : '💤');
+    _setCell(sheet, 3, row,
+        summary.focusSessionsCount > 0 ? l10n.trendActive : l10n.trendNone);
     row++;
 
     // Most Used App
-    _setCell(sheet, 0, row, 'Most Used App');
+    _setCell(sheet, 0, row, l10n.mostUsedApp);
     _setCell(sheet, 1, row, summary.mostUsedApp, bold: true);
     _setCell(sheet, 2, row, _formatDuration(summary.mostUsedAppTime));
-    _setCell(sheet, 3, row, '⭐');
+    _setCell(sheet, 3, row, l10n.trendTop);
     row += 3;
 
     // Category Breakdown Section
     if (summary.categoryBreakdown.isNotEmpty) {
-      _setCell(sheet, 0, row, 'CATEGORY BREAKDOWN',
+      _setCell(sheet, 0, row, l10n.categoryBreakdown,
           fontSize: 14,
           bold: true,
           bgColor: _accentPurple,
@@ -189,9 +203,9 @@ class AnalyticsXLSXExporter {
       _mergeCells(sheet, row, row, 0, 2);
       row++;
 
-      _setCell(sheet, 0, row, 'Category', bold: true, bgColor: _lightGray);
-      _setCell(sheet, 1, row, 'Percentage', bold: true, bgColor: _lightGray);
-      _setCell(sheet, 2, row, 'Visual', bold: true, bgColor: _lightGray);
+      _setCell(sheet, 0, row, l10n.category, bold: true, bgColor: _lightGray);
+      _setCell(sheet, 1, row, l10n.percentage, bold: true, bgColor: _lightGray);
+      _setCell(sheet, 2, row, l10n.visual, bold: true, bgColor: _lightGray);
       row++;
 
       final sortedCategories = summary.categoryBreakdown.entries.toList()
@@ -203,25 +217,29 @@ class AnalyticsXLSXExporter {
             bold: true);
 
         // Create a simple text-based bar
-        var barLength = (entry.value / 10).round();
-        var bar = '█' * barLength;
+        var barLength = (entry.value / 5).round();
+        var bar = '|' * barLength;
         _setCell(sheet, 2, row, bar, fontColor: _primaryBlue);
         row++;
       }
     }
 
-    // Note: Column widths are auto-adjusted by Excel when opening the file
+    // Set column widths
+    sheet.setColumnWidth(0, 25);
+    sheet.setColumnWidth(1, 30);
+    sheet.setColumnWidth(2, 20);
+    sheet.setColumnWidth(3, 20);
   }
 
   /// Create daily breakdown sheet
   void _createDailyBreakdownSheet(Excel excel, AnalyticsSummary summary) {
     if (summary.dailyScreenTimeData.isEmpty) return;
 
-    var sheet = excel['📅 Daily Breakdown'];
+    var sheet = excel[l10n.sheetDailyBreakdown];
     int row = 0;
 
     // Title
-    _setCell(sheet, 0, row, 'DAILY SCREEN TIME',
+    _setCell(sheet, 0, row, l10n.dailyScreenTime,
         fontSize: 16, bold: true, fontColor: _headerBg);
     _mergeCells(sheet, row, row, 0, 4);
     row += 2;
@@ -235,38 +253,38 @@ class AnalyticsXLSXExporter {
     final minDay = summary.dailyScreenTimeData
         .reduce((a, b) => a.screenTime < b.screenTime ? a : b);
 
-    _setCell(sheet, 0, row, '📊 STATISTICS', bold: true, bgColor: _lightGray);
+    _setCell(sheet, 0, row, l10n.statistics, bold: true, bgColor: _lightGray);
     _mergeCells(sheet, row, row, 0, 4);
     row++;
 
-    _setCell(sheet, 0, row, 'Average Daily');
+    _setCell(sheet, 0, row, l10n.averageDaily);
     _setCell(
         sheet, 1, row, _formatDuration(Duration(minutes: avgMinutes.round())),
         bold: true, fontSize: 12);
     row++;
 
-    _setCell(sheet, 0, row, 'Highest Day');
+    _setCell(sheet, 0, row, l10n.highestDay);
     _setCell(sheet, 1, row, DateFormat('EEEE, MMM d').format(maxDay.date));
     _setCell(sheet, 2, row, _formatDuration(maxDay.screenTime),
         bold: true, fontColor: _dangerRed);
     row++;
 
-    _setCell(sheet, 0, row, 'Lowest Day');
+    _setCell(sheet, 0, row, l10n.lowestDay);
     _setCell(sheet, 1, row, DateFormat('EEEE, MMM d').format(minDay.date));
     _setCell(sheet, 2, row, _formatDuration(minDay.screenTime),
         bold: true, fontColor: _successGreen);
     row += 3;
 
     // Data table
-    _setCell(sheet, 0, row, 'Date',
+    _setCell(sheet, 0, row, l10n.date,
         bold: true, bgColor: _headerBg, fontColor: '#FFFFFF');
-    _setCell(sheet, 1, row, 'Day',
+    _setCell(sheet, 1, row, l10n.day,
         bold: true, bgColor: _headerBg, fontColor: '#FFFFFF');
-    _setCell(sheet, 2, row, 'Hours',
+    _setCell(sheet, 2, row, l10n.hours,
         bold: true, bgColor: _headerBg, fontColor: '#FFFFFF');
-    _setCell(sheet, 3, row, 'Minutes',
+    _setCell(sheet, 3, row, l10n.minutes,
         bold: true, bgColor: _headerBg, fontColor: '#FFFFFF');
-    _setCell(sheet, 4, row, 'Visual',
+    _setCell(sheet, 4, row, l10n.visual,
         bold: true, bgColor: _headerBg, fontColor: '#FFFFFF');
     row++;
 
@@ -292,7 +310,7 @@ class AnalyticsXLSXExporter {
       // Visual bar
       var barLength =
           ((dailyData.screenTime.inMinutes / maxMinutes) * 20).round();
-      var bar = '█' * barLength;
+      var bar = '|' * barLength;
       var color = dailyData.screenTime.inHours >= 8
           ? _dangerRed
           : dailyData.screenTime.inHours >= 4
@@ -304,18 +322,23 @@ class AnalyticsXLSXExporter {
       row++;
     }
 
-    // Note: Column widths are auto-adjusted by Excel when opening the file
+    // Set column widths
+    sheet.setColumnWidth(0, 15);
+    sheet.setColumnWidth(1, 15);
+    sheet.setColumnWidth(2, 12);
+    sheet.setColumnWidth(3, 12);
+    sheet.setColumnWidth(4, 25);
   }
 
   /// Create app details sheet
   void _createAppDetailsSheet(Excel excel, AnalyticsSummary summary) {
     if (summary.appUsageDetails.isEmpty) return;
 
-    var sheet = excel['📱 Apps'];
+    var sheet = excel[l10n.sheetApps];
     int row = 0;
 
     // Title
-    _setCell(sheet, 0, row, 'APPLICATION USAGE DETAILS',
+    _setCell(sheet, 0, row, l10n.applicationUsageDetails,
         fontSize: 16, bold: true, fontColor: _headerBg);
     _mergeCells(sheet, row, row, 0, 6);
     row += 2;
@@ -328,26 +351,26 @@ class AnalyticsXLSXExporter {
     final productiveApps =
         summary.appUsageDetails.where((app) => app.isProductive).length;
 
-    _setCell(sheet, 0, row, 'Total Apps:', bold: true);
+    _setCell(sheet, 0, row, l10n.totalApps, bold: true);
     _setCell(sheet, 1, row, summary.appUsageDetails.length.toString());
-    _setCell(sheet, 3, row, 'Productive Apps:', bold: true);
+    _setCell(sheet, 3, row, l10n.productiveApps, bold: true);
     _setCell(sheet, 4, row, '$productiveApps', fontColor: _successGreen);
     row += 2;
 
     // Header
-    _setCell(sheet, 0, row, 'Rank',
+    _setCell(sheet, 0, row, l10n.rank,
         bold: true, bgColor: _headerBg, fontColor: '#FFFFFF');
-    _setCell(sheet, 1, row, 'Application',
+    _setCell(sheet, 1, row, l10n.application,
         bold: true, bgColor: _headerBg, fontColor: '#FFFFFF');
-    _setCell(sheet, 2, row, 'Category',
+    _setCell(sheet, 2, row, l10n.category,
         bold: true, bgColor: _headerBg, fontColor: '#FFFFFF');
-    _setCell(sheet, 3, row, 'Time',
+    _setCell(sheet, 3, row, l10n.time,
         bold: true, bgColor: _headerBg, fontColor: '#FFFFFF');
-    _setCell(sheet, 4, row, '% of Total',
+    _setCell(sheet, 4, row, l10n.percentOfTotal,
         bold: true, bgColor: _headerBg, fontColor: '#FFFFFF');
-    _setCell(sheet, 5, row, 'Type',
+    _setCell(sheet, 5, row, l10n.type,
         bold: true, bgColor: _headerBg, fontColor: '#FFFFFF');
-    _setCell(sheet, 6, row, 'Usage Level',
+    _setCell(sheet, 6, row, l10n.usageLevel,
         bold: true, bgColor: _headerBg, fontColor: '#FFFFFF');
     row++;
 
@@ -361,9 +384,9 @@ class AnalyticsXLSXExporter {
 
       // Rank with medal for top 3
       var rankText = rank.toString();
-      if (rank == 1) rankText = '🥇 1';
-      if (rank == 2) rankText = '🥈 2';
-      if (rank == 3) rankText = '🥉 3';
+      if (rank == 1) rankText = '#1';
+      if (rank == 2) rankText = '#2';
+      if (rank == 3) rankText = '#3';
 
       _setCell(sheet, 0, row, rankText, bold: rank <= 3);
       _setCell(sheet, 1, row, appDetail.appName, bold: rank <= 3);
@@ -372,72 +395,74 @@ class AnalyticsXLSXExporter {
       _setCell(sheet, 4, row, '${percentage.toStringAsFixed(1)}%');
 
       // Productive indicator with color
-      var typeText = appDetail.isProductive ? '✅ Productive' : '⚠️ Leisure';
+      var typeText = appDetail.isProductive ? l10n.productive : l10n.leisure;
       var typeColor =
           appDetail.isProductive ? _productiveColor : _unproductiveColor;
       _setCell(sheet, 5, row, typeText, fontColor: typeColor, bold: true);
 
       // Usage level visualization
-      var usageLevel = percentage >= 20
-          ? 'Very High ████████'
-          : percentage >= 10
-              ? 'High ██████'
-              : percentage >= 5
-                  ? 'Medium ████'
-                  : 'Low ██';
-      var usageColor = percentage >= 20
-          ? _dangerRed
-          : percentage >= 10
-              ? _warningOrange
-              : percentage >= 5
-                  ? _primaryBlue
-                  : _successGreen;
+      String usageLevel;
+      String usageColor;
+      if (percentage >= 20) {
+        usageLevel = l10n.usageLevelVeryHigh;
+        usageColor = _dangerRed;
+      } else if (percentage >= 10) {
+        usageLevel = l10n.usageLevelHigh;
+        usageColor = _warningOrange;
+      } else if (percentage >= 5) {
+        usageLevel = l10n.usageLevelMedium;
+        usageColor = _primaryBlue;
+      } else {
+        usageLevel = l10n.usageLevelLow;
+        usageColor = _successGreen;
+      }
       _setCell(sheet, 6, row, usageLevel, fontColor: usageColor);
 
       rank++;
       row++;
     }
 
-    // Note: Column widths are auto-adjusted by Excel when opening the file
+    // Set column widths
+    sheet.setColumnWidth(0, 8);
+    sheet.setColumnWidth(1, 30);
+    sheet.setColumnWidth(2, 18);
+    sheet.setColumnWidth(3, 12);
+    sheet.setColumnWidth(4, 12);
+    sheet.setColumnWidth(5, 15);
+    sheet.setColumnWidth(6, 20);
   }
 
   /// Create insights sheet
   void _createInsightsSheet(Excel excel, AnalyticsSummary summary) {
-    var sheet = excel['💡 Insights'];
+    var sheet = excel[l10n.sheetInsights];
     int row = 0;
 
     // Title
-    _setCell(sheet, 0, row, '💡 KEY INSIGHTS & RECOMMENDATIONS',
+    _setCell(sheet, 0, row, l10n.keyInsightsTitle,
         fontSize: 16, bold: true, fontColor: _headerBg);
-    _mergeCells(sheet, row, row, 0, 1);
+    _mergeCells(sheet, row, row, 0, 2);
     row += 2;
 
     final insights = _generateInsights(summary);
 
     for (var insight in insights) {
-      // Determine icon and color based on insight content
-      String icon = '📌';
+      // Determine indicator and color based on insight content
+      String indicator = '*';
       String? bgColor;
 
-      if (insight.contains('Excellent') || insight.contains('Great')) {
-        icon = '🌟';
+      if (insight.contains(l10n.trendExcellent) ||
+          insight.contains(l10n.trendGood)) {
+        indicator = '[+]';
         bgColor = '#E8F5E9';
-      } else if (insight.contains('Good')) {
-        icon = '✅';
-        bgColor = '#E3F2FD';
-      } else if (insight.contains('Low') ||
-          insight.contains('High Daily Usage')) {
-        icon = '⚠️';
-        bgColor = '#FFF3E0';
-      } else if (insight.contains('increased')) {
-        icon = '📈';
+      } else if (insight.contains(l10n.directionIncreased)) {
+        indicator = '[^]';
         bgColor = '#FCE4EC';
-      } else if (insight.contains('decreased')) {
-        icon = '📉';
+      } else if (insight.contains(l10n.directionDecreased)) {
+        indicator = '[v]';
         bgColor = '#F3E5F5';
       }
 
-      _setCell(sheet, 0, row, icon, fontSize: 14);
+      _setCell(sheet, 0, row, indicator, fontSize: 14, bold: true);
       _setCell(sheet, 1, row, insight, bgColor: bgColor);
       _mergeCells(sheet, row, row, 1, 2);
       row += 2;
@@ -446,21 +471,26 @@ class AnalyticsXLSXExporter {
     row += 2;
 
     // Recommendations section
-    _setCell(sheet, 0, row, '🎯 PERSONALIZED RECOMMENDATIONS',
+    _setCell(sheet, 0, row, l10n.personalizedRecommendations,
         fontSize: 14, bold: true, bgColor: _accentPurple, fontColor: '#FFFFFF');
     _mergeCells(sheet, row, row, 0, 2);
     row += 2;
 
     final recommendations = _generateRecommendations(summary);
+    int recNum = 1;
     for (var rec in recommendations) {
-      _setCell(sheet, 0, row, '→',
-          fontColor: _accentPurple, fontSize: 14, bold: true);
+      _setCell(sheet, 0, row, '$recNum.',
+          fontColor: _accentPurple, fontSize: 12, bold: true);
       _setCell(sheet, 1, row, rec, bgColor: '#F5F5F5');
       _mergeCells(sheet, row, row, 1, 2);
       row += 2;
+      recNum++;
     }
 
-    // Note: Column widths are auto-adjusted by Excel when opening the file
+    // Set column widths
+    sheet.setColumnWidth(0, 8);
+    sheet.setColumnWidth(1, 50);
+    sheet.setColumnWidth(2, 30);
   }
 
   /// Generate insights based on the data
@@ -473,14 +503,11 @@ class AnalyticsXLSXExporter {
         : 0;
 
     if (hoursPerDay > 8) {
-      insights.add(
-          'High Daily Usage: You\'re averaging ${hoursPerDay.toStringAsFixed(1)} hours per day of screen time');
+      insights.add(l10n.insightHighDailyUsage(hoursPerDay.toStringAsFixed(1)));
     } else if (hoursPerDay < 2) {
-      insights.add(
-          'Low Daily Usage: You\'re averaging ${hoursPerDay.toStringAsFixed(1)} hours per day - great balance!');
+      insights.add(l10n.insightLowDailyUsage(hoursPerDay.toStringAsFixed(1)));
     } else {
-      insights.add(
-          'Moderate Usage: Averaging ${hoursPerDay.toStringAsFixed(1)} hours per day of screen time');
+      insights.add(l10n.insightModerateUsage(hoursPerDay.toStringAsFixed(1)));
     }
 
     // Productivity insights
@@ -491,15 +518,15 @@ class AnalyticsXLSXExporter {
         : 0.0;
 
     if (productivityPercentage >= 70) {
-      insights.add(
-          'Excellent Productivity: ${productivityPercentage.toStringAsFixed(0)}% of your screen time is productive work!');
+      insights.add(l10n.insightExcellentProductivity(
+          productivityPercentage.toStringAsFixed(0)));
     } else if (productivityPercentage >= 50) {
-      insights.add(
-          'Good Productivity: ${productivityPercentage.toStringAsFixed(0)}% of your screen time is productive');
+      insights.add(l10n
+          .insightGoodProductivity(productivityPercentage.toStringAsFixed(0)));
     } else if (productivityPercentage < 30 &&
         summary.totalScreenTime.inMinutes > 0) {
-      insights.add(
-          'Low Productivity Alert: Only ${productivityPercentage.toStringAsFixed(0)}% of screen time is productive');
+      insights.add(l10n
+          .insightLowProductivity(productivityPercentage.toStringAsFixed(0)));
     }
 
     // Focus session insights
@@ -507,40 +534,39 @@ class AnalyticsXLSXExporter {
       final daysWithData = summary.dailyScreenTimeData.length;
       final avgSessionsPerDay =
           daysWithData > 0 ? summary.focusSessionsCount / daysWithData : 0;
-      insights.add(
-          'Focus Sessions: Completed ${summary.focusSessionsCount} sessions (${avgSessionsPerDay.toStringAsFixed(1)} per day on average)');
+      insights.add(l10n.insightFocusSessions(
+          summary.focusSessionsCount, avgSessionsPerDay.toStringAsFixed(1)));
 
       if (summary.focusSessionsCount >= 20) {
-        insights.add(
-            'Great Focus Habit: You\'ve built an amazing focus routine with ${summary.focusSessionsCount} completed sessions!');
+        insights.add(l10n.insightGreatFocusHabit(summary.focusSessionsCount));
       }
     } else {
-      insights.add(
-          'No Focus Sessions: Consider using focus mode to boost your productivity');
+      insights.add(l10n.insightNoFocusSessions);
     }
 
     // Comparison insights
     if (summary.screenTimeComparisonPercent.abs() > 10) {
-      final direction =
-          summary.screenTimeComparisonPercent > 0 ? 'increased' : 'decreased';
-      insights.add(
-          'Screen Time Trend: Your usage has ${direction} by ${summary.screenTimeComparisonPercent.abs().toStringAsFixed(0)}% compared to the previous period');
+      final direction = summary.screenTimeComparisonPercent > 0
+          ? l10n.directionIncreased
+          : l10n.directionDecreased;
+      insights.add(l10n.insightScreenTimeTrend(direction,
+          summary.screenTimeComparisonPercent.abs().toStringAsFixed(0)));
     }
 
     if (summary.productiveTimeComparisonPercent.abs() > 10) {
       final direction = summary.productiveTimeComparisonPercent > 0
-          ? 'increased'
-          : 'decreased';
-      insights.add(
-          'Productive Time Trend: Your productive time has ${direction} by ${summary.productiveTimeComparisonPercent.abs().toStringAsFixed(0)}% compared to previous period');
+          ? l10n.directionIncreased
+          : l10n.directionDecreased;
+      insights.add(l10n.insightProductiveTimeTrend(direction,
+          summary.productiveTimeComparisonPercent.abs().toStringAsFixed(0)));
     }
 
     // Category insights
     if (summary.categoryBreakdown.isNotEmpty) {
       final topCategory = summary.categoryBreakdown.entries
           .reduce((a, b) => a.value > b.value ? a : b);
-      insights.add(
-          'Top Category: ${topCategory.key} dominates with ${topCategory.value.toStringAsFixed(0)}% of your total time');
+      insights.add(l10n.insightTopCategory(
+          topCategory.key, topCategory.value.toStringAsFixed(0)));
     }
 
     // App usage insights
@@ -551,8 +577,10 @@ class AnalyticsXLSXExporter {
               summary.totalScreenTime.inMinutes *
               100)
           : 0.0;
-      insights.add(
-          'Most Used App: ${summary.mostUsedApp} accounts for ${percentage.toStringAsFixed(0)}% of your time (${_formatDuration(summary.mostUsedAppTime)})');
+      insights.add(l10n.insightMostUsedApp(
+          summary.mostUsedApp,
+          percentage.toStringAsFixed(0),
+          _formatDuration(summary.mostUsedAppTime)));
     }
 
     // Daily pattern insights
@@ -566,13 +594,16 @@ class AnalyticsXLSXExporter {
 
         if (highestDay.screenTime.inMinutes >
             lowestDay.screenTime.inMinutes * 2) {
-          insights.add(
-              'Usage Varies Significantly: ${DateFormat('EEEE').format(highestDay.date)} had ${(highestDay.screenTime.inMinutes / lowestDay.screenTime.inMinutes).toStringAsFixed(1)}x more usage than ${DateFormat('EEEE').format(lowestDay.date)}');
+          insights.add(l10n.insightUsageVaries(
+              DateFormat('EEEE').format(highestDay.date),
+              (highestDay.screenTime.inMinutes / lowestDay.screenTime.inMinutes)
+                  .toStringAsFixed(1),
+              DateFormat('EEEE').format(lowestDay.date)));
         }
       }
     }
 
-    return insights.isEmpty ? ['No significant insights available'] : insights;
+    return insights.isEmpty ? [l10n.insightNoInsights] : insights;
   }
 
   /// Generate personalized recommendations
@@ -586,16 +617,13 @@ class AnalyticsXLSXExporter {
         : 0.0;
 
     if (productivityPercentage < 50) {
-      recommendations.add(
-          'Try scheduling more focus sessions throughout your day to boost productivity');
-      recommendations
-          .add('Consider setting app limits on leisure applications');
+      recommendations.add(l10n.recScheduleFocusSessions);
+      recommendations.add(l10n.recSetAppLimits);
     }
 
     if (summary.focusSessionsCount < 5 &&
         summary.dailyScreenTimeData.length >= 7) {
-      recommendations.add(
-          'Aim for at least 1-2 focus sessions per day to build a consistent habit');
+      recommendations.add(l10n.recAimForFocusSessions);
     }
 
     final hoursPerDay = summary.dailyScreenTimeData.isNotEmpty
@@ -603,10 +631,8 @@ class AnalyticsXLSXExporter {
         : 0;
 
     if (hoursPerDay > 8) {
-      recommendations.add(
-          'Your daily screen time is quite high. Try taking regular breaks using the 20-20-20 rule');
-      recommendations.add(
-          'Consider setting daily screen time goals to gradually reduce usage');
+      recommendations.add(l10n.recTakeBreaks);
+      recommendations.add(l10n.recSetDailyGoals);
     }
 
     if (summary.categoryBreakdown.isNotEmpty) {
@@ -618,26 +644,21 @@ class AnalyticsXLSXExporter {
           .fold(0.0, (sum, e) => sum + e.value);
 
       if (entertainment > 40) {
-        recommendations.add(
-            'Entertainment apps account for a large portion of your time. Consider balancing with more productive activities');
+        recommendations.add(l10n.recBalanceEntertainment);
       }
     }
 
     if (summary.screenTimeComparisonPercent > 20) {
-      recommendations.add(
-          'Your screen time has increased significantly. Review your usage patterns and set boundaries');
+      recommendations.add(l10n.recReviewUsagePatterns);
     }
 
     if (summary.productiveTimeComparisonPercent < -20) {
-      recommendations.add(
-          'Your productive time has decreased. Try scheduling focused work blocks in your calendar');
+      recommendations.add(l10n.recScheduleFocusedWork);
     }
 
     if (recommendations.isEmpty) {
-      recommendations
-          .add('Keep up the great work! Your screen time habits look healthy');
-      recommendations
-          .add('Continue using focus sessions to maintain productivity');
+      recommendations.add(l10n.recKeepUpGreatWork);
+      recommendations.add(l10n.recContinueFocusSessions);
     }
 
     return recommendations;
@@ -706,9 +727,9 @@ class AnalyticsXLSXExporter {
     final minutes = duration.inMinutes.remainder(60);
 
     if (hours > 0) {
-      return '${hours}h ${minutes}m';
+      return l10n.durationHoursMinutes(hours, minutes);
     } else {
-      return '${minutes}m';
+      return l10n.durationMinutesOnly(minutes);
     }
   }
 

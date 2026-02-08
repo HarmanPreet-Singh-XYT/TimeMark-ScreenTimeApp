@@ -325,7 +325,7 @@ class AppLocalizationsUr extends AppLocalizations {
   String get customDialogTitle => 'حسب ضرورت';
 
   @override
-  String get dateRange => 'تاریخ کی حد';
+  String get dateRange => 'تاریخ کی حد:';
 
   @override
   String get specificDate => 'مخصوص تاریخ';
@@ -337,7 +337,7 @@ class AppLocalizationsUr extends AppLocalizations {
   String get endDate => 'اختتام کی تاریخ: ';
 
   @override
-  String get date => 'تاریخ: ';
+  String get date => 'تاریخ';
 
   @override
   String get cancel => 'منسوخ کریں';
@@ -356,13 +356,13 @@ class AppLocalizationsUr extends AppLocalizations {
       'شروع کی تاریخ اختتام کی تاریخ سے پہلے یا برابر ہونی چاہیے۔';
 
   @override
-  String get totalScreenTime => 'کل اسکرین ٹائم';
+  String get totalScreenTime => 'کل سکرین وقت';
 
   @override
   String get productiveTime => 'پیداواری وقت';
 
   @override
-  String get mostUsedApp => 'سب سے زیادہ استعمال ہونے والی ایپ';
+  String get mostUsedApp => 'سب سے زیادہ استعمال شدہ ایپ';
 
   @override
   String get focusSessions => 'فوکس سیشنز';
@@ -383,10 +383,10 @@ class AppLocalizationsUr extends AppLocalizations {
   }
 
   @override
-  String get dailyScreenTime => 'روزانہ اسکرین ٹائم';
+  String get dailyScreenTime => 'روزانہ سکرین وقت';
 
   @override
-  String get categoryBreakdown => 'زمرے کی تقسیم';
+  String get categoryBreakdown => 'زمرہ تقسیم';
 
   @override
   String get noDataAvailable => 'کوئی ڈیٹا دستیاب نہیں';
@@ -591,12 +591,12 @@ class AppLocalizationsUr extends AppLocalizations {
 
   @override
   String durationHoursMinutes(int hours, int minutes) {
-    return '$hours گھنٹے $minutes منٹ';
+    return '$hoursگھ $minutesم';
   }
 
   @override
   String durationMinutesOnly(int minutes) {
-    return '$minutes منٹ';
+    return '$minutesم';
   }
 
   @override
@@ -627,10 +627,10 @@ class AppLocalizationsUr extends AppLocalizations {
   String get dailyTotalLimit => 'روزانہ کل حد: ';
 
   @override
-  String get hours => 'گھنٹے: ';
+  String get hours => 'گھنٹے';
 
   @override
-  String get minutes => 'منٹ: ';
+  String get minutes => 'منٹ';
 
   @override
   String get currentUsage => 'موجودہ استعمال: ';
@@ -1447,8 +1447,7 @@ class AppLocalizationsUr extends AppLocalizations {
   String get exportStarting => 'برآمد شروع ہو رہی ہے...';
 
   @override
-  String get exportSuccessful =>
-      'برآمد کامیاب! فائل Documents/TimeMark-Backups میں محفوظ ہو گئی';
+  String get exportSuccessful => 'برآمد کامیاب';
 
   @override
   String get exportFailed => 'برآمد ناکام';
@@ -2380,4 +2379,316 @@ class AppLocalizationsUr extends AppLocalizations {
   @override
   String get restartFailedMessage =>
       'ایپ خود بخود دوبارہ شروع نہیں ہو سکی۔ براہ کرم بند کریں (Cmd+Q) اور دستی طور پر دوبارہ کھولیں۔';
+
+  @override
+  String get exportAnalyticsReport => 'تجزیاتی رپورٹ برآمد کریں';
+
+  @override
+  String get chooseExportFormat => 'برآمد فارمیٹ منتخب کریں:';
+
+  @override
+  String get beautifulExcelReport => 'خوبصورت ایکسل رپورٹ';
+
+  @override
+  String get beautifulExcelReportDescription =>
+      'چارٹس، ایموجیز اور بصیرت کے ساتھ شاندار، رنگین اسپریڈشیٹ ✨';
+
+  @override
+  String get excelReportIncludes => 'ایکسل رپورٹ میں شامل ہے:';
+
+  @override
+  String get summarySheetDescription =>
+      '📊 خلاصہ شیٹ - رجحانات کے ساتھ اہم میٹرکس';
+
+  @override
+  String get dailyBreakdownDescription =>
+      '📅 روزانہ تفصیل - بصری استعمال کے پیٹرن';
+
+  @override
+  String get appsSheetDescription => '📱 ایپس شیٹ - تفصیلی ایپ رینکنگ';
+
+  @override
+  String get insightsDescription => '💡 بصیرت - ہوشیار سفارشات';
+
+  @override
+  String get beautifulExcelExportSuccess =>
+      'خوبصورت ایکسل رپورٹ کامیابی سے برآمد ہوگئی! 🎉';
+
+  @override
+  String failedToExportReport(String error) {
+    return 'رپورٹ برآمد کرنے میں ناکام: $error';
+  }
+
+  @override
+  String get exporting => 'برآمد ہو رہا ہے...';
+
+  @override
+  String get exportExcel => 'ایکسل برآمد کریں';
+
+  @override
+  String get saveAnalyticsReport => 'تجزیاتی رپورٹ محفوظ کریں';
+
+  @override
+  String analyticsReportFileName(String timestamp) {
+    return 'تجزیاتی_رپورٹ_$timestamp.xlsx';
+  }
+
+  @override
+  String get usageAnalyticsReportTitle => 'استعمال کی تجزیاتی رپورٹ';
+
+  @override
+  String get generated => 'تیار کیا گیا:';
+
+  @override
+  String get period => 'مدت:';
+
+  @override
+  String dateRangeValue(String startDate, String endDate) {
+    return '$startDate سے $endDate';
+  }
+
+  @override
+  String get keyMetrics => 'اہم میٹرکس';
+
+  @override
+  String get metric => 'میٹرک';
+
+  @override
+  String get value => 'قدر';
+
+  @override
+  String get change => 'تبدیلی';
+
+  @override
+  String get trend => 'رجحان';
+
+  @override
+  String get productivityRate => 'پیداواری شرح';
+
+  @override
+  String get trendUp => 'اوپر';
+
+  @override
+  String get trendDown => 'نیچے';
+
+  @override
+  String get trendExcellent => 'بہترین';
+
+  @override
+  String get trendGood => 'اچھا';
+
+  @override
+  String get trendNeedsImprovement => 'بہتری کی ضرورت';
+
+  @override
+  String get trendActive => 'فعال';
+
+  @override
+  String get trendNone => 'کوئی نہیں';
+
+  @override
+  String get trendTop => 'سب سے اوپر';
+
+  @override
+  String get category => 'زمرہ';
+
+  @override
+  String get percentage => 'فیصد';
+
+  @override
+  String get visual => 'بصری';
+
+  @override
+  String get statistics => 'اعدادوشمار';
+
+  @override
+  String get averageDaily => 'روزانہ اوسط';
+
+  @override
+  String get highestDay => 'سب سے زیادہ دن';
+
+  @override
+  String get lowestDay => 'سب سے کم دن';
+
+  @override
+  String get day => 'دن';
+
+  @override
+  String get applicationUsageDetails => 'ایپلیکیشن استعمال کی تفصیلات';
+
+  @override
+  String get totalApps => 'کل ایپس:';
+
+  @override
+  String get productiveApps => 'پیداواری ایپس:';
+
+  @override
+  String get rank => 'درجہ';
+
+  @override
+  String get application => 'ایپلیکیشن';
+
+  @override
+  String get time => 'وقت';
+
+  @override
+  String get percentOfTotal => 'کل کا %';
+
+  @override
+  String get type => 'قسم';
+
+  @override
+  String get usageLevel => 'استعمال کی سطح';
+
+  @override
+  String get leisure => 'تفریح';
+
+  @override
+  String get usageLevelVeryHigh => 'بہت زیادہ ||||||||';
+
+  @override
+  String get usageLevelHigh => 'زیادہ ||||||';
+
+  @override
+  String get usageLevelMedium => 'درمیانی ||||';
+
+  @override
+  String get usageLevelLow => 'کم ||';
+
+  @override
+  String get keyInsightsTitle => 'اہم بصیرت اور سفارشات';
+
+  @override
+  String get personalizedRecommendations => 'ذاتی سفارشات';
+
+  @override
+  String insightHighDailyUsage(String hours) {
+    return 'زیادہ روزانہ استعمال: آپ اوسطاً روزانہ $hours گھنٹے سکرین وقت استعمال کر رہے ہیں';
+  }
+
+  @override
+  String insightLowDailyUsage(String hours) {
+    return 'کم روزانہ استعمال: آپ اوسطاً روزانہ $hours گھنٹے - بہترین توازن!';
+  }
+
+  @override
+  String insightModerateUsage(String hours) {
+    return 'معتدل استعمال: اوسطاً روزانہ $hours گھنٹے سکرین وقت';
+  }
+
+  @override
+  String insightExcellentProductivity(String percentage) {
+    return 'بہترین پیداواریت: آپ کے سکرین وقت کا $percentage% پیداواری کام ہے!';
+  }
+
+  @override
+  String insightGoodProductivity(String percentage) {
+    return 'اچھی پیداواریت: آپ کے سکرین وقت کا $percentage% پیداواری ہے';
+  }
+
+  @override
+  String insightLowProductivity(String percentage) {
+    return 'کم پیداواریت کا انتباہ: صرف $percentage% سکرین وقت پیداواری ہے';
+  }
+
+  @override
+  String insightFocusSessions(int count, String avgPerDay) {
+    return 'فوکس سیشنز: $count سیشنز مکمل کیے (اوسطاً روزانہ $avgPerDay)';
+  }
+
+  @override
+  String insightGreatFocusHabit(int count) {
+    return 'بہترین فوکس عادت: آپ نے $count مکمل سیشنز کے ساتھ ایک شاندار فوکس روٹین بنایا ہے!';
+  }
+
+  @override
+  String get insightNoFocusSessions =>
+      'کوئی فوکس سیشنز نہیں: پیداواریت بڑھانے کے لیے فوکس موڈ استعمال کرنے پر غور کریں';
+
+  @override
+  String insightScreenTimeTrend(String direction, String percentage) {
+    return 'سکرین وقت کا رجحان: پچھلی مدت کے مقابلے میں آپ کا استعمال $percentage% $direction';
+  }
+
+  @override
+  String insightProductiveTimeTrend(String direction, String percentage) {
+    return 'پیداواری وقت کا رجحان: پچھلی مدت کے مقابلے میں آپ کا پیداواری وقت $percentage% $direction';
+  }
+
+  @override
+  String get directionIncreased => 'بڑھا';
+
+  @override
+  String get directionDecreased => 'گھٹا';
+
+  @override
+  String insightTopCategory(String category, String percentage) {
+    return 'سب سے اوپر زمرہ: $category آپ کے کل وقت کا $percentage% ہے';
+  }
+
+  @override
+  String insightMostUsedApp(
+      String appName, String percentage, String duration) {
+    return 'سب سے زیادہ استعمال شدہ ایپ: $appName آپ کے وقت کا $percentage% ($duration) ہے';
+  }
+
+  @override
+  String insightUsageVaries(String highDay, String multiplier, String lowDay) {
+    return 'استعمال میں نمایاں فرق: $highDay میں $lowDay سے ${multiplier}x زیادہ استعمال تھا';
+  }
+
+  @override
+  String get insightNoInsights => 'کوئی اہم بصیرت دستیاب نہیں';
+
+  @override
+  String get recScheduleFocusSessions =>
+      'پیداواریت بڑھانے کے لیے دن بھر میں مزید فوکس سیشنز شیڈول کرنے کی کوشش کریں';
+
+  @override
+  String get recSetAppLimits =>
+      'تفریحی ایپلیکیشنز پر حدود مقرر کرنے پر غور کریں';
+
+  @override
+  String get recAimForFocusSessions =>
+      'مستقل عادت بنانے کے لیے روزانہ کم از کم 1-2 فوکس سیشنز کا ہدف رکھیں';
+
+  @override
+  String get recTakeBreaks =>
+      'آپ کا روزانہ سکرین وقت کافی زیادہ ہے۔ 20-20-20 قاعدے کا استعمال کرتے ہوئے باقاعدگی سے وقفے لینے کی کوشش کریں';
+
+  @override
+  String get recSetDailyGoals =>
+      'آہستہ آہستہ استعمال کم کرنے کے لیے روزانہ سکرین وقت کے اہداف مقرر کرنے پر غور کریں';
+
+  @override
+  String get recBalanceEntertainment =>
+      'تفریحی ایپس آپ کے وقت کا بڑا حصہ لیتی ہیں۔ زیادہ پیداواری سرگرمیوں کے ساتھ توازن پر غور کریں';
+
+  @override
+  String get recReviewUsagePatterns =>
+      'آپ کا سکرین وقت نمایاں طور پر بڑھ گیا ہے۔ اپنے استعمال کے پیٹرن کا جائزہ لیں اور حدود مقرر کریں';
+
+  @override
+  String get recScheduleFocusedWork =>
+      'آپ کا پیداواری وقت کم ہوا ہے۔ اپنے کیلنڈر میں فوکسڈ کام کے بلاکس شیڈول کرنے کی کوشش کریں';
+
+  @override
+  String get recKeepUpGreatWork =>
+      'بہترین کام جاری رکھیں! آپ کی سکرین وقت کی عادات صحت مند نظر آتی ہیں';
+
+  @override
+  String get recContinueFocusSessions =>
+      'پیداواریت برقرار رکھنے کے لیے فوکس سیشنز کا استعمال جاری رکھیں';
+
+  @override
+  String get sheetSummary => 'خلاصہ';
+
+  @override
+  String get sheetDailyBreakdown => 'روزانہ تفصیل';
+
+  @override
+  String get sheetApps => 'ایپس';
+
+  @override
+  String get sheetInsights => 'بصیرت';
 }

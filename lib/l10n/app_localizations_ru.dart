@@ -327,7 +327,7 @@ class AppLocalizationsRu extends AppLocalizations {
   String get customDialogTitle => 'Пользовательский';
 
   @override
-  String get dateRange => 'Диапазон дат';
+  String get dateRange => 'Диапазон Дат:';
 
   @override
   String get specificDate => 'Конкретная дата';
@@ -339,7 +339,7 @@ class AppLocalizationsRu extends AppLocalizations {
   String get endDate => 'Дата окончания: ';
 
   @override
-  String get date => 'Дата: ';
+  String get date => 'Дата';
 
   @override
   String get cancel => 'Отмена';
@@ -358,16 +358,16 @@ class AppLocalizationsRu extends AppLocalizations {
       'Дата начала должна быть раньше или равна дате окончания.';
 
   @override
-  String get totalScreenTime => 'Общее экранное время';
+  String get totalScreenTime => 'Общее Время Экрана';
 
   @override
-  String get productiveTime => 'Продуктивное время';
+  String get productiveTime => 'Продуктивное Время';
 
   @override
-  String get mostUsedApp => 'Самое используемое приложение';
+  String get mostUsedApp => 'Самое Используемое Приложение';
 
   @override
-  String get focusSessions => 'Сессии фокусировки';
+  String get focusSessions => 'Сессии Фокусировки';
 
   @override
   String positiveComparison(String percent) {
@@ -385,10 +385,10 @@ class AppLocalizationsRu extends AppLocalizations {
   }
 
   @override
-  String get dailyScreenTime => 'Дневное экранное время';
+  String get dailyScreenTime => 'ЕЖЕДНЕВНОЕ ВРЕМЯ ЭКРАНА';
 
   @override
-  String get categoryBreakdown => 'Распределение по категориям';
+  String get categoryBreakdown => 'РАЗБИВКА ПО КАТЕГОРИЯМ';
 
   @override
   String get noDataAvailable => 'Данные недоступны';
@@ -630,10 +630,10 @@ class AppLocalizationsRu extends AppLocalizations {
   String get dailyTotalLimit => 'Дневной общий лимит: ';
 
   @override
-  String get hours => 'Часы: ';
+  String get hours => 'Часы';
 
   @override
-  String get minutes => 'Минуты: ';
+  String get minutes => 'Минуты';
 
   @override
   String get currentUsage => 'Текущее использование: ';
@@ -1455,11 +1455,10 @@ class AppLocalizationsRu extends AppLocalizations {
   String get exportStarting => 'Начало экспорта...';
 
   @override
-  String get exportSuccessful =>
-      'Экспорт успешен! Файл сохранён в Документы/TimeMark-Backups';
+  String get exportSuccessful => 'Экспорт Успешен';
 
   @override
-  String get exportFailed => 'Ошибка экспорта';
+  String get exportFailed => 'Ошибка Экспорта';
 
   @override
   String get exportComplete => 'Экспорт завершён';
@@ -2449,4 +2448,317 @@ class AppLocalizationsRu extends AppLocalizations {
   @override
   String get restartFailedMessage =>
       'Не удалось автоматически перезапустить приложение. Пожалуйста, выйдите (Cmd+Q) и запустите его вручную.';
+
+  @override
+  String get exportAnalyticsReport => 'Экспорт Аналитического Отчёта';
+
+  @override
+  String get chooseExportFormat => 'Выберите формат экспорта:';
+
+  @override
+  String get beautifulExcelReport => 'Красивый Excel Отчёт';
+
+  @override
+  String get beautifulExcelReportDescription =>
+      'Великолепная, красочная таблица с диаграммами, эмодзи и аналитикой ✨';
+
+  @override
+  String get excelReportIncludes => 'Excel отчёт включает:';
+
+  @override
+  String get summarySheetDescription =>
+      '📊 Лист Сводки - Ключевые показатели с трендами';
+
+  @override
+  String get dailyBreakdownDescription =>
+      '📅 Ежедневная Разбивка - Визуальные паттерны использования';
+
+  @override
+  String get appsSheetDescription =>
+      '📱 Лист Приложений - Подробные рейтинги приложений';
+
+  @override
+  String get insightsDescription => '💡 Инсайты - Умные рекомендации';
+
+  @override
+  String get beautifulExcelExportSuccess =>
+      'Красивый Excel отчёт успешно экспортирован! 🎉';
+
+  @override
+  String failedToExportReport(String error) {
+    return 'Не удалось экспортировать отчёт: $error';
+  }
+
+  @override
+  String get exporting => 'Экспорт...';
+
+  @override
+  String get exportExcel => 'Экспорт Excel';
+
+  @override
+  String get saveAnalyticsReport => 'Сохранить Аналитический Отчёт';
+
+  @override
+  String analyticsReportFileName(String timestamp) {
+    return 'аналитический_отчёт_$timestamp.xlsx';
+  }
+
+  @override
+  String get usageAnalyticsReportTitle => 'ОТЧЁТ ОБ АНАЛИЗЕ ИСПОЛЬЗОВАНИЯ';
+
+  @override
+  String get generated => 'Создан:';
+
+  @override
+  String get period => 'Период:';
+
+  @override
+  String dateRangeValue(String startDate, String endDate) {
+    return '$startDate по $endDate';
+  }
+
+  @override
+  String get keyMetrics => 'КЛЮЧЕВЫЕ ПОКАЗАТЕЛИ';
+
+  @override
+  String get metric => 'Показатель';
+
+  @override
+  String get value => 'Значение';
+
+  @override
+  String get change => 'Изменение';
+
+  @override
+  String get trend => 'Тренд';
+
+  @override
+  String get productivityRate => 'Уровень Продуктивности';
+
+  @override
+  String get trendUp => 'Рост';
+
+  @override
+  String get trendDown => 'Снижение';
+
+  @override
+  String get trendExcellent => 'Отлично';
+
+  @override
+  String get trendGood => 'Хорошо';
+
+  @override
+  String get trendNeedsImprovement => 'Требует Улучшения';
+
+  @override
+  String get trendActive => 'Активен';
+
+  @override
+  String get trendNone => 'Нет';
+
+  @override
+  String get trendTop => 'Топ';
+
+  @override
+  String get category => 'Категория';
+
+  @override
+  String get percentage => 'Процент';
+
+  @override
+  String get visual => 'Визуально';
+
+  @override
+  String get statistics => 'СТАТИСТИКА';
+
+  @override
+  String get averageDaily => 'Среднее за День';
+
+  @override
+  String get highestDay => 'Самый Высокий День';
+
+  @override
+  String get lowestDay => 'Самый Низкий День';
+
+  @override
+  String get day => 'День';
+
+  @override
+  String get applicationUsageDetails => 'ДЕТАЛИ ИСПОЛЬЗОВАНИЯ ПРИЛОЖЕНИЙ';
+
+  @override
+  String get totalApps => 'Всего Приложений:';
+
+  @override
+  String get productiveApps => 'Продуктивных Приложений:';
+
+  @override
+  String get rank => 'Место';
+
+  @override
+  String get application => 'Приложение';
+
+  @override
+  String get time => 'Время';
+
+  @override
+  String get percentOfTotal => '% от Общего';
+
+  @override
+  String get type => 'Тип';
+
+  @override
+  String get usageLevel => 'Уровень Использования';
+
+  @override
+  String get leisure => 'Досуг';
+
+  @override
+  String get usageLevelVeryHigh => 'Очень Высокий ||||||||';
+
+  @override
+  String get usageLevelHigh => 'Высокий ||||||';
+
+  @override
+  String get usageLevelMedium => 'Средний ||||';
+
+  @override
+  String get usageLevelLow => 'Низкий ||';
+
+  @override
+  String get keyInsightsTitle => 'КЛЮЧЕВЫЕ ИНСАЙТЫ И РЕКОМЕНДАЦИИ';
+
+  @override
+  String get personalizedRecommendations => 'ПЕРСОНАЛЬНЫЕ РЕКОМЕНДАЦИИ';
+
+  @override
+  String insightHighDailyUsage(String hours) {
+    return 'Высокое Ежедневное Использование: Вы используете в среднем $hours часов в день экранного времени';
+  }
+
+  @override
+  String insightLowDailyUsage(String hours) {
+    return 'Низкое Ежедневное Использование: Вы используете в среднем $hours часов в день - отличный баланс!';
+  }
+
+  @override
+  String insightModerateUsage(String hours) {
+    return 'Умеренное Использование: В среднем $hours часов экранного времени в день';
+  }
+
+  @override
+  String insightExcellentProductivity(String percentage) {
+    return 'Отличная Продуктивность: $percentage% вашего экранного времени - продуктивная работа!';
+  }
+
+  @override
+  String insightGoodProductivity(String percentage) {
+    return 'Хорошая Продуктивность: $percentage% вашего экранного времени продуктивно';
+  }
+
+  @override
+  String insightLowProductivity(String percentage) {
+    return 'Предупреждение о Низкой Продуктивности: Только $percentage% экранного времени продуктивно';
+  }
+
+  @override
+  String insightFocusSessions(int count, String avgPerDay) {
+    return 'Сессии Фокусировки: Завершено $count сессий (в среднем $avgPerDay в день)';
+  }
+
+  @override
+  String insightGreatFocusHabit(int count) {
+    return 'Отличная Привычка Фокусировки: Вы создали потрясающую рутину с $count завершёнными сессиями!';
+  }
+
+  @override
+  String get insightNoFocusSessions =>
+      'Нет Сессий Фокусировки: Рассмотрите использование режима фокусировки для повышения продуктивности';
+
+  @override
+  String insightScreenTimeTrend(String direction, String percentage) {
+    return 'Тренд Экранного Времени: Ваше использование $direction на $percentage% по сравнению с предыдущим периодом';
+  }
+
+  @override
+  String insightProductiveTimeTrend(String direction, String percentage) {
+    return 'Тренд Продуктивного Времени: Ваше продуктивное время $direction на $percentage% по сравнению с предыдущим периодом';
+  }
+
+  @override
+  String get directionIncreased => 'увеличилось';
+
+  @override
+  String get directionDecreased => 'уменьшилось';
+
+  @override
+  String insightTopCategory(String category, String percentage) {
+    return 'Топ Категория: $category доминирует с $percentage% вашего общего времени';
+  }
+
+  @override
+  String insightMostUsedApp(
+      String appName, String percentage, String duration) {
+    return 'Самое Используемое Приложение: $appName занимает $percentage% вашего времени ($duration)';
+  }
+
+  @override
+  String insightUsageVaries(String highDay, String multiplier, String lowDay) {
+    return 'Использование Значительно Различается: $highDay имел в ${multiplier}x больше использования чем $lowDay';
+  }
+
+  @override
+  String get insightNoInsights => 'Значительные инсайты недоступны';
+
+  @override
+  String get recScheduleFocusSessions =>
+      'Попробуйте планировать больше сессий фокусировки в течение дня для повышения продуктивности';
+
+  @override
+  String get recSetAppLimits =>
+      'Рассмотрите установку лимитов на развлекательные приложения';
+
+  @override
+  String get recAimForFocusSessions =>
+      'Стремитесь к минимум 1-2 сессиям фокусировки в день для формирования постоянной привычки';
+
+  @override
+  String get recTakeBreaks =>
+      'Ваше ежедневное экранное время довольно высокое. Попробуйте делать регулярные перерывы по правилу 20-20-20';
+
+  @override
+  String get recSetDailyGoals =>
+      'Рассмотрите установку ежедневных целей экранного времени для постепенного снижения использования';
+
+  @override
+  String get recBalanceEntertainment =>
+      'Развлекательные приложения занимают большую часть вашего времени. Рассмотрите баланс с более продуктивными занятиями';
+
+  @override
+  String get recReviewUsagePatterns =>
+      'Ваше экранное время значительно увеличилось. Пересмотрите паттерны использования и установите границы';
+
+  @override
+  String get recScheduleFocusedWork =>
+      'Ваше продуктивное время уменьшилось. Попробуйте планировать блоки сфокусированной работы в календаре';
+
+  @override
+  String get recKeepUpGreatWork =>
+      'Продолжайте в том же духе! Ваши привычки экранного времени выглядят здоровыми';
+
+  @override
+  String get recContinueFocusSessions =>
+      'Продолжайте использовать сессии фокусировки для поддержания продуктивности';
+
+  @override
+  String get sheetSummary => 'Сводка';
+
+  @override
+  String get sheetDailyBreakdown => 'Ежедневная Разбивка';
+
+  @override
+  String get sheetApps => 'Приложения';
+
+  @override
+  String get sheetInsights => 'Инсайты';
 }

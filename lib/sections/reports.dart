@@ -20,18 +20,31 @@ class Reports extends StatefulWidget {
 class _ReportsState extends State<Reports> {
   final UsageAnalyticsController _analyticsController =
       UsageAnalyticsController();
-  late final AnalyticsXLSXExporter _xlsxExporter;
+  AnalyticsXLSXExporter? _xlsxExporter; // Make nullable initially
   AnalyticsSummary? _analyticsSummary;
   bool _isLoading = true;
   bool _isExporting = false;
   String? _error;
   PeriodType _selectedPeriod = PeriodType.last7Days;
+  bool _isInitialized = false; // Add flag to prevent multiple calls
 
   @override
   void initState() {
     super.initState();
-    _xlsxExporter = AnalyticsXLSXExporter(_analyticsController);
-    _initializeAndLoadData();
+    // Don't access context here
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    if (!_isInitialized) {
+      _isInitialized = true;
+      _xlsxExporter = AnalyticsXLSXExporter(
+        _analyticsController,
+        AppLocalizations.of(context)!,
+      );
+      _initializeAndLoadData();
+    }
   }
 
   Future<void> _initializeAndLoadData() async {
@@ -159,20 +172,21 @@ class _ReportsState extends State<Reports> {
 
   // Excel Export Methods
   Future<void> _showExportDialog() async {
+    final l10n = AppLocalizations.of(context)!;
+
     await showDialog(
       context: context,
       builder: (context) => ContentDialog(
-        title: const Text('Export Analytics Report'),
+        title: Text(l10n.exportAnalyticsReport),
         content: Column(
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Text('Choose export format:'),
+            Text(l10n.chooseExportFormat),
             const SizedBox(height: 16),
             ListTile(
-              title: const Text('📊 Beautiful Excel Report'),
-              subtitle: const Text(
-                  'Gorgeous, colorful spreadsheet with charts, emojis, and insights ✨'),
+              title: Text(l10n.beautifulExcelReport),
+              subtitle: Text(l10n.beautifulExcelReportDescription),
               leading: const Icon(FluentIcons.excel_document),
               onPressed: () {
                 Navigator.pop(context);
@@ -183,22 +197,22 @@ class _ReportsState extends State<Reports> {
             const Divider(),
             const SizedBox(height: 8),
             Text(
-              'The Excel report includes:',
-              style: TextStyle(
+              l10n.excelReportIncludes,
+              style: const TextStyle(
                 fontSize: 12,
                 fontWeight: FontWeight.w600,
               ),
             ),
             const SizedBox(height: 8),
-            _buildFeatureItem('📊 Summary Sheet - Key metrics with trends'),
-            _buildFeatureItem('📅 Daily Breakdown - Visual usage patterns'),
-            _buildFeatureItem('📱 Apps Sheet - Detailed app rankings'),
-            _buildFeatureItem('💡 Insights - Smart recommendations'),
+            _buildFeatureItem(l10n.summarySheetDescription),
+            _buildFeatureItem(l10n.dailyBreakdownDescription),
+            _buildFeatureItem(l10n.appsSheetDescription),
+            _buildFeatureItem(l10n.insightsDescription),
           ],
         ),
         actions: [
           Button(
-            child: const Text('Cancel'),
+            child: Text(l10n.cancel),
             onPressed: () => Navigator.pop(context),
           ),
         ],
@@ -225,32 +239,34 @@ class _ReportsState extends State<Reports> {
   }
 
   Future<void> _exportComprehensiveReport() async {
+    final l10n = AppLocalizations.of(context)!;
     if (_analyticsSummary == null) return;
 
     setState(() => _isExporting = true);
 
     try {
-      final success = await _xlsxExporter.exportAnalyticsReport(
+      final success = await _xlsxExporter?.exportAnalyticsReport(
         summary: _analyticsSummary!,
         periodLabel: _getPeriodLabel(_selectedPeriod),
         startDate: _startDate,
         endDate: _endDate,
       );
 
-      if (success) {
-        _showSuccessMessage('Beautiful Excel report exported successfully! 🎉');
+      if (success!) {
+        _showSuccessMessage(l10n.beautifulExcelExportSuccess);
       }
     } catch (e) {
-      _showErrorMessage('Failed to export report: $e');
+      _showErrorMessage(l10n.failedToExportReport(e.toString()));
     } finally {
       setState(() => _isExporting = false);
     }
   }
 
   void _showSuccessMessage(String message) {
+    final l10n = AppLocalizations.of(context)!;
     displayInfoBar(context, builder: (context, close) {
       return InfoBar(
-        title: const Text('Export Successful'),
+        title: Text(l10n.exportSuccessful),
         content: Text(message),
         severity: InfoBarSeverity.success,
         action: IconButton(
@@ -262,9 +278,10 @@ class _ReportsState extends State<Reports> {
   }
 
   void _showErrorMessage(String message) {
+    final l10n = AppLocalizations.of(context)!;
     displayInfoBar(context, builder: (context, close) {
       return InfoBar(
-        title: const Text('Export Failed'),
+        title: Text(l10n.exportFailed),
         content: Text(message),
         severity: InfoBarSeverity.error,
         action: IconButton(
@@ -368,28 +385,28 @@ class _ReportsState extends State<Reports> {
         Row(
           children: [
             // Export Button
-            // if (_analyticsSummary != null && !_isLoading)
-            //   Padding(
-            //     padding: const EdgeInsets.only(right: 12),
-            //     child: FilledButton(
-            //       onPressed: _isExporting ? null : _showExportDialog,
-            //       child: Row(
-            //         mainAxisSize: MainAxisSize.min,
-            //         children: [
-            //           if (_isExporting)
-            //             const SizedBox(
-            //               width: 16,
-            //               height: 16,
-            //               child: ProgressRing(strokeWidth: 2),
-            //             )
-            //           else
-            //             const Icon(FluentIcons.excel_document, size: 16),
-            //           const SizedBox(width: 8),
-            //           Text(_isExporting ? 'Exporting...' : 'Export Excel ✨'),
-            //         ],
-            //       ),
-            //     ),
-            //   ),
+            if (_analyticsSummary != null && !_isLoading)
+              Padding(
+                padding: const EdgeInsets.only(right: 12),
+                child: FilledButton(
+                  onPressed: _isExporting ? null : _showExportDialog,
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      if (_isExporting)
+                        const SizedBox(
+                          width: 16,
+                          height: 16,
+                          child: ProgressRing(strokeWidth: 2),
+                        )
+                      else
+                        const Icon(FluentIcons.excel_document, size: 16),
+                      const SizedBox(width: 8),
+                      Text(_isExporting ? 'Exporting...' : 'Export Excel'),
+                    ],
+                  ),
+                ),
+              ),
             // Period Selector
             ComboBox<PeriodType>(
               value: _selectedPeriod,

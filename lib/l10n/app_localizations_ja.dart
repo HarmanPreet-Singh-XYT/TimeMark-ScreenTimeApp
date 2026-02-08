@@ -318,7 +318,7 @@ class AppLocalizationsJa extends AppLocalizations {
   String get customDialogTitle => 'カスタム';
 
   @override
-  String get dateRange => '日付範囲';
+  String get dateRange => '日付範囲：';
 
   @override
   String get specificDate => '特定の日付';
@@ -330,7 +330,7 @@ class AppLocalizationsJa extends AppLocalizations {
   String get endDate => '終了日: ';
 
   @override
-  String get date => '日付: ';
+  String get date => '日付';
 
   @override
   String get cancel => 'キャンセル';
@@ -348,13 +348,13 @@ class AppLocalizationsJa extends AppLocalizations {
   String get startDateBeforeEndDate => '開始日は終了日以前でなければなりません。';
 
   @override
-  String get totalScreenTime => '総スクリーンタイム';
+  String get totalScreenTime => '合計スクリーン時間';
 
   @override
-  String get productiveTime => '生産的な時間';
+  String get productiveTime => '生産的時間';
 
   @override
-  String get mostUsedApp => '最も使用されているアプリ';
+  String get mostUsedApp => '最も使用されたアプリ';
 
   @override
   String get focusSessions => '集中セッション';
@@ -375,10 +375,10 @@ class AppLocalizationsJa extends AppLocalizations {
   }
 
   @override
-  String get dailyScreenTime => '1日のスクリーンタイム';
+  String get dailyScreenTime => '日別スクリーン時間';
 
   @override
-  String get categoryBreakdown => 'カテゴリ別内訳';
+  String get categoryBreakdown => 'カテゴリ内訳';
 
   @override
   String get noDataAvailable => 'データがありません';
@@ -611,10 +611,10 @@ class AppLocalizationsJa extends AppLocalizations {
   String get dailyTotalLimit => '1日の合計制限: ';
 
   @override
-  String get hours => '時間: ';
+  String get hours => '時間';
 
   @override
-  String get minutes => '分: ';
+  String get minutes => '分';
 
   @override
   String get currentUsage => '現在の使用量: ';
@@ -1425,11 +1425,10 @@ class AppLocalizationsJa extends AppLocalizations {
   String get exportStarting => 'エクスポートを開始しています...';
 
   @override
-  String get exportSuccessful =>
-      'エクスポート成功！ファイルはドキュメント/TimeMark-Backupsに保存されました';
+  String get exportSuccessful => 'エクスポート成功';
 
   @override
-  String get exportFailed => 'エクスポートに失敗しました';
+  String get exportFailed => 'エクスポート失敗';
 
   @override
   String get exportComplete => 'エクスポート完了';
@@ -2344,4 +2343,309 @@ class AppLocalizationsJa extends AppLocalizations {
   @override
   String get restartFailedMessage =>
       'アプリを自動的に再起動できませんでした。終了（Cmd+Q）して手動で再起動してください。';
+
+  @override
+  String get exportAnalyticsReport => '分析レポートをエクスポート';
+
+  @override
+  String get chooseExportFormat => 'エクスポート形式を選択：';
+
+  @override
+  String get beautifulExcelReport => '美しいExcelレポート';
+
+  @override
+  String get beautifulExcelReportDescription =>
+      'チャート、絵文字、インサイト付きの華やかでカラフルなスプレッドシート ✨';
+
+  @override
+  String get excelReportIncludes => 'Excelレポートに含まれるもの：';
+
+  @override
+  String get summarySheetDescription => '📊 サマリーシート - トレンド付きの主要指標';
+
+  @override
+  String get dailyBreakdownDescription => '📅 日別内訳 - 視覚的な使用パターン';
+
+  @override
+  String get appsSheetDescription => '📱 アプリシート - 詳細なアプリランキング';
+
+  @override
+  String get insightsDescription => '💡 インサイト - スマートな推奨事項';
+
+  @override
+  String get beautifulExcelExportSuccess => '美しいExcelレポートが正常にエクスポートされました！🎉';
+
+  @override
+  String failedToExportReport(String error) {
+    return 'レポートのエクスポートに失敗しました：$error';
+  }
+
+  @override
+  String get exporting => 'エクスポート中...';
+
+  @override
+  String get exportExcel => 'Excelエクスポート';
+
+  @override
+  String get saveAnalyticsReport => '分析レポートを保存';
+
+  @override
+  String analyticsReportFileName(String timestamp) {
+    return '分析レポート_$timestamp.xlsx';
+  }
+
+  @override
+  String get usageAnalyticsReportTitle => '使用状況分析レポート';
+
+  @override
+  String get generated => '作成日時：';
+
+  @override
+  String get period => '期間：';
+
+  @override
+  String dateRangeValue(String startDate, String endDate) {
+    return '$startDate ～ $endDate';
+  }
+
+  @override
+  String get keyMetrics => '主要指標';
+
+  @override
+  String get metric => '指標';
+
+  @override
+  String get value => '値';
+
+  @override
+  String get change => '変化';
+
+  @override
+  String get trend => '傾向';
+
+  @override
+  String get productivityRate => '生産性率';
+
+  @override
+  String get trendUp => '上昇';
+
+  @override
+  String get trendDown => '下降';
+
+  @override
+  String get trendExcellent => '優秀';
+
+  @override
+  String get trendGood => '良好';
+
+  @override
+  String get trendNeedsImprovement => '改善が必要';
+
+  @override
+  String get trendActive => 'アクティブ';
+
+  @override
+  String get trendNone => 'なし';
+
+  @override
+  String get trendTop => 'トップ';
+
+  @override
+  String get category => 'カテゴリ';
+
+  @override
+  String get percentage => 'パーセント';
+
+  @override
+  String get visual => 'ビジュアル';
+
+  @override
+  String get statistics => '統計';
+
+  @override
+  String get averageDaily => '日平均';
+
+  @override
+  String get highestDay => '最高の日';
+
+  @override
+  String get lowestDay => '最低の日';
+
+  @override
+  String get day => '曜日';
+
+  @override
+  String get applicationUsageDetails => 'アプリケーション使用詳細';
+
+  @override
+  String get totalApps => 'アプリ合計：';
+
+  @override
+  String get productiveApps => '生産的アプリ：';
+
+  @override
+  String get rank => '順位';
+
+  @override
+  String get application => 'アプリケーション';
+
+  @override
+  String get time => '時間';
+
+  @override
+  String get percentOfTotal => '合計の%';
+
+  @override
+  String get type => 'タイプ';
+
+  @override
+  String get usageLevel => '使用レベル';
+
+  @override
+  String get leisure => '娯楽';
+
+  @override
+  String get usageLevelVeryHigh => '非常に高い ||||||||';
+
+  @override
+  String get usageLevelHigh => '高い ||||||';
+
+  @override
+  String get usageLevelMedium => '中程度 ||||';
+
+  @override
+  String get usageLevelLow => '低い ||';
+
+  @override
+  String get keyInsightsTitle => '主要なインサイトと推奨事項';
+
+  @override
+  String get personalizedRecommendations => 'パーソナライズされた推奨事項';
+
+  @override
+  String insightHighDailyUsage(String hours) {
+    return '高い日次使用量：1日平均$hours時間のスクリーン時間を使用しています';
+  }
+
+  @override
+  String insightLowDailyUsage(String hours) {
+    return '低い日次使用量：1日平均$hours時間 - 素晴らしいバランスです！';
+  }
+
+  @override
+  String insightModerateUsage(String hours) {
+    return '適度な使用量：1日平均$hours時間のスクリーン時間';
+  }
+
+  @override
+  String insightExcellentProductivity(String percentage) {
+    return '優れた生産性：スクリーン時間の$percentage%が生産的な作業です！';
+  }
+
+  @override
+  String insightGoodProductivity(String percentage) {
+    return '良好な生産性：スクリーン時間の$percentage%が生産的です';
+  }
+
+  @override
+  String insightLowProductivity(String percentage) {
+    return '低生産性アラート：スクリーン時間のわずか$percentage%が生産的です';
+  }
+
+  @override
+  String insightFocusSessions(int count, String avgPerDay) {
+    return '集中セッション：$countセッション完了（1日平均$avgPerDay）';
+  }
+
+  @override
+  String insightGreatFocusHabit(int count) {
+    return '素晴らしい集中習慣：$count回の完了セッションで素晴らしい集中ルーティンを構築しました！';
+  }
+
+  @override
+  String get insightNoFocusSessions =>
+      '集中セッションなし：生産性を向上させるために集中モードの使用を検討してください';
+
+  @override
+  String insightScreenTimeTrend(String direction, String percentage) {
+    return 'スクリーン時間の傾向：前期間と比較して使用量が$percentage%$direction';
+  }
+
+  @override
+  String insightProductiveTimeTrend(String direction, String percentage) {
+    return '生産的時間の傾向：前期間と比較して生産的時間が$percentage%$direction';
+  }
+
+  @override
+  String get directionIncreased => '増加しました';
+
+  @override
+  String get directionDecreased => '減少しました';
+
+  @override
+  String insightTopCategory(String category, String percentage) {
+    return 'トップカテゴリ：$categoryが合計時間の$percentage%を占めています';
+  }
+
+  @override
+  String insightMostUsedApp(
+      String appName, String percentage, String duration) {
+    return '最も使用されたアプリ：$appNameが時間の$percentage%（$duration）を占めています';
+  }
+
+  @override
+  String insightUsageVaries(String highDay, String multiplier, String lowDay) {
+    return '使用量に大きな差：$highDayは$lowDayより$multiplier倍多い使用量でした';
+  }
+
+  @override
+  String get insightNoInsights => '重要なインサイトはありません';
+
+  @override
+  String get recScheduleFocusSessions =>
+      '生産性を向上させるために、1日を通してより多くの集中セッションをスケジュールしてみてください';
+
+  @override
+  String get recSetAppLimits => '娯楽アプリに制限を設定することを検討してください';
+
+  @override
+  String get recAimForFocusSessions =>
+      '一貫した習慣を構築するために、1日あたり少なくとも1〜2回の集中セッションを目指してください';
+
+  @override
+  String get recTakeBreaks =>
+      '1日のスクリーン時間がかなり長いです。20-20-20ルールを使用して定期的に休憩を取ってみてください';
+
+  @override
+  String get recSetDailyGoals => '使用量を徐々に減らすために、1日のスクリーン時間目標を設定することを検討してください';
+
+  @override
+  String get recBalanceEntertainment =>
+      '娯楽アプリが時間の大部分を占めています。より生産的な活動とのバランスを検討してください';
+
+  @override
+  String get recReviewUsagePatterns =>
+      'スクリーン時間が大幅に増加しました。使用パターンを確認し、境界を設定してください';
+
+  @override
+  String get recScheduleFocusedWork =>
+      '生産的時間が減少しました。カレンダーに集中作業ブロックをスケジュールしてみてください';
+
+  @override
+  String get recKeepUpGreatWork => 'その調子です！スクリーン時間の習慣は健康的に見えます';
+
+  @override
+  String get recContinueFocusSessions => '生産性を維持するために集中セッションを引き続き使用してください';
+
+  @override
+  String get sheetSummary => 'サマリー';
+
+  @override
+  String get sheetDailyBreakdown => '日別内訳';
+
+  @override
+  String get sheetApps => 'アプリ';
+
+  @override
+  String get sheetInsights => 'インサイト';
 }

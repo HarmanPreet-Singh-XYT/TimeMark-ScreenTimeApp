@@ -1759,5 +1759,219 @@
   "restartFailedTitle": "Restart Failed",
   "restartFailedMessage": "Could not restart the app automatically. Please quit (Cmd+Q) and relaunch manually.",
   "ok": "OK",
-  "error": "Error"
+  "error": "Error",
+  "exportAnalyticsReport": "Export Analytics Report",
+  "chooseExportFormat": "Choose export format:",
+  "beautifulExcelReport": "Beautiful Excel Report",
+  "beautifulExcelReportDescription": "Gorgeous, colorful spreadsheet with charts, emojis, and insights ✨",
+  "excelReportIncludes": "The Excel report includes:",
+  "summarySheetDescription": "📊 Summary Sheet - Key metrics with trends",
+  "dailyBreakdownDescription": "📅 Daily Breakdown - Visual usage patterns",
+  "appsSheetDescription": "📱 Apps Sheet - Detailed app rankings",
+  "insightsDescription": "💡 Insights - Smart recommendations",
+  "cancel": "Cancel",
+  "exportSuccessful": "Export Successful",
+  "beautifulExcelExportSuccess": "Beautiful Excel report exported successfully! 🎉",
+  "exportFailed": "Export Failed",
+  "failedToExportReport": "Failed to export report: {error}",
+  "@failedToExportReport": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "exporting": "Exporting...",
+  "exportExcel": "Export Excel",
+  "saveAnalyticsReport": "Save Analytics Report",
+  "analyticsReportFileName": "analytics_report_{timestamp}.xlsx",
+  "@analyticsReportFileName": {
+    "placeholders": {
+      "timestamp": {"type": "String"}
+    }
+  },
+  
+  "usageAnalyticsReportTitle": "USAGE ANALYTICS REPORT",
+  "generated": "Generated:",
+  "period": "Period:",
+  "dateRange": "Date Range:",
+  "dateRangeValue": "{startDate} to {endDate}",
+  "@dateRangeValue": {
+    "placeholders": {
+      "startDate": {"type": "String"},
+      "endDate": {"type": "String"}
+    }
+  },
+  
+  "keyMetrics": "KEY METRICS",
+  "metric": "Metric",
+  "value": "Value",
+  "change": "Change",
+  "trend": "Trend",
+  
+  "totalScreenTime": "Total Screen Time",
+  "productiveTime": "Productive Time",
+  "productivityRate": "Productivity Rate",
+  "focusSessions": "Focus Sessions",
+  "mostUsedApp": "Most Used App",
+  
+  "trendUp": "Up",
+  "trendDown": "Down",
+  "trendExcellent": "Excellent",
+  "trendGood": "Good",
+  "trendNeedsImprovement": "Needs Improvement",
+  "trendActive": "Active",
+  "trendNone": "None",
+  "trendTop": "Top",
+  
+  "categoryBreakdown": "CATEGORY BREAKDOWN",
+  "category": "Category",
+  "percentage": "Percentage",
+  "visual": "Visual",
+  
+  "dailyScreenTime": "DAILY SCREEN TIME",
+  "statistics": "STATISTICS",
+  "averageDaily": "Average Daily",
+  "highestDay": "Highest Day",
+  "lowestDay": "Lowest Day",
+  
+  "date": "Date",
+  "day": "Day",
+  "hours": "Hours",
+  "minutes": "Minutes",
+  
+  "applicationUsageDetails": "APPLICATION USAGE DETAILS",
+  "totalApps": "Total Apps:",
+  "productiveApps": "Productive Apps:",
+  
+  "rank": "Rank",
+  "application": "Application",
+  "time": "Time",
+  "percentOfTotal": "% of Total",
+  "type": "Type",
+  "usageLevel": "Usage Level",
+  
+  "productive": "Productive",
+  "leisure": "Leisure",
+  
+  "usageLevelVeryHigh": "Very High ||||||||",
+  "usageLevelHigh": "High ||||||",
+  "usageLevelMedium": "Medium ||||",
+  "usageLevelLow": "Low ||",
+  
+  "keyInsightsTitle": "KEY INSIGHTS & RECOMMENDATIONS",
+  "personalizedRecommendations": "PERSONALIZED RECOMMENDATIONS",
+  
+  "insightHighDailyUsage": "High Daily Usage: You're averaging {hours} hours per day of screen time",
+  "@insightHighDailyUsage": {
+    "placeholders": {"hours": {"type": "String"}}
+  },
+  "insightLowDailyUsage": "Low Daily Usage: You're averaging {hours} hours per day - great balance!",
+  "@insightLowDailyUsage": {
+    "placeholders": {"hours": {"type": "String"}}
+  },
+  "insightModerateUsage": "Moderate Usage: Averaging {hours} hours per day of screen time",
+  "@insightModerateUsage": {
+    "placeholders": {"hours": {"type": "String"}}
+  },
+  
+  "insightExcellentProductivity": "Excellent Productivity: {percentage}% of your screen time is productive work!",
+  "@insightExcellentProductivity": {
+    "placeholders": {"percentage": {"type": "String"}}
+  },
+  "insightGoodProductivity": "Good Productivity: {percentage}% of your screen time is productive",
+  "@insightGoodProductivity": {
+    "placeholders": {"percentage": {"type": "String"}}
+  },
+  "insightLowProductivity": "Low Productivity Alert: Only {percentage}% of screen time is productive",
+  "@insightLowProductivity": {
+    "placeholders": {"percentage": {"type": "String"}}
+  },
+  
+  "insightFocusSessions": "Focus Sessions: Completed {count} sessions ({avgPerDay} per day on average)",
+  "@insightFocusSessions": {
+    "placeholders": {
+      "count": {"type": "int"},
+      "avgPerDay": {"type": "String"}
+    }
+  },
+  "insightGreatFocusHabit": "Great Focus Habit: You've built an amazing focus routine with {count} completed sessions!",
+  "@insightGreatFocusHabit": {
+    "placeholders": {"count": {"type": "int"}}
+  },
+  "insightNoFocusSessions": "No Focus Sessions: Consider using focus mode to boost your productivity",
+  
+  "insightScreenTimeTrend": "Screen Time Trend: Your usage has {direction} by {percentage}% compared to the previous period",
+  "@insightScreenTimeTrend": {
+    "placeholders": {
+      "direction": {"type": "String"},
+      "percentage": {"type": "String"}
+    }
+  },
+  "insightProductiveTimeTrend": "Productive Time Trend: Your productive time has {direction} by {percentage}% compared to previous period",
+  "@insightProductiveTimeTrend": {
+    "placeholders": {
+      "direction": {"type": "String"},
+      "percentage": {"type": "String"}
+    }
+  },
+  
+  "directionIncreased": "increased",
+  "directionDecreased": "decreased",
+  
+  "insightTopCategory": "Top Category: {category} dominates with {percentage}% of your total time",
+  "@insightTopCategory": {
+    "placeholders": {
+      "category": {"type": "String"},
+      "percentage": {"type": "String"}
+    }
+  },
+  
+  "insightMostUsedApp": "Most Used App: {appName} accounts for {percentage}% of your time ({duration})",
+  "@insightMostUsedApp": {
+    "placeholders": {
+      "appName": {"type": "String"},
+      "percentage": {"type": "String"},
+      "duration": {"type": "String"}
+    }
+  },
+  
+  "insightUsageVaries": "Usage Varies Significantly: {highDay} had {multiplier}x more usage than {lowDay}",
+  "@insightUsageVaries": {
+    "placeholders": {
+      "highDay": {"type": "String"},
+      "multiplier": {"type": "String"},
+      "lowDay": {"type": "String"}
+    }
+  },
+  
+  "insightNoInsights": "No significant insights available",
+  
+  "recScheduleFocusSessions": "Try scheduling more focus sessions throughout your day to boost productivity",
+  "recSetAppLimits": "Consider setting app limits on leisure applications",
+  "recAimForFocusSessions": "Aim for at least 1-2 focus sessions per day to build a consistent habit",
+  "recTakeBreaks": "Your daily screen time is quite high. Try taking regular breaks using the 20-20-20 rule",
+  "recSetDailyGoals": "Consider setting daily screen time goals to gradually reduce usage",
+  "recBalanceEntertainment": "Entertainment apps account for a large portion of your time. Consider balancing with more productive activities",
+  "recReviewUsagePatterns": "Your screen time has increased significantly. Review your usage patterns and set boundaries",
+  "recScheduleFocusedWork": "Your productive time has decreased. Try scheduling focused work blocks in your calendar",
+  "recKeepUpGreatWork": "Keep up the great work! Your screen time habits look healthy",
+  "recContinueFocusSessions": "Continue using focus sessions to maintain productivity",
+  
+  "durationHoursMinutes": "{hours}h {minutes}m",
+  "@durationHoursMinutes": {
+    "placeholders": {
+      "hours": {"type": "int"},
+      "minutes": {"type": "int"}
+    }
+  },
+  "durationMinutesOnly": "{minutes}m",
+  "@durationMinutesOnly": {
+    "placeholders": {"minutes": {"type": "int"}}
+  },
+  
+  "sheetSummary": "Summary",
+  "sheetDailyBreakdown": "Daily Breakdown",
+  "sheetApps": "Apps",
+  "sheetInsights": "Insights"
 }

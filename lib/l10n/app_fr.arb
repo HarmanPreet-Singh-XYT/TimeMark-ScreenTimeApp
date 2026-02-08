@@ -1632,6 +1632,133 @@
   "restartFailedTitle": "Échec du redémarrage",
   "restartFailedMessage": "Impossible de redémarrer automatiquement l’application. Quittez-la (Cmd+Q) et relancez-la manuellement.",
   "ok": "OK",
-  "error": "Erreur"
-
+  "error": "Erreur",
+  "exportAnalyticsReport": "Exporter le Rapport d'Analyse",
+  "chooseExportFormat": "Choisissez le format d'exportation :",
+  "beautifulExcelReport": "Magnifique Rapport Excel",
+  "beautifulExcelReportDescription": "Feuille de calcul colorée et magnifique avec graphiques, emojis et insights ✨",
+  "excelReportIncludes": "Le rapport Excel comprend :",
+  "summarySheetDescription": "📊 Feuille de Résumé - Métriques clés avec tendances",
+  "dailyBreakdownDescription": "📅 Détail Quotidien - Modèles d'utilisation visuels",
+  "appsSheetDescription": "📱 Feuille Apps - Classements détaillés des applications",
+  "insightsDescription": "💡 Insights - Recommandations intelligentes",
+  "cancel": "Annuler",
+  "exportSuccessful": "Exportation Réussie",
+  "beautifulExcelExportSuccess": "Magnifique rapport Excel exporté avec succès ! 🎉",
+  "exportFailed": "Exportation Échouée",
+  "failedToExportReport": "Échec de l'exportation du rapport : {error}",
+  "exporting": "Exportation...",
+  "exportExcel": "Exporter Excel",
+  "saveAnalyticsReport": "Enregistrer le Rapport d'Analyse",
+  "analyticsReportFileName": "rapport_analytique_{timestamp}.xlsx",
+  
+  "usageAnalyticsReportTitle": "RAPPORT D'ANALYSE D'UTILISATION",
+  "generated": "Généré :",
+  "period": "Période :",
+  "dateRange": "Plage de Dates :",
+  "dateRangeValue": "{startDate} au {endDate}",
+  
+  "keyMetrics": "MÉTRIQUES CLÉS",
+  "metric": "Métrique",
+  "value": "Valeur",
+  "change": "Changement",
+  "trend": "Tendance",
+  
+  "totalScreenTime": "Temps d'Écran Total",
+  "productiveTime": "Temps Productif",
+  "productivityRate": "Taux de Productivité",
+  "focusSessions": "Sessions de Concentration",
+  "mostUsedApp": "App la Plus Utilisée",
+  
+  "trendUp": "Hausse",
+  "trendDown": "Baisse",
+  "trendExcellent": "Excellent",
+  "trendGood": "Bon",
+  "trendNeedsImprovement": "À Améliorer",
+  "trendActive": "Actif",
+  "trendNone": "Aucun",
+  "trendTop": "Top",
+  
+  "categoryBreakdown": "RÉPARTITION PAR CATÉGORIE",
+  "category": "Catégorie",
+  "percentage": "Pourcentage",
+  "visual": "Visuel",
+  
+  "dailyScreenTime": "TEMPS D'ÉCRAN QUOTIDIEN",
+  "statistics": "STATISTIQUES",
+  "averageDaily": "Moyenne Quotidienne",
+  "highestDay": "Jour le Plus Élevé",
+  "lowestDay": "Jour le Plus Bas",
+  
+  "date": "Date",
+  "day": "Jour",
+  "hours": "Heures",
+  "minutes": "Minutes",
+  
+  "applicationUsageDetails": "DÉTAILS D'UTILISATION DES APPLICATIONS",
+  "totalApps": "Total des Apps :",
+  "productiveApps": "Apps Productives :",
+  
+  "rank": "Rang",
+  "application": "Application",
+  "time": "Temps",
+  "percentOfTotal": "% du Total",
+  "type": "Type",
+  "usageLevel": "Niveau d'Utilisation",
+  
+  "productive": "Productif",
+  "leisure": "Loisir",
+  
+  "usageLevelVeryHigh": "Très Élevé ||||||||",
+  "usageLevelHigh": "Élevé ||||||",
+  "usageLevelMedium": "Moyen ||||",
+  "usageLevelLow": "Faible ||",
+  
+  "keyInsightsTitle": "PERSPECTIVES ET RECOMMANDATIONS CLÉS",
+  "personalizedRecommendations": "RECOMMANDATIONS PERSONNALISÉES",
+  
+  "insightHighDailyUsage": "Utilisation Quotidienne Élevée : Vous utilisez en moyenne {hours} heures par jour",
+  "insightLowDailyUsage": "Faible Utilisation Quotidienne : En moyenne {hours} heures par jour - excellent équilibre !",
+  "insightModerateUsage": "Utilisation Modérée : En moyenne {hours} heures de temps d'écran par jour",
+  
+  "insightExcellentProductivity": "Excellente Productivité : {percentage}% de votre temps d'écran est du travail productif !",
+  "insightGoodProductivity": "Bonne Productivité : {percentage}% de votre temps d'écran est productif",
+  "insightLowProductivity": "Alerte Faible Productivité : Seulement {percentage}% du temps d'écran est productif",
+  
+  "insightFocusSessions": "Sessions de Concentration : {count} sessions complétées ({avgPerDay} par jour en moyenne)",
+  "insightGreatFocusHabit": "Excellente Habitude de Concentration : Vous avez construit une routine incroyable avec {count} sessions complétées !",
+  "insightNoFocusSessions": "Aucune Session de Concentration : Pensez à utiliser le mode concentration pour augmenter votre productivité",
+  
+  "insightScreenTimeTrend": "Tendance Temps d'Écran : Votre utilisation a {direction} de {percentage}% par rapport à la période précédente",
+  "insightProductiveTimeTrend": "Tendance Temps Productif : Votre temps productif a {direction} de {percentage}% par rapport à la période précédente",
+  
+  "directionIncreased": "augmenté",
+  "directionDecreased": "diminué",
+  
+  "insightTopCategory": "Catégorie Principale : {category} domine avec {percentage}% de votre temps total",
+  
+  "insightMostUsedApp": "App la Plus Utilisée : {appName} représente {percentage}% de votre temps ({duration})",
+  
+  "insightUsageVaries": "L'Utilisation Varie Significativement : {highDay} avait {multiplier}x plus d'utilisation que {lowDay}",
+  
+  "insightNoInsights": "Aucune perspective significative disponible",
+  
+  "recScheduleFocusSessions": "Essayez de planifier plus de sessions de concentration tout au long de la journée pour augmenter la productivité",
+  "recSetAppLimits": "Envisagez de définir des limites sur les applications de loisir",
+  "recAimForFocusSessions": "Visez au moins 1-2 sessions de concentration par jour pour créer une habitude constante",
+  "recTakeBreaks": "Votre temps d'écran quotidien est assez élevé. Essayez de prendre des pauses régulières en utilisant la règle 20-20-20",
+  "recSetDailyGoals": "Envisagez de définir des objectifs quotidiens de temps d'écran pour réduire progressivement l'utilisation",
+  "recBalanceEntertainment": "Les apps de divertissement occupent une grande partie de votre temps. Envisagez d'équilibrer avec des activités plus productives",
+  "recReviewUsagePatterns": "Votre temps d'écran a considérablement augmenté. Examinez vos habitudes d'utilisation et fixez des limites",
+  "recScheduleFocusedWork": "Votre temps productif a diminué. Essayez de planifier des blocs de travail concentré dans votre calendrier",
+  "recKeepUpGreatWork": "Continuez comme ça ! Vos habitudes de temps d'écran semblent saines",
+  "recContinueFocusSessions": "Continuez à utiliser les sessions de concentration pour maintenir la productivité",
+  
+  "durationHoursMinutes": "{hours}h {minutes}m",
+  "durationMinutesOnly": "{minutes}m",
+  
+  "sheetSummary": "Résumé",
+  "sheetDailyBreakdown": "Détail Quotidien",
+  "sheetApps": "Apps",
+  "sheetInsights": "Perspectives"
 }

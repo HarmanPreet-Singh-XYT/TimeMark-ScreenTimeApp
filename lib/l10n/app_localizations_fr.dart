@@ -341,7 +341,7 @@ class AppLocalizationsFr extends AppLocalizations {
   String get customDialogTitle => 'Personnalisé';
 
   @override
-  String get dateRange => 'Plage de Dates';
+  String get dateRange => 'Plage de Dates :';
 
   @override
   String get specificDate => 'Date Spécifique';
@@ -353,7 +353,7 @@ class AppLocalizationsFr extends AppLocalizations {
   String get endDate => 'Date de Fin : ';
 
   @override
-  String get date => 'Date : ';
+  String get date => 'Date';
 
   @override
   String get cancel => 'Annuler';
@@ -378,7 +378,7 @@ class AppLocalizationsFr extends AppLocalizations {
   String get productiveTime => 'Temps Productif';
 
   @override
-  String get mostUsedApp => 'Application la Plus Utilisée';
+  String get mostUsedApp => 'App la Plus Utilisée';
 
   @override
   String get focusSessions => 'Sessions de Concentration';
@@ -399,10 +399,10 @@ class AppLocalizationsFr extends AppLocalizations {
   }
 
   @override
-  String get dailyScreenTime => 'Temps d\'Écran Quotidien';
+  String get dailyScreenTime => 'TEMPS D\'ÉCRAN QUOTIDIEN';
 
   @override
-  String get categoryBreakdown => 'Répartition par Catégorie';
+  String get categoryBreakdown => 'RÉPARTITION PAR CATÉGORIE';
 
   @override
   String get noDataAvailable => 'Aucune donnée disponible';
@@ -645,10 +645,10 @@ class AppLocalizationsFr extends AppLocalizations {
   String get dailyTotalLimit => 'Limite Quotidienne Totale : ';
 
   @override
-  String get hours => 'Heures : ';
+  String get hours => 'Heures';
 
   @override
-  String get minutes => 'Minutes : ';
+  String get minutes => 'Minutes';
 
   @override
   String get currentUsage => 'Utilisation Actuelle : ';
@@ -1475,11 +1475,10 @@ class AppLocalizationsFr extends AppLocalizations {
   String get exportStarting => 'Démarrage de l\'exportation...';
 
   @override
-  String get exportSuccessful =>
-      'Exportation réussie ! Fichier enregistré dans Documents/TimeMark-Backups';
+  String get exportSuccessful => 'Exportation Réussie';
 
   @override
-  String get exportFailed => 'Échec de l\'exportation';
+  String get exportFailed => 'Exportation Échouée';
 
   @override
   String get exportComplete => 'Exportation terminée';
@@ -2469,4 +2468,319 @@ class AppLocalizationsFr extends AppLocalizations {
   @override
   String get restartFailedMessage =>
       'Impossible de redémarrer automatiquement l’application. Quittez-la (Cmd+Q) et relancez-la manuellement.';
+
+  @override
+  String get exportAnalyticsReport => 'Exporter le Rapport d\'Analyse';
+
+  @override
+  String get chooseExportFormat => 'Choisissez le format d\'exportation :';
+
+  @override
+  String get beautifulExcelReport => 'Magnifique Rapport Excel';
+
+  @override
+  String get beautifulExcelReportDescription =>
+      'Feuille de calcul colorée et magnifique avec graphiques, emojis et insights ✨';
+
+  @override
+  String get excelReportIncludes => 'Le rapport Excel comprend :';
+
+  @override
+  String get summarySheetDescription =>
+      '📊 Feuille de Résumé - Métriques clés avec tendances';
+
+  @override
+  String get dailyBreakdownDescription =>
+      '📅 Détail Quotidien - Modèles d\'utilisation visuels';
+
+  @override
+  String get appsSheetDescription =>
+      '📱 Feuille Apps - Classements détaillés des applications';
+
+  @override
+  String get insightsDescription =>
+      '💡 Insights - Recommandations intelligentes';
+
+  @override
+  String get beautifulExcelExportSuccess =>
+      'Magnifique rapport Excel exporté avec succès ! 🎉';
+
+  @override
+  String failedToExportReport(String error) {
+    return 'Échec de l\'exportation du rapport : $error';
+  }
+
+  @override
+  String get exporting => 'Exportation...';
+
+  @override
+  String get exportExcel => 'Exporter Excel';
+
+  @override
+  String get saveAnalyticsReport => 'Enregistrer le Rapport d\'Analyse';
+
+  @override
+  String analyticsReportFileName(String timestamp) {
+    return 'rapport_analytique_$timestamp.xlsx';
+  }
+
+  @override
+  String get usageAnalyticsReportTitle => 'RAPPORT D\'ANALYSE D\'UTILISATION';
+
+  @override
+  String get generated => 'Généré :';
+
+  @override
+  String get period => 'Période :';
+
+  @override
+  String dateRangeValue(String startDate, String endDate) {
+    return '$startDate au $endDate';
+  }
+
+  @override
+  String get keyMetrics => 'MÉTRIQUES CLÉS';
+
+  @override
+  String get metric => 'Métrique';
+
+  @override
+  String get value => 'Valeur';
+
+  @override
+  String get change => 'Changement';
+
+  @override
+  String get trend => 'Tendance';
+
+  @override
+  String get productivityRate => 'Taux de Productivité';
+
+  @override
+  String get trendUp => 'Hausse';
+
+  @override
+  String get trendDown => 'Baisse';
+
+  @override
+  String get trendExcellent => 'Excellent';
+
+  @override
+  String get trendGood => 'Bon';
+
+  @override
+  String get trendNeedsImprovement => 'À Améliorer';
+
+  @override
+  String get trendActive => 'Actif';
+
+  @override
+  String get trendNone => 'Aucun';
+
+  @override
+  String get trendTop => 'Top';
+
+  @override
+  String get category => 'Catégorie';
+
+  @override
+  String get percentage => 'Pourcentage';
+
+  @override
+  String get visual => 'Visuel';
+
+  @override
+  String get statistics => 'STATISTIQUES';
+
+  @override
+  String get averageDaily => 'Moyenne Quotidienne';
+
+  @override
+  String get highestDay => 'Jour le Plus Élevé';
+
+  @override
+  String get lowestDay => 'Jour le Plus Bas';
+
+  @override
+  String get day => 'Jour';
+
+  @override
+  String get applicationUsageDetails =>
+      'DÉTAILS D\'UTILISATION DES APPLICATIONS';
+
+  @override
+  String get totalApps => 'Total des Apps :';
+
+  @override
+  String get productiveApps => 'Apps Productives :';
+
+  @override
+  String get rank => 'Rang';
+
+  @override
+  String get application => 'Application';
+
+  @override
+  String get time => 'Temps';
+
+  @override
+  String get percentOfTotal => '% du Total';
+
+  @override
+  String get type => 'Type';
+
+  @override
+  String get usageLevel => 'Niveau d\'Utilisation';
+
+  @override
+  String get leisure => 'Loisir';
+
+  @override
+  String get usageLevelVeryHigh => 'Très Élevé ||||||||';
+
+  @override
+  String get usageLevelHigh => 'Élevé ||||||';
+
+  @override
+  String get usageLevelMedium => 'Moyen ||||';
+
+  @override
+  String get usageLevelLow => 'Faible ||';
+
+  @override
+  String get keyInsightsTitle => 'PERSPECTIVES ET RECOMMANDATIONS CLÉS';
+
+  @override
+  String get personalizedRecommendations => 'RECOMMANDATIONS PERSONNALISÉES';
+
+  @override
+  String insightHighDailyUsage(String hours) {
+    return 'Utilisation Quotidienne Élevée : Vous utilisez en moyenne $hours heures par jour';
+  }
+
+  @override
+  String insightLowDailyUsage(String hours) {
+    return 'Faible Utilisation Quotidienne : En moyenne $hours heures par jour - excellent équilibre !';
+  }
+
+  @override
+  String insightModerateUsage(String hours) {
+    return 'Utilisation Modérée : En moyenne $hours heures de temps d\'écran par jour';
+  }
+
+  @override
+  String insightExcellentProductivity(String percentage) {
+    return 'Excellente Productivité : $percentage% de votre temps d\'écran est du travail productif !';
+  }
+
+  @override
+  String insightGoodProductivity(String percentage) {
+    return 'Bonne Productivité : $percentage% de votre temps d\'écran est productif';
+  }
+
+  @override
+  String insightLowProductivity(String percentage) {
+    return 'Alerte Faible Productivité : Seulement $percentage% du temps d\'écran est productif';
+  }
+
+  @override
+  String insightFocusSessions(int count, String avgPerDay) {
+    return 'Sessions de Concentration : $count sessions complétées ($avgPerDay par jour en moyenne)';
+  }
+
+  @override
+  String insightGreatFocusHabit(int count) {
+    return 'Excellente Habitude de Concentration : Vous avez construit une routine incroyable avec $count sessions complétées !';
+  }
+
+  @override
+  String get insightNoFocusSessions =>
+      'Aucune Session de Concentration : Pensez à utiliser le mode concentration pour augmenter votre productivité';
+
+  @override
+  String insightScreenTimeTrend(String direction, String percentage) {
+    return 'Tendance Temps d\'Écran : Votre utilisation a $direction de $percentage% par rapport à la période précédente';
+  }
+
+  @override
+  String insightProductiveTimeTrend(String direction, String percentage) {
+    return 'Tendance Temps Productif : Votre temps productif a $direction de $percentage% par rapport à la période précédente';
+  }
+
+  @override
+  String get directionIncreased => 'augmenté';
+
+  @override
+  String get directionDecreased => 'diminué';
+
+  @override
+  String insightTopCategory(String category, String percentage) {
+    return 'Catégorie Principale : $category domine avec $percentage% de votre temps total';
+  }
+
+  @override
+  String insightMostUsedApp(
+      String appName, String percentage, String duration) {
+    return 'App la Plus Utilisée : $appName représente $percentage% de votre temps ($duration)';
+  }
+
+  @override
+  String insightUsageVaries(String highDay, String multiplier, String lowDay) {
+    return 'L\'Utilisation Varie Significativement : $highDay avait ${multiplier}x plus d\'utilisation que $lowDay';
+  }
+
+  @override
+  String get insightNoInsights => 'Aucune perspective significative disponible';
+
+  @override
+  String get recScheduleFocusSessions =>
+      'Essayez de planifier plus de sessions de concentration tout au long de la journée pour augmenter la productivité';
+
+  @override
+  String get recSetAppLimits =>
+      'Envisagez de définir des limites sur les applications de loisir';
+
+  @override
+  String get recAimForFocusSessions =>
+      'Visez au moins 1-2 sessions de concentration par jour pour créer une habitude constante';
+
+  @override
+  String get recTakeBreaks =>
+      'Votre temps d\'écran quotidien est assez élevé. Essayez de prendre des pauses régulières en utilisant la règle 20-20-20';
+
+  @override
+  String get recSetDailyGoals =>
+      'Envisagez de définir des objectifs quotidiens de temps d\'écran pour réduire progressivement l\'utilisation';
+
+  @override
+  String get recBalanceEntertainment =>
+      'Les apps de divertissement occupent une grande partie de votre temps. Envisagez d\'équilibrer avec des activités plus productives';
+
+  @override
+  String get recReviewUsagePatterns =>
+      'Votre temps d\'écran a considérablement augmenté. Examinez vos habitudes d\'utilisation et fixez des limites';
+
+  @override
+  String get recScheduleFocusedWork =>
+      'Votre temps productif a diminué. Essayez de planifier des blocs de travail concentré dans votre calendrier';
+
+  @override
+  String get recKeepUpGreatWork =>
+      'Continuez comme ça ! Vos habitudes de temps d\'écran semblent saines';
+
+  @override
+  String get recContinueFocusSessions =>
+      'Continuez à utiliser les sessions de concentration pour maintenir la productivité';
+
+  @override
+  String get sheetSummary => 'Résumé';
+
+  @override
+  String get sheetDailyBreakdown => 'Détail Quotidien';
+
+  @override
+  String get sheetApps => 'Apps';
+
+  @override
+  String get sheetInsights => 'Perspectives';
 }

@@ -1629,5 +1629,133 @@
   "restartFailedTitle": "Gagal memulai ulang",
   "restartFailedMessage": "Aplikasi tidak dapat dimulai ulang secara otomatis. Silakan keluar (Cmd+Q) dan buka kembali secara manual.",
   "ok": "OK",
-  "error": "Kesalahan"
+  "error": "Kesalahan",
+  "exportAnalyticsReport": "Ekspor Laporan Analitik",
+  "chooseExportFormat": "Pilih format ekspor:",
+  "beautifulExcelReport": "Laporan Excel yang Indah",
+  "beautifulExcelReportDescription": "Spreadsheet yang indah dan berwarna dengan grafik, emoji, dan wawasan ✨",
+  "excelReportIncludes": "Laporan Excel meliputi:",
+  "summarySheetDescription": "📊 Lembar Ringkasan - Metrik utama dengan tren",
+  "dailyBreakdownDescription": "📅 Rincian Harian - Pola penggunaan visual",
+  "appsSheetDescription": "📱 Lembar Aplikasi - Peringkat aplikasi terperinci",
+  "insightsDescription": "💡 Wawasan - Rekomendasi cerdas",
+  "cancel": "Batal",
+  "exportSuccessful": "Ekspor Berhasil",
+  "beautifulExcelExportSuccess": "Laporan Excel yang indah berhasil diekspor! 🎉",
+  "exportFailed": "Ekspor Gagal",
+  "failedToExportReport": "Gagal mengekspor laporan: {error}",
+  "exporting": "Mengekspor...",
+  "exportExcel": "Ekspor Excel",
+  "saveAnalyticsReport": "Simpan Laporan Analitik",
+  "analyticsReportFileName": "laporan_analitik_{timestamp}.xlsx",
+  
+  "usageAnalyticsReportTitle": "LAPORAN ANALISIS PENGGUNAAN",
+  "generated": "Dibuat:",
+  "period": "Periode:",
+  "dateRange": "Rentang Tanggal:",
+  "dateRangeValue": "{startDate} sampai {endDate}",
+  
+  "keyMetrics": "METRIK UTAMA",
+  "metric": "Metrik",
+  "value": "Nilai",
+  "change": "Perubahan",
+  "trend": "Tren",
+  
+  "totalScreenTime": "Total Waktu Layar",
+  "productiveTime": "Waktu Produktif",
+  "productivityRate": "Tingkat Produktivitas",
+  "focusSessions": "Sesi Fokus",
+  "mostUsedApp": "Aplikasi Paling Sering Digunakan",
+  
+  "trendUp": "Naik",
+  "trendDown": "Turun",
+  "trendExcellent": "Sangat Baik",
+  "trendGood": "Baik",
+  "trendNeedsImprovement": "Perlu Perbaikan",
+  "trendActive": "Aktif",
+  "trendNone": "Tidak Ada",
+  "trendTop": "Teratas",
+  
+  "categoryBreakdown": "RINCIAN KATEGORI",
+  "category": "Kategori",
+  "percentage": "Persentase",
+  "visual": "Visual",
+  
+  "dailyScreenTime": "WAKTU LAYAR HARIAN",
+  "statistics": "STATISTIK",
+  "averageDaily": "Rata-rata Harian",
+  "highestDay": "Hari Tertinggi",
+  "lowestDay": "Hari Terendah",
+  
+  "date": "Tanggal",
+  "day": "Hari",
+  "hours": "Jam",
+  "minutes": "Menit",
+  
+  "applicationUsageDetails": "DETAIL PENGGUNAAN APLIKASI",
+  "totalApps": "Total Aplikasi:",
+  "productiveApps": "Aplikasi Produktif:",
+  
+  "rank": "Peringkat",
+  "application": "Aplikasi",
+  "time": "Waktu",
+  "percentOfTotal": "% dari Total",
+  "type": "Tipe",
+  "usageLevel": "Tingkat Penggunaan",
+  
+  "productive": "Produktif",
+  "leisure": "Hiburan",
+  
+  "usageLevelVeryHigh": "Sangat Tinggi ||||||||",
+  "usageLevelHigh": "Tinggi ||||||",
+  "usageLevelMedium": "Sedang ||||",
+  "usageLevelLow": "Rendah ||",
+  
+  "keyInsightsTitle": "WAWASAN DAN REKOMENDASI UTAMA",
+  "personalizedRecommendations": "REKOMENDASI PERSONAL",
+  
+  "insightHighDailyUsage": "Penggunaan Harian Tinggi: Anda rata-rata menggunakan {hours} jam waktu layar per hari",
+  "insightLowDailyUsage": "Penggunaan Harian Rendah: Anda rata-rata {hours} jam per hari - keseimbangan yang bagus!",
+  "insightModerateUsage": "Penggunaan Sedang: Rata-rata {hours} jam waktu layar per hari",
+  
+  "insightExcellentProductivity": "Produktivitas Sangat Baik: {percentage}% waktu layar Anda adalah kerja produktif!",
+  "insightGoodProductivity": "Produktivitas Baik: {percentage}% waktu layar Anda produktif",
+  "insightLowProductivity": "Peringatan Produktivitas Rendah: Hanya {percentage}% waktu layar yang produktif",
+  
+  "insightFocusSessions": "Sesi Fokus: Menyelesaikan {count} sesi (rata-rata {avgPerDay} per hari)",
+  "insightGreatFocusHabit": "Kebiasaan Fokus Hebat: Anda telah membangun rutinitas fokus yang luar biasa dengan {count} sesi selesai!",
+  "insightNoFocusSessions": "Tidak Ada Sesi Fokus: Pertimbangkan menggunakan mode fokus untuk meningkatkan produktivitas Anda",
+  
+  "insightScreenTimeTrend": "Tren Waktu Layar: Penggunaan Anda {direction} {percentage}% dibandingkan periode sebelumnya",
+  "insightProductiveTimeTrend": "Tren Waktu Produktif: Waktu produktif Anda {direction} {percentage}% dibandingkan periode sebelumnya",
+  
+  "directionIncreased": "meningkat",
+  "directionDecreased": "menurun",
+  
+  "insightTopCategory": "Kategori Teratas: {category} mendominasi dengan {percentage}% dari total waktu Anda",
+  
+  "insightMostUsedApp": "Aplikasi Paling Sering Digunakan: {appName} menyumbang {percentage}% dari waktu Anda ({duration})",
+  
+  "insightUsageVaries": "Penggunaan Bervariasi Signifikan: {highDay} memiliki penggunaan {multiplier}x lebih banyak dari {lowDay}",
+  
+  "insightNoInsights": "Tidak ada wawasan signifikan tersedia",
+  
+  "recScheduleFocusSessions": "Coba jadwalkan lebih banyak sesi fokus sepanjang hari untuk meningkatkan produktivitas",
+  "recSetAppLimits": "Pertimbangkan untuk menetapkan batas pada aplikasi hiburan",
+  "recAimForFocusSessions": "Targetkan setidaknya 1-2 sesi fokus per hari untuk membangun kebiasaan konsisten",
+  "recTakeBreaks": "Waktu layar harian Anda cukup tinggi. Coba ambil istirahat teratur menggunakan aturan 20-20-20",
+  "recSetDailyGoals": "Pertimbangkan untuk menetapkan target waktu layar harian untuk mengurangi penggunaan secara bertahap",
+  "recBalanceEntertainment": "Aplikasi hiburan menyumbang sebagian besar waktu Anda. Pertimbangkan untuk menyeimbangkan dengan aktivitas lebih produktif",
+  "recReviewUsagePatterns": "Waktu layar Anda meningkat secara signifikan. Tinjau pola penggunaan Anda dan tetapkan batasan",
+  "recScheduleFocusedWork": "Waktu produktif Anda menurun. Coba jadwalkan blok kerja fokus di kalender Anda",
+  "recKeepUpGreatWork": "Terus pertahankan! Kebiasaan waktu layar Anda terlihat sehat",
+  "recContinueFocusSessions": "Terus gunakan sesi fokus untuk mempertahankan produktivitas",
+  
+  "durationHoursMinutes": "{hours}j {minutes}m",
+  "durationMinutesOnly": "{minutes}m",
+  
+  "sheetSummary": "Ringkasan",
+  "sheetDailyBreakdown": "Rincian Harian",
+  "sheetApps": "Aplikasi",
+  "sheetInsights": "Wawasan"
 }

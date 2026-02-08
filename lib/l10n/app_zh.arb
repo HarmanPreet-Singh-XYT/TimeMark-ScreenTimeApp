@@ -1631,5 +1631,133 @@
   "restartFailedTitle": "重新启动失败",
   "restartFailedMessage": "无法自动重新启动应用。请退出（Cmd+Q）并手动重新打开。",
   "ok": "确定",
-  "error": "错误"
+  "error": "错误",
+  "exportAnalyticsReport": "导出分析报告",
+  "chooseExportFormat": "选择导出格式：",
+  "beautifulExcelReport": "精美Excel报告",
+  "beautifulExcelReportDescription": "精美多彩的电子表格，包含图表、表情符号和见解 ✨",
+  "excelReportIncludes": "Excel报告包含：",
+  "summarySheetDescription": "📊 摘要表 - 关键指标和趋势",
+  "dailyBreakdownDescription": "📅 每日明细 - 可视化使用模式",
+  "appsSheetDescription": "📱 应用表 - 详细应用排名",
+  "insightsDescription": "💡 洞察 - 智能建议",
+  "cancel": "取消",
+  "exportSuccessful": "导出成功",
+  "beautifulExcelExportSuccess": "精美Excel报告导出成功！🎉",
+  "exportFailed": "导出失败",
+  "failedToExportReport": "导出报告失败：{error}",
+  "exporting": "导出中...",
+  "exportExcel": "导出Excel",
+  "saveAnalyticsReport": "保存分析报告",
+  "analyticsReportFileName": "分析报告_{timestamp}.xlsx",
+  
+  "usageAnalyticsReportTitle": "使用分析报告",
+  "generated": "生成时间：",
+  "period": "周期：",
+  "dateRange": "日期范围：",
+  "dateRangeValue": "{startDate} 至 {endDate}",
+  
+  "keyMetrics": "关键指标",
+  "metric": "指标",
+  "value": "数值",
+  "change": "变化",
+  "trend": "趋势",
+  
+  "totalScreenTime": "总屏幕使用时间",
+  "productiveTime": "高效时间",
+  "productivityRate": "生产力比率",
+  "focusSessions": "专注会话",
+  "mostUsedApp": "最常用应用",
+  
+  "trendUp": "上升",
+  "trendDown": "下降",
+  "trendExcellent": "优秀",
+  "trendGood": "良好",
+  "trendNeedsImprovement": "需改进",
+  "trendActive": "活跃",
+  "trendNone": "无",
+  "trendTop": "最高",
+  
+  "categoryBreakdown": "类别分布",
+  "category": "类别",
+  "percentage": "百分比",
+  "visual": "可视化",
+  
+  "dailyScreenTime": "每日屏幕使用时间",
+  "statistics": "统计数据",
+  "averageDaily": "日均",
+  "highestDay": "最高日",
+  "lowestDay": "最低日",
+  
+  "date": "日期",
+  "day": "星期",
+  "hours": "小时",
+  "minutes": "分钟",
+  
+  "applicationUsageDetails": "应用使用详情",
+  "totalApps": "应用总数：",
+  "productiveApps": "高效应用：",
+  
+  "rank": "排名",
+  "application": "应用程序",
+  "time": "时间",
+  "percentOfTotal": "占比",
+  "type": "类型",
+  "usageLevel": "使用级别",
+  
+  "productive": "高效",
+  "leisure": "休闲",
+  
+  "usageLevelVeryHigh": "非常高 ||||||||",
+  "usageLevelHigh": "高 ||||||",
+  "usageLevelMedium": "中等 ||||",
+  "usageLevelLow": "低 ||",
+  
+  "keyInsightsTitle": "关键洞察与建议",
+  "personalizedRecommendations": "个性化建议",
+  
+  "insightHighDailyUsage": "高日使用量：您平均每天屏幕使用时间为{hours}小时",
+  "insightLowDailyUsage": "低日使用量：您平均每天仅{hours}小时 - 保持得很好！",
+  "insightModerateUsage": "适度使用：平均每天屏幕使用时间为{hours}小时",
+  
+  "insightExcellentProductivity": "出色的生产力：{percentage}%的屏幕时间用于高效工作！",
+  "insightGoodProductivity": "良好的生产力：{percentage}%的屏幕时间用于高效工作",
+  "insightLowProductivity": "低生产力警告：仅{percentage}%的屏幕时间是高效的",
+  
+  "insightFocusSessions": "专注会话：完成{count}次会话（平均每天{avgPerDay}次）",
+  "insightGreatFocusHabit": "出色的专注习惯：您已完成{count}次专注会话，建立了出色的专注习惯！",
+  "insightNoFocusSessions": "无专注会话：考虑使用专注模式来提高生产力",
+  
+  "insightScreenTimeTrend": "屏幕时间趋势：与上一周期相比，您的使用量{direction}了{percentage}%",
+  "insightProductiveTimeTrend": "高效时间趋势：与上一周期相比，您的高效时间{direction}了{percentage}%",
+  
+  "directionIncreased": "增加",
+  "directionDecreased": "减少",
+  
+  "insightTopCategory": "热门类别：{category}占据了{percentage}%的总时间",
+  
+  "insightMostUsedApp": "最常用应用：{appName}占用了{percentage}%的时间（{duration}）",
+  
+  "insightUsageVaries": "使用量波动显著：{highDay}的使用量是{lowDay}的{multiplier}倍",
+  
+  "insightNoInsights": "暂无重要洞察",
+  
+  "recScheduleFocusSessions": "尝试在一天中安排更多专注会话以提高生产力",
+  "recSetAppLimits": "考虑为休闲应用设置使用限制",
+  "recAimForFocusSessions": "争取每天至少1-2次专注会话以建立持续的习惯",
+  "recTakeBreaks": "您的每日屏幕时间较高。尝试使用20-20-20法则定期休息",
+  "recSetDailyGoals": "考虑设置每日屏幕时间目标以逐渐减少使用",
+  "recBalanceEntertainment": "娱乐应用占用了大量时间。考虑平衡更多高效活动",
+  "recReviewUsagePatterns": "您的屏幕时间显著增加。审查您的使用模式并设定界限",
+  "recScheduleFocusedWork": "您的高效时间有所减少。尝试在日历中安排专注工作时段",
+  "recKeepUpGreatWork": "继续保持！您的屏幕时间习惯看起来很健康",
+  "recContinueFocusSessions": "继续使用专注会话以保持生产力",
+  
+  "durationHoursMinutes": "{hours}小时{minutes}分钟",
+  "durationMinutesOnly": "{minutes}分钟",
+  
+  "sheetSummary": "摘要",
+  "sheetDailyBreakdown": "每日明细",
+  "sheetApps": "应用",
+  "sheetInsights": "洞察"
 }

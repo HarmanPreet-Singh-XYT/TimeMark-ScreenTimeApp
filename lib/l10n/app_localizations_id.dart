@@ -328,7 +328,7 @@ class AppLocalizationsId extends AppLocalizations {
   String get customDialogTitle => 'Kustom';
 
   @override
-  String get dateRange => 'Rentang Tanggal';
+  String get dateRange => 'Rentang Tanggal:';
 
   @override
   String get specificDate => 'Tanggal Spesifik';
@@ -340,7 +340,7 @@ class AppLocalizationsId extends AppLocalizations {
   String get endDate => 'Tanggal Akhir: ';
 
   @override
-  String get date => 'Tanggal: ';
+  String get date => 'Tanggal';
 
   @override
   String get cancel => 'Batal';
@@ -386,10 +386,10 @@ class AppLocalizationsId extends AppLocalizations {
   }
 
   @override
-  String get dailyScreenTime => 'Waktu Layar Harian';
+  String get dailyScreenTime => 'WAKTU LAYAR HARIAN';
 
   @override
-  String get categoryBreakdown => 'Pembagian Kategori';
+  String get categoryBreakdown => 'RINCIAN KATEGORI';
 
   @override
   String get noDataAvailable => 'Tidak ada data tersedia';
@@ -630,10 +630,10 @@ class AppLocalizationsId extends AppLocalizations {
   String get dailyTotalLimit => 'Batasan Total Harian: ';
 
   @override
-  String get hours => 'Jam: ';
+  String get hours => 'Jam';
 
   @override
-  String get minutes => 'Menit: ';
+  String get minutes => 'Menit';
 
   @override
   String get currentUsage => 'Penggunaan Saat Ini: ';
@@ -1452,11 +1452,10 @@ class AppLocalizationsId extends AppLocalizations {
   String get exportStarting => 'Memulai ekspor...';
 
   @override
-  String get exportSuccessful =>
-      'Ekspor berhasil! File disimpan di Dokumen/TimeMark-Backups';
+  String get exportSuccessful => 'Ekspor Berhasil';
 
   @override
-  String get exportFailed => 'Ekspor gagal';
+  String get exportFailed => 'Ekspor Gagal';
 
   @override
   String get exportComplete => 'Ekspor Selesai';
@@ -2392,4 +2391,317 @@ class AppLocalizationsId extends AppLocalizations {
   @override
   String get restartFailedMessage =>
       'Aplikasi tidak dapat dimulai ulang secara otomatis. Silakan keluar (Cmd+Q) dan buka kembali secara manual.';
+
+  @override
+  String get exportAnalyticsReport => 'Ekspor Laporan Analitik';
+
+  @override
+  String get chooseExportFormat => 'Pilih format ekspor:';
+
+  @override
+  String get beautifulExcelReport => 'Laporan Excel yang Indah';
+
+  @override
+  String get beautifulExcelReportDescription =>
+      'Spreadsheet yang indah dan berwarna dengan grafik, emoji, dan wawasan ✨';
+
+  @override
+  String get excelReportIncludes => 'Laporan Excel meliputi:';
+
+  @override
+  String get summarySheetDescription =>
+      '📊 Lembar Ringkasan - Metrik utama dengan tren';
+
+  @override
+  String get dailyBreakdownDescription =>
+      '📅 Rincian Harian - Pola penggunaan visual';
+
+  @override
+  String get appsSheetDescription =>
+      '📱 Lembar Aplikasi - Peringkat aplikasi terperinci';
+
+  @override
+  String get insightsDescription => '💡 Wawasan - Rekomendasi cerdas';
+
+  @override
+  String get beautifulExcelExportSuccess =>
+      'Laporan Excel yang indah berhasil diekspor! 🎉';
+
+  @override
+  String failedToExportReport(String error) {
+    return 'Gagal mengekspor laporan: $error';
+  }
+
+  @override
+  String get exporting => 'Mengekspor...';
+
+  @override
+  String get exportExcel => 'Ekspor Excel';
+
+  @override
+  String get saveAnalyticsReport => 'Simpan Laporan Analitik';
+
+  @override
+  String analyticsReportFileName(String timestamp) {
+    return 'laporan_analitik_$timestamp.xlsx';
+  }
+
+  @override
+  String get usageAnalyticsReportTitle => 'LAPORAN ANALISIS PENGGUNAAN';
+
+  @override
+  String get generated => 'Dibuat:';
+
+  @override
+  String get period => 'Periode:';
+
+  @override
+  String dateRangeValue(String startDate, String endDate) {
+    return '$startDate sampai $endDate';
+  }
+
+  @override
+  String get keyMetrics => 'METRIK UTAMA';
+
+  @override
+  String get metric => 'Metrik';
+
+  @override
+  String get value => 'Nilai';
+
+  @override
+  String get change => 'Perubahan';
+
+  @override
+  String get trend => 'Tren';
+
+  @override
+  String get productivityRate => 'Tingkat Produktivitas';
+
+  @override
+  String get trendUp => 'Naik';
+
+  @override
+  String get trendDown => 'Turun';
+
+  @override
+  String get trendExcellent => 'Sangat Baik';
+
+  @override
+  String get trendGood => 'Baik';
+
+  @override
+  String get trendNeedsImprovement => 'Perlu Perbaikan';
+
+  @override
+  String get trendActive => 'Aktif';
+
+  @override
+  String get trendNone => 'Tidak Ada';
+
+  @override
+  String get trendTop => 'Teratas';
+
+  @override
+  String get category => 'Kategori';
+
+  @override
+  String get percentage => 'Persentase';
+
+  @override
+  String get visual => 'Visual';
+
+  @override
+  String get statistics => 'STATISTIK';
+
+  @override
+  String get averageDaily => 'Rata-rata Harian';
+
+  @override
+  String get highestDay => 'Hari Tertinggi';
+
+  @override
+  String get lowestDay => 'Hari Terendah';
+
+  @override
+  String get day => 'Hari';
+
+  @override
+  String get applicationUsageDetails => 'DETAIL PENGGUNAAN APLIKASI';
+
+  @override
+  String get totalApps => 'Total Aplikasi:';
+
+  @override
+  String get productiveApps => 'Aplikasi Produktif:';
+
+  @override
+  String get rank => 'Peringkat';
+
+  @override
+  String get application => 'Aplikasi';
+
+  @override
+  String get time => 'Waktu';
+
+  @override
+  String get percentOfTotal => '% dari Total';
+
+  @override
+  String get type => 'Tipe';
+
+  @override
+  String get usageLevel => 'Tingkat Penggunaan';
+
+  @override
+  String get leisure => 'Hiburan';
+
+  @override
+  String get usageLevelVeryHigh => 'Sangat Tinggi ||||||||';
+
+  @override
+  String get usageLevelHigh => 'Tinggi ||||||';
+
+  @override
+  String get usageLevelMedium => 'Sedang ||||';
+
+  @override
+  String get usageLevelLow => 'Rendah ||';
+
+  @override
+  String get keyInsightsTitle => 'WAWASAN DAN REKOMENDASI UTAMA';
+
+  @override
+  String get personalizedRecommendations => 'REKOMENDASI PERSONAL';
+
+  @override
+  String insightHighDailyUsage(String hours) {
+    return 'Penggunaan Harian Tinggi: Anda rata-rata menggunakan $hours jam waktu layar per hari';
+  }
+
+  @override
+  String insightLowDailyUsage(String hours) {
+    return 'Penggunaan Harian Rendah: Anda rata-rata $hours jam per hari - keseimbangan yang bagus!';
+  }
+
+  @override
+  String insightModerateUsage(String hours) {
+    return 'Penggunaan Sedang: Rata-rata $hours jam waktu layar per hari';
+  }
+
+  @override
+  String insightExcellentProductivity(String percentage) {
+    return 'Produktivitas Sangat Baik: $percentage% waktu layar Anda adalah kerja produktif!';
+  }
+
+  @override
+  String insightGoodProductivity(String percentage) {
+    return 'Produktivitas Baik: $percentage% waktu layar Anda produktif';
+  }
+
+  @override
+  String insightLowProductivity(String percentage) {
+    return 'Peringatan Produktivitas Rendah: Hanya $percentage% waktu layar yang produktif';
+  }
+
+  @override
+  String insightFocusSessions(int count, String avgPerDay) {
+    return 'Sesi Fokus: Menyelesaikan $count sesi (rata-rata $avgPerDay per hari)';
+  }
+
+  @override
+  String insightGreatFocusHabit(int count) {
+    return 'Kebiasaan Fokus Hebat: Anda telah membangun rutinitas fokus yang luar biasa dengan $count sesi selesai!';
+  }
+
+  @override
+  String get insightNoFocusSessions =>
+      'Tidak Ada Sesi Fokus: Pertimbangkan menggunakan mode fokus untuk meningkatkan produktivitas Anda';
+
+  @override
+  String insightScreenTimeTrend(String direction, String percentage) {
+    return 'Tren Waktu Layar: Penggunaan Anda $direction $percentage% dibandingkan periode sebelumnya';
+  }
+
+  @override
+  String insightProductiveTimeTrend(String direction, String percentage) {
+    return 'Tren Waktu Produktif: Waktu produktif Anda $direction $percentage% dibandingkan periode sebelumnya';
+  }
+
+  @override
+  String get directionIncreased => 'meningkat';
+
+  @override
+  String get directionDecreased => 'menurun';
+
+  @override
+  String insightTopCategory(String category, String percentage) {
+    return 'Kategori Teratas: $category mendominasi dengan $percentage% dari total waktu Anda';
+  }
+
+  @override
+  String insightMostUsedApp(
+      String appName, String percentage, String duration) {
+    return 'Aplikasi Paling Sering Digunakan: $appName menyumbang $percentage% dari waktu Anda ($duration)';
+  }
+
+  @override
+  String insightUsageVaries(String highDay, String multiplier, String lowDay) {
+    return 'Penggunaan Bervariasi Signifikan: $highDay memiliki penggunaan ${multiplier}x lebih banyak dari $lowDay';
+  }
+
+  @override
+  String get insightNoInsights => 'Tidak ada wawasan signifikan tersedia';
+
+  @override
+  String get recScheduleFocusSessions =>
+      'Coba jadwalkan lebih banyak sesi fokus sepanjang hari untuk meningkatkan produktivitas';
+
+  @override
+  String get recSetAppLimits =>
+      'Pertimbangkan untuk menetapkan batas pada aplikasi hiburan';
+
+  @override
+  String get recAimForFocusSessions =>
+      'Targetkan setidaknya 1-2 sesi fokus per hari untuk membangun kebiasaan konsisten';
+
+  @override
+  String get recTakeBreaks =>
+      'Waktu layar harian Anda cukup tinggi. Coba ambil istirahat teratur menggunakan aturan 20-20-20';
+
+  @override
+  String get recSetDailyGoals =>
+      'Pertimbangkan untuk menetapkan target waktu layar harian untuk mengurangi penggunaan secara bertahap';
+
+  @override
+  String get recBalanceEntertainment =>
+      'Aplikasi hiburan menyumbang sebagian besar waktu Anda. Pertimbangkan untuk menyeimbangkan dengan aktivitas lebih produktif';
+
+  @override
+  String get recReviewUsagePatterns =>
+      'Waktu layar Anda meningkat secara signifikan. Tinjau pola penggunaan Anda dan tetapkan batasan';
+
+  @override
+  String get recScheduleFocusedWork =>
+      'Waktu produktif Anda menurun. Coba jadwalkan blok kerja fokus di kalender Anda';
+
+  @override
+  String get recKeepUpGreatWork =>
+      'Terus pertahankan! Kebiasaan waktu layar Anda terlihat sehat';
+
+  @override
+  String get recContinueFocusSessions =>
+      'Terus gunakan sesi fokus untuk mempertahankan produktivitas';
+
+  @override
+  String get sheetSummary => 'Ringkasan';
+
+  @override
+  String get sheetDailyBreakdown => 'Rincian Harian';
+
+  @override
+  String get sheetApps => 'Aplikasi';
+
+  @override
+  String get sheetInsights => 'Wawasan';
 }

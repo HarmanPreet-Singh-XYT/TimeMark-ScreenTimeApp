@@ -679,7 +679,7 @@ abstract class AppLocalizations {
   /// Label for date range selection mode
   ///
   /// In en, this message translates to:
-  /// **'Date Range'**
+  /// **'Date Range:'**
   String get dateRange;
 
   /// Label for single date selection mode
@@ -703,7 +703,7 @@ abstract class AppLocalizations {
   /// Label for single date picker
   ///
   /// In en, this message translates to:
-  /// **'Date: '**
+  /// **'Date'**
   String get date;
 
   /// Cancel button text
@@ -781,13 +781,13 @@ abstract class AppLocalizations {
   /// Title for daily screen time chart
   ///
   /// In en, this message translates to:
-  /// **'Daily Screen Time'**
+  /// **'DAILY SCREEN TIME'**
   String get dailyScreenTime;
 
   /// Title for category breakdown pie chart
   ///
   /// In en, this message translates to:
-  /// **'Category Breakdown'**
+  /// **'CATEGORY BREAKDOWN'**
   String get categoryBreakdown;
 
   /// Empty state message when no data exists
@@ -1132,13 +1132,13 @@ abstract class AppLocalizations {
   /// **'{hour} PM'**
   String hourPeriodPM(int hour);
 
-  /// Duration format with hours and minutes
+  /// No description provided for @durationHoursMinutes.
   ///
   /// In en, this message translates to:
   /// **'{hours}h {minutes}m'**
   String durationHoursMinutes(int hours, int minutes);
 
-  /// Duration format with minutes only
+  /// No description provided for @durationMinutesOnly.
   ///
   /// In en, this message translates to:
   /// **'{minutes}m'**
@@ -1201,13 +1201,13 @@ abstract class AppLocalizations {
   /// No description provided for @hours.
   ///
   /// In en, this message translates to:
-  /// **'Hours: '**
+  /// **'Hours'**
   String get hours;
 
   /// No description provided for @minutes.
   ///
   /// In en, this message translates to:
-  /// **'Minutes: '**
+  /// **'Minutes'**
   String get minutes;
 
   /// No description provided for @currentUsage.
@@ -2761,13 +2761,13 @@ abstract class AppLocalizations {
   /// No description provided for @exportSuccessful.
   ///
   /// In en, this message translates to:
-  /// **'Export successful! File saved at Documents/TimeMark-Backups'**
+  /// **'Export Successful'**
   String get exportSuccessful;
 
   /// No description provided for @exportFailed.
   ///
   /// In en, this message translates to:
-  /// **'Export failed'**
+  /// **'Export Failed'**
   String get exportFailed;
 
   /// No description provided for @exportComplete.
@@ -4437,6 +4437,534 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Could not restart the app automatically. Please quit (Cmd+Q) and relaunch manually.'**
   String get restartFailedMessage;
+
+  /// No description provided for @exportAnalyticsReport.
+  ///
+  /// In en, this message translates to:
+  /// **'Export Analytics Report'**
+  String get exportAnalyticsReport;
+
+  /// No description provided for @chooseExportFormat.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose export format:'**
+  String get chooseExportFormat;
+
+  /// No description provided for @beautifulExcelReport.
+  ///
+  /// In en, this message translates to:
+  /// **'Beautiful Excel Report'**
+  String get beautifulExcelReport;
+
+  /// No description provided for @beautifulExcelReportDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'Gorgeous, colorful spreadsheet with charts, emojis, and insights ✨'**
+  String get beautifulExcelReportDescription;
+
+  /// No description provided for @excelReportIncludes.
+  ///
+  /// In en, this message translates to:
+  /// **'The Excel report includes:'**
+  String get excelReportIncludes;
+
+  /// No description provided for @summarySheetDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'📊 Summary Sheet - Key metrics with trends'**
+  String get summarySheetDescription;
+
+  /// No description provided for @dailyBreakdownDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'📅 Daily Breakdown - Visual usage patterns'**
+  String get dailyBreakdownDescription;
+
+  /// No description provided for @appsSheetDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'📱 Apps Sheet - Detailed app rankings'**
+  String get appsSheetDescription;
+
+  /// No description provided for @insightsDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'💡 Insights - Smart recommendations'**
+  String get insightsDescription;
+
+  /// No description provided for @beautifulExcelExportSuccess.
+  ///
+  /// In en, this message translates to:
+  /// **'Beautiful Excel report exported successfully! 🎉'**
+  String get beautifulExcelExportSuccess;
+
+  /// No description provided for @failedToExportReport.
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to export report: {error}'**
+  String failedToExportReport(String error);
+
+  /// No description provided for @exporting.
+  ///
+  /// In en, this message translates to:
+  /// **'Exporting...'**
+  String get exporting;
+
+  /// No description provided for @exportExcel.
+  ///
+  /// In en, this message translates to:
+  /// **'Export Excel'**
+  String get exportExcel;
+
+  /// No description provided for @saveAnalyticsReport.
+  ///
+  /// In en, this message translates to:
+  /// **'Save Analytics Report'**
+  String get saveAnalyticsReport;
+
+  /// No description provided for @analyticsReportFileName.
+  ///
+  /// In en, this message translates to:
+  /// **'analytics_report_{timestamp}.xlsx'**
+  String analyticsReportFileName(String timestamp);
+
+  /// No description provided for @usageAnalyticsReportTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'USAGE ANALYTICS REPORT'**
+  String get usageAnalyticsReportTitle;
+
+  /// No description provided for @generated.
+  ///
+  /// In en, this message translates to:
+  /// **'Generated:'**
+  String get generated;
+
+  /// No description provided for @period.
+  ///
+  /// In en, this message translates to:
+  /// **'Period:'**
+  String get period;
+
+  /// No description provided for @dateRangeValue.
+  ///
+  /// In en, this message translates to:
+  /// **'{startDate} to {endDate}'**
+  String dateRangeValue(String startDate, String endDate);
+
+  /// No description provided for @keyMetrics.
+  ///
+  /// In en, this message translates to:
+  /// **'KEY METRICS'**
+  String get keyMetrics;
+
+  /// No description provided for @metric.
+  ///
+  /// In en, this message translates to:
+  /// **'Metric'**
+  String get metric;
+
+  /// No description provided for @value.
+  ///
+  /// In en, this message translates to:
+  /// **'Value'**
+  String get value;
+
+  /// No description provided for @change.
+  ///
+  /// In en, this message translates to:
+  /// **'Change'**
+  String get change;
+
+  /// No description provided for @trend.
+  ///
+  /// In en, this message translates to:
+  /// **'Trend'**
+  String get trend;
+
+  /// No description provided for @productivityRate.
+  ///
+  /// In en, this message translates to:
+  /// **'Productivity Rate'**
+  String get productivityRate;
+
+  /// No description provided for @trendUp.
+  ///
+  /// In en, this message translates to:
+  /// **'Up'**
+  String get trendUp;
+
+  /// No description provided for @trendDown.
+  ///
+  /// In en, this message translates to:
+  /// **'Down'**
+  String get trendDown;
+
+  /// No description provided for @trendExcellent.
+  ///
+  /// In en, this message translates to:
+  /// **'Excellent'**
+  String get trendExcellent;
+
+  /// No description provided for @trendGood.
+  ///
+  /// In en, this message translates to:
+  /// **'Good'**
+  String get trendGood;
+
+  /// No description provided for @trendNeedsImprovement.
+  ///
+  /// In en, this message translates to:
+  /// **'Needs Improvement'**
+  String get trendNeedsImprovement;
+
+  /// No description provided for @trendActive.
+  ///
+  /// In en, this message translates to:
+  /// **'Active'**
+  String get trendActive;
+
+  /// No description provided for @trendNone.
+  ///
+  /// In en, this message translates to:
+  /// **'None'**
+  String get trendNone;
+
+  /// No description provided for @trendTop.
+  ///
+  /// In en, this message translates to:
+  /// **'Top'**
+  String get trendTop;
+
+  /// No description provided for @category.
+  ///
+  /// In en, this message translates to:
+  /// **'Category'**
+  String get category;
+
+  /// No description provided for @percentage.
+  ///
+  /// In en, this message translates to:
+  /// **'Percentage'**
+  String get percentage;
+
+  /// No description provided for @visual.
+  ///
+  /// In en, this message translates to:
+  /// **'Visual'**
+  String get visual;
+
+  /// No description provided for @statistics.
+  ///
+  /// In en, this message translates to:
+  /// **'STATISTICS'**
+  String get statistics;
+
+  /// No description provided for @averageDaily.
+  ///
+  /// In en, this message translates to:
+  /// **'Average Daily'**
+  String get averageDaily;
+
+  /// No description provided for @highestDay.
+  ///
+  /// In en, this message translates to:
+  /// **'Highest Day'**
+  String get highestDay;
+
+  /// No description provided for @lowestDay.
+  ///
+  /// In en, this message translates to:
+  /// **'Lowest Day'**
+  String get lowestDay;
+
+  /// No description provided for @day.
+  ///
+  /// In en, this message translates to:
+  /// **'Day'**
+  String get day;
+
+  /// No description provided for @applicationUsageDetails.
+  ///
+  /// In en, this message translates to:
+  /// **'APPLICATION USAGE DETAILS'**
+  String get applicationUsageDetails;
+
+  /// No description provided for @totalApps.
+  ///
+  /// In en, this message translates to:
+  /// **'Total Apps:'**
+  String get totalApps;
+
+  /// No description provided for @productiveApps.
+  ///
+  /// In en, this message translates to:
+  /// **'Productive Apps:'**
+  String get productiveApps;
+
+  /// No description provided for @rank.
+  ///
+  /// In en, this message translates to:
+  /// **'Rank'**
+  String get rank;
+
+  /// No description provided for @application.
+  ///
+  /// In en, this message translates to:
+  /// **'Application'**
+  String get application;
+
+  /// No description provided for @time.
+  ///
+  /// In en, this message translates to:
+  /// **'Time'**
+  String get time;
+
+  /// No description provided for @percentOfTotal.
+  ///
+  /// In en, this message translates to:
+  /// **'% of Total'**
+  String get percentOfTotal;
+
+  /// No description provided for @type.
+  ///
+  /// In en, this message translates to:
+  /// **'Type'**
+  String get type;
+
+  /// No description provided for @usageLevel.
+  ///
+  /// In en, this message translates to:
+  /// **'Usage Level'**
+  String get usageLevel;
+
+  /// No description provided for @leisure.
+  ///
+  /// In en, this message translates to:
+  /// **'Leisure'**
+  String get leisure;
+
+  /// No description provided for @usageLevelVeryHigh.
+  ///
+  /// In en, this message translates to:
+  /// **'Very High ||||||||'**
+  String get usageLevelVeryHigh;
+
+  /// No description provided for @usageLevelHigh.
+  ///
+  /// In en, this message translates to:
+  /// **'High ||||||'**
+  String get usageLevelHigh;
+
+  /// No description provided for @usageLevelMedium.
+  ///
+  /// In en, this message translates to:
+  /// **'Medium ||||'**
+  String get usageLevelMedium;
+
+  /// No description provided for @usageLevelLow.
+  ///
+  /// In en, this message translates to:
+  /// **'Low ||'**
+  String get usageLevelLow;
+
+  /// No description provided for @keyInsightsTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'KEY INSIGHTS & RECOMMENDATIONS'**
+  String get keyInsightsTitle;
+
+  /// No description provided for @personalizedRecommendations.
+  ///
+  /// In en, this message translates to:
+  /// **'PERSONALIZED RECOMMENDATIONS'**
+  String get personalizedRecommendations;
+
+  /// No description provided for @insightHighDailyUsage.
+  ///
+  /// In en, this message translates to:
+  /// **'High Daily Usage: You\'re averaging {hours} hours per day of screen time'**
+  String insightHighDailyUsage(String hours);
+
+  /// No description provided for @insightLowDailyUsage.
+  ///
+  /// In en, this message translates to:
+  /// **'Low Daily Usage: You\'re averaging {hours} hours per day - great balance!'**
+  String insightLowDailyUsage(String hours);
+
+  /// No description provided for @insightModerateUsage.
+  ///
+  /// In en, this message translates to:
+  /// **'Moderate Usage: Averaging {hours} hours per day of screen time'**
+  String insightModerateUsage(String hours);
+
+  /// No description provided for @insightExcellentProductivity.
+  ///
+  /// In en, this message translates to:
+  /// **'Excellent Productivity: {percentage}% of your screen time is productive work!'**
+  String insightExcellentProductivity(String percentage);
+
+  /// No description provided for @insightGoodProductivity.
+  ///
+  /// In en, this message translates to:
+  /// **'Good Productivity: {percentage}% of your screen time is productive'**
+  String insightGoodProductivity(String percentage);
+
+  /// No description provided for @insightLowProductivity.
+  ///
+  /// In en, this message translates to:
+  /// **'Low Productivity Alert: Only {percentage}% of screen time is productive'**
+  String insightLowProductivity(String percentage);
+
+  /// No description provided for @insightFocusSessions.
+  ///
+  /// In en, this message translates to:
+  /// **'Focus Sessions: Completed {count} sessions ({avgPerDay} per day on average)'**
+  String insightFocusSessions(int count, String avgPerDay);
+
+  /// No description provided for @insightGreatFocusHabit.
+  ///
+  /// In en, this message translates to:
+  /// **'Great Focus Habit: You\'ve built an amazing focus routine with {count} completed sessions!'**
+  String insightGreatFocusHabit(int count);
+
+  /// No description provided for @insightNoFocusSessions.
+  ///
+  /// In en, this message translates to:
+  /// **'No Focus Sessions: Consider using focus mode to boost your productivity'**
+  String get insightNoFocusSessions;
+
+  /// No description provided for @insightScreenTimeTrend.
+  ///
+  /// In en, this message translates to:
+  /// **'Screen Time Trend: Your usage has {direction} by {percentage}% compared to the previous period'**
+  String insightScreenTimeTrend(String direction, String percentage);
+
+  /// No description provided for @insightProductiveTimeTrend.
+  ///
+  /// In en, this message translates to:
+  /// **'Productive Time Trend: Your productive time has {direction} by {percentage}% compared to previous period'**
+  String insightProductiveTimeTrend(String direction, String percentage);
+
+  /// No description provided for @directionIncreased.
+  ///
+  /// In en, this message translates to:
+  /// **'increased'**
+  String get directionIncreased;
+
+  /// No description provided for @directionDecreased.
+  ///
+  /// In en, this message translates to:
+  /// **'decreased'**
+  String get directionDecreased;
+
+  /// No description provided for @insightTopCategory.
+  ///
+  /// In en, this message translates to:
+  /// **'Top Category: {category} dominates with {percentage}% of your total time'**
+  String insightTopCategory(String category, String percentage);
+
+  /// No description provided for @insightMostUsedApp.
+  ///
+  /// In en, this message translates to:
+  /// **'Most Used App: {appName} accounts for {percentage}% of your time ({duration})'**
+  String insightMostUsedApp(String appName, String percentage, String duration);
+
+  /// No description provided for @insightUsageVaries.
+  ///
+  /// In en, this message translates to:
+  /// **'Usage Varies Significantly: {highDay} had {multiplier}x more usage than {lowDay}'**
+  String insightUsageVaries(String highDay, String multiplier, String lowDay);
+
+  /// No description provided for @insightNoInsights.
+  ///
+  /// In en, this message translates to:
+  /// **'No significant insights available'**
+  String get insightNoInsights;
+
+  /// No description provided for @recScheduleFocusSessions.
+  ///
+  /// In en, this message translates to:
+  /// **'Try scheduling more focus sessions throughout your day to boost productivity'**
+  String get recScheduleFocusSessions;
+
+  /// No description provided for @recSetAppLimits.
+  ///
+  /// In en, this message translates to:
+  /// **'Consider setting app limits on leisure applications'**
+  String get recSetAppLimits;
+
+  /// No description provided for @recAimForFocusSessions.
+  ///
+  /// In en, this message translates to:
+  /// **'Aim for at least 1-2 focus sessions per day to build a consistent habit'**
+  String get recAimForFocusSessions;
+
+  /// No description provided for @recTakeBreaks.
+  ///
+  /// In en, this message translates to:
+  /// **'Your daily screen time is quite high. Try taking regular breaks using the 20-20-20 rule'**
+  String get recTakeBreaks;
+
+  /// No description provided for @recSetDailyGoals.
+  ///
+  /// In en, this message translates to:
+  /// **'Consider setting daily screen time goals to gradually reduce usage'**
+  String get recSetDailyGoals;
+
+  /// No description provided for @recBalanceEntertainment.
+  ///
+  /// In en, this message translates to:
+  /// **'Entertainment apps account for a large portion of your time. Consider balancing with more productive activities'**
+  String get recBalanceEntertainment;
+
+  /// No description provided for @recReviewUsagePatterns.
+  ///
+  /// In en, this message translates to:
+  /// **'Your screen time has increased significantly. Review your usage patterns and set boundaries'**
+  String get recReviewUsagePatterns;
+
+  /// No description provided for @recScheduleFocusedWork.
+  ///
+  /// In en, this message translates to:
+  /// **'Your productive time has decreased. Try scheduling focused work blocks in your calendar'**
+  String get recScheduleFocusedWork;
+
+  /// No description provided for @recKeepUpGreatWork.
+  ///
+  /// In en, this message translates to:
+  /// **'Keep up the great work! Your screen time habits look healthy'**
+  String get recKeepUpGreatWork;
+
+  /// No description provided for @recContinueFocusSessions.
+  ///
+  /// In en, this message translates to:
+  /// **'Continue using focus sessions to maintain productivity'**
+  String get recContinueFocusSessions;
+
+  /// No description provided for @sheetSummary.
+  ///
+  /// In en, this message translates to:
+  /// **'Summary'**
+  String get sheetSummary;
+
+  /// No description provided for @sheetDailyBreakdown.
+  ///
+  /// In en, this message translates to:
+  /// **'Daily Breakdown'**
+  String get sheetDailyBreakdown;
+
+  /// No description provided for @sheetApps.
+  ///
+  /// In en, this message translates to:
+  /// **'Apps'**
+  String get sheetApps;
+
+  /// No description provided for @sheetInsights.
+  ///
+  /// In en, this message translates to:
+  /// **'Insights'**
+  String get sheetInsights;
 }
 
 class _AppLocalizationsDelegate

@@ -1,7 +1,9 @@
+import 'dart:io';
 import 'dart:ui';
 
 import 'package:flutter/foundation.dart';
 import 'package:hive_flutter/hive_flutter.dart';
+import 'package:path_provider/path_provider.dart';
 import 'dart:async';
 import 'package:synchronized/synchronized.dart';
 
@@ -147,8 +149,21 @@ class AppDataStore extends ChangeNotifier {
       if (_isInitialized) return true;
 
       try {
-        // Initialize Hive
-        await Hive.initFlutter();
+        // Only use custom path for macOS
+        if (Platform.isMacOS) {
+          final directory = await getApplicationSupportDirectory();
+          final hivePath = '${directory.path}/harman_screentime';
+
+          final dir = Directory(hivePath);
+          if (!await dir.exists()) {
+            await dir.create(recursive: true);
+          }
+
+          Hive.init(hivePath);
+        } else {
+          // Default behavior for all other platforms
+          await Hive.initFlutter();
+        }
 
         // Register adapters
         if (!Hive.isAdapterRegistered(1))
@@ -174,10 +189,7 @@ class AppDataStore extends ChangeNotifier {
         }
 
         _isInitialized = true;
-
-        // Schedule periodic maintenance
         _schedulePeriodicMaintenance();
-
         notifyListeners();
         return true;
       } catch (e) {

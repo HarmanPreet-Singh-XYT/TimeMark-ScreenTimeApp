@@ -310,7 +310,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get customDialogTitle => '自定义';
 
   @override
-  String get dateRange => '日期范围';
+  String get dateRange => '日期范围：';
 
   @override
   String get specificDate => '特定日期';
@@ -322,7 +322,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get endDate => '结束日期：';
 
   @override
-  String get date => '日期：';
+  String get date => '日期';
 
   @override
   String get cancel => '取消';
@@ -340,7 +340,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get startDateBeforeEndDate => '开始日期必须早于或等于结束日期。';
 
   @override
-  String get totalScreenTime => '总屏幕时间';
+  String get totalScreenTime => '总屏幕使用时间';
 
   @override
   String get productiveTime => '高效时间';
@@ -367,7 +367,7 @@ class AppLocalizationsZh extends AppLocalizations {
   }
 
   @override
-  String get dailyScreenTime => '每日屏幕时间';
+  String get dailyScreenTime => '每日屏幕使用时间';
 
   @override
   String get categoryBreakdown => '类别分布';
@@ -603,10 +603,10 @@ class AppLocalizationsZh extends AppLocalizations {
   String get dailyTotalLimit => '每日总限制：';
 
   @override
-  String get hours => '小时：';
+  String get hours => '小时';
 
   @override
-  String get minutes => '分钟：';
+  String get minutes => '分钟';
 
   @override
   String get currentUsage => '当前使用：';
@@ -1413,7 +1413,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get exportStarting => '正在开始导出...';
 
   @override
-  String get exportSuccessful => '导出成功！文件已保存至 Documents/TimeMark-Backups';
+  String get exportSuccessful => '导出成功';
 
   @override
   String get exportFailed => '导出失败';
@@ -2322,4 +2322,301 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get restartFailedMessage => '无法自动重新启动应用。请退出（Cmd+Q）并手动重新打开。';
+
+  @override
+  String get exportAnalyticsReport => '导出分析报告';
+
+  @override
+  String get chooseExportFormat => '选择导出格式：';
+
+  @override
+  String get beautifulExcelReport => '精美Excel报告';
+
+  @override
+  String get beautifulExcelReportDescription => '精美多彩的电子表格，包含图表、表情符号和见解 ✨';
+
+  @override
+  String get excelReportIncludes => 'Excel报告包含：';
+
+  @override
+  String get summarySheetDescription => '📊 摘要表 - 关键指标和趋势';
+
+  @override
+  String get dailyBreakdownDescription => '📅 每日明细 - 可视化使用模式';
+
+  @override
+  String get appsSheetDescription => '📱 应用表 - 详细应用排名';
+
+  @override
+  String get insightsDescription => '💡 洞察 - 智能建议';
+
+  @override
+  String get beautifulExcelExportSuccess => '精美Excel报告导出成功！🎉';
+
+  @override
+  String failedToExportReport(String error) {
+    return '导出报告失败：$error';
+  }
+
+  @override
+  String get exporting => '导出中...';
+
+  @override
+  String get exportExcel => '导出Excel';
+
+  @override
+  String get saveAnalyticsReport => '保存分析报告';
+
+  @override
+  String analyticsReportFileName(String timestamp) {
+    return '分析报告_$timestamp.xlsx';
+  }
+
+  @override
+  String get usageAnalyticsReportTitle => '使用分析报告';
+
+  @override
+  String get generated => '生成时间：';
+
+  @override
+  String get period => '周期：';
+
+  @override
+  String dateRangeValue(String startDate, String endDate) {
+    return '$startDate 至 $endDate';
+  }
+
+  @override
+  String get keyMetrics => '关键指标';
+
+  @override
+  String get metric => '指标';
+
+  @override
+  String get value => '数值';
+
+  @override
+  String get change => '变化';
+
+  @override
+  String get trend => '趋势';
+
+  @override
+  String get productivityRate => '生产力比率';
+
+  @override
+  String get trendUp => '上升';
+
+  @override
+  String get trendDown => '下降';
+
+  @override
+  String get trendExcellent => '优秀';
+
+  @override
+  String get trendGood => '良好';
+
+  @override
+  String get trendNeedsImprovement => '需改进';
+
+  @override
+  String get trendActive => '活跃';
+
+  @override
+  String get trendNone => '无';
+
+  @override
+  String get trendTop => '最高';
+
+  @override
+  String get category => '类别';
+
+  @override
+  String get percentage => '百分比';
+
+  @override
+  String get visual => '可视化';
+
+  @override
+  String get statistics => '统计数据';
+
+  @override
+  String get averageDaily => '日均';
+
+  @override
+  String get highestDay => '最高日';
+
+  @override
+  String get lowestDay => '最低日';
+
+  @override
+  String get day => '星期';
+
+  @override
+  String get applicationUsageDetails => '应用使用详情';
+
+  @override
+  String get totalApps => '应用总数：';
+
+  @override
+  String get productiveApps => '高效应用：';
+
+  @override
+  String get rank => '排名';
+
+  @override
+  String get application => '应用程序';
+
+  @override
+  String get time => '时间';
+
+  @override
+  String get percentOfTotal => '占比';
+
+  @override
+  String get type => '类型';
+
+  @override
+  String get usageLevel => '使用级别';
+
+  @override
+  String get leisure => '休闲';
+
+  @override
+  String get usageLevelVeryHigh => '非常高 ||||||||';
+
+  @override
+  String get usageLevelHigh => '高 ||||||';
+
+  @override
+  String get usageLevelMedium => '中等 ||||';
+
+  @override
+  String get usageLevelLow => '低 ||';
+
+  @override
+  String get keyInsightsTitle => '关键洞察与建议';
+
+  @override
+  String get personalizedRecommendations => '个性化建议';
+
+  @override
+  String insightHighDailyUsage(String hours) {
+    return '高日使用量：您平均每天屏幕使用时间为$hours小时';
+  }
+
+  @override
+  String insightLowDailyUsage(String hours) {
+    return '低日使用量：您平均每天仅$hours小时 - 保持得很好！';
+  }
+
+  @override
+  String insightModerateUsage(String hours) {
+    return '适度使用：平均每天屏幕使用时间为$hours小时';
+  }
+
+  @override
+  String insightExcellentProductivity(String percentage) {
+    return '出色的生产力：$percentage%的屏幕时间用于高效工作！';
+  }
+
+  @override
+  String insightGoodProductivity(String percentage) {
+    return '良好的生产力：$percentage%的屏幕时间用于高效工作';
+  }
+
+  @override
+  String insightLowProductivity(String percentage) {
+    return '低生产力警告：仅$percentage%的屏幕时间是高效的';
+  }
+
+  @override
+  String insightFocusSessions(int count, String avgPerDay) {
+    return '专注会话：完成$count次会话（平均每天$avgPerDay次）';
+  }
+
+  @override
+  String insightGreatFocusHabit(int count) {
+    return '出色的专注习惯：您已完成$count次专注会话，建立了出色的专注习惯！';
+  }
+
+  @override
+  String get insightNoFocusSessions => '无专注会话：考虑使用专注模式来提高生产力';
+
+  @override
+  String insightScreenTimeTrend(String direction, String percentage) {
+    return '屏幕时间趋势：与上一周期相比，您的使用量$direction了$percentage%';
+  }
+
+  @override
+  String insightProductiveTimeTrend(String direction, String percentage) {
+    return '高效时间趋势：与上一周期相比，您的高效时间$direction了$percentage%';
+  }
+
+  @override
+  String get directionIncreased => '增加';
+
+  @override
+  String get directionDecreased => '减少';
+
+  @override
+  String insightTopCategory(String category, String percentage) {
+    return '热门类别：$category占据了$percentage%的总时间';
+  }
+
+  @override
+  String insightMostUsedApp(
+      String appName, String percentage, String duration) {
+    return '最常用应用：$appName占用了$percentage%的时间（$duration）';
+  }
+
+  @override
+  String insightUsageVaries(String highDay, String multiplier, String lowDay) {
+    return '使用量波动显著：$highDay的使用量是$lowDay的$multiplier倍';
+  }
+
+  @override
+  String get insightNoInsights => '暂无重要洞察';
+
+  @override
+  String get recScheduleFocusSessions => '尝试在一天中安排更多专注会话以提高生产力';
+
+  @override
+  String get recSetAppLimits => '考虑为休闲应用设置使用限制';
+
+  @override
+  String get recAimForFocusSessions => '争取每天至少1-2次专注会话以建立持续的习惯';
+
+  @override
+  String get recTakeBreaks => '您的每日屏幕时间较高。尝试使用20-20-20法则定期休息';
+
+  @override
+  String get recSetDailyGoals => '考虑设置每日屏幕时间目标以逐渐减少使用';
+
+  @override
+  String get recBalanceEntertainment => '娱乐应用占用了大量时间。考虑平衡更多高效活动';
+
+  @override
+  String get recReviewUsagePatterns => '您的屏幕时间显著增加。审查您的使用模式并设定界限';
+
+  @override
+  String get recScheduleFocusedWork => '您的高效时间有所减少。尝试在日历中安排专注工作时段';
+
+  @override
+  String get recKeepUpGreatWork => '继续保持！您的屏幕时间习惯看起来很健康';
+
+  @override
+  String get recContinueFocusSessions => '继续使用专注会话以保持生产力';
+
+  @override
+  String get sheetSummary => '摘要';
+
+  @override
+  String get sheetDailyBreakdown => '每日明细';
+
+  @override
+  String get sheetApps => '应用';
+
+  @override
+  String get sheetInsights => '洞察';
 }

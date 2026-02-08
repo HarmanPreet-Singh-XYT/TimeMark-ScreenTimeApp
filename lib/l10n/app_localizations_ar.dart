@@ -320,7 +320,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get customDialogTitle => 'مخصص';
 
   @override
-  String get dateRange => 'نطاق التاريخ';
+  String get dateRange => 'نطاق التاريخ:';
 
   @override
   String get specificDate => 'تاريخ محدد';
@@ -332,7 +332,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get endDate => 'تاريخ النهاية: ';
 
   @override
-  String get date => 'التاريخ: ';
+  String get date => 'التاريخ';
 
   @override
   String get cancel => 'إلغاء';
@@ -617,10 +617,10 @@ class AppLocalizationsAr extends AppLocalizations {
   String get dailyTotalLimit => 'الحد اليومي الإجمالي: ';
 
   @override
-  String get hours => 'الساعات: ';
+  String get hours => 'ساعات';
 
   @override
-  String get minutes => 'الدقائق: ';
+  String get minutes => 'دقائق';
 
   @override
   String get currentUsage => 'الاستخدام الحالي: ';
@@ -1436,8 +1436,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get exportStarting => 'جارٍ بدء التصدير...';
 
   @override
-  String get exportSuccessful =>
-      'تم التصدير بنجاح! تم حفظ الملف في المستندات/TimeMark-Backups';
+  String get exportSuccessful => 'تم التصدير بنجاح';
 
   @override
   String get exportFailed => 'فشل التصدير';
@@ -2366,4 +2365,316 @@ class AppLocalizationsAr extends AppLocalizations {
   @override
   String get restartFailedMessage =>
       'تعذر إعادة تشغيل التطبيق تلقائيًا. يرجى الخروج (Cmd+Q) وإعادة تشغيله يدويًا.';
+
+  @override
+  String get exportAnalyticsReport => 'تصدير تقرير التحليلات';
+
+  @override
+  String get chooseExportFormat => 'اختر صيغة التصدير:';
+
+  @override
+  String get beautifulExcelReport => 'تقرير إكسل جميل';
+
+  @override
+  String get beautifulExcelReportDescription =>
+      'جدول بيانات ملون وجميل مع رسوم بيانية ورموز تعبيرية ورؤى ✨';
+
+  @override
+  String get excelReportIncludes => 'يتضمن تقرير الإكسل:';
+
+  @override
+  String get summarySheetDescription =>
+      '📊 ورقة الملخص - المقاييس الرئيسية مع الاتجاهات';
+
+  @override
+  String get dailyBreakdownDescription =>
+      '📅 التفصيل اليومي - أنماط الاستخدام المرئية';
+
+  @override
+  String get appsSheetDescription =>
+      '📱 ورقة التطبيقات - تصنيفات التطبيقات التفصيلية';
+
+  @override
+  String get insightsDescription => '💡 رؤى - توصيات ذكية';
+
+  @override
+  String get beautifulExcelExportSuccess =>
+      'تم تصدير تقرير الإكسل الجميل بنجاح! 🎉';
+
+  @override
+  String failedToExportReport(String error) {
+    return 'فشل في تصدير التقرير: $error';
+  }
+
+  @override
+  String get exporting => 'جاري التصدير...';
+
+  @override
+  String get exportExcel => 'تصدير إكسل';
+
+  @override
+  String get saveAnalyticsReport => 'حفظ تقرير التحليلات';
+
+  @override
+  String analyticsReportFileName(String timestamp) {
+    return 'تقرير_التحليلات_$timestamp.xlsx';
+  }
+
+  @override
+  String get usageAnalyticsReportTitle => 'تقرير تحليل الاستخدام';
+
+  @override
+  String get generated => 'تم الإنشاء:';
+
+  @override
+  String get period => 'الفترة:';
+
+  @override
+  String dateRangeValue(String startDate, String endDate) {
+    return '$startDate إلى $endDate';
+  }
+
+  @override
+  String get keyMetrics => 'المقاييس الرئيسية';
+
+  @override
+  String get metric => 'المقياس';
+
+  @override
+  String get value => 'القيمة';
+
+  @override
+  String get change => 'التغيير';
+
+  @override
+  String get trend => 'الاتجاه';
+
+  @override
+  String get productivityRate => 'معدل الإنتاجية';
+
+  @override
+  String get trendUp => 'ارتفاع';
+
+  @override
+  String get trendDown => 'انخفاض';
+
+  @override
+  String get trendExcellent => 'ممتاز';
+
+  @override
+  String get trendGood => 'جيد';
+
+  @override
+  String get trendNeedsImprovement => 'يحتاج تحسين';
+
+  @override
+  String get trendActive => 'نشط';
+
+  @override
+  String get trendNone => 'لا يوجد';
+
+  @override
+  String get trendTop => 'الأعلى';
+
+  @override
+  String get category => 'الفئة';
+
+  @override
+  String get percentage => 'النسبة المئوية';
+
+  @override
+  String get visual => 'مرئي';
+
+  @override
+  String get statistics => 'الإحصائيات';
+
+  @override
+  String get averageDaily => 'المعدل اليومي';
+
+  @override
+  String get highestDay => 'أعلى يوم';
+
+  @override
+  String get lowestDay => 'أدنى يوم';
+
+  @override
+  String get day => 'اليوم';
+
+  @override
+  String get applicationUsageDetails => 'تفاصيل استخدام التطبيقات';
+
+  @override
+  String get totalApps => 'إجمالي التطبيقات:';
+
+  @override
+  String get productiveApps => 'التطبيقات المنتجة:';
+
+  @override
+  String get rank => 'الترتيب';
+
+  @override
+  String get application => 'التطبيق';
+
+  @override
+  String get time => 'الوقت';
+
+  @override
+  String get percentOfTotal => '% من الإجمالي';
+
+  @override
+  String get type => 'النوع';
+
+  @override
+  String get usageLevel => 'مستوى الاستخدام';
+
+  @override
+  String get leisure => 'ترفيه';
+
+  @override
+  String get usageLevelVeryHigh => 'عالي جداً ||||||||';
+
+  @override
+  String get usageLevelHigh => 'عالي ||||||';
+
+  @override
+  String get usageLevelMedium => 'متوسط ||||';
+
+  @override
+  String get usageLevelLow => 'منخفض ||';
+
+  @override
+  String get keyInsightsTitle => 'الرؤى والتوصيات الرئيسية';
+
+  @override
+  String get personalizedRecommendations => 'توصيات مخصصة';
+
+  @override
+  String insightHighDailyUsage(String hours) {
+    return 'استخدام يومي مرتفع: أنت تستخدم في المتوسط $hours ساعات يومياً من وقت الشاشة';
+  }
+
+  @override
+  String insightLowDailyUsage(String hours) {
+    return 'استخدام يومي منخفض: أنت تستخدم في المتوسط $hours ساعات يومياً - توازن رائع!';
+  }
+
+  @override
+  String insightModerateUsage(String hours) {
+    return 'استخدام معتدل: في المتوسط $hours ساعات يومياً من وقت الشاشة';
+  }
+
+  @override
+  String insightExcellentProductivity(String percentage) {
+    return 'إنتاجية ممتازة: $percentage% من وقت شاشتك هو عمل منتج!';
+  }
+
+  @override
+  String insightGoodProductivity(String percentage) {
+    return 'إنتاجية جيدة: $percentage% من وقت شاشتك منتج';
+  }
+
+  @override
+  String insightLowProductivity(String percentage) {
+    return 'تنبيه إنتاجية منخفضة: فقط $percentage% من وقت الشاشة منتج';
+  }
+
+  @override
+  String insightFocusSessions(int count, String avgPerDay) {
+    return 'جلسات التركيز: أكملت $count جلسة ($avgPerDay في اليوم في المتوسط)';
+  }
+
+  @override
+  String insightGreatFocusHabit(int count) {
+    return 'عادة تركيز رائعة: لقد بنيت روتين تركيز مذهل مع $count جلسة مكتملة!';
+  }
+
+  @override
+  String get insightNoFocusSessions =>
+      'لا توجد جلسات تركيز: فكر في استخدام وضع التركيز لتعزيز إنتاجيتك';
+
+  @override
+  String insightScreenTimeTrend(String direction, String percentage) {
+    return 'اتجاه وقت الشاشة: استخدامك $direction بنسبة $percentage% مقارنة بالفترة السابقة';
+  }
+
+  @override
+  String insightProductiveTimeTrend(String direction, String percentage) {
+    return 'اتجاه الوقت المنتج: وقتك المنتج $direction بنسبة $percentage% مقارنة بالفترة السابقة';
+  }
+
+  @override
+  String get directionIncreased => 'زاد';
+
+  @override
+  String get directionDecreased => 'انخفض';
+
+  @override
+  String insightTopCategory(String category, String percentage) {
+    return 'الفئة الأعلى: $category تهيمن بنسبة $percentage% من إجمالي وقتك';
+  }
+
+  @override
+  String insightMostUsedApp(
+      String appName, String percentage, String duration) {
+    return 'التطبيق الأكثر استخداماً: $appName يمثل $percentage% من وقتك ($duration)';
+  }
+
+  @override
+  String insightUsageVaries(String highDay, String multiplier, String lowDay) {
+    return 'الاستخدام يختلف بشكل كبير: $highDay كان لديه استخدام أكثر بـ$multiplier مرة من $lowDay';
+  }
+
+  @override
+  String get insightNoInsights => 'لا تتوفر رؤى مهمة';
+
+  @override
+  String get recScheduleFocusSessions =>
+      'حاول جدولة المزيد من جلسات التركيز طوال يومك لتعزيز الإنتاجية';
+
+  @override
+  String get recSetAppLimits => 'فكر في وضع حدود على تطبيقات الترفيه';
+
+  @override
+  String get recAimForFocusSessions =>
+      'اهدف إلى 1-2 جلسة تركيز على الأقل يومياً لبناء عادة ثابتة';
+
+  @override
+  String get recTakeBreaks =>
+      'وقت شاشتك اليومي مرتفع جداً. حاول أخذ فترات راحة منتظمة باستخدام قاعدة 20-20-20';
+
+  @override
+  String get recSetDailyGoals =>
+      'فكر في تحديد أهداف يومية لوقت الشاشة لتقليل الاستخدام تدريجياً';
+
+  @override
+  String get recBalanceEntertainment =>
+      'تطبيقات الترفيه تستهلك جزءاً كبيراً من وقتك. فكر في التوازن مع أنشطة أكثر إنتاجية';
+
+  @override
+  String get recReviewUsagePatterns =>
+      'زاد وقت شاشتك بشكل كبير. راجع أنماط استخدامك وضع حدوداً';
+
+  @override
+  String get recScheduleFocusedWork =>
+      'انخفض وقتك المنتج. حاول جدولة فترات عمل مركزة في تقويمك';
+
+  @override
+  String get recKeepUpGreatWork =>
+      'واصل العمل الرائع! عادات وقت الشاشة لديك تبدو صحية';
+
+  @override
+  String get recContinueFocusSessions =>
+      'استمر في استخدام جلسات التركيز للحفاظ على الإنتاجية';
+
+  @override
+  String get sheetSummary => 'الملخص';
+
+  @override
+  String get sheetDailyBreakdown => 'التفصيل اليومي';
+
+  @override
+  String get sheetApps => 'التطبيقات';
+
+  @override
+  String get sheetInsights => 'الرؤى';
 }
