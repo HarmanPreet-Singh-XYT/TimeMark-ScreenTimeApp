@@ -2761,4 +2761,84 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get sheetInsights => 'Инсайты';
+
+  @override
+  String get statusHeader => 'Статус';
+
+  @override
+  String workSessions(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count рабочих сессий',
+      few: '$count рабочие сессии',
+      one: '$count рабочая сессия',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get complete => 'Завершено';
+
+  @override
+  String get inProgress => 'В процессе';
+
+  @override
+  String get workTime => 'Рабочее время';
+
+  @override
+  String get breakTime => 'Время перерыва';
+
+  @override
+  String get phasesCompleted => 'Завершено фаз';
+
+  @override
+  String hourMinuteFormat(String hours, String minutes) {
+    return '$hours ч $minutes мин';
+  }
+
+  @override
+  String hourOnlyFormat(String hours) {
+    return '$hours ч';
+  }
+
+  @override
+  String minuteFormat(String minutes) {
+    return '$minutes мин';
+  }
+
+  @override
+  String sessionsCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count сессий',
+      few: '$count сессии',
+      one: '$count сессия',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get workPhases => 'Рабочие фазы';
+
+  @override
+  String get averageLength => 'Средняя длина';
+
+  @override
+  String get mostProductive => 'Самый продуктивный';
+
+  @override
+  String get work => 'Работа';
+
+  @override
+  String get breaks => 'Перерывы';
+
+  @override
+  String get none => 'Нет';
+
+  @override
+  String minuteShortFormat(String minutes) {
+    return '$minutesм';
+  }
 }

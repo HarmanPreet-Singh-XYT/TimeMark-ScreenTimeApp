@@ -1759,5 +1759,76 @@
   "sheetSummary": "摘要",
   "sheetDailyBreakdown": "每日明细",
   "sheetApps": "应用",
-  "sheetInsights": "洞察"
+  "sheetInsights": "洞察",
+  "statusHeader": "状态",
+  "workSessions": "{count}个工作时段",
+  "@workSessions": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "complete": "已完成",
+  "inProgress": "进行中",
+  "workTime": "工作时间",
+  "breakTime": "休息时间",
+  "phasesCompleted": "已完成阶段",
+  "hourMinuteFormat": "{hours}小时{minutes}分钟",
+  "@hourMinuteFormat": {
+    "placeholders": {
+      "hours": {
+        "type": "String"
+      },
+      "minutes": {
+        "type": "String"
+      }
+    }
+  },
+  "hourOnlyFormat": "{hours}小时",
+  "@hourOnlyFormat": {
+    "placeholders": {
+      "hours": {
+        "type": "String"
+      }
+    }
+  },
+  "minuteFormat": "{minutes}分钟",
+  "@minuteFormat": {
+    "placeholders": {
+      "minutes": {
+        "type": "String"
+      }
+    }
+  },
+  "@sessionsCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "totalTime": "总时间",
+  "workPhases": "工作阶段",
+  "averageLength": "平均时长",
+  "mostProductive": "最高效",
+  "work": "工作",
+  "breaks": "休息",
+  "none": "无",
+  "minuteShortFormat": "{minutes}分钟",
+  "@minuteShortFormat": {
+    "placeholders": {
+      "minutes": {
+        "type": "String"
+      }
+    }
+  },
+  "sessionsCount": "{count}个时段",
+  "@sessionsCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  }
 }

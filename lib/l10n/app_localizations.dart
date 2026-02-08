@@ -4965,6 +4965,114 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Insights'**
   String get sheetInsights;
+
+  /// No description provided for @statusHeader.
+  ///
+  /// In en, this message translates to:
+  /// **'Status'**
+  String get statusHeader;
+
+  /// No description provided for @workSessions.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{{count} work session} other{{count} work sessions}}'**
+  String workSessions(int count);
+
+  /// No description provided for @complete.
+  ///
+  /// In en, this message translates to:
+  /// **'Complete'**
+  String get complete;
+
+  /// No description provided for @inProgress.
+  ///
+  /// In en, this message translates to:
+  /// **'In Progress'**
+  String get inProgress;
+
+  /// No description provided for @workTime.
+  ///
+  /// In en, this message translates to:
+  /// **'Work Time'**
+  String get workTime;
+
+  /// No description provided for @breakTime.
+  ///
+  /// In en, this message translates to:
+  /// **'Break Time'**
+  String get breakTime;
+
+  /// No description provided for @phasesCompleted.
+  ///
+  /// In en, this message translates to:
+  /// **'Phases Completed'**
+  String get phasesCompleted;
+
+  /// No description provided for @hourMinuteFormat.
+  ///
+  /// In en, this message translates to:
+  /// **'{hours} hr {minutes} min'**
+  String hourMinuteFormat(String hours, String minutes);
+
+  /// No description provided for @hourOnlyFormat.
+  ///
+  /// In en, this message translates to:
+  /// **'{hours} hr'**
+  String hourOnlyFormat(String hours);
+
+  /// No description provided for @minuteFormat.
+  ///
+  /// In en, this message translates to:
+  /// **'{minutes} min'**
+  String minuteFormat(String minutes);
+
+  /// No description provided for @sessionsCount.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{{count} session} other{{count} sessions}}'**
+  String sessionsCount(int count);
+
+  /// No description provided for @workPhases.
+  ///
+  /// In en, this message translates to:
+  /// **'Work Phases'**
+  String get workPhases;
+
+  /// No description provided for @averageLength.
+  ///
+  /// In en, this message translates to:
+  /// **'Average Length'**
+  String get averageLength;
+
+  /// No description provided for @mostProductive.
+  ///
+  /// In en, this message translates to:
+  /// **'Most Productive'**
+  String get mostProductive;
+
+  /// No description provided for @work.
+  ///
+  /// In en, this message translates to:
+  /// **'Work'**
+  String get work;
+
+  /// No description provided for @breaks.
+  ///
+  /// In en, this message translates to:
+  /// **'Breaks'**
+  String get breaks;
+
+  /// No description provided for @none.
+  ///
+  /// In en, this message translates to:
+  /// **'None'**
+  String get none;
+
+  /// No description provided for @minuteShortFormat.
+  ///
+  /// In en, this message translates to:
+  /// **'{minutes}m'**
+  String minuteShortFormat(String minutes);
 }
 
 class _AppLocalizationsDelegate

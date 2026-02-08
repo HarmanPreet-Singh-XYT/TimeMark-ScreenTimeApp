@@ -1766,5 +1766,69 @@
   "sheetSummary": "সারাংশ",
   "sheetDailyBreakdown": "দৈনিক বিশ্লেষণ",
   "sheetApps": "অ্যাপস",
-  "sheetInsights": "অন্তর্দৃষ্টি"
+  "sheetInsights": "অন্তর্দৃষ্টি",
+  "statusHeader": "অবস্থা",
+  "workSessions": "{count}টি কাজের সেশন",
+  "@workSessions": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "complete": "সম্পূর্ণ",
+  "inProgress": "চলমান",
+  "workTime": "কাজের সময়",
+  "breakTime": "বিরতির সময়",
+  "phasesCompleted": "সম্পন্ন ধাপ",
+  "hourMinuteFormat": "{hours} ঘণ্টা {minutes} মিনিট",
+  "@hourMinuteFormat": {
+    "placeholders": {
+      "hours": {
+        "type": "String"
+      },
+      "minutes": {
+        "type": "String"
+      }
+    }
+  },
+  "hourOnlyFormat": "{hours} ঘণ্টা",
+  "@hourOnlyFormat": {
+    "placeholders": {
+      "hours": {
+        "type": "String"
+      }
+    }
+  },
+  "minuteFormat": "{minutes} মিনিট",
+  "@minuteFormat": {
+    "placeholders": {
+      "minutes": {
+        "type": "String"
+      }
+    }
+  },
+  "sessionsCount": "{count}টি সেশন",
+  "@sessionsCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "totalTime": "মোট সময়",
+  "workPhases": "কাজের ধাপ",
+  "averageLength": "গড় সময়কাল",
+  "mostProductive": "সবচেয়ে উৎপাদনশীল",
+  "work": "কাজ",
+  "breaks": "বিরতি",
+  "none": "কিছু নেই",
+  "minuteShortFormat": "{minutes}মি",
+  "@minuteShortFormat": {
+    "placeholders": {
+      "minutes": {
+        "type": "String"
+      }
+    }
+  }
 }

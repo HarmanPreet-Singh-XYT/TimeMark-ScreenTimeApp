@@ -87,10 +87,13 @@ class _FocusModeState extends State<FocusMode>
         startDate: startDate,
         endDate: endDate,
       );
-      final history = _analyticsService.getSessionHistory(
+
+      // Use GROUPED sessions instead of individual phases
+      final history = _analyticsService.getGroupedPomodoroSessions(
         startDate: startDate,
         endDate: endDate,
       );
+
       final countByDay = _analyticsService.getSessionCountByDay(
         startDate: startDate,
         endDate: endDate,
@@ -102,7 +105,7 @@ class _FocusModeState extends State<FocusMode>
         workPercentage = timeDistribution['workPercentage'] ?? 0;
         shortBreakPercentage = timeDistribution['shortBreakPercentage'] ?? 0;
         longBreakPercentage = timeDistribution['longBreakPercentage'] ?? 0;
-        sessionHistory = history;
+        sessionHistory = history; // Now contains grouped sessions
         sessionCountByDay = _getLatestDataByWeekday(countByDay);
         focusTrends = trends;
         weeklySummary = summary;
@@ -409,16 +412,40 @@ class _FocusModeState extends State<FocusMode>
     );
   }
 
-  Widget _buildWeeklySummaryCard(BuildContext context, AppLocalizations l10n) {
-    final totalSessions = weeklySummary['totalSessions'] ?? 0;
-    final sessions =
-        weeklySummary['sessions'] as List<Map<String, dynamic>>? ?? [];
+  /// Converts English day name to localized day name
+  String _getLocalizedDayName(String dayKey, AppLocalizations l10n) {
+    switch (dayKey.toLowerCase()) {
+      case 'monday':
+        return l10n.day_monday;
+      case 'tuesday':
+        return l10n.day_tuesday;
+      case 'wednesday':
+        return l10n.day_wednesday;
+      case 'thursday':
+        return l10n.day_thursday;
+      case 'friday':
+        return l10n.day_friday;
+      case 'saturday':
+        return l10n.day_saturday;
+      case 'sunday':
+        return l10n.day_sunday;
+      case 'none':
+      default:
+        return l10n.none;
+    }
+  }
 
-    // Calculate from sessions list
-    final totalMinutes = sessions.fold<int>(
-        0, (sum, session) => sum + (session['totalMinutes'] as int? ?? 0));
-    final avgSessionLength =
-        totalSessions > 0 ? (totalMinutes / totalSessions).round() : 0;
+  Widget _buildWeeklySummaryCard(BuildContext context, AppLocalizations l10n) {
+    final int totalSessions = weeklySummary['totalSessions'] ?? 0;
+    final int totalWorkPhases = weeklySummary['totalWorkPhases'] ?? 0;
+    final String formattedTotalTime =
+        weeklySummary['formattedTotalTime'] ?? l10n.minuteFormat('0');
+    final int avgSessionMinutes = weeklySummary['avgSessionMinutes'] ?? 0;
+    final String mostProductiveDayKey =
+        weeklySummary['mostProductiveDay'] ?? 'None';
+    // Convert English day name to localized day name
+    final String mostProductiveDay =
+        _getLocalizedDayName(mostProductiveDayKey, l10n);
 
     return _AnimatedCard(
       child: Padding(
@@ -426,23 +453,236 @@ class _FocusModeState extends State<FocusMode>
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(
-              l10n.thisWeek,
-              style: FluentTheme.of(context).typography.bodyStrong?.copyWith(
-                    fontWeight: FontWeight.w600,
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  l10n.thisWeek,
+                  style:
+                      FluentTheme.of(context).typography.bodyStrong?.copyWith(
+                            fontWeight: FontWeight.w600,
+                          ),
+                ),
+                if (totalSessions > 0)
+                  Container(
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                    decoration: BoxDecoration(
+                      color: const Color(0xFF4CAF50).withValues(alpha: 0.1),
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    child: Text(
+                      l10n.sessionsCount(totalSessions),
+                      style:
+                          FluentTheme.of(context).typography.caption?.copyWith(
+                                color: const Color(0xFF4CAF50),
+                                fontWeight: FontWeight.w600,
+                              ),
+                    ),
                   ),
+              ],
             ),
             const SizedBox(height: 16),
-            _buildStatRow(context, l10n.sessions, '$totalSessions',
-                FluentIcons.check_mark),
-            const SizedBox(height: 12),
-            _buildStatRow(
-                context, l10n.totalTime, '${totalMinutes}m', FluentIcons.clock),
-            const SizedBox(height: 12),
-            _buildStatRow(context, l10n.avgLength, '${avgSessionLength}m',
-                FluentIcons.calculator),
+
+            // Time breakdown
+            _buildTimeSection(
+                context, l10n, l10n.totalTime, formattedTotalTime, null),
+            const SizedBox(height: 8),
+
+            // Work vs Break breakdown with progress bar
+            _buildTimeBreakdown(context, l10n, weeklySummary),
+            const SizedBox(height: 16),
+
+            // Stats grid
+            Row(
+              children: [
+                Expanded(
+                  child: _buildMiniStat(
+                    context,
+                    l10n.workPhases,
+                    '$totalWorkPhases',
+                    const Color(0xFFFF5C50),
+                  ),
+                ),
+                const SizedBox(width: 12),
+                Expanded(
+                  child: _buildMiniStat(
+                    context,
+                    l10n.averageLength,
+                    avgSessionMinutes > 0
+                        ? l10n.minuteShortFormat(avgSessionMinutes.toString())
+                        : '-',
+                    const Color(0xFF42A5F5),
+                  ),
+                ),
+              ],
+            ),
+
+            if (mostProductiveDay != l10n.none) ...[
+              const SizedBox(height: 12),
+              _buildStatRow(
+                context,
+                l10n.mostProductive,
+                mostProductiveDay,
+                FluentIcons.emoji,
+              ),
+            ],
           ],
         ),
+      ),
+    );
+  }
+
+  Widget _buildTimeSection(BuildContext context, AppLocalizations l10n,
+      String label, String value, Color? color) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        Text(
+          label,
+          style: FluentTheme.of(context).typography.body,
+        ),
+        Text(
+          value,
+          style: FluentTheme.of(context).typography.bodyStrong?.copyWith(
+                fontWeight: FontWeight.w600,
+                color: color,
+              ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildTimeBreakdown(BuildContext context, AppLocalizations l10n,
+      Map<String, dynamic> summary) {
+    final int totalMinutes = summary['totalMinutes'] ?? 0;
+    final int workMinutes = summary['totalWorkMinutes'] ?? 0;
+    final int breakMinutes = summary['totalBreakMinutes'] ?? 0;
+
+    final double workPercent =
+        totalMinutes > 0 ? workMinutes / totalMinutes : 0;
+    final double breakPercent =
+        totalMinutes > 0 ? breakMinutes / totalMinutes : 0;
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        // Progress bar
+        Container(
+          height: 8,
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(4),
+            color: FluentTheme.of(context).inactiveBackgroundColor,
+          ),
+          child: Row(
+            children: [
+              if (workPercent > 0)
+                Flexible(
+                  flex: (workPercent * 100).round(),
+                  child: Container(
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.horizontal(
+                        left: const Radius.circular(4),
+                        right: breakPercent > 0
+                            ? Radius.zero
+                            : const Radius.circular(4),
+                      ),
+                      color: const Color(0xFFFF5C50),
+                    ),
+                  ),
+                ),
+              if (breakPercent > 0)
+                Flexible(
+                  flex: (breakPercent * 100).round(),
+                  child: Container(
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.horizontal(
+                        left: workPercent > 0
+                            ? Radius.zero
+                            : const Radius.circular(4),
+                        right: const Radius.circular(4),
+                      ),
+                      color: const Color(0xFF4CAF50),
+                    ),
+                  ),
+                ),
+            ],
+          ),
+        ),
+        const SizedBox(height: 8),
+
+        // Legend
+        Row(
+          children: [
+            _buildLegendItem(
+                context,
+                l10n.work,
+                l10n.minuteShortFormat(workMinutes.toString()),
+                const Color(0xFFFF5C50)),
+            const SizedBox(width: 16),
+            _buildLegendItem(
+                context,
+                l10n.breaks,
+                l10n.minuteShortFormat(breakMinutes.toString()),
+                const Color(0xFF4CAF50)),
+          ],
+        ),
+      ],
+    );
+  }
+
+  Widget _buildLegendItem(
+      BuildContext context, String label, String value, Color color) {
+    return Row(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Container(
+          width: 8,
+          height: 8,
+          decoration: BoxDecoration(
+            color: color,
+            shape: BoxShape.circle,
+          ),
+        ),
+        const SizedBox(width: 6),
+        Text(
+          '$label: $value',
+          style: FluentTheme.of(context).typography.caption,
+        ),
+      ],
+    );
+  }
+
+  Widget _buildMiniStat(
+      BuildContext context, String label, String value, Color color) {
+    return Container(
+      padding: const EdgeInsets.all(12),
+      decoration: BoxDecoration(
+        color: color.withValues(alpha: 0.1),
+        borderRadius: BorderRadius.circular(8),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            value,
+            style: FluentTheme.of(context).typography.subtitle?.copyWith(
+                  fontWeight: FontWeight.w600,
+                  color: color,
+                ),
+          ),
+          const SizedBox(height: 2),
+          Text(
+            label,
+            style: FluentTheme.of(context).typography.caption?.copyWith(
+                  color: FluentTheme.of(context)
+                      .typography
+                      .caption
+                      ?.color
+                      ?.withValues(alpha: 0.7),
+                ),
+          ),
+        ],
       ),
     );
   }
@@ -553,9 +793,6 @@ class _MeterState extends State<Meter> with TickerProviderStateMixin {
   bool _isRunning = false;
   TimerState _currentTimerState = TimerState.idle;
 
-  // Track completed sessions locally
-  int _completedWorkSessions = 0;
-
   // Animation controllers
   late AnimationController _pulseController;
   late Animation<double> _pulseAnimation;
@@ -583,6 +820,8 @@ class _MeterState extends State<Meter> with TickerProviderStateMixin {
   }
 
   void _updateFromTimerUpdate(TimerUpdate update) {
+    TimerState previousState = _currentTimerState;
+
     _currentTimerState = update.state;
     _isRunning = update.isRunning;
 
@@ -610,6 +849,20 @@ class _MeterState extends State<Meter> with TickerProviderStateMixin {
     _percentComplete = update.secondsRemaining > 0
         ? (update.secondsRemaining / totalSeconds)
         : 1.0;
+
+    // Detect state transitions and play sounds when state actually changes
+    if (previousState != _currentTimerState &&
+        previousState != TimerState.idle) {
+      debugPrint(
+          '🔔 State transition detected: $previousState → $_currentTimerState');
+      if (_currentTimerState == TimerState.work) {
+        _onWorkSessionStart();
+      } else if (_currentTimerState == TimerState.shortBreak) {
+        _onShortBreakStart();
+      } else if (_currentTimerState == TimerState.longBreak) {
+        _onLongBreakStart();
+      }
+    }
 
     // Handle pulse animation
     if (_isRunning && !_pulseController.isAnimating) {
@@ -716,59 +969,72 @@ class _MeterState extends State<Meter> with TickerProviderStateMixin {
           VoiceGenderOptions.defaultGender;
 
   void _onWorkSessionStart() {
-    debugPrint('Work session started');
+    debugPrint('▶️ Work session started in UI');
+    if (!mounted) return;
+
     if (enableSounds) {
       SoundManager.playSound(
         context: context,
         soundType: 'work_start',
         voiceGender: selectedVoiceGender,
-      );
+      ).catchError((e) {
+        debugPrint('❌ Work start sound error: $e');
+      });
     }
-    if (blockDistractions) debugPrint('Blocking distractions');
+    if (blockDistractions) {
+      debugPrint('🚫 Blocking distractions');
+    }
   }
 
   void _onShortBreakStart() {
-    debugPrint('Short break started');
+    debugPrint('☕ Short break started in UI');
+    if (!mounted) return;
+
     if (enableSounds) {
       SoundManager.playSound(
         context: context,
         soundType: 'break_start',
         voiceGender: selectedVoiceGender,
-      );
+      ).catchError((e) {
+        debugPrint('❌ Break start sound error: $e');
+      });
     }
-    setState(() {
-      _completedWorkSessions++;
-    });
+    // REMOVED: _completedWorkSessions++ (service handles this)
   }
 
   void _onLongBreakStart() {
-    debugPrint('Long break started');
+    debugPrint('🌴 Long break started in UI');
+    if (!mounted) return;
+
     if (enableSounds) {
       SoundManager.playSound(
         context: context,
         soundType: 'long_break_start',
         voiceGender: selectedVoiceGender,
-      );
+      ).catchError((e) {
+        debugPrint('❌ Long break start sound error: $e');
+      });
     }
-    setState(() {
-      _completedWorkSessions++;
-    });
+    // REMOVED: _completedWorkSessions++ (service handles this)
   }
 
   void _onTimerComplete() {
-    debugPrint('Timer completed');
+    debugPrint('⏰ Timer phase completed');
+    if (!mounted) return;
+
     if (enableSounds) {
       SoundManager.playSound(
         context: context,
         soundType: 'timer_complete',
         voiceGender: selectedVoiceGender,
-      );
+      ).catchError((e) {
+        debugPrint('❌ Completion sound error: $e');
+      });
     }
   }
 
   void _handlePlayPausePressed() {
-    debugPrint(
-        '🔵 Play/Pause - State: ${_timerService.currentState}, Running: $_isRunning');
+    debugPrint('🔵 Play/Pause pressed');
 
     _buttonScaleController
         .forward()
@@ -777,66 +1043,22 @@ class _MeterState extends State<Meter> with TickerProviderStateMixin {
     final wasIdle = _timerService.currentState == TimerState.idle;
     final wasRunning = _isRunning;
 
-    // Play sound BEFORE starting timer if starting from idle
-    if (!wasRunning && wasIdle && enableSounds && mounted) {
-      debugPrint('🔊 Playing sound before timer start');
-      SoundManager.playSound(
-        context: context,
-        soundType: 'work_start',
-        voiceGender: selectedVoiceGender,
-      ).catchError((e) {
-        debugPrint('❌ Sound error: $e');
-      });
-    }
-
     setState(() {
       if (wasRunning) {
         _timerService.pauseTimer();
       } else {
         if (wasIdle || _timerService.secondsRemaining == 0) {
-          // Always start a fresh work session if idle OR timer is at 0
           debugPrint('▶️ Starting fresh work session');
           _timerService.startWorkSession();
+          // Call UI callback for manual start
+          if (mounted) {
+            _onWorkSessionStart();
+          }
         } else {
-          // Resume existing timer
           debugPrint('▶️ Resuming timer');
           _timerService.resumeTimer();
         }
       }
-    });
-  }
-
-  void _handleReloadPressed() {
-    setState(() {
-      _timerService.resetTimer();
-      // if (_timerService.currentState == TimerState.idle) {
-      //   _timerService.startWorkSession();
-      // }
-    });
-  }
-
-  void _handleSkipPressed() {
-    setState(() {
-      // Skip to next session
-      if (_currentTimerState == TimerState.work) {
-        // If in work session, increment count and start break
-        _completedWorkSessions++;
-        if (_completedWorkSessions % 4 == 0) {
-          _timerService.startLongBreak();
-        } else {
-          _timerService.startShortBreak();
-        }
-      } else {
-        // If in break, start new work session
-        _timerService.startWorkSession();
-      }
-    });
-  }
-
-  void _resetAllSessions() {
-    setState(() {
-      _timerService.resetStats(); // ← This resets the service counter
-      _timerService.resetTimer();
     });
   }
 
@@ -867,8 +1089,8 @@ class _MeterState extends State<Meter> with TickerProviderStateMixin {
 
   @override
   void dispose() {
-    // _timerService.dispose();
-    // _uiUpdateTimer?.cancel();
+    _timerSubscription?.cancel(); // Cancel subscription first
+    _timerSubscription = null;
     _pulseController.dispose();
     _buttonScaleController.dispose();
     _audioPlayer.dispose();
@@ -993,6 +1215,7 @@ class _MeterState extends State<Meter> with TickerProviderStateMixin {
                 _currentTimerState != TimerState.idle) {
               setState(() {
                 _timerService.startWorkSession();
+                if (mounted) _onWorkSessionStart();
               });
             }
           },
@@ -1006,6 +1229,7 @@ class _MeterState extends State<Meter> with TickerProviderStateMixin {
             if (_currentTimerState != TimerState.shortBreak) {
               setState(() {
                 _timerService.startShortBreak();
+                if (mounted) _onShortBreakStart();
               });
             }
           },
@@ -1019,12 +1243,33 @@ class _MeterState extends State<Meter> with TickerProviderStateMixin {
             if (_currentTimerState != TimerState.longBreak) {
               setState(() {
                 _timerService.startLongBreak();
+                if (mounted) _onLongBreakStart();
               });
             }
           },
         ),
       ],
     );
+  }
+
+  void _handleNavigateBackward() {
+    setState(() {
+      _timerService.navigateBackward();
+    });
+  }
+
+  void _handleNavigateForward() {
+    setState(() {
+      _timerService.navigateForward();
+    });
+  }
+
+  void _resetCompleteSession() {
+    // Only call this when user wants to completely restart from beginning
+    setState(() {
+      _timerService.resetStats();
+      _timerService.resetTimer();
+    });
   }
 
   Widget _buildControlButtons(BuildContext context, Color timerColor) {
@@ -1034,15 +1279,15 @@ class _MeterState extends State<Meter> with TickerProviderStateMixin {
       children: [
         ControlButton(
           icon: FluentIcons.refresh,
-          onPressed: _handleReloadPressed,
-          tooltip: l10n.restartSession,
+          onPressed: _resetCompleteSession,
+          tooltip: l10n.restartSession, // Restart current phase
         ),
         const SizedBox(width: 16),
 
         ControlButton(
           icon: FluentIcons.previous,
-          onPressed: _resetAllSessions,
-          tooltip: l10n.resetAll,
+          onPressed: _handleNavigateBackward,
+          tooltip: 'Previous Phase', // Navigate backward in session
         ),
         const SizedBox(width: 20),
 
@@ -1059,8 +1304,8 @@ class _MeterState extends State<Meter> with TickerProviderStateMixin {
         const SizedBox(width: 20),
         ControlButton(
           icon: FluentIcons.next,
-          onPressed: _handleSkipPressed,
-          tooltip: l10n.skipToNext,
+          onPressed: _handleNavigateForward,
+          tooltip: 'Next Phase', // Navigate forward in session
         ),
         const SizedBox(width: 16),
 
@@ -1074,11 +1319,13 @@ class _MeterState extends State<Meter> with TickerProviderStateMixin {
   }
 
   Widget _buildSessionCounter(BuildContext context) {
-    // Show 4 dots representing sessions until long break
     final sessionsUntilLongBreak = 4;
     final currentCycleProgress =
         _timerService.completedSessions % sessionsUntilLongBreak;
     final l10n = AppLocalizations.of(context)!;
+    final fullSessionsCompleted =
+        _timerService.completedFullSessions; // ← Add this
+
     return Column(
       children: [
         Row(
@@ -1119,7 +1366,7 @@ class _MeterState extends State<Meter> with TickerProviderStateMixin {
         ),
         const SizedBox(height: 8),
         Text(
-          l10n.sessionsCompleted(_timerService.completedSessions),
+          l10n.sessionsCompleted(fullSessionsCompleted), // ← Use full sessions
           style: FluentTheme.of(context).typography.caption?.copyWith(
                 color: FluentTheme.of(context)
                     .typography

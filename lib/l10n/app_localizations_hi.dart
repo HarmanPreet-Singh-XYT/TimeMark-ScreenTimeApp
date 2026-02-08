@@ -2700,4 +2700,70 @@ class AppLocalizationsHi extends AppLocalizations {
 
   @override
   String get sheetInsights => 'अंतर्दृष्टि';
+
+  @override
+  String get statusHeader => 'स्थिति';
+
+  @override
+  String workSessions(int count) {
+    return '$count कार्य सत्र';
+  }
+
+  @override
+  String get complete => 'पूर्ण';
+
+  @override
+  String get inProgress => 'प्रगति में';
+
+  @override
+  String get workTime => 'कार्य समय';
+
+  @override
+  String get breakTime => 'विराम समय';
+
+  @override
+  String get phasesCompleted => 'पूर्ण चरण';
+
+  @override
+  String hourMinuteFormat(String hours, String minutes) {
+    return '$hours घंटा $minutes मिनट';
+  }
+
+  @override
+  String hourOnlyFormat(String hours) {
+    return '$hours घंटा';
+  }
+
+  @override
+  String minuteFormat(String minutes) {
+    return '$minutes मिनट';
+  }
+
+  @override
+  String sessionsCount(int count) {
+    return '$count सत्र';
+  }
+
+  @override
+  String get workPhases => 'कार्य चरण';
+
+  @override
+  String get averageLength => 'औसत अवधि';
+
+  @override
+  String get mostProductive => 'सबसे उत्पादक';
+
+  @override
+  String get work => 'कार्य';
+
+  @override
+  String get breaks => 'विराम';
+
+  @override
+  String get none => 'कोई नहीं';
+
+  @override
+  String minuteShortFormat(String minutes) {
+    return '$minutesमि';
+  }
 }

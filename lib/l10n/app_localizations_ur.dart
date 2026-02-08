@@ -2691,4 +2691,70 @@ class AppLocalizationsUr extends AppLocalizations {
 
   @override
   String get sheetInsights => 'بصیرت';
+
+  @override
+  String get statusHeader => 'حیثیت';
+
+  @override
+  String workSessions(int count) {
+    return '$count کام کے سیشن';
+  }
+
+  @override
+  String get complete => 'مکمل';
+
+  @override
+  String get inProgress => 'جاری ہے';
+
+  @override
+  String get workTime => 'کام کا وقت';
+
+  @override
+  String get breakTime => 'وقفے کا وقت';
+
+  @override
+  String get phasesCompleted => 'مکمل مراحل';
+
+  @override
+  String hourMinuteFormat(String hours, String minutes) {
+    return '$hours گھنٹہ $minutes منٹ';
+  }
+
+  @override
+  String hourOnlyFormat(String hours) {
+    return '$hours گھنٹہ';
+  }
+
+  @override
+  String minuteFormat(String minutes) {
+    return '$minutes منٹ';
+  }
+
+  @override
+  String sessionsCount(int count) {
+    return '$count سیشن';
+  }
+
+  @override
+  String get workPhases => 'کام کے مراحل';
+
+  @override
+  String get averageLength => 'اوسط مدت';
+
+  @override
+  String get mostProductive => 'سب سے زیادہ پیداواری';
+
+  @override
+  String get work => 'کام';
+
+  @override
+  String get breaks => 'وقفے';
+
+  @override
+  String get none => 'کوئی نہیں';
+
+  @override
+  String minuteShortFormat(String minutes) {
+    return '$minutesم';
+  }
 }

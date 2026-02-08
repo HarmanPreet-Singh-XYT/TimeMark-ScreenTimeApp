@@ -2648,4 +2648,70 @@ class AppLocalizationsJa extends AppLocalizations {
 
   @override
   String get sheetInsights => 'インサイト';
+
+  @override
+  String get statusHeader => 'ステータス';
+
+  @override
+  String workSessions(int count) {
+    return '$count回の作業セッション';
+  }
+
+  @override
+  String get complete => '完了';
+
+  @override
+  String get inProgress => '進行中';
+
+  @override
+  String get workTime => '作業時間';
+
+  @override
+  String get breakTime => '休憩時間';
+
+  @override
+  String get phasesCompleted => '完了したフェーズ';
+
+  @override
+  String hourMinuteFormat(String hours, String minutes) {
+    return '$hours時間$minutes分';
+  }
+
+  @override
+  String hourOnlyFormat(String hours) {
+    return '$hours時間';
+  }
+
+  @override
+  String minuteFormat(String minutes) {
+    return '$minutes分';
+  }
+
+  @override
+  String sessionsCount(int count) {
+    return '$countセッション';
+  }
+
+  @override
+  String get workPhases => '作業フェーズ';
+
+  @override
+  String get averageLength => '平均時間';
+
+  @override
+  String get mostProductive => '最も生産的';
+
+  @override
+  String get work => '作業';
+
+  @override
+  String get breaks => '休憩';
+
+  @override
+  String get none => 'なし';
+
+  @override
+  String minuteShortFormat(String minutes) {
+    return '$minutes分';
+  }
 }

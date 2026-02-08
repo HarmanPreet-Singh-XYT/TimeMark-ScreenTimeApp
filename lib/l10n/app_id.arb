@@ -1757,5 +1757,69 @@
   "sheetSummary": "Ringkasan",
   "sheetDailyBreakdown": "Rincian Harian",
   "sheetApps": "Aplikasi",
-  "sheetInsights": "Wawasan"
+  "sheetInsights": "Wawasan",
+  "statusHeader": "Status",
+  "workSessions": "{count} sesi kerja",
+  "@workSessions": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "complete": "Selesai",
+  "inProgress": "Sedang Berlangsung",
+  "workTime": "Waktu Kerja",
+  "breakTime": "Waktu Istirahat",
+  "phasesCompleted": "Fase Selesai",
+  "hourMinuteFormat": "{hours} jam {minutes} menit",
+  "@hourMinuteFormat": {
+    "placeholders": {
+      "hours": {
+        "type": "String"
+      },
+      "minutes": {
+        "type": "String"
+      }
+    }
+  },
+  "hourOnlyFormat": "{hours} jam",
+  "@hourOnlyFormat": {
+    "placeholders": {
+      "hours": {
+        "type": "String"
+      }
+    }
+  },
+  "minuteFormat": "{minutes} menit",
+  "@minuteFormat": {
+    "placeholders": {
+      "minutes": {
+        "type": "String"
+      }
+    }
+  },
+  "sessionsCount": "{count} sesi",
+  "@sessionsCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "totalTime": "Total Waktu",
+  "workPhases": "Fase Kerja",
+  "averageLength": "Rata-rata Durasi",
+  "mostProductive": "Paling Produktif",
+  "work": "Kerja",
+  "breaks": "Istirahat",
+  "none": "Tidak ada",
+  "minuteShortFormat": "{minutes}m",
+  "@minuteShortFormat": {
+    "placeholders": {
+      "minutes": {
+        "type": "String"
+      }
+    }
+  }
 }

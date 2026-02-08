@@ -1765,5 +1765,69 @@
   "sheetSummary": "सारांश",
   "sheetDailyBreakdown": "दैनिक विवरण",
   "sheetApps": "ऐप्स",
-  "sheetInsights": "अंतर्दृष्टि"
+  "sheetInsights": "अंतर्दृष्टि",
+  "statusHeader": "स्थिति",
+  "workSessions": "{count} कार्य सत्र",
+  "@workSessions": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "complete": "पूर्ण",
+  "inProgress": "प्रगति में",
+  "workTime": "कार्य समय",
+  "breakTime": "विराम समय",
+  "phasesCompleted": "पूर्ण चरण",
+  "hourMinuteFormat": "{hours} घंटा {minutes} मिनट",
+  "@hourMinuteFormat": {
+    "placeholders": {
+      "hours": {
+        "type": "String"
+      },
+      "minutes": {
+        "type": "String"
+      }
+    }
+  },
+  "hourOnlyFormat": "{hours} घंटा",
+  "@hourOnlyFormat": {
+    "placeholders": {
+      "hours": {
+        "type": "String"
+      }
+    }
+  },
+  "minuteFormat": "{minutes} मिनट",
+  "@minuteFormat": {
+    "placeholders": {
+      "minutes": {
+        "type": "String"
+      }
+    }
+  },
+  "sessionsCount": "{count} सत्र",
+  "@sessionsCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "totalTime": "कुल समय",
+  "workPhases": "कार्य चरण",
+  "averageLength": "औसत अवधि",
+  "mostProductive": "सबसे उत्पादक",
+  "work": "कार्य",
+  "breaks": "विराम",
+  "none": "कोई नहीं",
+  "minuteShortFormat": "{minutes}मि",
+  "@minuteShortFormat": {
+    "placeholders": {
+      "minutes": {
+        "type": "String"
+      }
+    }
+  }
 }

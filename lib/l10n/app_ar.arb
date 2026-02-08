@@ -1764,5 +1764,69 @@
   "sheetSummary": "الملخص",
   "sheetDailyBreakdown": "التفصيل اليومي",
   "sheetApps": "التطبيقات",
-  "sheetInsights": "الرؤى"
+  "sheetInsights": "الرؤى",
+  "statusHeader": "الحالة",
+  "workSessions": "{count, plural, =1{جلسة عمل واحدة} other{{count} جلسات عمل}}",
+  "@workSessions": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "complete": "مكتمل",
+  "inProgress": "قيد التقدم",
+  "workTime": "وقت العمل",
+  "breakTime": "وقت الاستراحة",
+  "phasesCompleted": "المراحل المكتملة",
+  "hourMinuteFormat": "{hours} ساعة {minutes} دقيقة",
+  "@hourMinuteFormat": {
+    "placeholders": {
+      "hours": {
+        "type": "String"
+      },
+      "minutes": {
+        "type": "String"
+      }
+    }
+  },
+  "hourOnlyFormat": "{hours} ساعة",
+  "@hourOnlyFormat": {
+    "placeholders": {
+      "hours": {
+        "type": "String"
+      }
+    }
+  },
+  "minuteFormat": "{minutes} دقيقة",
+  "@minuteFormat": {
+    "placeholders": {
+      "minutes": {
+        "type": "String"
+      }
+    }
+  },
+  "sessionsCount": "{count, plural, =1{جلسة واحدة} other{{count} جلسات}}",
+  "@sessionsCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "totalTime": "الوقت الإجمالي",
+  "workPhases": "مراحل العمل",
+  "averageLength": "متوسط المدة",
+  "mostProductive": "الأكثر إنتاجية",
+  "work": "عمل",
+  "breaks": "استراحات",
+  "none": "لا يوجد",
+  "minuteShortFormat": "{minutes}د",
+  "@minuteShortFormat": {
+    "placeholders": {
+      "minutes": {
+        "type": "String"
+      }
+    }
+  }
 }

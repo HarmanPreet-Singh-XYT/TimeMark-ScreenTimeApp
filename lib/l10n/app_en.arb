@@ -1973,5 +1973,69 @@
   "sheetSummary": "Summary",
   "sheetDailyBreakdown": "Daily Breakdown",
   "sheetApps": "Apps",
-  "sheetInsights": "Insights"
+  "sheetInsights": "Insights",
+  "statusHeader": "Status",
+  "workSessions": "{count, plural, =1{{count} work session} other{{count} work sessions}}",
+  "@workSessions": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "complete": "Complete",
+  "inProgress": "In Progress",
+  "workTime": "Work Time",
+  "breakTime": "Break Time",
+  "phasesCompleted": "Phases Completed",
+  "hourMinuteFormat": "{hours} hr {minutes} min",
+  "@hourMinuteFormat": {
+    "placeholders": {
+      "hours": {
+        "type": "String"
+      },
+      "minutes": {
+        "type": "String"
+      }
+    }
+  },
+  "hourOnlyFormat": "{hours} hr",
+  "@hourOnlyFormat": {
+    "placeholders": {
+      "hours": {
+        "type": "String"
+      }
+    }
+  },
+  "minuteFormat": "{minutes} min",
+  "@minuteFormat": {
+    "placeholders": {
+      "minutes": {
+        "type": "String"
+      }
+    }
+  },
+  "sessionsCount": "{count, plural, =1{{count} session} other{{count} sessions}}",
+  "@sessionsCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "totalTime": "Total Time",
+  "workPhases": "Work Phases",
+  "averageLength": "Average Length",
+  "mostProductive": "Most Productive",
+  "work": "Work",
+  "breaks": "Breaks",
+  "none": "None",
+  "minuteShortFormat": "{minutes}m",
+  "@minuteShortFormat": {
+    "placeholders": {
+      "minutes": {
+        "type": "String"
+      }
+    }
+  }
 }

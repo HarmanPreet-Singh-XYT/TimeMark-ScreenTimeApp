@@ -2619,4 +2619,70 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get sheetInsights => '洞察';
+
+  @override
+  String get statusHeader => '状态';
+
+  @override
+  String workSessions(int count) {
+    return '$count个工作时段';
+  }
+
+  @override
+  String get complete => '已完成';
+
+  @override
+  String get inProgress => '进行中';
+
+  @override
+  String get workTime => '工作时间';
+
+  @override
+  String get breakTime => '休息时间';
+
+  @override
+  String get phasesCompleted => '已完成阶段';
+
+  @override
+  String hourMinuteFormat(String hours, String minutes) {
+    return '$hours小时$minutes分钟';
+  }
+
+  @override
+  String hourOnlyFormat(String hours) {
+    return '$hours小时';
+  }
+
+  @override
+  String minuteFormat(String minutes) {
+    return '$minutes分钟';
+  }
+
+  @override
+  String sessionsCount(int count) {
+    return '$count个时段';
+  }
+
+  @override
+  String get workPhases => '工作阶段';
+
+  @override
+  String get averageLength => '平均时长';
+
+  @override
+  String get mostProductive => '最高效';
+
+  @override
+  String get work => '工作';
+
+  @override
+  String get breaks => '休息';
+
+  @override
+  String get none => '无';
+
+  @override
+  String minuteShortFormat(String minutes) {
+    return '$minutes分钟';
+  }
 }

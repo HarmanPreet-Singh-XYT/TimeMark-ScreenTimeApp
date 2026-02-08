@@ -1834,7 +1834,7 @@ class AppLocalizationsFr extends AppLocalizations {
   String get sessions => 'Sessions';
 
   @override
-  String get totalTime => 'Temps Total';
+  String get totalTime => 'Temps total';
 
   @override
   String get avgLength => 'Durée Moyenne';
@@ -2783,4 +2783,82 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get sheetInsights => 'Perspectives';
+
+  @override
+  String get statusHeader => 'Statut';
+
+  @override
+  String workSessions(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count sessions de travail',
+      one: '$count session de travail',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get complete => 'Terminé';
+
+  @override
+  String get inProgress => 'En cours';
+
+  @override
+  String get workTime => 'Temps de travail';
+
+  @override
+  String get breakTime => 'Temps de pause';
+
+  @override
+  String get phasesCompleted => 'Phases terminées';
+
+  @override
+  String hourMinuteFormat(String hours, String minutes) {
+    return '$hours h $minutes min';
+  }
+
+  @override
+  String hourOnlyFormat(String hours) {
+    return '$hours h';
+  }
+
+  @override
+  String minuteFormat(String minutes) {
+    return '$minutes min';
+  }
+
+  @override
+  String sessionsCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count sessions',
+      one: '$count session',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get workPhases => 'Phases de travail';
+
+  @override
+  String get averageLength => 'Durée moyenne';
+
+  @override
+  String get mostProductive => 'Plus productif';
+
+  @override
+  String get work => 'Travail';
+
+  @override
+  String get breaks => 'Pauses';
+
+  @override
+  String get none => 'Aucun';
+
+  @override
+  String minuteShortFormat(String minutes) {
+    return '${minutes}m';
+  }
 }

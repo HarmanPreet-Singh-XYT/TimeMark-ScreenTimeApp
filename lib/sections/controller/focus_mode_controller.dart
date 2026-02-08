@@ -2,24 +2,31 @@ import 'dart:async';
 import 'package:fluent_ui/fluent_ui.dart';
 
 import 'data_controllers/focus_mode_data_controller.dart';
-import './notification_controller.dart'; // Import the notification controller
+import './notification_controller.dart';
 
 enum TimerState { work, shortBreak, longBreak, idle }
 
+// Define the session phase structure
+class SessionPhase {
+  final TimerState state;
+  final int durationMinutes;
+  final int index; // Position in the chain (0-7)
+
+  SessionPhase(this.state, this.durationMinutes, this.index);
+}
+
 class PomodoroTimerService {
-  // Singleton instance
   static final PomodoroTimerService _instance =
       PomodoroTimerService._internal();
   final FocusAnalyticsService _analyticsService = FocusAnalyticsService();
   final NotificationController _notificationController =
-      NotificationController(); // Instance of notification controller
+      NotificationController();
 
   final StreamController<TimerUpdate> _stateController =
       StreamController<TimerUpdate>.broadcast();
 
   Stream<TimerUpdate> get timerUpdates => _stateController.stream;
 
-  // Factory constructor
   factory PomodoroTimerService({
     required int workDuration,
     required int shortBreakDuration,
@@ -41,22 +48,37 @@ class PomodoroTimerService {
     _instance._onLongBreakStart = onLongBreakStart;
     _instance._onTimerComplete = onTimerComplete;
 
+    // BUILD SESSION CHAIN IMMEDIATELY
+    _instance._buildSessionChain();
+
     return _instance;
   }
 
-  // Private constructor
-  PomodoroTimerService._internal();
+  PomodoroTimerService._internal() {
+    // Initialize with default chain
+    _buildSessionChain();
+  }
 
   // Config variables
-  int _workDuration = 25; // default 25 minute
-  int _shortBreakDuration = 5; // default 5 minutes
-  int _longBreakDuration = 15; // default 15 minutes
+  int _workDuration = 25;
+  int _shortBreakDuration = 5;
+  int _longBreakDuration = 15;
   bool _autoStart = false;
   bool _enableNotifications = true;
 
-  // Session tracking
-  int _completedSessions = 0;
-  int _totalSessions = 0;
+  // Session chain tracking
+  int _currentPhaseIndex = -1; // -1 = idle, 0-7 = positions in chain
+  List<SessionPhase> _sessionChain = [];
+
+  // Session statistics
+  int _completedFullSessions = 0;
+
+  // Track current session for database - FIXED VERSION
+  DateTime? _currentSessionStart;
+  DateTime? _currentSessionEnd;
+  DateTime? _currentPhaseStart; // Track when current phase started
+  List<Map<String, dynamic>> _sessionPhases =
+      []; // Track all phases with durations
 
   // Timer state
   TimerState _currentState = TimerState.idle;
@@ -75,16 +97,50 @@ class PomodoroTimerService {
   int get minutesRemaining => _secondsRemaining ~/ 60;
   int get secondsInCurrentMinute => _secondsRemaining % 60;
   bool get isRunning => _timer != null && _timer!.isActive;
-  int get completedSessions => _completedSessions;
-  int get totalSessions => _totalSessions;
+  int get completedSessions => _getCompletedWorkPeriods(); // For UI dots (0-3)
+  int get completedFullSessions => _completedFullSessions;
+  int get totalSessions => _completedFullSessions;
+  int get currentPhaseIndex => _currentPhaseIndex;
+  int get totalPhasesInSession => 8; // 4 work + 3 short breaks + 1 long break
 
-  // Initialize the timer service
-  Future<void> initialize() async {
-    // Ensure notification controller is initialized
-    await _notificationController.initialize();
+  // Calculate completed work periods from current phase index
+  int _getCompletedWorkPeriods() {
+    if (_currentPhaseIndex < 0) return 0;
+
+    // Count work periods we've COMPLETED (not the current one)
+    int count = 0;
+    for (int i = 0; i < _currentPhaseIndex && i < 8; i++) {
+      if (i % 2 == 0) {
+        // Work periods are at even indices
+        count++;
+      }
+    }
+    return count.clamp(0, 4);
   }
 
-  // Update configuration
+  // Build the session chain based on current durations
+  void _buildSessionChain() {
+    debugPrint('🔨 Building session chain...');
+    _sessionChain = [
+      SessionPhase(TimerState.work, _workDuration, 0),
+      SessionPhase(TimerState.shortBreak, _shortBreakDuration, 1),
+      SessionPhase(TimerState.work, _workDuration, 2),
+      SessionPhase(TimerState.shortBreak, _shortBreakDuration, 3),
+      SessionPhase(TimerState.work, _workDuration, 4),
+      SessionPhase(TimerState.shortBreak, _shortBreakDuration, 5),
+      SessionPhase(TimerState.work, _workDuration, 6),
+      SessionPhase(TimerState.longBreak, _longBreakDuration, 7),
+    ];
+    debugPrint('✅ Session chain built with ${_sessionChain.length} phases');
+  }
+
+  Future<void> initialize() async {
+    debugPrint('🚀 Initializing PomodoroTimerService...');
+    await _notificationController.initialize();
+    _buildSessionChain();
+    debugPrint('✅ PomodoroTimerService initialized');
+  }
+
   void updateConfig({
     int? workDuration,
     int? shortBreakDuration,
@@ -105,19 +161,21 @@ class PomodoroTimerService {
     _onShortBreakStart = onShortBreakStart ?? _onShortBreakStart;
     _onLongBreakStart = onLongBreakStart ?? _onLongBreakStart;
     _onTimerComplete = onTimerComplete ?? _onTimerComplete;
+
+    _buildSessionChain(); // Rebuild chain with new durations
   }
 
-  // Timer callback function - notify listeners
   void _timerCallback(Timer timer) {
     if (_secondsRemaining > 0) {
       _secondsRemaining--;
 
-      // Notify all listeners of the update
       _stateController.add(TimerUpdate(
         state: _currentState,
         secondsRemaining: _secondsRemaining,
         isRunning: isRunning,
-        completedSessions: _completedSessions,
+        completedSessions: _getCompletedWorkPeriods(),
+        completedFullSessions: _completedFullSessions,
+        currentPhaseIndex: _currentPhaseIndex,
       ));
 
       if (_enableNotifications && _secondsRemaining == 60) {
@@ -131,96 +189,123 @@ class PomodoroTimerService {
     }
   }
 
-  // Also emit when state changes (start, pause, reset, etc.)
   void _emitUpdate() {
     _stateController.add(TimerUpdate(
       state: _currentState,
       secondsRemaining: _secondsRemaining,
       isRunning: isRunning,
-      completedSessions: _completedSessions,
+      completedSessions: _getCompletedWorkPeriods(),
+      completedFullSessions: _completedFullSessions,
+      currentPhaseIndex: _currentPhaseIndex,
     ));
   }
 
-  // Update startWorkSession, pauseTimer, etc. to call _emitUpdate()
-  void startWorkSession() {
-    _currentState = TimerState.work;
-    _secondsRemaining = _workDuration * 60;
-    _startTimer();
-    _emitUpdate(); // Add this
+  // Start a specific phase by index
+  void _startPhaseByIndex(int index) {
+    debugPrint('🎯 _startPhaseByIndex called with index: $index');
 
-    if (_enableNotifications) {
-      _notificationController.sendFocusNotification('Pomodoro Work', false);
-      _onWorkSessionStart?.call();
+    if (_sessionChain.isEmpty) {
+      debugPrint('⚠️ Session chain is empty! Building it now...');
+      _buildSessionChain();
     }
-  }
 
-  // Start a short break
-  void startShortBreak() {
-    _currentState = TimerState.shortBreak;
-    _secondsRemaining = _shortBreakDuration * 60;
+    if (index < 0 || index >= _sessionChain.length) {
+      debugPrint(
+          '❌ Invalid phase index: $index (chain length: ${_sessionChain.length})');
+      return;
+    }
+
+    // Start tracking if this is the beginning of a new session
+    if (index == 0) {
+      _currentSessionStart = DateTime.now();
+      _sessionPhases = []; // Reset phase tracking
+      debugPrint('🆕 Starting NEW Pomodoro session at $_currentSessionStart');
+    }
+
+    // Track when this phase starts
+    _currentPhaseStart = DateTime.now();
+
+    SessionPhase phase = _sessionChain[index];
+    _currentPhaseIndex = index;
+    _currentState = phase.state;
+    _secondsRemaining = phase.durationMinutes * 60;
+
+    debugPrint(
+        '📍 Moving to phase $index: ${phase.state} (${phase.durationMinutes}m = $_secondsRemaining seconds)');
+
+    _emitUpdate(); // Emit update before starting timer
     _startTimer();
 
-    // Send notification for short break start
+    // Send notifications
     if (_enableNotifications) {
-      _notificationController.sendFocusNotification('Short Break', false);
-      if (_onShortBreakStart != null) {
-        _onShortBreakStart!();
+      switch (phase.state) {
+        case TimerState.work:
+          _notificationController.sendFocusNotification('Pomodoro Work', false);
+          break;
+        case TimerState.shortBreak:
+          _notificationController.sendFocusNotification('Short Break', false);
+          break;
+        case TimerState.longBreak:
+          _notificationController.sendFocusNotification('Long Break', false);
+          break;
+        case TimerState.idle:
+          break;
       }
     }
   }
 
-  // In your PomodoroTimerService class
+  void startWorkSession() {
+    debugPrint('▶️ startWorkSession called');
+    _startPhaseByIndex(0); // Always start from the beginning of the chain
+  }
+
+  void startShortBreak() {
+    debugPrint('☕ startShortBreak called');
+    // Find the first short break phase
+    _startPhaseByIndex(1);
+  }
+
+  void startLongBreak() {
+    debugPrint('🌴 startLongBreak called');
+    _startPhaseByIndex(7); // Last phase in the chain
+  }
+
   void restartCurrentSession() {
+    debugPrint(
+        '🔄 restartCurrentSession called (current phase: $_currentPhaseIndex)');
     pauseTimer();
 
-    // Keep the current state but reset the time
-    switch (_currentState) {
-      case TimerState.work:
-        _secondsRemaining = _workDuration * 60;
-        break;
-      case TimerState.shortBreak:
-        _secondsRemaining = _shortBreakDuration * 60;
-        break;
-      case TimerState.longBreak:
-        _secondsRemaining = _longBreakDuration * 60;
-        break;
-      case TimerState.idle:
-        _secondsRemaining = _workDuration * 60;
-        break;
+    // Restart the current phase
+    if (_currentPhaseIndex >= 0 && _currentPhaseIndex < _sessionChain.length) {
+      SessionPhase phase = _sessionChain[_currentPhaseIndex];
+      _secondsRemaining = phase.durationMinutes * 60;
+      _currentPhaseStart = DateTime.now(); // Reset phase start time
+      debugPrint(
+          'Resetting to ${phase.durationMinutes} minutes ($_secondsRemaining seconds)');
+    } else {
+      _secondsRemaining = _workDuration * 60;
+      debugPrint(
+          'No valid phase, defaulting to work duration: $_secondsRemaining seconds');
     }
 
-    // Automatically restart the timer
+    _emitUpdate();
+
     if (_currentState != TimerState.idle) {
       _startTimer();
     }
   }
 
-  // Start a long break
-  void startLongBreak() {
-    _currentState = TimerState.longBreak;
-    _secondsRemaining = _longBreakDuration * 60;
-    _startTimer();
-
-    // Send notification for long break start
-    if (_enableNotifications) {
-      _notificationController.sendFocusNotification('Long Break', false);
-      if (_onLongBreakStart != null) {
-        _onLongBreakStart!();
-      }
-    }
-  }
-
-  // Start the timer
   void _startTimer() {
+    debugPrint('⏱️ Starting timer with $_secondsRemaining seconds remaining');
     _timer?.cancel();
     _timer = Timer.periodic(const Duration(seconds: 1), _timerCallback);
   }
 
-  // Pause the timer
   void pauseTimer() {
+    debugPrint('⏸️ Pausing timer');
     _timer?.cancel();
     _timer = null;
-    _emitUpdate(); // Add this
+    _emitUpdate();
 
     if (_enableNotifications && _currentState != TimerState.idle) {
       _notificationController.showPopupAlert('Pomodoro Paused',
@@ -228,7 +313,6 @@ class PomodoroTimerService {
     }
   }
 
-  // Get the name of the current session type for notifications
   String _getSessionTypeName() {
     switch (_currentState) {
       case TimerState.work:
@@ -242,12 +326,11 @@ class PomodoroTimerService {
     }
   }
 
-  // Resume the timer
   void resumeTimer() {
+    debugPrint('▶️ Resuming timer');
     if (!isRunning && _secondsRemaining > 0) {
       _startTimer();
 
-      // Optional: Send a notification for resumed timer
       if (_enableNotifications && _currentState != TimerState.idle) {
         _notificationController.showPopupAlert('Pomodoro Resumed',
             'Your ${_getSessionTypeName()} session has been resumed.');
@@ -255,198 +338,306 @@ class PomodoroTimerService {
     }
   }
 
-  // Reset the timer
   void resetTimer() {
+    debugPrint('🔄 Resetting timer to idle');
     pauseTimer();
-
-    // Reset to idle state completely
     _currentState = TimerState.idle;
+    _currentPhaseIndex = -1;
     _secondsRemaining = _workDuration * 60;
 
-    // Optional: Send a notification for reset timer
+    // Clear session tracking
+    _currentSessionStart = null;
+    _currentSessionEnd = null;
+    _currentPhaseStart = null;
+    _sessionPhases = [];
+
+    _emitUpdate();
+
     if (_enableNotifications) {
       _notificationController.showPopupAlert(
           'Pomodoro Reset', 'Your timer has been reset.');
     }
   }
 
-  // // Timer callback function
-  // void _timerCallback(Timer timer) {
-  //   if (_secondsRemaining > 0) {
-  //     _secondsRemaining--;
+  // Record phase completion with actual duration and SAVE TO DATABASE
+  void _recordPhaseCompletion() {
+    if (_currentPhaseStart == null) return;
 
-  //     // Optional: Send a notification when time is almost up (e.g., 1 minute remaining)
-  //     if (_enableNotifications && _secondsRemaining == 60) {
-  //       _notificationController.showPopupAlert('1 Minute Remaining',
-  //           'Your ${_getSessionTypeName()} session will end in 1 minute.');
-  //     }
-  //   } else {
-  //     timer.cancel();
-  //     _timer = null;
-  //     _handleTimerComplete();
-  //   }
-  // }
+    final phaseEnd = DateTime.now();
+    final actualDuration = phaseEnd.difference(_currentPhaseStart!);
 
-  // Handle timer completion
-  void _handleTimerComplete() {
-    debugPrint('━━━━━━━━━━ TIMER COMPLETE ━━━━━━━━━━');
-    debugPrint('State before handling: $_currentState');
+    debugPrint('📊 Recording phase completion:');
+    debugPrint('   Type: $_currentState');
+    debugPrint(
+        '   Planned: ${_sessionChain[_currentPhaseIndex].durationMinutes} min');
+    debugPrint(
+        '   Actual: ${actualDuration.inMinutes} min ${actualDuration.inSeconds % 60} sec');
 
-    String completedSessionType = _getSessionTypeName();
-    TimerState completedState =
-        _currentState; // ← Store the state BEFORE changing it
-    int completedDuration = 0;
+    // Determine session type tag for database
+    String sessionTypeTag;
+    switch (_currentState) {
+      case TimerState.work:
+        sessionTypeTag = 'POMODORO_WORK';
+        break;
+      case TimerState.shortBreak:
+        sessionTypeTag = 'POMODORO_SHORT_BREAK';
+        break;
+      case TimerState.longBreak:
+        sessionTypeTag = 'POMODORO_LONG_BREAK';
+        break;
+      case TimerState.idle:
+        return; // Don't save idle state
+    }
 
-    // Always call the completion callback first
+    // Save this phase to database immediately
+    // Using appsBlocked field to encode session type
+    try {
+      debugPrint(
+          '💾 Saving phase to database: $_currentState as $sessionTypeTag');
+      _analyticsService.createFocusSession(
+        startTime: _currentPhaseStart!,
+        duration: actualDuration,
+        appsBlocked: [sessionTypeTag], // Encode type here
+      );
+      debugPrint('✅ Phase saved successfully');
+    } catch (e) {
+      debugPrint('❌ Failed to save phase: $e');
+    }
+
+    // Also track in session phases list for summary
+    _sessionPhases.add({
+      'type': _currentState.toString(),
+      'plannedMinutes': _sessionChain[_currentPhaseIndex].durationMinutes,
+      'actualDuration': actualDuration,
+      'startTime': _currentPhaseStart,
+      'endTime': phaseEnd,
+    });
+  }
+
+  // Complete the full Pomodoro session (extracted method)
+  void _completeSession() {
+    debugPrint('🎯 _completeSession called');
+    debugPrint('   Current phase: $_currentPhaseIndex');
+    debugPrint('   Phases completed: ${_sessionPhases.length}');
+
+    // Record the final phase (long break) - this will save it to DB
+    _recordPhaseCompletion();
+    _currentSessionEnd = DateTime.now();
+
+    // Calculate summary statistics for logging
+    if (_currentSessionStart != null && _sessionPhases.isNotEmpty) {
+      final totalDuration =
+          _currentSessionEnd!.difference(_currentSessionStart!);
+
+      final workDuration = _sessionPhases
+          .where((phase) => phase['type'] == 'TimerState.work')
+          .fold<Duration>(Duration.zero,
+              (sum, phase) => sum + (phase['actualDuration'] as Duration));
+
+      debugPrint('✅ COMPLETE Pomodoro session summary:');
+      debugPrint('   Session start: $_currentSessionStart');
+      debugPrint('   Session end: $_currentSessionEnd');
+      debugPrint('   Total elapsed time: ${totalDuration.inMinutes} minutes');
+      debugPrint('   Total work time: ${workDuration.inMinutes} minutes');
+      debugPrint('   Phases saved to DB: ${_sessionPhases.length}');
+    }
+
+    // INCREMENT FULL SESSION
+    _completedFullSessions++;
+    debugPrint(
+        '🎉 Completed full Pomodoro session! Total: $_completedFullSessions');
+
+    // Reset for next session
+    _currentSessionStart = null;
+    _currentSessionEnd = null;
+    _currentPhaseStart = null;
+    _sessionPhases = [];
+
+    // Call completion callback
     if (_onTimerComplete != null) {
+      debugPrint('📞 Calling onTimerComplete callback');
       _onTimerComplete!();
     }
 
-    if (_currentState == TimerState.work) {
-      completedDuration = _workDuration;
-      _completedSessions++;
-      _totalSessions++;
+    if (_enableNotifications) {
+      _notificationController.sendFocusNotification('Long Break', true);
+    }
 
-      debugPrint(
-          'Work session completed. Total completed: $_completedSessions');
+    // AUTO-START NEW SESSION or go to idle
+    if (_autoStart) {
+      debugPrint('▶️ Auto-starting NEW session (autoStart=true)');
+      _startPhaseByIndex(0);
 
-      // Send completion notification
       if (_enableNotifications) {
-        _notificationController.sendFocusNotification('Pomodoro Work', true);
-      }
-
-      // Determine which break to start next
-      if (_completedSessions % 4 == 0) {
-        debugPrint('Starting LONG break (after 4 sessions)');
-        if (_autoStart) {
-          startLongBreak();
-        } else {
-          _currentState = TimerState.idle;
-          if (_enableNotifications) {
-            _notificationController.showPopupAlert('Time for a Long Break',
-                'You have completed 4 work sessions. Time for a long break!');
-          }
-        }
-      } else {
-        debugPrint('Starting SHORT break');
-        if (_autoStart) {
-          startShortBreak();
-        } else {
-          _currentState = TimerState.idle;
-          if (_enableNotifications) {
-            _notificationController.showPopupAlert('Time for a Short Break',
-                'Work session completed. Time for a short break!');
-          }
-        }
+        _notificationController.showPopupAlert(
+            'New Session Starting', 'Starting a fresh Pomodoro session!');
       }
     } else {
-      // Break is complete
-      debugPrint('Break completed: $completedSessionType');
+      debugPrint('⏸️ Session complete. Going to idle (autoStart=false)');
+      _timer?.cancel();
+      _timer = null;
+      _currentState = TimerState.idle;
+      _currentPhaseIndex = -1;
+      _secondsRemaining = _workDuration * 60;
+      _emitUpdate();
 
-      if (_currentState == TimerState.shortBreak) {
-        completedDuration = _shortBreakDuration;
-      } else if (_currentState == TimerState.longBreak) {
-        completedDuration = _longBreakDuration;
-      }
-
-      // Send completion notification
       if (_enableNotifications) {
-        _notificationController.sendFocusNotification(
-            completedSessionType, true);
+        _notificationController.showPopupAlert('Session Complete',
+            'Great work! Press play when ready to start a new session.');
       }
+    }
+  }
 
-      // Start a new work session if autoStart is enabled
-      if (_autoStart) {
-        debugPrint('Auto-starting work session');
-        startWorkSession();
-      } else {
-        _currentState = TimerState.idle;
-        if (_enableNotifications) {
-          _notificationController.showPopupAlert('Break Completed',
-              'Your break is over. Ready to start working again?');
+  void _handleTimerComplete() {
+    debugPrint('━━━━━━━━━━ TIMER COMPLETE ━━━━━━━━━━');
+    debugPrint('Completed phase index: $_currentPhaseIndex');
+    debugPrint('Completed state: $_currentState');
+
+    // Record this phase completion
+    _recordPhaseCompletion();
+
+    // Check if we just completed the last phase (long break)
+    if (_currentPhaseIndex == 7) {
+      debugPrint('✅ Long break completed - FULL SESSION DONE');
+      _completeSession();
+    } else {
+      // Not the last phase - move to next phase in the chain
+      debugPrint('▶️ Auto-advancing to next phase');
+      _startPhaseByIndex(_currentPhaseIndex + 1);
+
+      // Call appropriate callbacks
+      if (_currentPhaseIndex >= 0 &&
+          _currentPhaseIndex < _sessionChain.length) {
+        SessionPhase nextPhase = _sessionChain[_currentPhaseIndex];
+        switch (nextPhase.state) {
+          case TimerState.work:
+            if (_onWorkSessionStart != null) _onWorkSessionStart!();
+            break;
+          case TimerState.shortBreak:
+            if (_onShortBreakStart != null) _onShortBreakStart!();
+            break;
+          case TimerState.longBreak:
+            if (_onLongBreakStart != null) _onLongBreakStart!();
+            break;
+          case TimerState.idle:
+            break;
         }
       }
     }
 
-    // Save to database - ONLY for work sessions
-    if (completedState == TimerState.work) {
-      debugPrint('💾 Saving to database...');
-      debugPrint('Duration: $completedDuration minutes');
-
-      DateTime now = DateTime.now();
-      Duration duration = Duration(minutes: completedDuration);
-      DateTime startTime = now.subtract(duration);
-
-      debugPrint('Start time: $startTime');
-      debugPrint('End time: $now');
-
-      try {
-        _analyticsService.createFocusSession(
-          startTime: startTime,
-          duration: duration,
-          appsBlocked: [],
-        );
-        debugPrint('✅ Database save successful');
-      } catch (e) {
-        debugPrint('❌ Database save failed: $e');
-      }
-    } else {
-      debugPrint('ℹ️ Skipping database save for break session');
-    }
-
-    debugPrint('State after handling: $_currentState');
+    debugPrint('Current phase index after handling: $_currentPhaseIndex');
     debugPrint('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
   }
 
-  // Skip to the next phase
-  void skipToNext() {
-    // String skippedSessionType = _getSessionTypeName();
+  // Navigate backward in the session chain (like a linked list)
+  void navigateBackward() {
+    debugPrint('⏮️ Navigating backward from phase $_currentPhaseIndex');
 
-    switch (_currentState) {
-      case TimerState.work:
-        // Notify about skipping work session
-        if (_enableNotifications) {
-          _notificationController.showPopupAlert(
-              'Work Session Skipped', 'You skipped the current work session.');
-        }
-        _handleTimerComplete();
-        break;
-      case TimerState.shortBreak:
-      case TimerState.longBreak:
-        // Notify about skipping break
-        if (_enableNotifications) {
-          _notificationController.showPopupAlert('Break Skipped',
-              'You skipped your ${_currentState == TimerState.shortBreak ? 'short' : 'long'} break.');
-        }
+    if (_currentPhaseIndex <= 0) {
+      debugPrint('Already at beginning or idle');
+      if (_currentPhaseIndex == 0) {
+        resetTimer(); // Go to idle
+      }
+      return;
+    }
 
-        if (_autoStart) {
-          startWorkSession();
-        } else {
-          _currentState = TimerState.idle;
-        }
-        break;
-      case TimerState.idle:
-        startWorkSession();
-        break;
+    // Move to previous phase in the chain
+    int newIndex = _currentPhaseIndex - 1;
+    debugPrint('Moving to phase $newIndex');
+
+    pauseTimer();
+    _startPhaseByIndex(newIndex);
+
+    // Call appropriate callback
+    if (newIndex >= 0 && newIndex < _sessionChain.length) {
+      SessionPhase phase = _sessionChain[newIndex];
+      switch (phase.state) {
+        case TimerState.work:
+          if (_onWorkSessionStart != null) _onWorkSessionStart!();
+          break;
+        case TimerState.shortBreak:
+          if (_onShortBreakStart != null) _onShortBreakStart!();
+          break;
+        case TimerState.longBreak:
+          if (_onLongBreakStart != null) _onLongBreakStart!();
+          break;
+        case TimerState.idle:
+          break;
+      }
     }
   }
 
-  // Reset all stats
-  void resetStats() {
-    _completedSessions = 0;
-    _totalSessions = 0;
+  // Navigate forward in the session chain (like a linked list)
+  void navigateForward() {
+    debugPrint('⏭️ Navigating forward from phase $_currentPhaseIndex');
 
-    // Notify about stats reset
+    // If at long break (phase 7), complete the session
+    if (_currentPhaseIndex == 7) {
+      debugPrint('📍 At long break - completing session when forwarding');
+      _completeSession();
+      return;
+    }
+
+    if (_currentPhaseIndex >= 7) {
+      debugPrint('Already at or past end of session');
+      return;
+    }
+
+    // If idle, start from beginning
+    if (_currentPhaseIndex < 0) {
+      debugPrint('Starting from idle - going to phase 0');
+      _startPhaseByIndex(0);
+      if (_onWorkSessionStart != null) _onWorkSessionStart!();
+      return;
+    }
+
+    // Move to next phase in the chain
+    int newIndex = _currentPhaseIndex + 1;
+    debugPrint('Moving to phase $newIndex');
+
+    pauseTimer();
+    _startPhaseByIndex(newIndex);
+
+    // Call appropriate callback
+    if (newIndex >= 0 && newIndex < _sessionChain.length) {
+      SessionPhase phase = _sessionChain[newIndex];
+      switch (phase.state) {
+        case TimerState.work:
+          if (_onWorkSessionStart != null) _onWorkSessionStart!();
+          break;
+        case TimerState.shortBreak:
+          if (_onShortBreakStart != null) _onShortBreakStart!();
+          break;
+        case TimerState.longBreak:
+          if (_onLongBreakStart != null) _onLongBreakStart!();
+          break;
+        case TimerState.idle:
+          break;
+      }
+    }
+  }
+
+  void resetStats() {
+    debugPrint('🔄 Resetting all stats');
+    _currentPhaseIndex = -1;
+    _completedFullSessions = 0;
+    _currentSessionStart = null;
+    _currentSessionEnd = null;
+    _currentPhaseStart = null;
+    _sessionPhases = [];
+    _emitUpdate();
+
     if (_enableNotifications) {
       _notificationController.showPopupAlert(
           'Stats Reset', 'Your Pomodoro statistics have been reset.');
     }
   }
 
-  // Dispose of resources
   void dispose() {
+    debugPrint('🗑️ Disposing PomodoroTimerService');
     _timer?.cancel();
     _timer = null;
+    _stateController.close();
   }
 }
 
@@ -455,11 +646,15 @@ class TimerUpdate {
   final int secondsRemaining;
   final bool isRunning;
   final int completedSessions;
+  final int completedFullSessions;
+  final int currentPhaseIndex;
 
   TimerUpdate({
     required this.state,
     required this.secondsRemaining,
     required this.isRunning,
     required this.completedSessions,
+    required this.completedFullSessions,
+    required this.currentPhaseIndex,
   });
 }

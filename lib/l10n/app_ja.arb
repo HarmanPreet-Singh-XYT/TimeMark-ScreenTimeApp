@@ -1764,5 +1764,69 @@
   "sheetSummary": "サマリー",
   "sheetDailyBreakdown": "日別内訳",
   "sheetApps": "アプリ",
-  "sheetInsights": "インサイト"
+  "sheetInsights": "インサイト",
+  "statusHeader": "ステータス",
+  "workSessions": "{count}回の作業セッション",
+  "@workSessions": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "complete": "完了",
+  "inProgress": "進行中",
+  "workTime": "作業時間",
+  "breakTime": "休憩時間",
+  "phasesCompleted": "完了したフェーズ",
+  "hourMinuteFormat": "{hours}時間{minutes}分",
+  "@hourMinuteFormat": {
+    "placeholders": {
+      "hours": {
+        "type": "String"
+      },
+      "minutes": {
+        "type": "String"
+      }
+    }
+  },
+  "hourOnlyFormat": "{hours}時間",
+  "@hourOnlyFormat": {
+    "placeholders": {
+      "hours": {
+        "type": "String"
+      }
+    }
+  },
+  "minuteFormat": "{minutes}分",
+  "@minuteFormat": {
+    "placeholders": {
+      "minutes": {
+        "type": "String"
+      }
+    }
+  },
+  "sessionsCount": "{count}セッション",
+  "@sessionsCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "totalTime": "合計時間",
+  "workPhases": "作業フェーズ",
+  "averageLength": "平均時間",
+  "mostProductive": "最も生産的",
+  "work": "作業",
+  "breaks": "休憩",
+  "none": "なし",
+  "minuteShortFormat": "{minutes}分",
+  "@minuteShortFormat": {
+    "placeholders": {
+      "minutes": {
+        "type": "String"
+      }
+    }
+  }
 }

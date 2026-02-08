@@ -2706,4 +2706,70 @@ class AppLocalizationsBn extends AppLocalizations {
 
   @override
   String get sheetInsights => 'অন্তর্দৃষ্টি';
+
+  @override
+  String get statusHeader => 'অবস্থা';
+
+  @override
+  String workSessions(int count) {
+    return '$countটি কাজের সেশন';
+  }
+
+  @override
+  String get complete => 'সম্পূর্ণ';
+
+  @override
+  String get inProgress => 'চলমান';
+
+  @override
+  String get workTime => 'কাজের সময়';
+
+  @override
+  String get breakTime => 'বিরতির সময়';
+
+  @override
+  String get phasesCompleted => 'সম্পন্ন ধাপ';
+
+  @override
+  String hourMinuteFormat(String hours, String minutes) {
+    return '$hours ঘণ্টা $minutes মিনিট';
+  }
+
+  @override
+  String hourOnlyFormat(String hours) {
+    return '$hours ঘণ্টা';
+  }
+
+  @override
+  String minuteFormat(String minutes) {
+    return '$minutes মিনিট';
+  }
+
+  @override
+  String sessionsCount(int count) {
+    return '$countটি সেশন';
+  }
+
+  @override
+  String get workPhases => 'কাজের ধাপ';
+
+  @override
+  String get averageLength => 'গড় সময়কাল';
+
+  @override
+  String get mostProductive => 'সবচেয়ে উৎপাদনশীল';
+
+  @override
+  String get work => 'কাজ';
+
+  @override
+  String get breaks => 'বিরতি';
+
+  @override
+  String get none => 'কিছু নেই';
+
+  @override
+  String minuteShortFormat(String minutes) {
+    return '$minutesমি';
+  }
 }

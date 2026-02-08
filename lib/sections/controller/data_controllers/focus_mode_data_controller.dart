@@ -8,157 +8,104 @@ import '../app_data_controller.dart';
 
 class FocusAnalyticsService {
   final AppDataStore _dataStore;
-  
+
   // Singleton pattern
-  static final FocusAnalyticsService _instance = FocusAnalyticsService._internal();
-  
+  static final FocusAnalyticsService _instance =
+      FocusAnalyticsService._internal();
+
   factory FocusAnalyticsService() {
     return _instance;
   }
-  
+
   FocusAnalyticsService._internal() : _dataStore = AppDataStore();
-  
-  // Get session counts by day for a specific period
-  Map<String, int> getSessionCountByDay({
-    required DateTime startDate,
-    required DateTime endDate,
-  }) {
-    if (!_dataStore.isInitialized) return {};
-    
-    try {
-      final Map<String, int> result = {};
-      
-      // Get all sessions in the range
-      final List<FocusSessionRecord> sessions = _dataStore.getFocusSessionsRange(startDate, endDate);
-      
-      // Initialize result with all days in the range
-      DateTime current = DateTime(startDate.year, startDate.month, startDate.day);
-      final DateTime end = DateTime(endDate.year, endDate.month, endDate.day);
-      
-      while (!current.isAfter(end)) {
-        final String dateKey = _formatDate(current);
-        result[dateKey] = 0;
-        current = current.add(const Duration(days: 1));
+
+  // ═══════════════════════════════════════════════════════════════════════════
+  // HELPER: Extract session type from appsBlocked
+  // ═══════════════════════════════════════════════════════════════════════════
+
+  String _getSessionType(List<String> appsBlocked) {
+    const List<String> pomodoroTags = [
+      'POMODORO_WORK',
+      'POMODORO_SHORT_BREAK',
+      'POMODORO_LONG_BREAK',
+    ];
+
+    for (final tag in pomodoroTags) {
+      if (appsBlocked.contains(tag)) {
+        return tag;
       }
-      
-      // Count sessions by day
-      for (final session in sessions) {
-        if (session.completed) {
-          final String dateKey = _formatDate(session.date);
-          result[dateKey] = (result[dateKey] ?? 0) + 1;
-        }
-      }
-      
-      return result;
-    } catch (e) {
-      debugPrint("Error getting session count by day: $e");
-      return {};
+    }
+
+    return 'REGULAR_FOCUS'; // Non-pomodoro focus session
+  }
+
+  String _getSessionTypeLabel(String sessionType) {
+    switch (sessionType) {
+      case 'POMODORO_WORK':
+        return 'Work Session';
+      case 'POMODORO_SHORT_BREAK':
+        return 'Short Break';
+      case 'POMODORO_LONG_BREAK':
+        return 'Long Break';
+      default:
+        return 'Focus Session';
     }
   }
-  
-  // Get detailed session history for a specific period
-  List<Map<String, dynamic>> getSessionHistory({
-    required DateTime startDate,
-    required DateTime endDate,
-  }) {
-    if (!_dataStore.isInitialized) return [];
-    
-    try {
-      final List<Map<String, dynamic>> result = [];
-      final List<FocusSessionRecord> sessions = _dataStore.getFocusSessionsRange(startDate, endDate);
-      
-      for (final session in sessions) {
-        if (session.completed) {
-          // Calculate total duration including breaks
-          final Duration totalDuration = session.duration + session.totalBreakTime;
-          
-          // Format time
-          final String startTimeStr = DateFormat('yyyy-MM-dd HH:mm').format(session.startTime);
-          final String durationStr = _formatDuration(totalDuration);
-          
-          // Calculate work time percentage
-          final double workTimePercentage = session.duration.inSeconds / totalDuration.inSeconds * 100;
-          
-          result.add({
-            'date': startTimeStr,
-            'duration': durationStr,
-            'totalMinutes': totalDuration.inMinutes,
-            'workMinutes': session.duration.inMinutes,
-            'breakMinutes': session.totalBreakTime.inMinutes,
-            'breakCount': session.breakCount,
-            'workTimePercentage': workTimePercentage.toStringAsFixed(1),
-            'appsBlocked': session.appsBlocked,
-            'rawSession': session, // Include the raw session for direct access if needed
-          });
-        }
-      }
-      
-      // Sort by date (newest first)
-      result.sort((a, b) => b['date'].compareTo(a['date']));
-      
-      return result;
-    } catch (e) {
-      debugPrint("Error getting session history: $e");
-      return [];
-    }
+
+  bool _isPomodoroPhase(String sessionType) {
+    return sessionType == 'POMODORO_WORK' ||
+        sessionType == 'POMODORO_SHORT_BREAK' ||
+        sessionType == 'POMODORO_LONG_BREAK';
   }
-  
-  // Get time distribution between work and breaks for a specific period
+
+  // ═══════════════════════════════════════════════════════════════════════════
+  // TIME DISTRIBUTION - Fixed to use session type tags
+  // ═══════════════════════════════════════════════════════════════════════════
+
   Map<String, dynamic> getTimeDistribution({
     required DateTime startDate,
     required DateTime endDate,
   }) {
     if (!_dataStore.isInitialized) {
-      return {
-        'workTime': Duration.zero,
-        'shortBreakTime': Duration.zero,
-        'longBreakTime': Duration.zero,
-        'workPercentage': 0.0,
-        'shortBreakPercentage': 0.0,
-        'longBreakPercentage': 0.0,
-      };
+      return _emptyTimeDistribution();
     }
-    
+
     try {
-      final List<FocusSessionRecord> sessions = _dataStore.getFocusSessionsRange(startDate, endDate)
+      final List<FocusSessionRecord> sessions = _dataStore
+          .getFocusSessionsRange(startDate, endDate)
           .where((session) => session.completed)
           .toList();
-      
+
       if (sessions.isEmpty) {
-        return {
-          'workTime': Duration.zero,
-          'shortBreakTime': Duration.zero,
-          'longBreakTime': Duration.zero,
-          'workPercentage': 0.0,
-          'shortBreakPercentage': 0.0,
-          'longBreakPercentage': 0.0,
-        };
+        return _emptyTimeDistribution();
       }
-      
-      // Calculate total work time
-      final Duration workTime = sessions.fold(
-          Duration.zero, (sum, session) => sum + session.duration);
-      
-      // For this example, we'll assume breaks less than 5 minutes are short breaks
-      // and breaks 5 minutes or longer are long breaks
+
+      Duration workTime = Duration.zero;
       Duration shortBreakTime = Duration.zero;
       Duration longBreakTime = Duration.zero;
-      
+
       for (final session in sessions) {
-        // This is an estimation since we don't have break durations individually
-        // You may need to adjust this logic based on your actual data structure
-        final Duration avgBreakTime = session.breakCount > 0
-            ? session.totalBreakTime ~/ session.breakCount
-            : Duration.zero;
-        
-        if (avgBreakTime.inMinutes < 5) {
-          shortBreakTime += session.totalBreakTime;
-        } else {
-          longBreakTime += session.totalBreakTime;
+        final String sessionType = _getSessionType(session.appsBlocked);
+
+        switch (sessionType) {
+          case 'POMODORO_WORK':
+            workTime += session.duration;
+            break;
+          case 'POMODORO_SHORT_BREAK':
+            shortBreakTime += session.duration;
+            break;
+          case 'POMODORO_LONG_BREAK':
+            longBreakTime += session.duration;
+            break;
+          default:
+            // Regular focus sessions count as work
+            workTime += session.duration;
+            break;
         }
       }
-      
+
       final Duration totalTime = workTime + shortBreakTime + longBreakTime;
+
       final double workPercentage = totalTime.inSeconds > 0
           ? workTime.inSeconds / totalTime.inSeconds * 100
           : 0.0;
@@ -168,7 +115,7 @@ class FocusAnalyticsService {
       final double longBreakPercentage = totalTime.inSeconds > 0
           ? longBreakTime.inSeconds / totalTime.inSeconds * 100
           : 0.0;
-      
+
       return {
         'workTime': workTime,
         'shortBreakTime': shortBreakTime,
@@ -184,283 +131,619 @@ class FocusAnalyticsService {
       };
     } catch (e) {
       debugPrint("Error getting time distribution: $e");
-      return {
-        'workTime': Duration.zero,
-        'shortBreakTime': Duration.zero,
-        'longBreakTime': Duration.zero,
-        'workPercentage': 0.0,
-        'shortBreakPercentage': 0.0,
-        'longBreakPercentage': 0.0,
-      };
+      return _emptyTimeDistribution();
     }
   }
-  
-  // Get focus session trends over specified periods
-  Map<String, dynamic> getFocusTrends({
-    int months = 3, // Default to last 3 months
-    bool useLifetimeIfLess = true, // Use all available data if less than months
+
+  Map<String, dynamic> _emptyTimeDistribution() {
+    return {
+      'workTime': Duration.zero,
+      'shortBreakTime': Duration.zero,
+      'longBreakTime': Duration.zero,
+      'totalTime': Duration.zero,
+      'workPercentage': 0.0,
+      'shortBreakPercentage': 0.0,
+      'longBreakPercentage': 0.0,
+      'formattedWorkTime': '0 min',
+      'formattedShortBreakTime': '0 min',
+      'formattedLongBreakTime': '0 min',
+      'formattedTotalTime': '0 min',
+    };
+  }
+
+  // ═══════════════════════════════════════════════════════════════════════════
+  // SESSION COUNTING - Count COMPLETE Pomodoro sessions (not individual phases)
+  // ═══════════════════════════════════════════════════════════════════════════
+
+  /// Count complete Pomodoro sessions (a session ends with a long break)
+  int getCompletePomodoroSessionCount({
+    required DateTime startDate,
+    required DateTime endDate,
   }) {
-    if (!_dataStore.isInitialized) {
-      return {
-        'periods': <String>[],
-        'sessionCounts': <int>[],
-        'avgDuration': <double>[],
-        'totalFocusTime': <int>[],
-        'percentageChange': 0.0,
-      };
-    }
-    
+    if (!_dataStore.isInitialized) return 0;
+
     try {
-      // Determine start date based on available data
-      final DateTime now = DateTime.now();
-      final DateTime endDate = DateTime(now.year, now.month, now.day);
-      
-      // For demonstration, we'll just go back to the first day of months ago
-      // In a real app, you might want to query your data store to find the earliest record
-      DateTime startDate = DateTime(now.year, now.month - months, 1);
-      
-      if (useLifetimeIfLess) {
-        // In a real implementation, you would query for the earliest record date
-        // For demonstration, we'll just use a fixed date if it's recent
-        final DateTime earliestPossible = DateTime(now.year - 1, now.month, 1);
-        if (earliestPossible.isAfter(startDate)) {
-          startDate = earliestPossible;
+      final List<FocusSessionRecord> sessions = _dataStore
+          .getFocusSessionsRange(startDate, endDate)
+          .where((session) => session.completed)
+          .toList();
+
+      // Count long breaks = count of complete sessions
+      int completeSessionCount = 0;
+      for (final session in sessions) {
+        final String sessionType = _getSessionType(session.appsBlocked);
+        if (sessionType == 'POMODORO_LONG_BREAK') {
+          completeSessionCount++;
         }
       }
-      
-      final List<String> periods = [];
-      final List<int> sessionCounts = [];
-      final List<double> avgDuration = [];
-      final List<int> totalFocusTime = [];
-      
-      // Calculate data for each month
-      DateTime currentStart = DateTime(startDate.year, startDate.month, 1);
-      
-      while (!currentStart.isAfter(endDate)) {
-        // Calculate end of the month
-        final DateTime nextMonth = DateTime(currentStart.year, currentStart.month + 1, 1);
-        final DateTime currentEnd = nextMonth.subtract(const Duration(days: 1));
-        
-        // Ensure we don't go beyond today
-        final DateTime adjustedEnd = currentEnd.isAfter(endDate) ? endDate : currentEnd;
-        
-        // Get sessions for this period
-        final List<FocusSessionRecord> periodSessions = _dataStore
-            .getFocusSessionsRange(currentStart, adjustedEnd)
-            .where((session) => session.completed)
-            .toList();
-        
-        // Calculate metrics
-        final int count = periodSessions.length;
-        final Duration total = periodSessions.fold(
-            Duration.zero, (sum, session) => sum + session.duration);
-        final double avg = count > 0 ? total.inMinutes / count : 0;
-        
-        // Add to result lists
-        periods.add(DateFormat('MMM yyyy').format(currentStart));
-        sessionCounts.add(count);
-        avgDuration.add(avg);
-        totalFocusTime.add(total.inMinutes);
-        
-        // Move to next month
-        currentStart = nextMonth;
-      }
-      
-      // Calculate percentage change (comparing last two periods)
-      double percentageChange = 0.0;
-      if (totalFocusTime.length >= 2 && totalFocusTime[totalFocusTime.length - 2] > 0) {
-        final int current = totalFocusTime.last;
-        final int previous = totalFocusTime[totalFocusTime.length - 2];
-        percentageChange = (current - previous) / previous * 100;
-      }
-      
-      return {
-        'periods': periods,
-        'sessionCounts': sessionCounts,
-        'avgDuration': avgDuration,
-        'totalFocusTime': totalFocusTime,
-        'percentageChange': percentageChange,
-      };
+
+      return completeSessionCount;
     } catch (e) {
-      debugPrint("Error getting focus trends: $e");
-      return {
-        'periods': <String>[],
-        'sessionCounts': <int>[],
-        'avgDuration': <double>[],
-        'totalFocusTime': <int>[],
-        'percentageChange': 0.0,
-      };
+      debugPrint("Error counting complete sessions: $e");
+      return 0;
     }
   }
-  
-  // Get weekly summary for the current or specified week
+
+  /// Count work phases completed (for progress tracking)
+  int getWorkPhaseCount({
+    required DateTime startDate,
+    required DateTime endDate,
+  }) {
+    if (!_dataStore.isInitialized) return 0;
+
+    try {
+      final List<FocusSessionRecord> sessions = _dataStore
+          .getFocusSessionsRange(startDate, endDate)
+          .where((session) => session.completed)
+          .toList();
+
+      int workCount = 0;
+      for (final session in sessions) {
+        final String sessionType = _getSessionType(session.appsBlocked);
+        if (sessionType == 'POMODORO_WORK') {
+          workCount++;
+        }
+      }
+
+      return workCount;
+    } catch (e) {
+      debugPrint("Error counting work phases: $e");
+      return 0;
+    }
+  }
+
+  // ═══════════════════════════════════════════════════════════════════════════
+  // SESSION COUNT BY DAY - Count complete sessions per day
+  // ═══════════════════════════════════════════════════════════════════════════
+
+  Map<String, int> getSessionCountByDay({
+    required DateTime startDate,
+    required DateTime endDate,
+  }) {
+    if (!_dataStore.isInitialized) return {};
+
+    try {
+      final Map<String, int> result = {};
+      final List<FocusSessionRecord> sessions =
+          _dataStore.getFocusSessionsRange(startDate, endDate);
+
+      // Initialize result with all days in the range
+      DateTime current =
+          DateTime(startDate.year, startDate.month, startDate.day);
+      final DateTime end = DateTime(endDate.year, endDate.month, endDate.day);
+
+      while (!current.isAfter(end)) {
+        final String dateKey = _formatDate(current);
+        result[dateKey] = 0;
+        current = current.add(const Duration(days: 1));
+      }
+
+      // Count COMPLETE sessions by day (only count long breaks as session completion)
+      for (final session in sessions) {
+        if (session.completed) {
+          final String sessionType = _getSessionType(session.appsBlocked);
+
+          // Only count complete Pomodoro sessions (marked by long break completion)
+          if (sessionType == 'POMODORO_LONG_BREAK') {
+            final String dateKey = _formatDate(session.date);
+            result[dateKey] = (result[dateKey] ?? 0) + 1;
+          }
+        }
+      }
+
+      return result;
+    } catch (e) {
+      debugPrint("Error getting session count by day: $e");
+      return {};
+    }
+  }
+
+  /// Alternative: Get work phase count by day (if you want to show work periods instead)
+  Map<String, int> getWorkPhaseCountByDay({
+    required DateTime startDate,
+    required DateTime endDate,
+  }) {
+    if (!_dataStore.isInitialized) return {};
+
+    try {
+      final Map<String, int> result = {};
+      final List<FocusSessionRecord> sessions =
+          _dataStore.getFocusSessionsRange(startDate, endDate);
+
+      // Initialize result with all days in the range
+      DateTime current =
+          DateTime(startDate.year, startDate.month, startDate.day);
+      final DateTime end = DateTime(endDate.year, endDate.month, endDate.day);
+
+      while (!current.isAfter(end)) {
+        final String dateKey = _formatDate(current);
+        result[dateKey] = 0;
+        current = current.add(const Duration(days: 1));
+      }
+
+      // Count work phases by day
+      for (final session in sessions) {
+        if (session.completed) {
+          final String sessionType = _getSessionType(session.appsBlocked);
+
+          if (sessionType == 'POMODORO_WORK') {
+            final String dateKey = _formatDate(session.date);
+            result[dateKey] = (result[dateKey] ?? 0) + 1;
+          }
+        }
+      }
+
+      return result;
+    } catch (e) {
+      debugPrint("Error getting work phase count by day: $e");
+      return {};
+    }
+  }
+
+  // ═══════════════════════════════════════════════════════════════════════════
+  // SESSION HISTORY - Show grouped Pomodoro cycles OR individual phases
+  // ═══════════════════════════════════════════════════════════════════════════
+
+  /// Get detailed history showing each phase with its type
+  List<Map<String, dynamic>> getSessionHistory({
+    required DateTime startDate,
+    required DateTime endDate,
+  }) {
+    if (!_dataStore.isInitialized) return [];
+
+    try {
+      final List<Map<String, dynamic>> result = [];
+      final List<FocusSessionRecord> sessions =
+          _dataStore.getFocusSessionsRange(startDate, endDate);
+
+      for (final session in sessions) {
+        if (session.completed) {
+          final String sessionType = _getSessionType(session.appsBlocked);
+          final String sessionTypeLabel = _getSessionTypeLabel(sessionType);
+
+          final String startTimeStr =
+              DateFormat('yyyy-MM-dd HH:mm').format(session.startTime);
+          final String durationStr = _formatDuration(session.duration);
+
+          result.add({
+            'date': startTimeStr,
+            'duration': durationStr,
+            'totalMinutes': session.duration.inMinutes,
+            'sessionType': sessionType,
+            'sessionTypeLabel': sessionTypeLabel,
+            'isPomodoroPhase': _isPomodoroPhase(sessionType),
+            'appsBlocked': session.appsBlocked,
+            'rawSession': session,
+          });
+        }
+      }
+
+      // Sort by date (newest first)
+      result.sort((a, b) => b['date'].compareTo(a['date']));
+
+      return result;
+    } catch (e) {
+      debugPrint("Error getting session history: $e");
+      return [];
+    }
+  }
+
+  /// Get grouped Pomodoro sessions (each complete cycle as one entry)
+  List<Map<String, dynamic>> getGroupedPomodoroSessions({
+    required DateTime startDate,
+    required DateTime endDate,
+  }) {
+    if (!_dataStore.isInitialized) return [];
+
+    try {
+      final List<FocusSessionRecord> allSessions = _dataStore
+          .getFocusSessionsRange(startDate, endDate)
+          .where((session) => session.completed)
+          .toList();
+
+      // Sort by start time
+      allSessions.sort((a, b) => a.startTime.compareTo(b.startTime));
+
+      final List<Map<String, dynamic>> groupedSessions = [];
+      List<FocusSessionRecord> currentGroup = [];
+
+      for (final session in allSessions) {
+        final String sessionType = _getSessionType(session.appsBlocked);
+
+        if (!_isPomodoroPhase(sessionType)) {
+          // Non-Pomodoro session, add as standalone
+          groupedSessions.add({
+            'type': 'regular_focus',
+            'startTime': session.startTime,
+            'totalDuration': session.duration,
+            'workDuration': session.duration,
+            'breakDuration': Duration.zero,
+            'phases': 1,
+            'isComplete': true,
+          });
+          continue;
+        }
+
+        currentGroup.add(session);
+
+        // If we hit a long break, this completes a Pomodoro session
+        if (sessionType == 'POMODORO_LONG_BREAK') {
+          final groupedSession = _summarizeGroup(currentGroup);
+          groupedSessions.add(groupedSession);
+          currentGroup = [];
+        }
+      }
+
+      // Handle incomplete session (no long break yet)
+      if (currentGroup.isNotEmpty) {
+        final groupedSession = _summarizeGroup(currentGroup, isComplete: false);
+        groupedSessions.add(groupedSession);
+      }
+
+      // Sort newest first
+      groupedSessions.sort((a, b) =>
+          (b['startTime'] as DateTime).compareTo(a['startTime'] as DateTime));
+
+      return groupedSessions;
+    } catch (e) {
+      debugPrint("Error getting grouped sessions: $e");
+      return [];
+    }
+  }
+
+  Map<String, dynamic> _summarizeGroup(List<FocusSessionRecord> group,
+      {bool isComplete = true}) {
+    if (group.isEmpty) {
+      return {
+        'type': 'pomodoro',
+        'startTime': DateTime.now(),
+        'totalDuration': Duration.zero,
+        'workDuration': Duration.zero,
+        'breakDuration': Duration.zero,
+        'phases': 0,
+        'isComplete': false,
+      };
+    }
+
+    Duration workDuration = Duration.zero;
+    Duration breakDuration = Duration.zero;
+    int workPhases = 0;
+    int breakPhases = 0;
+
+    for (final session in group) {
+      final String sessionType = _getSessionType(session.appsBlocked);
+
+      switch (sessionType) {
+        case 'POMODORO_WORK':
+          workDuration += session.duration;
+          workPhases++;
+          break;
+        case 'POMODORO_SHORT_BREAK':
+        case 'POMODORO_LONG_BREAK':
+          breakDuration += session.duration;
+          breakPhases++;
+          break;
+      }
+    }
+
+    return {
+      'type': 'pomodoro',
+      'startTime': group.first.startTime,
+      'endTime': group.last.startTime.add(group.last.duration),
+      'totalDuration': workDuration + breakDuration,
+      'workDuration': workDuration,
+      'breakDuration': breakDuration,
+      'workPhases': workPhases,
+      'breakPhases': breakPhases,
+      'phases': group.length,
+      'isComplete': isComplete,
+      'formattedTotalDuration': _formatDuration(workDuration + breakDuration),
+      'formattedWorkDuration': _formatDuration(workDuration),
+      'formattedBreakDuration': _formatDuration(breakDuration),
+    };
+  }
+
+  // ═══════════════════════════════════════════════════════════════════════════
+  // WEEKLY SUMMARY - Fixed to count complete sessions
+  // ═══════════════════════════════════════════════════════════════════════════
+
   Map<String, dynamic> getWeeklySummary({DateTime? targetDate}) {
     final DateTime now = targetDate ?? DateTime.now();
-    
+
     // Find start of week (Monday) and end of week (Sunday)
     final int weekday = now.weekday;
-    final DateTime startOfWeek = now.subtract(Duration(days: weekday - 1));
-    final DateTime endOfWeek = startOfWeek.add(const Duration(days: 6));
-    
-    // Get session count by day
+    final DateTime startOfWeek = DateTime(now.year, now.month, now.day)
+        .subtract(Duration(days: weekday - 1));
+    final DateTime endOfWeek = startOfWeek
+        .add(const Duration(days: 6, hours: 23, minutes: 59, seconds: 59));
+
+    // Get complete session count by day
     final Map<String, int> sessionsByDay = getSessionCountByDay(
       startDate: startOfWeek,
       endDate: endOfWeek,
     );
-    
+
     // Get time distribution
     final Map<String, dynamic> timeDistribution = getTimeDistribution(
       startDate: startOfWeek,
       endDate: endOfWeek,
     );
-    
-    // Get detailed sessions
-    final List<Map<String, dynamic>> sessions = getSessionHistory(
+
+    // Get grouped sessions for detailed view
+    final List<Map<String, dynamic>> groupedSessions =
+        getGroupedPomodoroSessions(
       startDate: startOfWeek,
       endDate: endOfWeek,
     );
-    
-    // Calculate total sessions for the week
-    final int totalSessions = sessionsByDay.values.fold(0, (sum, count) => sum + count);
-    
-    // Calculate average daily sessions
-    final double avgDailySessions = totalSessions / 7;
-    
-    // Find the day with most sessions
+
+    // Calculate totals from TIME DISTRIBUTION (more accurate)
+    final Duration totalWorkTime =
+        timeDistribution['workTime'] as Duration? ?? Duration.zero;
+    final Duration totalShortBreakTime =
+        timeDistribution['shortBreakTime'] as Duration? ?? Duration.zero;
+    final Duration totalLongBreakTime =
+        timeDistribution['longBreakTime'] as Duration? ?? Duration.zero;
+    final Duration totalBreakTime = totalShortBreakTime + totalLongBreakTime;
+    final Duration totalTime = totalWorkTime + totalBreakTime;
+
+    // Count complete sessions
+    final int totalCompleteSessions = groupedSessions
+        .where((s) => s['isComplete'] == true && s['type'] == 'pomodoro')
+        .length;
+
+    // Count work phases
+    final int totalWorkPhases = getWorkPhaseCount(
+      startDate: startOfWeek,
+      endDate: endOfWeek,
+    );
+
+    // Calculate average session length (TOTAL time per complete session)
+    final int avgSessionMinutes = totalCompleteSessions > 0
+        ? (totalTime.inMinutes / totalCompleteSessions).round()
+        : 0;
+
+    // Calculate average WORK time per complete session
+    final int avgWorkMinutes = totalCompleteSessions > 0
+        ? (totalWorkTime.inMinutes / totalCompleteSessions).round()
+        : 0;
+
+    // Find most productive day
     String mostProductiveDay = "None";
     int maxSessions = 0;
-    
+
     sessionsByDay.forEach((day, count) {
       if (count > maxSessions) {
         maxSessions = count;
         mostProductiveDay = day;
       }
     });
-    
-    // Format the most productive day to be more readable
+
+    // Format most productive day
     if (mostProductiveDay != "None") {
       try {
         final DateTime date = DateFormat('yyyy-MM-dd').parse(mostProductiveDay);
-        mostProductiveDay = DateFormat('EEEE').format(date); // Day name (e.g., "Monday")
+        mostProductiveDay = DateFormat('EEEE').format(date);
       } catch (e) {
         debugPrint("Error formatting most productive day: $e");
       }
     }
-    
+
     return {
+      // Week range
       'weekStart': startOfWeek,
       'weekEnd': endOfWeek,
-      'totalSessions': totalSessions,
-      'avgDailySessions': avgDailySessions,
+
+      // Session counts
+      'totalSessions': totalCompleteSessions, // Complete Pomodoro cycles
+      'totalWorkPhases': totalWorkPhases, // Individual work periods
+
+      // Time values (as Duration)
+      'totalTime': totalTime,
+      'totalWorkTime': totalWorkTime,
+      'totalBreakTime': totalBreakTime,
+
+      // Time values (as int minutes) - THESE ARE WHAT YOUR UI NEEDS
+      'totalMinutes': totalTime.inMinutes,
+      'totalWorkMinutes': totalWorkTime.inMinutes,
+      'totalBreakMinutes': totalBreakTime.inMinutes,
+
+      // Averages
+      'avgSessionMinutes': avgSessionMinutes, // Avg TOTAL time per session
+      'avgWorkMinutes': avgWorkMinutes, // Avg WORK time per session
+
+      // Formatted strings for display
+      'formattedTotalTime': _formatDuration(totalTime),
+      'formattedTotalWorkTime': _formatDuration(totalWorkTime),
+      'formattedTotalBreakTime': _formatDuration(totalBreakTime),
+
+      // Other data
       'mostProductiveDay': mostProductiveDay,
       'sessionsByDay': sessionsByDay,
       'timeDistribution': timeDistribution,
-      'sessions': sessions,
+      'sessions': groupedSessions,
     };
   }
-  
-  // Helper methods
+
+  // ═══════════════════════════════════════════════════════════════════════════
+  // FOCUS TRENDS - Fixed to count complete sessions
+  // ═══════════════════════════════════════════════════════════════════════════
+
+  Map<String, dynamic> getFocusTrends({
+    int months = 3,
+    bool useLifetimeIfLess = true,
+  }) {
+    if (!_dataStore.isInitialized) {
+      return _emptyTrends();
+    }
+
+    try {
+      final DateTime now = DateTime.now();
+      final DateTime endDate = DateTime(now.year, now.month, now.day);
+      DateTime startDate = DateTime(now.year, now.month - months, 1);
+
+      if (useLifetimeIfLess) {
+        final DateTime earliestPossible = DateTime(now.year - 1, now.month, 1);
+        if (earliestPossible.isAfter(startDate)) {
+          startDate = earliestPossible;
+        }
+      }
+
+      final List<String> periods = [];
+      final List<int> sessionCounts = []; // Complete sessions
+      final List<int> workPhaseCounts = []; // Work phases
+      final List<double> avgDuration = [];
+      final List<int> totalFocusTime = []; // Work time only
+
+      DateTime currentStart = DateTime(startDate.year, startDate.month, 1);
+
+      while (!currentStart.isAfter(endDate)) {
+        final DateTime nextMonth =
+            DateTime(currentStart.year, currentStart.month + 1, 1);
+        final DateTime currentEnd = nextMonth.subtract(const Duration(days: 1));
+        final DateTime adjustedEnd =
+            currentEnd.isAfter(endDate) ? endDate : currentEnd;
+
+        // Get complete sessions for this period
+        final int completeSessionCount = getCompletePomodoroSessionCount(
+          startDate: currentStart,
+          endDate: adjustedEnd,
+        );
+
+        // Get work phase count
+        final int workPhaseCount = getWorkPhaseCount(
+          startDate: currentStart,
+          endDate: adjustedEnd,
+        );
+
+        // Get time distribution for work time
+        final timeDistribution = getTimeDistribution(
+          startDate: currentStart,
+          endDate: adjustedEnd,
+        );
+
+        final Duration workTime =
+            timeDistribution['workTime'] as Duration? ?? Duration.zero;
+        final double avg = completeSessionCount > 0
+            ? workTime.inMinutes / completeSessionCount
+            : 0;
+
+        periods.add(DateFormat('MMM yyyy').format(currentStart));
+        sessionCounts.add(completeSessionCount);
+        workPhaseCounts.add(workPhaseCount);
+        avgDuration.add(avg);
+        totalFocusTime.add(workTime.inMinutes);
+
+        currentStart = nextMonth;
+      }
+
+      // Calculate percentage change
+      double percentageChange = 0.0;
+      if (totalFocusTime.length >= 2 &&
+          totalFocusTime[totalFocusTime.length - 2] > 0) {
+        final int current = totalFocusTime.last;
+        final int previous = totalFocusTime[totalFocusTime.length - 2];
+        percentageChange = (current - previous) / previous * 100;
+      }
+
+      return {
+        'periods': periods,
+        'sessionCounts': sessionCounts, // Complete Pomodoro sessions
+        'workPhaseCounts': workPhaseCounts, // Individual work phases
+        'avgDuration': avgDuration,
+        'totalFocusTime': totalFocusTime,
+        'percentageChange': percentageChange,
+      };
+    } catch (e) {
+      debugPrint("Error getting focus trends: $e");
+      return _emptyTrends();
+    }
+  }
+
+  Map<String, dynamic> _emptyTrends() {
+    return {
+      'periods': <String>[],
+      'sessionCounts': <int>[],
+      'workPhaseCounts': <int>[],
+      'avgDuration': <double>[],
+      'totalFocusTime': <int>[],
+      'percentageChange': 0.0,
+    };
+  }
+
+  // ═══════════════════════════════════════════════════════════════════════════
+  // HELPER METHODS
+  // ═══════════════════════════════════════════════════════════════════════════
+
   String _formatDate(DateTime date) {
     return DateFormat('yyyy-MM-dd').format(date);
   }
-  
+
   String _formatDuration(Duration duration) {
     final int hours = duration.inHours;
     final int minutes = duration.inMinutes.remainder(60);
-    
+
     if (hours > 0) {
       return '$hours hr ${minutes > 0 ? '$minutes min' : ''}';
     } else {
       return '$minutes min';
     }
   }
-  
-  // Create a new focus session
+
+  // ═══════════════════════════════════════════════════════════════════════════
+  // CREATE/DELETE SESSIONS
+  // ═══════════════════════════════════════════════════════════════════════════
+
   Future<bool> createFocusSession({
     required DateTime startTime,
     required Duration duration,
     required List<String> appsBlocked,
   }) async {
     if (!_dataStore.isInitialized) return false;
-    
+
     try {
-      final DateTime date = DateTime(startTime.year, startTime.month, startTime.day);
-      
+      final DateTime date =
+          DateTime(startTime.year, startTime.month, startTime.day);
+
       final FocusSessionRecord session = FocusSessionRecord(
         date: date,
         startTime: startTime,
         duration: duration,
         appsBlocked: appsBlocked,
-        completed: true, // Will be marked as completed when the session ends
+        completed: true,
         breakCount: 0,
         totalBreakTime: Duration.zero,
       );
-      
+
       return await _dataStore.recordFocusSession(session);
     } catch (e) {
       debugPrint("Error creating focus session: $e");
       return false;
     }
   }
-  
-  // Update an existing focus session (e.g., when it's completed)
-  Future<bool> updateFocusSession({
-    required String sessionKey,
-    required bool completed,
-    required int breakCount,
-    required Duration totalBreakTime,
-  }) async {
-    if (!_dataStore.isInitialized) return false;
-    
-    try {
-      // In a real implementation, you would need a way to get the existing session
-      // The AppDataStore doesn't currently have a method to get a session by key
-      // You might need to extend it to add this functionality
-      
-      // For demonstration, we'll create a mock implementation
-      // Fetch the session from storage, update it, and save it back
-      
-      // 1. Get the session (mock)
-      // In reality, you'd need to implement a method like:
-      // final FocusSessionRecord? existingSession = _dataStore.getFocusSessionByKey(sessionKey);
-      
-      // 2. Update the session and save it (mock)
-      // This is just a placeholder - you'd need to implement this in AppDataStore
-      debugPrint("Mock implementation: updating session $sessionKey");
-      debugPrint("completed: $completed, breakCount: $breakCount, breakTime: $totalBreakTime");
-      
-      // For now, return false to indicate this isn't implemented yet
-      return false;
-      
-      // In a real implementation, you'd do something like:
-      /*
-      if (existingSession != null) {
-        final FocusSessionRecord updatedSession = FocusSessionRecord(
-          date: existingSession.date,
-          startTime: existingSession.startTime,
-          duration: existingSession.duration,
-          appsBlocked: existingSession.appsBlocked,
-          completed: completed,
-          breakCount: breakCount,
-          totalBreakTime: totalBreakTime,
-        );
-        
-        // Delete the old session and add the updated one
-        await _dataStore.deleteFocusSession(sessionKey);
-        return await _dataStore.recordFocusSession(updatedSession);
-      }
-      return false;
-      */
-    } catch (e) {
-      debugPrint("Error updating focus session: $e");
-      return false;
-    }
-  }
-  
-  // Delete a focus session
+
   Future<bool> deleteFocusSession(String sessionKey) async {
     if (!_dataStore.isInitialized) return false;
-    
+
     try {
       return await _dataStore.deleteFocusSession(sessionKey);
     } catch (e) {

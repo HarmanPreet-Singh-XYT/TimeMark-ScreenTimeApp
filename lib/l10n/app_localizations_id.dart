@@ -2704,4 +2704,70 @@ class AppLocalizationsId extends AppLocalizations {
 
   @override
   String get sheetInsights => 'Wawasan';
+
+  @override
+  String get statusHeader => 'Status';
+
+  @override
+  String workSessions(int count) {
+    return '$count sesi kerja';
+  }
+
+  @override
+  String get complete => 'Selesai';
+
+  @override
+  String get inProgress => 'Sedang Berlangsung';
+
+  @override
+  String get workTime => 'Waktu Kerja';
+
+  @override
+  String get breakTime => 'Waktu Istirahat';
+
+  @override
+  String get phasesCompleted => 'Fase Selesai';
+
+  @override
+  String hourMinuteFormat(String hours, String minutes) {
+    return '$hours jam $minutes menit';
+  }
+
+  @override
+  String hourOnlyFormat(String hours) {
+    return '$hours jam';
+  }
+
+  @override
+  String minuteFormat(String minutes) {
+    return '$minutes menit';
+  }
+
+  @override
+  String sessionsCount(int count) {
+    return '$count sesi';
+  }
+
+  @override
+  String get workPhases => 'Fase Kerja';
+
+  @override
+  String get averageLength => 'Rata-rata Durasi';
+
+  @override
+  String get mostProductive => 'Paling Produktif';
+
+  @override
+  String get work => 'Kerja';
+
+  @override
+  String get breaks => 'Istirahat';
+
+  @override
+  String get none => 'Tidak ada';
+
+  @override
+  String minuteShortFormat(String minutes) {
+    return '${minutes}m';
+  }
 }

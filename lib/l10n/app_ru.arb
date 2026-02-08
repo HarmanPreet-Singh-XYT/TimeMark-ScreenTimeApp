@@ -1761,5 +1761,69 @@
   "sheetSummary": "Сводка",
   "sheetDailyBreakdown": "Ежедневная Разбивка",
   "sheetApps": "Приложения",
-  "sheetInsights": "Инсайты"
+  "sheetInsights": "Инсайты",
+  "statusHeader": "Статус",
+  "workSessions": "{count, plural, =1{{count} рабочая сессия} few{{count} рабочие сессии} other{{count} рабочих сессий}}",
+  "@workSessions": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "complete": "Завершено",
+  "inProgress": "В процессе",
+  "workTime": "Рабочее время",
+  "breakTime": "Время перерыва",
+  "phasesCompleted": "Завершено фаз",
+  "hourMinuteFormat": "{hours} ч {minutes} мин",
+  "@hourMinuteFormat": {
+    "placeholders": {
+      "hours": {
+        "type": "String"
+      },
+      "minutes": {
+        "type": "String"
+      }
+    }
+  },
+  "hourOnlyFormat": "{hours} ч",
+  "@hourOnlyFormat": {
+    "placeholders": {
+      "hours": {
+        "type": "String"
+      }
+    }
+  },
+  "minuteFormat": "{minutes} мин",
+  "@minuteFormat": {
+    "placeholders": {
+      "minutes": {
+        "type": "String"
+      }
+    }
+  },
+  "sessionsCount": "{count, plural, =1{{count} сессия} few{{count} сессии} other{{count} сессий}}",
+  "@sessionsCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "totalTime": "Общее время",
+  "workPhases": "Рабочие фазы",
+  "averageLength": "Средняя длина",
+  "mostProductive": "Самый продуктивный",
+  "work": "Работа",
+  "breaks": "Перерывы",
+  "none": "Нет",
+  "minuteShortFormat": "{minutes}м",
+  "@minuteShortFormat": {
+    "placeholders": {
+      "minutes": {
+        "type": "String"
+      }
+    }
+  }
 }

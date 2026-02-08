@@ -1767,5 +1767,69 @@
   "sheetSummary": "خلاصہ",
   "sheetDailyBreakdown": "روزانہ تفصیل",
   "sheetApps": "ایپس",
-  "sheetInsights": "بصیرت"
+  "sheetInsights": "بصیرت",
+  "statusHeader": "حیثیت",
+  "workSessions": "{count} کام کے سیشن",
+  "@workSessions": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "complete": "مکمل",
+  "inProgress": "جاری ہے",
+  "workTime": "کام کا وقت",
+  "breakTime": "وقفے کا وقت",
+  "phasesCompleted": "مکمل مراحل",
+  "hourMinuteFormat": "{hours} گھنٹہ {minutes} منٹ",
+  "@hourMinuteFormat": {
+    "placeholders": {
+      "hours": {
+        "type": "String"
+      },
+      "minutes": {
+        "type": "String"
+      }
+    }
+  },
+  "hourOnlyFormat": "{hours} گھنٹہ",
+  "@hourOnlyFormat": {
+    "placeholders": {
+      "hours": {
+        "type": "String"
+      }
+    }
+  },
+  "minuteFormat": "{minutes} منٹ",
+  "@minuteFormat": {
+    "placeholders": {
+      "minutes": {
+        "type": "String"
+      }
+    }
+  },
+  "sessionsCount": "{count} سیشن",
+  "@sessionsCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "totalTime": "کل وقت",
+  "workPhases": "کام کے مراحل",
+  "averageLength": "اوسط مدت",
+  "mostProductive": "سب سے زیادہ پیداواری",
+  "work": "کام",
+  "breaks": "وقفے",
+  "none": "کوئی نہیں",
+  "minuteShortFormat": "{minutes}م",
+  "@minuteShortFormat": {
+    "placeholders": {
+      "minutes": {
+        "type": "String"
+      }
+    }
+  }
 }

@@ -2728,4 +2728,82 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get sheetInsights => 'Insights';
+
+  @override
+  String get statusHeader => 'Status';
+
+  @override
+  String workSessions(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count work sessions',
+      one: '$count work session',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get complete => 'Complete';
+
+  @override
+  String get inProgress => 'In Progress';
+
+  @override
+  String get workTime => 'Work Time';
+
+  @override
+  String get breakTime => 'Break Time';
+
+  @override
+  String get phasesCompleted => 'Phases Completed';
+
+  @override
+  String hourMinuteFormat(String hours, String minutes) {
+    return '$hours hr $minutes min';
+  }
+
+  @override
+  String hourOnlyFormat(String hours) {
+    return '$hours hr';
+  }
+
+  @override
+  String minuteFormat(String minutes) {
+    return '$minutes min';
+  }
+
+  @override
+  String sessionsCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count sessions',
+      one: '$count session',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get workPhases => 'Work Phases';
+
+  @override
+  String get averageLength => 'Average Length';
+
+  @override
+  String get mostProductive => 'Most Productive';
+
+  @override
+  String get work => 'Work';
+
+  @override
+  String get breaks => 'Breaks';
+
+  @override
+  String get none => 'None';
+
+  @override
+  String minuteShortFormat(String minutes) {
+    return '${minutes}m';
+  }
 }

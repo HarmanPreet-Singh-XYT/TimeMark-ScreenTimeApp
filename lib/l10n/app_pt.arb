@@ -1757,5 +1757,69 @@
   "sheetSummary": "Resumo",
   "sheetDailyBreakdown": "Detalhamento Diário",
   "sheetApps": "Apps",
-  "sheetInsights": "Insights"
+  "sheetInsights": "Insights",
+  "statusHeader": "Status",
+  "workSessions": "{count, plural, =1{{count} sessão de trabalho} other{{count} sessões de trabalho}}",
+  "@workSessions": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "complete": "Concluído",
+  "inProgress": "Em andamento",
+  "workTime": "Tempo de trabalho",
+  "breakTime": "Tempo de pausa",
+  "phasesCompleted": "Fases concluídas",
+  "hourMinuteFormat": "{hours} h {minutes} min",
+  "@hourMinuteFormat": {
+    "placeholders": {
+      "hours": {
+        "type": "String"
+      },
+      "minutes": {
+        "type": "String"
+      }
+    }
+  },
+  "hourOnlyFormat": "{hours} h",
+  "@hourOnlyFormat": {
+    "placeholders": {
+      "hours": {
+        "type": "String"
+      }
+    }
+  },
+  "minuteFormat": "{minutes} min",
+  "@minuteFormat": {
+    "placeholders": {
+      "minutes": {
+        "type": "String"
+      }
+    }
+  },
+  "sessionsCount": "{count, plural, =1{{count} sessão} other{{count} sessões}}",
+  "@sessionsCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "totalTime": "Tempo total",
+  "workPhases": "Fases de trabalho",
+  "averageLength": "Duração média",
+  "mostProductive": "Mais produtivo",
+  "work": "Trabalho",
+  "breaks": "Pausas",
+  "none": "Nenhum",
+  "minuteShortFormat": "{minutes}m",
+  "@minuteShortFormat": {
+    "placeholders": {
+      "minutes": {
+        "type": "String"
+      }
+    }
+  }
 }
