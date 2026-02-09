@@ -19,7 +19,6 @@ class AnalyticsXLSXExporter {
   static const _warningOrange = '#F39C12';
   static const _dangerRed = '#E74C3C';
   static const _lightGray = '#ECF0F1';
-  static const _darkGray = '#34495E';
   static const _headerBg = '#2C3E50';
   static const _productiveColor = '#27AE60';
   static const _unproductiveColor = '#E67E22';
@@ -343,11 +342,6 @@ class AnalyticsXLSXExporter {
     _mergeCells(sheet, row, row, 0, 6);
     row += 2;
 
-    // Quick stats
-    final totalTime = summary.appUsageDetails.fold<Duration>(
-      Duration.zero,
-      (sum, app) => sum + app.totalTime,
-    );
     final productiveApps =
         summary.appUsageDetails.where((app) => app.isProductive).length;
 

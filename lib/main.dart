@@ -20,7 +20,6 @@ import 'package:bitsdojo_window/bitsdojo_window.dart';
 import 'package:tray_manager/tray_manager.dart';
 import './sections/controller/application_controller.dart';
 import 'utils/single_instance_ipc.dart';
-import 'package:flutter/services.dart';
 import 'dart:ui' show lerpDouble;
 // ADD THESE IMPORTS
 import 'package:provider/provider.dart';

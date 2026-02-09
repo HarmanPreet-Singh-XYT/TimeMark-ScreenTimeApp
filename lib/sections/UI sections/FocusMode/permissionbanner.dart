@@ -279,56 +279,56 @@ class _NotificationPermissionBannerState
     );
   }
 
-  Future<void> _showSystemSettingsInfo() async {
-    final l10n = AppLocalizations.of(context)!;
-    await showDialog(
-      context: context,
-      builder: (context) => ContentDialog(
-        title: Row(
-          children: [
-            Icon(FluentIcons.system, size: 20),
-            SizedBox(width: 12),
-            Text(l10n.systemSettingsRequired),
-          ],
-        ),
-        content: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              l10n.notificationsDisabledSystemLevel,
-              style: TextStyle(fontWeight: FontWeight.w600),
-            ),
-            SizedBox(height: 16),
-            Text(l10n.step1OpenSystemSettings),
-            SizedBox(height: 8),
-            Text(l10n.step2GoToNotifications),
-            SizedBox(height: 8),
-            Text(l10n.step3FindApp),
-            SizedBox(height: 8),
-            Text(l10n.step4EnableNotifications),
-            SizedBox(height: 16),
-            Text(
-              l10n.returnToAppMessage,
-              style: TextStyle(fontStyle: FontStyle.italic),
-            ),
-          ],
-        ),
-        actions: [
-          Button(
-            child: Text(l10n.cancel),
-            onPressed: () => Navigator.pop(context),
-          ),
-          FilledButton(
-            child: Text(l10n.gotIt),
-            onPressed: () {
-              Navigator.pop(context);
-            },
-          ),
-        ],
-      ),
-    );
-  }
+  // Future<void> _showSystemSettingsInfo() async {
+  //   final l10n = AppLocalizations.of(context)!;
+  //   await showDialog(
+  //     context: context,
+  //     builder: (context) => ContentDialog(
+  //       title: Row(
+  //         children: [
+  //           Icon(FluentIcons.system, size: 20),
+  //           SizedBox(width: 12),
+  //           Text(l10n.systemSettingsRequired),
+  //         ],
+  //       ),
+  //       content: Column(
+  //         mainAxisSize: MainAxisSize.min,
+  //         crossAxisAlignment: CrossAxisAlignment.start,
+  //         children: [
+  //           Text(
+  //             l10n.notificationsDisabledSystemLevel,
+  //             style: TextStyle(fontWeight: FontWeight.w600),
+  //           ),
+  //           SizedBox(height: 16),
+  //           Text(l10n.step1OpenSystemSettings),
+  //           SizedBox(height: 8),
+  //           Text(l10n.step2GoToNotifications),
+  //           SizedBox(height: 8),
+  //           Text(l10n.step3FindApp),
+  //           SizedBox(height: 8),
+  //           Text(l10n.step4EnableNotifications),
+  //           SizedBox(height: 16),
+  //           Text(
+  //             l10n.returnToAppMessage,
+  //             style: TextStyle(fontStyle: FontStyle.italic),
+  //           ),
+  //         ],
+  //       ),
+  //       actions: [
+  //         Button(
+  //           child: Text(l10n.cancel),
+  //           onPressed: () => Navigator.pop(context),
+  //         ),
+  //         FilledButton(
+  //           child: Text(l10n.gotIt),
+  //           onPressed: () {
+  //             Navigator.pop(context);
+  //           },
+  //         ),
+  //       ],
+  //     ),
+  //   );
+  // }
 }
 
 /// Compact version of notification permission banner
