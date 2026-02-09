@@ -2829,4 +2829,88 @@ class AppLocalizationsPt extends AppLocalizations {
   String minuteShortFormat(String minutes) {
     return '${minutes}m';
   }
+
+  @override
+  String get importTheme => 'Importar tema';
+
+  @override
+  String get exportTheme => 'Exportar tema';
+
+  @override
+  String get import => 'Importar';
+
+  @override
+  String get export => 'Exportar';
+
+  @override
+  String get chooseExportMethod => 'Escolha como exportar seu tema:';
+
+  @override
+  String get saveAsFile => 'Salvar como arquivo';
+
+  @override
+  String get saveThemeAsJSONFile =>
+      'Salvar o tema como arquivo JSON no seu dispositivo';
+
+  @override
+  String get copyToClipboard => 'Copiar para a área de transferência';
+
+  @override
+  String get copyThemeJSONToClipboard =>
+      'Copiar dados do tema para a área de transferência';
+
+  @override
+  String get share => 'Compartilhar';
+
+  @override
+  String get shareThemeViaSystemSheet =>
+      'Compartilhar tema usando a folha de compartilhamento do sistema';
+
+  @override
+  String get chooseImportMethod => 'Escolha como importar um tema:';
+
+  @override
+  String get loadFromFile => 'Carregar de arquivo';
+
+  @override
+  String get selectJSONFileFromDevice =>
+      'Selecione um arquivo JSON de tema do seu dispositivo';
+
+  @override
+  String get pasteFromClipboard => 'Colar da área de transferência';
+
+  @override
+  String get importFromClipboardJSON =>
+      'Importar tema dos dados JSON da área de transferência';
+
+  @override
+  String get importFromFile => 'Importar tema de um arquivo';
+
+  @override
+  String get themeCreatedSuccessfully => 'Tema criado com sucesso!';
+
+  @override
+  String get themeUpdatedSuccessfully => 'Tema atualizado com sucesso!';
+
+  @override
+  String get themeDeletedSuccessfully => 'Tema excluído com sucesso!';
+
+  @override
+  String get themeExportedSuccessfully => 'Tema exportado com sucesso!';
+
+  @override
+  String get themeCopiedToClipboard =>
+      'Tema copiado para a área de transferência!';
+
+  @override
+  String themeImportedSuccessfully(String themeName) {
+    return 'Tema \"$themeName\" importado com sucesso!';
+  }
+
+  @override
+  String get noThemeDataFound => 'Nenhum dado de tema encontrado';
+
+  @override
+  String get invalidThemeFormat =>
+      'Formato de tema inválido. Por favor, verifique os dados JSON.';
 }

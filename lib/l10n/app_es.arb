@@ -1824,5 +1824,37 @@
         "type": "String"
       }
     }
-  }
+  },
+   "importTheme": "Importar tema",
+  "exportTheme": "Exportar tema",
+  "import": "Importar",
+  "export": "Exportar",
+  "chooseExportMethod": "Elige cómo exportar tu tema:",
+  "saveAsFile": "Guardar como archivo",
+  "saveThemeAsJSONFile": "Guardar el tema como archivo JSON en tu dispositivo",
+  "copyToClipboard": "Copiar al portapapeles",
+  "copyThemeJSONToClipboard": "Copiar datos del tema al portapapeles",
+  "share": "Compartir",
+  "shareThemeViaSystemSheet": "Compartir tema usando la hoja de compartir del sistema",
+  "chooseImportMethod": "Elige cómo importar un tema:",
+  "loadFromFile": "Cargar desde archivo",
+  "selectJSONFileFromDevice": "Selecciona un archivo JSON de tema de tu dispositivo",
+  "pasteFromClipboard": "Pegar desde portapapeles",
+  "importFromClipboardJSON": "Importar tema desde datos JSON del portapapeles",
+  "importFromFile": "Importar tema desde un archivo",
+  "themeCreatedSuccessfully": "¡Tema creado exitosamente!",
+  "themeUpdatedSuccessfully": "¡Tema actualizado exitosamente!",
+  "themeDeletedSuccessfully": "¡Tema eliminado exitosamente!",
+  "themeExportedSuccessfully": "¡Tema exportado exitosamente!",
+  "themeCopiedToClipboard": "¡Tema copiado al portapapeles!",
+  "themeImportedSuccessfully": "¡Tema \"{themeName}\" importado exitosamente!",
+  "@themeImportedSuccessfully": {
+    "placeholders": {
+      "themeName": {
+        "type": "String"
+      }
+    }
+  },
+  "noThemeDataFound": "No se encontraron datos del tema",
+  "invalidThemeFormat": "Formato de tema inválido. Por favor, verifica los datos JSON."
 }

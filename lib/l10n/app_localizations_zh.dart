@@ -2685,4 +2685,81 @@ class AppLocalizationsZh extends AppLocalizations {
   String minuteShortFormat(String minutes) {
     return '$minutes分钟';
   }
+
+  @override
+  String get importTheme => '导入主题';
+
+  @override
+  String get exportTheme => '导出主题';
+
+  @override
+  String get import => '导入';
+
+  @override
+  String get export => '导出';
+
+  @override
+  String get chooseExportMethod => '选择导出主题的方式：';
+
+  @override
+  String get saveAsFile => '保存为文件';
+
+  @override
+  String get saveThemeAsJSONFile => '将主题保存为 JSON 文件到您的设备';
+
+  @override
+  String get copyToClipboard => '复制到剪贴板';
+
+  @override
+  String get copyThemeJSONToClipboard => '将主题数据复制到剪贴板';
+
+  @override
+  String get share => '分享';
+
+  @override
+  String get shareThemeViaSystemSheet => '使用系统分享功能分享主题';
+
+  @override
+  String get chooseImportMethod => '选择导入主题的方式：';
+
+  @override
+  String get loadFromFile => '从文件加载';
+
+  @override
+  String get selectJSONFileFromDevice => '从您的设备选择 JSON 主题文件';
+
+  @override
+  String get pasteFromClipboard => '从剪贴板粘贴';
+
+  @override
+  String get importFromClipboardJSON => '从剪贴板 JSON 数据导入主题';
+
+  @override
+  String get importFromFile => '从文件导入主题';
+
+  @override
+  String get themeCreatedSuccessfully => '主题创建成功！';
+
+  @override
+  String get themeUpdatedSuccessfully => '主题更新成功！';
+
+  @override
+  String get themeDeletedSuccessfully => '主题删除成功！';
+
+  @override
+  String get themeExportedSuccessfully => '主题导出成功！';
+
+  @override
+  String get themeCopiedToClipboard => '主题已复制到剪贴板！';
+
+  @override
+  String themeImportedSuccessfully(String themeName) {
+    return '主题“$themeName”导入成功！';
+  }
+
+  @override
+  String get noThemeDataFound => '未找到主题数据';
+
+  @override
+  String get invalidThemeFormat => '主题格式无效。请检查 JSON 数据。';
 }

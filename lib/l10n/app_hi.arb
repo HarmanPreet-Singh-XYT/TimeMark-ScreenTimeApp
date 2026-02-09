@@ -1829,5 +1829,37 @@
         "type": "String"
       }
     }
-  }
+  },
+  "importTheme": "थीम आयात करें",
+  "exportTheme": "थीम निर्यात करें",
+  "import": "आयात करें",
+  "export": "निर्यात करें",
+  "chooseExportMethod": "अपनी थीम निर्यात करने का तरीका चुनें:",
+  "saveAsFile": "फ़ाइल के रूप में सहेजें",
+  "saveThemeAsJSONFile": "थीम को अपने डिवाइस पर JSON फ़ाइल के रूप में सहेजें",
+  "copyToClipboard": "क्लिपबोर्ड पर कॉपी करें",
+  "copyThemeJSONToClipboard": "थीम डेटा को क्लिपबोर्ड पर कॉपी करें",
+  "share": "साझा करें",
+  "shareThemeViaSystemSheet": "सिस्टम शेयर शीट का उपयोग करके थीम साझा करें",
+  "chooseImportMethod": "थीम आयात करने का तरीका चुनें:",
+  "loadFromFile": "फ़ाइल से लोड करें",
+  "selectJSONFileFromDevice": "अपने डिवाइस से JSON थीम फ़ाइल चुनें",
+  "pasteFromClipboard": "क्लिपबोर्ड से पेस्ट करें",
+  "importFromClipboardJSON": "क्लिपबोर्ड JSON डेटा से थीम आयात करें",
+  "importFromFile": "फ़ाइल से थीम आयात करें",
+  "themeCreatedSuccessfully": "थीम सफलतापूर्वक बनाई गई!",
+  "themeUpdatedSuccessfully": "थीम सफलतापूर्वक अपडेट की गई!",
+  "themeDeletedSuccessfully": "थीम सफलतापूर्वक हटाई गई!",
+  "themeExportedSuccessfully": "थीम सफलतापूर्वक निर्यात की गई!",
+  "themeCopiedToClipboard": "थीम क्लिपबोर्ड पर कॉपी की गई!",
+  "themeImportedSuccessfully": "थीम \"{themeName}\" सफलतापूर्वक आयात की गई!",
+  "@themeImportedSuccessfully": {
+    "placeholders": {
+      "themeName": {
+        "type": "String"
+      }
+    }
+  },
+  "noThemeDataFound": "कोई थीम डेटा नहीं मिला",
+  "invalidThemeFormat": "अमान्य थीम प्रारूप। कृपया JSON डेटा जांचें।"
 }

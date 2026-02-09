@@ -2037,5 +2037,37 @@
         "type": "String"
       }
     }
-  }
+  },
+  "importTheme": "Import Theme",
+  "exportTheme": "Export Theme",
+  "import": "Import",
+  "export": "Export",
+  "chooseExportMethod": "Choose how to export your theme:",
+  "saveAsFile": "Save as File",
+  "saveThemeAsJSONFile": "Save theme as a JSON file to your device",
+  "copyToClipboard": "Copy to Clipboard",
+  "copyThemeJSONToClipboard": "Copy theme data to clipboard",
+  "share": "Share",
+  "shareThemeViaSystemSheet": "Share theme using system share sheet",
+  "chooseImportMethod": "Choose how to import a theme:",
+  "loadFromFile": "Load from File",
+  "selectJSONFileFromDevice": "Select a JSON theme file from your device",
+  "pasteFromClipboard": "Paste from Clipboard",
+  "importFromClipboardJSON": "Import theme from clipboard JSON data",
+  "importFromFile": "Import theme from a file",
+  "themeCreatedSuccessfully": "Theme created successfully!",
+  "themeUpdatedSuccessfully": "Theme updated successfully!",
+  "themeDeletedSuccessfully": "Theme deleted successfully!",
+  "themeExportedSuccessfully": "Theme exported successfully!",
+  "themeCopiedToClipboard": "Theme copied to clipboard!",
+  "themeImportedSuccessfully": "Theme \"{themeName}\" imported successfully!",
+  "@themeImportedSuccessfully": {
+    "placeholders": {
+      "themeName": {
+        "type": "String"
+      }
+    }
+  },
+  "noThemeDataFound": "No theme data found",
+  "invalidThemeFormat": "Invalid theme format. Please check the JSON data."
 }

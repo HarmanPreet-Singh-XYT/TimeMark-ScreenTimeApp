@@ -94,7 +94,7 @@ void main(List<String> args) async {
       45999,
       timeout: const Duration(milliseconds: 500),
     );
-    
+
     // Existing instance found, send SHOW and exit
     socket.write('SHOW');
     await socket.flush();
@@ -369,8 +369,8 @@ class _MyAppState extends State<MyApp>
   Future<void> _initTray() async {
     await trayManager.setIcon(
       Platform.isWindows
-          ? 'assets/icons/tray_icon.ico'
-          : 'assets/icons/tray_icon.png',
+          ? 'assets/icons/tray_icon_windows.ico'
+          : 'assets/icons/tray_icon_mac.png',
     );
     await trayManager.setToolTip("TimeMark");
     await _updateTrayMenu();

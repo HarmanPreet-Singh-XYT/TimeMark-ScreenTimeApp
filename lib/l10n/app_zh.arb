@@ -1830,5 +1830,37 @@
         "type": "int"
       }
     }
-  }
+  },
+  "importTheme": "导入主题",
+  "exportTheme": "导出主题",
+  "import": "导入",
+  "export": "导出",
+  "chooseExportMethod": "选择导出主题的方式：",
+  "saveAsFile": "保存为文件",
+  "saveThemeAsJSONFile": "将主题保存为 JSON 文件到您的设备",
+  "copyToClipboard": "复制到剪贴板",
+  "copyThemeJSONToClipboard": "将主题数据复制到剪贴板",
+  "share": "分享",
+  "shareThemeViaSystemSheet": "使用系统分享功能分享主题",
+  "chooseImportMethod": "选择导入主题的方式：",
+  "loadFromFile": "从文件加载",
+  "selectJSONFileFromDevice": "从您的设备选择 JSON 主题文件",
+  "pasteFromClipboard": "从剪贴板粘贴",
+  "importFromClipboardJSON": "从剪贴板 JSON 数据导入主题",
+  "importFromFile": "从文件导入主题",
+  "themeCreatedSuccessfully": "主题创建成功！",
+  "themeUpdatedSuccessfully": "主题更新成功！",
+  "themeDeletedSuccessfully": "主题删除成功！",
+  "themeExportedSuccessfully": "主题导出成功！",
+  "themeCopiedToClipboard": "主题已复制到剪贴板！",
+  "themeImportedSuccessfully": "主题\u201c{themeName}\u201d导入成功！",
+  "@themeImportedSuccessfully": {
+    "placeholders": {
+      "themeName": {
+        "type": "String"
+      }
+    }
+  },
+  "noThemeDataFound": "未找到主题数据",
+  "invalidThemeFormat": "主题格式无效。请检查 JSON 数据。"
 }

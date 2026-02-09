@@ -2714,4 +2714,81 @@ class AppLocalizationsJa extends AppLocalizations {
   String minuteShortFormat(String minutes) {
     return '$minutes分';
   }
+
+  @override
+  String get importTheme => 'テーマをインポート';
+
+  @override
+  String get exportTheme => 'テーマをエクスポート';
+
+  @override
+  String get import => 'インポート';
+
+  @override
+  String get export => 'エクスポート';
+
+  @override
+  String get chooseExportMethod => 'テーマのエクスポート方法を選択してください：';
+
+  @override
+  String get saveAsFile => 'ファイルとして保存';
+
+  @override
+  String get saveThemeAsJSONFile => 'テーマをJSONファイルとしてデバイスに保存';
+
+  @override
+  String get copyToClipboard => 'クリップボードにコピー';
+
+  @override
+  String get copyThemeJSONToClipboard => 'テーマデータをクリップボードにコピー';
+
+  @override
+  String get share => '共有';
+
+  @override
+  String get shareThemeViaSystemSheet => 'システム共有シートを使用してテーマを共有';
+
+  @override
+  String get chooseImportMethod => 'テーマのインポート方法を選択してください：';
+
+  @override
+  String get loadFromFile => 'ファイルから読み込む';
+
+  @override
+  String get selectJSONFileFromDevice => 'デバイスからJSONテーマファイルを選択';
+
+  @override
+  String get pasteFromClipboard => 'クリップボードから貼り付け';
+
+  @override
+  String get importFromClipboardJSON => 'クリップボードのJSONデータからテーマをインポート';
+
+  @override
+  String get importFromFile => 'ファイルからテーマをインポート';
+
+  @override
+  String get themeCreatedSuccessfully => 'テーマが正常に作成されました！';
+
+  @override
+  String get themeUpdatedSuccessfully => 'テーマが正常に更新されました！';
+
+  @override
+  String get themeDeletedSuccessfully => 'テーマが正常に削除されました！';
+
+  @override
+  String get themeExportedSuccessfully => 'テーマが正常にエクスポートされました！';
+
+  @override
+  String get themeCopiedToClipboard => 'テーマがクリップボードにコピーされました！';
+
+  @override
+  String themeImportedSuccessfully(String themeName) {
+    return 'テーマ「$themeName」が正常にインポートされました！';
+  }
+
+  @override
+  String get noThemeDataFound => 'テーマデータが見つかりません';
+
+  @override
+  String get invalidThemeFormat => 'テーマ形式が無効です。JSONデータを確認してください。';
 }

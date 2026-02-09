@@ -1828,5 +1828,37 @@
         "type": "String"
       }
     }
-  }
+  },
+  "importTheme": "استيراد السمة",
+  "exportTheme": "تصدير السمة",
+  "import": "استيراد",
+  "export": "تصدير",
+  "chooseExportMethod": "اختر طريقة تصدير السمة:",
+  "saveAsFile": "حفظ كملف",
+  "saveThemeAsJSONFile": "حفظ السمة كملف JSON على جهازك",
+  "copyToClipboard": "نسخ إلى الحافظة",
+  "copyThemeJSONToClipboard": "نسخ بيانات السمة إلى الحافظة",
+  "share": "مشاركة",
+  "shareThemeViaSystemSheet": "مشاركة السمة باستخدام ورقة المشاركة للنظام",
+  "chooseImportMethod": "اختر طريقة استيراد السمة:",
+  "loadFromFile": "تحميل من ملف",
+  "selectJSONFileFromDevice": "اختر ملف JSON للسمة من جهازك",
+  "pasteFromClipboard": "لصق من الحافظة",
+  "importFromClipboardJSON": "استيراد السمة من بيانات JSON في الحافظة",
+  "importFromFile": "استيراد السمة من ملف",
+  "themeCreatedSuccessfully": "تم إنشاء السمة بنجاح!",
+  "themeUpdatedSuccessfully": "تم تحديث السمة بنجاح!",
+  "themeDeletedSuccessfully": "تم حذف السمة بنجاح!",
+  "themeExportedSuccessfully": "تم تصدير السمة بنجاح!",
+  "themeCopiedToClipboard": "تم نسخ السمة إلى الحافظة!",
+  "themeImportedSuccessfully": "تم استيراد السمة \"{themeName}\" بنجاح!",
+  "@themeImportedSuccessfully": {
+    "placeholders": {
+      "themeName": {
+        "type": "String"
+      }
+    }
+  },
+  "noThemeDataFound": "لم يتم العثور على بيانات السمة",
+  "invalidThemeFormat": "تنسيق السمة غير صالح. يرجى التحقق من بيانات JSON."
 }

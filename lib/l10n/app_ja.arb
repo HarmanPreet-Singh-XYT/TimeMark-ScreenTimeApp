@@ -1828,5 +1828,37 @@
         "type": "String"
       }
     }
-  }
+  },
+  "importTheme": "テーマをインポート",
+  "exportTheme": "テーマをエクスポート",
+  "import": "インポート",
+  "export": "エクスポート",
+  "chooseExportMethod": "テーマのエクスポート方法を選択してください：",
+  "saveAsFile": "ファイルとして保存",
+  "saveThemeAsJSONFile": "テーマをJSONファイルとしてデバイスに保存",
+  "copyToClipboard": "クリップボードにコピー",
+  "copyThemeJSONToClipboard": "テーマデータをクリップボードにコピー",
+  "share": "共有",
+  "shareThemeViaSystemSheet": "システム共有シートを使用してテーマを共有",
+  "chooseImportMethod": "テーマのインポート方法を選択してください：",
+  "loadFromFile": "ファイルから読み込む",
+  "selectJSONFileFromDevice": "デバイスからJSONテーマファイルを選択",
+  "pasteFromClipboard": "クリップボードから貼り付け",
+  "importFromClipboardJSON": "クリップボードのJSONデータからテーマをインポート",
+  "importFromFile": "ファイルからテーマをインポート",
+  "themeCreatedSuccessfully": "テーマが正常に作成されました！",
+  "themeUpdatedSuccessfully": "テーマが正常に更新されました！",
+  "themeDeletedSuccessfully": "テーマが正常に削除されました！",
+  "themeExportedSuccessfully": "テーマが正常にエクスポートされました！",
+  "themeCopiedToClipboard": "テーマがクリップボードにコピーされました！",
+  "themeImportedSuccessfully": "テーマ「{themeName}」が正常にインポートされました！",
+  "@themeImportedSuccessfully": {
+    "placeholders": {
+      "themeName": {
+        "type": "String"
+      }
+    }
+  },
+  "noThemeDataFound": "テーマデータが見つかりません",
+  "invalidThemeFormat": "テーマ形式が無効です。JSONデータを確認してください。"
 }

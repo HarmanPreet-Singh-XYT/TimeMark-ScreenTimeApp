@@ -1821,5 +1821,37 @@
         "type": "String"
       }
     }
-  }
+  },
+  "importTheme": "Impor Tema",
+  "exportTheme": "Ekspor Tema",
+  "import": "Impor",
+  "export": "Ekspor",
+  "chooseExportMethod": "Pilih cara mengekspor tema Anda:",
+  "saveAsFile": "Simpan sebagai File",
+  "saveThemeAsJSONFile": "Simpan tema sebagai file JSON ke perangkat Anda",
+  "copyToClipboard": "Salin ke Papan Klip",
+  "copyThemeJSONToClipboard": "Salin data tema ke papan klip",
+  "share": "Bagikan",
+  "shareThemeViaSystemSheet": "Bagikan tema menggunakan lembar berbagi sistem",
+  "chooseImportMethod": "Pilih cara mengimpor tema:",
+  "loadFromFile": "Muat dari File",
+  "selectJSONFileFromDevice": "Pilih file JSON tema dari perangkat Anda",
+  "pasteFromClipboard": "Tempel dari Papan Klip",
+  "importFromClipboardJSON": "Impor tema dari data JSON papan klip",
+  "importFromFile": "Impor tema dari file",
+  "themeCreatedSuccessfully": "Tema berhasil dibuat!",
+  "themeUpdatedSuccessfully": "Tema berhasil diperbarui!",
+  "themeDeletedSuccessfully": "Tema berhasil dihapus!",
+  "themeExportedSuccessfully": "Tema berhasil diekspor!",
+  "themeCopiedToClipboard": "Tema disalin ke papan klip!",
+  "themeImportedSuccessfully": "Tema \"{themeName}\" berhasil diimpor!",
+  "@themeImportedSuccessfully": {
+    "placeholders": {
+      "themeName": {
+        "type": "String"
+      }
+    }
+  },
+  "noThemeDataFound": "Tidak ada data tema ditemukan",
+  "invalidThemeFormat": "Format tema tidak valid. Silakan periksa data JSON."
 }

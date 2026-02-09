@@ -5073,6 +5073,156 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'{minutes}m'**
   String minuteShortFormat(String minutes);
+
+  /// No description provided for @importTheme.
+  ///
+  /// In en, this message translates to:
+  /// **'Import Theme'**
+  String get importTheme;
+
+  /// No description provided for @exportTheme.
+  ///
+  /// In en, this message translates to:
+  /// **'Export Theme'**
+  String get exportTheme;
+
+  /// No description provided for @import.
+  ///
+  /// In en, this message translates to:
+  /// **'Import'**
+  String get import;
+
+  /// No description provided for @export.
+  ///
+  /// In en, this message translates to:
+  /// **'Export'**
+  String get export;
+
+  /// No description provided for @chooseExportMethod.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose how to export your theme:'**
+  String get chooseExportMethod;
+
+  /// No description provided for @saveAsFile.
+  ///
+  /// In en, this message translates to:
+  /// **'Save as File'**
+  String get saveAsFile;
+
+  /// No description provided for @saveThemeAsJSONFile.
+  ///
+  /// In en, this message translates to:
+  /// **'Save theme as a JSON file to your device'**
+  String get saveThemeAsJSONFile;
+
+  /// No description provided for @copyToClipboard.
+  ///
+  /// In en, this message translates to:
+  /// **'Copy to Clipboard'**
+  String get copyToClipboard;
+
+  /// No description provided for @copyThemeJSONToClipboard.
+  ///
+  /// In en, this message translates to:
+  /// **'Copy theme data to clipboard'**
+  String get copyThemeJSONToClipboard;
+
+  /// No description provided for @share.
+  ///
+  /// In en, this message translates to:
+  /// **'Share'**
+  String get share;
+
+  /// No description provided for @shareThemeViaSystemSheet.
+  ///
+  /// In en, this message translates to:
+  /// **'Share theme using system share sheet'**
+  String get shareThemeViaSystemSheet;
+
+  /// No description provided for @chooseImportMethod.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose how to import a theme:'**
+  String get chooseImportMethod;
+
+  /// No description provided for @loadFromFile.
+  ///
+  /// In en, this message translates to:
+  /// **'Load from File'**
+  String get loadFromFile;
+
+  /// No description provided for @selectJSONFileFromDevice.
+  ///
+  /// In en, this message translates to:
+  /// **'Select a JSON theme file from your device'**
+  String get selectJSONFileFromDevice;
+
+  /// No description provided for @pasteFromClipboard.
+  ///
+  /// In en, this message translates to:
+  /// **'Paste from Clipboard'**
+  String get pasteFromClipboard;
+
+  /// No description provided for @importFromClipboardJSON.
+  ///
+  /// In en, this message translates to:
+  /// **'Import theme from clipboard JSON data'**
+  String get importFromClipboardJSON;
+
+  /// No description provided for @importFromFile.
+  ///
+  /// In en, this message translates to:
+  /// **'Import theme from a file'**
+  String get importFromFile;
+
+  /// No description provided for @themeCreatedSuccessfully.
+  ///
+  /// In en, this message translates to:
+  /// **'Theme created successfully!'**
+  String get themeCreatedSuccessfully;
+
+  /// No description provided for @themeUpdatedSuccessfully.
+  ///
+  /// In en, this message translates to:
+  /// **'Theme updated successfully!'**
+  String get themeUpdatedSuccessfully;
+
+  /// No description provided for @themeDeletedSuccessfully.
+  ///
+  /// In en, this message translates to:
+  /// **'Theme deleted successfully!'**
+  String get themeDeletedSuccessfully;
+
+  /// No description provided for @themeExportedSuccessfully.
+  ///
+  /// In en, this message translates to:
+  /// **'Theme exported successfully!'**
+  String get themeExportedSuccessfully;
+
+  /// No description provided for @themeCopiedToClipboard.
+  ///
+  /// In en, this message translates to:
+  /// **'Theme copied to clipboard!'**
+  String get themeCopiedToClipboard;
+
+  /// No description provided for @themeImportedSuccessfully.
+  ///
+  /// In en, this message translates to:
+  /// **'Theme \"{themeName}\" imported successfully!'**
+  String themeImportedSuccessfully(String themeName);
+
+  /// No description provided for @noThemeDataFound.
+  ///
+  /// In en, this message translates to:
+  /// **'No theme data found'**
+  String get noThemeDataFound;
+
+  /// No description provided for @invalidThemeFormat.
+  ///
+  /// In en, this message translates to:
+  /// **'Invalid theme format. Please check the JSON data.'**
+  String get invalidThemeFormat;
 }
 
 class _AppLocalizationsDelegate

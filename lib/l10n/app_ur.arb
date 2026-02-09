@@ -1831,5 +1831,37 @@
         "type": "String"
       }
     }
-  }
+  },
+  "importTheme": "تھیم درآمد کریں",
+  "exportTheme": "تھیم برآمد کریں",
+  "import": "درآمد",
+  "export": "برآمد",
+  "chooseExportMethod": "اپنی تھیم برآمد کرنے کا طریقہ منتخب کریں:",
+  "saveAsFile": "فائل کے طور پر محفوظ کریں",
+  "saveThemeAsJSONFile": "تھیم کو اپنے آلے پر JSON فائل کے طور پر محفوظ کریں",
+  "copyToClipboard": "کلپ بورڈ پر کاپی کریں",
+  "copyThemeJSONToClipboard": "تھیم ڈیٹا کلپ بورڈ پر کاپی کریں",
+  "share": "شیئر کریں",
+  "shareThemeViaSystemSheet": "سسٹم شیئر شیٹ کا استعمال کرتے ہوئے تھیم شیئر کریں",
+  "chooseImportMethod": "تھیم درآمد کرنے کا طریقہ منتخب کریں:",
+  "loadFromFile": "فائل سے لوڈ کریں",
+  "selectJSONFileFromDevice": "اپنے آلے سے JSON تھیم فائل منتخب کریں",
+  "pasteFromClipboard": "کلپ بورڈ سے پیسٹ کریں",
+  "importFromClipboardJSON": "کلپ بورڈ JSON ڈیٹا سے تھیم درآمد کریں",
+  "importFromFile": "فائل سے تھیم درآمد کریں",
+  "themeCreatedSuccessfully": "تھیم کامیابی سے بنائی گئی!",
+  "themeUpdatedSuccessfully": "تھیم کامیابی سے اپڈیٹ ہوگئی!",
+  "themeDeletedSuccessfully": "تھیم کامیابی سے حذف ہوگئی!",
+  "themeExportedSuccessfully": "تھیم کامیابی سے برآمد ہوگئی!",
+  "themeCopiedToClipboard": "تھیم کلپ بورڈ پر کاپی ہوگئی!",
+  "themeImportedSuccessfully": "تھیم \"{themeName}\" کامیابی سے درآمد ہوگئی!",
+  "@themeImportedSuccessfully": {
+    "placeholders": {
+      "themeName": {
+        "type": "String"
+      }
+    }
+  },
+  "noThemeDataFound": "کوئی تھیم ڈیٹا نہیں ملا",
+  "invalidThemeFormat": "غلط تھیم فارمیٹ۔ براہ کرم JSON ڈیٹا چیک کریں۔"
 }

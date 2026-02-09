@@ -2841,4 +2841,87 @@ class AppLocalizationsRu extends AppLocalizations {
   String minuteShortFormat(String minutes) {
     return '$minutesм';
   }
+
+  @override
+  String get importTheme => 'Импорт темы';
+
+  @override
+  String get exportTheme => 'Экспорт темы';
+
+  @override
+  String get import => 'Импорт';
+
+  @override
+  String get export => 'Экспорт';
+
+  @override
+  String get chooseExportMethod => 'Выберите способ экспорта темы:';
+
+  @override
+  String get saveAsFile => 'Сохранить как файл';
+
+  @override
+  String get saveThemeAsJSONFile =>
+      'Сохранить тему как JSON-файл на устройство';
+
+  @override
+  String get copyToClipboard => 'Копировать в буфер обмена';
+
+  @override
+  String get copyThemeJSONToClipboard =>
+      'Копировать данные темы в буфер обмена';
+
+  @override
+  String get share => 'Поделиться';
+
+  @override
+  String get shareThemeViaSystemSheet =>
+      'Поделиться темой через системное меню';
+
+  @override
+  String get chooseImportMethod => 'Выберите способ импорта темы:';
+
+  @override
+  String get loadFromFile => 'Загрузить из файла';
+
+  @override
+  String get selectJSONFileFromDevice =>
+      'Выберите JSON-файл темы с вашего устройства';
+
+  @override
+  String get pasteFromClipboard => 'Вставить из буфера обмена';
+
+  @override
+  String get importFromClipboardJSON =>
+      'Импортировать тему из JSON-данных буфера обмена';
+
+  @override
+  String get importFromFile => 'Импортировать тему из файла';
+
+  @override
+  String get themeCreatedSuccessfully => 'Тема успешно создана!';
+
+  @override
+  String get themeUpdatedSuccessfully => 'Тема успешно обновлена!';
+
+  @override
+  String get themeDeletedSuccessfully => 'Тема успешно удалена!';
+
+  @override
+  String get themeExportedSuccessfully => 'Тема успешно экспортирована!';
+
+  @override
+  String get themeCopiedToClipboard => 'Тема скопирована в буфер обмена!';
+
+  @override
+  String themeImportedSuccessfully(String themeName) {
+    return 'Тема «$themeName» успешно импортирована!';
+  }
+
+  @override
+  String get noThemeDataFound => 'Данные темы не найдены';
+
+  @override
+  String get invalidThemeFormat =>
+      'Неверный формат темы. Пожалуйста, проверьте данные JSON.';
 }

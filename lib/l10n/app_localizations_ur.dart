@@ -2757,4 +2757,85 @@ class AppLocalizationsUr extends AppLocalizations {
   String minuteShortFormat(String minutes) {
     return '$minutesم';
   }
+
+  @override
+  String get importTheme => 'تھیم درآمد کریں';
+
+  @override
+  String get exportTheme => 'تھیم برآمد کریں';
+
+  @override
+  String get import => 'درآمد';
+
+  @override
+  String get export => 'برآمد';
+
+  @override
+  String get chooseExportMethod => 'اپنی تھیم برآمد کرنے کا طریقہ منتخب کریں:';
+
+  @override
+  String get saveAsFile => 'فائل کے طور پر محفوظ کریں';
+
+  @override
+  String get saveThemeAsJSONFile =>
+      'تھیم کو اپنے آلے پر JSON فائل کے طور پر محفوظ کریں';
+
+  @override
+  String get copyToClipboard => 'کلپ بورڈ پر کاپی کریں';
+
+  @override
+  String get copyThemeJSONToClipboard => 'تھیم ڈیٹا کلپ بورڈ پر کاپی کریں';
+
+  @override
+  String get share => 'شیئر کریں';
+
+  @override
+  String get shareThemeViaSystemSheet =>
+      'سسٹم شیئر شیٹ کا استعمال کرتے ہوئے تھیم شیئر کریں';
+
+  @override
+  String get chooseImportMethod => 'تھیم درآمد کرنے کا طریقہ منتخب کریں:';
+
+  @override
+  String get loadFromFile => 'فائل سے لوڈ کریں';
+
+  @override
+  String get selectJSONFileFromDevice =>
+      'اپنے آلے سے JSON تھیم فائل منتخب کریں';
+
+  @override
+  String get pasteFromClipboard => 'کلپ بورڈ سے پیسٹ کریں';
+
+  @override
+  String get importFromClipboardJSON => 'کلپ بورڈ JSON ڈیٹا سے تھیم درآمد کریں';
+
+  @override
+  String get importFromFile => 'فائل سے تھیم درآمد کریں';
+
+  @override
+  String get themeCreatedSuccessfully => 'تھیم کامیابی سے بنائی گئی!';
+
+  @override
+  String get themeUpdatedSuccessfully => 'تھیم کامیابی سے اپڈیٹ ہوگئی!';
+
+  @override
+  String get themeDeletedSuccessfully => 'تھیم کامیابی سے حذف ہوگئی!';
+
+  @override
+  String get themeExportedSuccessfully => 'تھیم کامیابی سے برآمد ہوگئی!';
+
+  @override
+  String get themeCopiedToClipboard => 'تھیم کلپ بورڈ پر کاپی ہوگئی!';
+
+  @override
+  String themeImportedSuccessfully(String themeName) {
+    return 'تھیم \"$themeName\" کامیابی سے درآمد ہوگئی!';
+  }
+
+  @override
+  String get noThemeDataFound => 'کوئی تھیم ڈیٹا نہیں ملا';
+
+  @override
+  String get invalidThemeFormat =>
+      'غلط تھیم فارمیٹ۔ براہ کرم JSON ڈیٹا چیک کریں۔';
 }

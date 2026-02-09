@@ -2806,4 +2806,83 @@ class AppLocalizationsEn extends AppLocalizations {
   String minuteShortFormat(String minutes) {
     return '${minutes}m';
   }
+
+  @override
+  String get importTheme => 'Import Theme';
+
+  @override
+  String get exportTheme => 'Export Theme';
+
+  @override
+  String get import => 'Import';
+
+  @override
+  String get export => 'Export';
+
+  @override
+  String get chooseExportMethod => 'Choose how to export your theme:';
+
+  @override
+  String get saveAsFile => 'Save as File';
+
+  @override
+  String get saveThemeAsJSONFile => 'Save theme as a JSON file to your device';
+
+  @override
+  String get copyToClipboard => 'Copy to Clipboard';
+
+  @override
+  String get copyThemeJSONToClipboard => 'Copy theme data to clipboard';
+
+  @override
+  String get share => 'Share';
+
+  @override
+  String get shareThemeViaSystemSheet => 'Share theme using system share sheet';
+
+  @override
+  String get chooseImportMethod => 'Choose how to import a theme:';
+
+  @override
+  String get loadFromFile => 'Load from File';
+
+  @override
+  String get selectJSONFileFromDevice =>
+      'Select a JSON theme file from your device';
+
+  @override
+  String get pasteFromClipboard => 'Paste from Clipboard';
+
+  @override
+  String get importFromClipboardJSON => 'Import theme from clipboard JSON data';
+
+  @override
+  String get importFromFile => 'Import theme from a file';
+
+  @override
+  String get themeCreatedSuccessfully => 'Theme created successfully!';
+
+  @override
+  String get themeUpdatedSuccessfully => 'Theme updated successfully!';
+
+  @override
+  String get themeDeletedSuccessfully => 'Theme deleted successfully!';
+
+  @override
+  String get themeExportedSuccessfully => 'Theme exported successfully!';
+
+  @override
+  String get themeCopiedToClipboard => 'Theme copied to clipboard!';
+
+  @override
+  String themeImportedSuccessfully(String themeName) {
+    return 'Theme \"$themeName\" imported successfully!';
+  }
+
+  @override
+  String get noThemeDataFound => 'No theme data found';
+
+  @override
+  String get invalidThemeFormat =>
+      'Invalid theme format. Please check the JSON data.';
 }

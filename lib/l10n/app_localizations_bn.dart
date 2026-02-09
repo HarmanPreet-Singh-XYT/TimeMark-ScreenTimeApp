@@ -2772,4 +2772,86 @@ class AppLocalizationsBn extends AppLocalizations {
   String minuteShortFormat(String minutes) {
     return '$minutesমি';
   }
+
+  @override
+  String get importTheme => 'থিম আমদানি করুন';
+
+  @override
+  String get exportTheme => 'থিম রপ্তানি করুন';
+
+  @override
+  String get import => 'আমদানি';
+
+  @override
+  String get export => 'রপ্তানি';
+
+  @override
+  String get chooseExportMethod => 'আপনার থিম রপ্তানি করার পদ্ধতি বেছে নিন:';
+
+  @override
+  String get saveAsFile => 'ফাইল হিসাবে সংরক্ষণ করুন';
+
+  @override
+  String get saveThemeAsJSONFile =>
+      'আপনার ডিভাইসে JSON ফাইল হিসাবে থিম সংরক্ষণ করুন';
+
+  @override
+  String get copyToClipboard => 'ক্লিপবোর্ডে কপি করুন';
+
+  @override
+  String get copyThemeJSONToClipboard => 'থিম ডেটা ক্লিপবোর্ডে কপি করুন';
+
+  @override
+  String get share => 'শেয়ার করুন';
+
+  @override
+  String get shareThemeViaSystemSheet =>
+      'সিস্টেম শেয়ার শীট ব্যবহার করে থিম শেয়ার করুন';
+
+  @override
+  String get chooseImportMethod => 'থিম আমদানি করার পদ্ধতি বেছে নিন:';
+
+  @override
+  String get loadFromFile => 'ফাইল থেকে লোড করুন';
+
+  @override
+  String get selectJSONFileFromDevice =>
+      'আপনার ডিভাইস থেকে একটি JSON থিম ফাইল নির্বাচন করুন';
+
+  @override
+  String get pasteFromClipboard => 'ক্লিপবোর্ড থেকে পেস্ট করুন';
+
+  @override
+  String get importFromClipboardJSON =>
+      'ক্লিপবোর্ড JSON ডেটা থেকে থিম আমদানি করুন';
+
+  @override
+  String get importFromFile => 'একটি ফাইল থেকে থিম আমদানি করুন';
+
+  @override
+  String get themeCreatedSuccessfully => 'থিম সফলভাবে তৈরি হয়েছে!';
+
+  @override
+  String get themeUpdatedSuccessfully => 'থিম সফলভাবে আপডেট হয়েছে!';
+
+  @override
+  String get themeDeletedSuccessfully => 'থিম সফলভাবে মুছে ফেলা হয়েছে!';
+
+  @override
+  String get themeExportedSuccessfully => 'থিম সফলভাবে রপ্তানি হয়েছে!';
+
+  @override
+  String get themeCopiedToClipboard => 'থিম ক্লিপবোর্ডে কপি করা হয়েছে!';
+
+  @override
+  String themeImportedSuccessfully(String themeName) {
+    return 'থিম \"$themeName\" সফলভাবে আমদানি হয়েছে!';
+  }
+
+  @override
+  String get noThemeDataFound => 'কোনো থিম ডেটা পাওয়া যায়নি';
+
+  @override
+  String get invalidThemeFormat =>
+      'অবৈধ থিম ফরম্যাট। অনুগ্রহ করে JSON ডেটা পরীক্ষা করুন।';
 }

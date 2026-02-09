@@ -2770,4 +2770,85 @@ class AppLocalizationsId extends AppLocalizations {
   String minuteShortFormat(String minutes) {
     return '${minutes}m';
   }
+
+  @override
+  String get importTheme => 'Impor Tema';
+
+  @override
+  String get exportTheme => 'Ekspor Tema';
+
+  @override
+  String get import => 'Impor';
+
+  @override
+  String get export => 'Ekspor';
+
+  @override
+  String get chooseExportMethod => 'Pilih cara mengekspor tema Anda:';
+
+  @override
+  String get saveAsFile => 'Simpan sebagai File';
+
+  @override
+  String get saveThemeAsJSONFile =>
+      'Simpan tema sebagai file JSON ke perangkat Anda';
+
+  @override
+  String get copyToClipboard => 'Salin ke Papan Klip';
+
+  @override
+  String get copyThemeJSONToClipboard => 'Salin data tema ke papan klip';
+
+  @override
+  String get share => 'Bagikan';
+
+  @override
+  String get shareThemeViaSystemSheet =>
+      'Bagikan tema menggunakan lembar berbagi sistem';
+
+  @override
+  String get chooseImportMethod => 'Pilih cara mengimpor tema:';
+
+  @override
+  String get loadFromFile => 'Muat dari File';
+
+  @override
+  String get selectJSONFileFromDevice =>
+      'Pilih file JSON tema dari perangkat Anda';
+
+  @override
+  String get pasteFromClipboard => 'Tempel dari Papan Klip';
+
+  @override
+  String get importFromClipboardJSON => 'Impor tema dari data JSON papan klip';
+
+  @override
+  String get importFromFile => 'Impor tema dari file';
+
+  @override
+  String get themeCreatedSuccessfully => 'Tema berhasil dibuat!';
+
+  @override
+  String get themeUpdatedSuccessfully => 'Tema berhasil diperbarui!';
+
+  @override
+  String get themeDeletedSuccessfully => 'Tema berhasil dihapus!';
+
+  @override
+  String get themeExportedSuccessfully => 'Tema berhasil diekspor!';
+
+  @override
+  String get themeCopiedToClipboard => 'Tema disalin ke papan klip!';
+
+  @override
+  String themeImportedSuccessfully(String themeName) {
+    return 'Tema \"$themeName\" berhasil diimpor!';
+  }
+
+  @override
+  String get noThemeDataFound => 'Tidak ada data tema ditemukan';
+
+  @override
+  String get invalidThemeFormat =>
+      'Format tema tidak valid. Silakan periksa data JSON.';
 }

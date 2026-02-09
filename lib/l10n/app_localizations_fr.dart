@@ -2861,4 +2861,87 @@ class AppLocalizationsFr extends AppLocalizations {
   String minuteShortFormat(String minutes) {
     return '${minutes}m';
   }
+
+  @override
+  String get importTheme => 'Importer le thème';
+
+  @override
+  String get exportTheme => 'Exporter le thème';
+
+  @override
+  String get import => 'Importer';
+
+  @override
+  String get export => 'Exporter';
+
+  @override
+  String get chooseExportMethod => 'Choisissez comment exporter votre thème :';
+
+  @override
+  String get saveAsFile => 'Enregistrer en fichier';
+
+  @override
+  String get saveThemeAsJSONFile =>
+      'Enregistrer le thème en fichier JSON sur votre appareil';
+
+  @override
+  String get copyToClipboard => 'Copier dans le presse-papiers';
+
+  @override
+  String get copyThemeJSONToClipboard =>
+      'Copier les données du thème dans le presse-papiers';
+
+  @override
+  String get share => 'Partager';
+
+  @override
+  String get shareThemeViaSystemSheet =>
+      'Partager le thème via la feuille de partage système';
+
+  @override
+  String get chooseImportMethod => 'Choisissez comment importer un thème :';
+
+  @override
+  String get loadFromFile => 'Charger depuis un fichier';
+
+  @override
+  String get selectJSONFileFromDevice =>
+      'Sélectionnez un fichier JSON de thème depuis votre appareil';
+
+  @override
+  String get pasteFromClipboard => 'Coller depuis le presse-papiers';
+
+  @override
+  String get importFromClipboardJSON =>
+      'Importer le thème depuis les données JSON du presse-papiers';
+
+  @override
+  String get importFromFile => 'Importer le thème depuis un fichier';
+
+  @override
+  String get themeCreatedSuccessfully => 'Thème créé avec succès !';
+
+  @override
+  String get themeUpdatedSuccessfully => 'Thème mis à jour avec succès !';
+
+  @override
+  String get themeDeletedSuccessfully => 'Thème supprimé avec succès !';
+
+  @override
+  String get themeExportedSuccessfully => 'Thème exporté avec succès !';
+
+  @override
+  String get themeCopiedToClipboard => 'Thème copié dans le presse-papiers !';
+
+  @override
+  String themeImportedSuccessfully(String themeName) {
+    return 'Thème « $themeName » importé avec succès !';
+  }
+
+  @override
+  String get noThemeDataFound => 'Aucune donnée de thème trouvée';
+
+  @override
+  String get invalidThemeFormat =>
+      'Format de thème invalide. Veuillez vérifier les données JSON.';
 }

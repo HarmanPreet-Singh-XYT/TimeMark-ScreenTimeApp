@@ -1825,5 +1825,37 @@
         "type": "String"
       }
     }
-  }
+  },
+  "importTheme": "Импорт темы",
+  "exportTheme": "Экспорт темы",
+  "import": "Импорт",
+  "export": "Экспорт",
+  "chooseExportMethod": "Выберите способ экспорта темы:",
+  "saveAsFile": "Сохранить как файл",
+  "saveThemeAsJSONFile": "Сохранить тему как JSON-файл на устройство",
+  "copyToClipboard": "Копировать в буфер обмена",
+  "copyThemeJSONToClipboard": "Копировать данные темы в буфер обмена",
+  "share": "Поделиться",
+  "shareThemeViaSystemSheet": "Поделиться темой через системное меню",
+  "chooseImportMethod": "Выберите способ импорта темы:",
+  "loadFromFile": "Загрузить из файла",
+  "selectJSONFileFromDevice": "Выберите JSON-файл темы с вашего устройства",
+  "pasteFromClipboard": "Вставить из буфера обмена",
+  "importFromClipboardJSON": "Импортировать тему из JSON-данных буфера обмена",
+  "importFromFile": "Импортировать тему из файла",
+  "themeCreatedSuccessfully": "Тема успешно создана!",
+  "themeUpdatedSuccessfully": "Тема успешно обновлена!",
+  "themeDeletedSuccessfully": "Тема успешно удалена!",
+  "themeExportedSuccessfully": "Тема успешно экспортирована!",
+  "themeCopiedToClipboard": "Тема скопирована в буфер обмена!",
+  "themeImportedSuccessfully": "Тема «{themeName}» успешно импортирована!",
+  "@themeImportedSuccessfully": {
+    "placeholders": {
+      "themeName": {
+        "type": "String"
+      }
+    }
+  },
+  "noThemeDataFound": "Данные темы не найдены",
+  "invalidThemeFormat": "Неверный формат темы. Пожалуйста, проверьте данные JSON."
 }

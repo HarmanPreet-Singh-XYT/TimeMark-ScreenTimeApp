@@ -2755,4 +2755,84 @@ class AppLocalizationsAr extends AppLocalizations {
   String minuteShortFormat(String minutes) {
     return '$minutesد';
   }
+
+  @override
+  String get importTheme => 'استيراد السمة';
+
+  @override
+  String get exportTheme => 'تصدير السمة';
+
+  @override
+  String get import => 'استيراد';
+
+  @override
+  String get export => 'تصدير';
+
+  @override
+  String get chooseExportMethod => 'اختر طريقة تصدير السمة:';
+
+  @override
+  String get saveAsFile => 'حفظ كملف';
+
+  @override
+  String get saveThemeAsJSONFile => 'حفظ السمة كملف JSON على جهازك';
+
+  @override
+  String get copyToClipboard => 'نسخ إلى الحافظة';
+
+  @override
+  String get copyThemeJSONToClipboard => 'نسخ بيانات السمة إلى الحافظة';
+
+  @override
+  String get share => 'مشاركة';
+
+  @override
+  String get shareThemeViaSystemSheet =>
+      'مشاركة السمة باستخدام ورقة المشاركة للنظام';
+
+  @override
+  String get chooseImportMethod => 'اختر طريقة استيراد السمة:';
+
+  @override
+  String get loadFromFile => 'تحميل من ملف';
+
+  @override
+  String get selectJSONFileFromDevice => 'اختر ملف JSON للسمة من جهازك';
+
+  @override
+  String get pasteFromClipboard => 'لصق من الحافظة';
+
+  @override
+  String get importFromClipboardJSON =>
+      'استيراد السمة من بيانات JSON في الحافظة';
+
+  @override
+  String get importFromFile => 'استيراد السمة من ملف';
+
+  @override
+  String get themeCreatedSuccessfully => 'تم إنشاء السمة بنجاح!';
+
+  @override
+  String get themeUpdatedSuccessfully => 'تم تحديث السمة بنجاح!';
+
+  @override
+  String get themeDeletedSuccessfully => 'تم حذف السمة بنجاح!';
+
+  @override
+  String get themeExportedSuccessfully => 'تم تصدير السمة بنجاح!';
+
+  @override
+  String get themeCopiedToClipboard => 'تم نسخ السمة إلى الحافظة!';
+
+  @override
+  String themeImportedSuccessfully(String themeName) {
+    return 'تم استيراد السمة \"$themeName\" بنجاح!';
+  }
+
+  @override
+  String get noThemeDataFound => 'لم يتم العثور على بيانات السمة';
+
+  @override
+  String get invalidThemeFormat =>
+      'تنسيق السمة غير صالح. يرجى التحقق من بيانات JSON.';
 }

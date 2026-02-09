@@ -1830,5 +1830,37 @@
         "type": "String"
       }
     }
-  }
+  },
+  "importTheme": "থিম আমদানি করুন",
+  "exportTheme": "থিম রপ্তানি করুন",
+  "import": "আমদানি",
+  "export": "রপ্তানি",
+  "chooseExportMethod": "আপনার থিম রপ্তানি করার পদ্ধতি বেছে নিন:",
+  "saveAsFile": "ফাইল হিসাবে সংরক্ষণ করুন",
+  "saveThemeAsJSONFile": "আপনার ডিভাইসে JSON ফাইল হিসাবে থিম সংরক্ষণ করুন",
+  "copyToClipboard": "ক্লিপবোর্ডে কপি করুন",
+  "copyThemeJSONToClipboard": "থিম ডেটা ক্লিপবোর্ডে কপি করুন",
+  "share": "শেয়ার করুন",
+  "shareThemeViaSystemSheet": "সিস্টেম শেয়ার শীট ব্যবহার করে থিম শেয়ার করুন",
+  "chooseImportMethod": "থিম আমদানি করার পদ্ধতি বেছে নিন:",
+  "loadFromFile": "ফাইল থেকে লোড করুন",
+  "selectJSONFileFromDevice": "আপনার ডিভাইস থেকে একটি JSON থিম ফাইল নির্বাচন করুন",
+  "pasteFromClipboard": "ক্লিপবোর্ড থেকে পেস্ট করুন",
+  "importFromClipboardJSON": "ক্লিপবোর্ড JSON ডেটা থেকে থিম আমদানি করুন",
+  "importFromFile": "একটি ফাইল থেকে থিম আমদানি করুন",
+  "themeCreatedSuccessfully": "থিম সফলভাবে তৈরি হয়েছে!",
+  "themeUpdatedSuccessfully": "থিম সফলভাবে আপডেট হয়েছে!",
+  "themeDeletedSuccessfully": "থিম সফলভাবে মুছে ফেলা হয়েছে!",
+  "themeExportedSuccessfully": "থিম সফলভাবে রপ্তানি হয়েছে!",
+  "themeCopiedToClipboard": "থিম ক্লিপবোর্ডে কপি করা হয়েছে!",
+  "themeImportedSuccessfully": "থিম \"{themeName}\" সফলভাবে আমদানি হয়েছে!",
+  "@themeImportedSuccessfully": {
+    "placeholders": {
+      "themeName": {
+        "type": "String"
+      }
+    }
+  },
+  "noThemeDataFound": "কোনো থিম ডেটা পাওয়া যায়নি",
+  "invalidThemeFormat": "অবৈধ থিম ফরম্যাট। অনুগ্রহ করে JSON ডেটা পরীক্ষা করুন।"
 }
