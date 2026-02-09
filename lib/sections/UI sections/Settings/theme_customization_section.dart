@@ -172,6 +172,7 @@ class _ThemeCustomizationSectionState extends State<ThemeCustomizationSection> {
             SettingRow(
               title: l10n.importTheme,
               description: l10n.importFromFile,
+              showDivider: themeProvider.customThemes.isNotEmpty ? true : false,
               control: Button(
                 onPressed: () => _importTheme(context, themeProvider),
                 child: Row(
