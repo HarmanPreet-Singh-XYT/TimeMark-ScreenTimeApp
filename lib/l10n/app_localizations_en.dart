@@ -2885,4 +2885,31 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get invalidThemeFormat =>
       'Invalid theme format. Please check the JSON data.';
+
+  @override
+  String get trackingModeTitle => 'Tracking Mode';
+
+  @override
+  String get trackingModeDescription => 'Choose how app usage is tracked';
+
+  @override
+  String get trackingModePolling => 'Standard (Low Resource)';
+
+  @override
+  String get trackingModePrecise => 'Precise (High Accuracy)';
+
+  @override
+  String get trackingModePollingHint =>
+      'Checks every minute - lower resource usage';
+
+  @override
+  String get trackingModePreciseHint =>
+      'Real-time tracking - higher accuracy, more resources';
+
+  @override
+  String get trackingModeChangeError =>
+      'Failed to change tracking mode. Please try again.';
+
+  @override
+  String get errorTitle => 'Error';
 }

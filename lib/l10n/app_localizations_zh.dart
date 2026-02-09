@@ -2762,4 +2762,28 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get invalidThemeFormat => '主题格式无效。请检查 JSON 数据。';
+
+  @override
+  String get trackingModeTitle => '追踪模式';
+
+  @override
+  String get trackingModeDescription => '选择应用使用情况的追踪方式';
+
+  @override
+  String get trackingModePolling => '标准（低资源占用）';
+
+  @override
+  String get trackingModePrecise => '精确（高准确度）';
+
+  @override
+  String get trackingModePollingHint => '每分钟检查一次 - 较低资源占用';
+
+  @override
+  String get trackingModePreciseHint => '实时追踪 - 更高准确度，更多资源占用';
+
+  @override
+  String get trackingModeChangeError => '更改追踪模式失败，请重试。';
+
+  @override
+  String get errorTitle => '错误';
 }

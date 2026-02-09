@@ -2854,4 +2854,32 @@ class AppLocalizationsBn extends AppLocalizations {
   @override
   String get invalidThemeFormat =>
       'অবৈধ থিম ফরম্যাট। অনুগ্রহ করে JSON ডেটা পরীক্ষা করুন।';
+
+  @override
+  String get trackingModeTitle => 'ট্র্যাকিং মোড';
+
+  @override
+  String get trackingModeDescription =>
+      'অ্যাপ ব্যবহার কীভাবে ট্র্যাক করা হবে তা বেছে নিন';
+
+  @override
+  String get trackingModePolling => 'স্ট্যান্ডার্ড (কম রিসোর্স)';
+
+  @override
+  String get trackingModePrecise => 'সুনির্দিষ্ট (উচ্চ নির্ভুলতা)';
+
+  @override
+  String get trackingModePollingHint =>
+      'প্রতি মিনিটে পরীক্ষা করে - কম রিসোর্স ব্যবহার';
+
+  @override
+  String get trackingModePreciseHint =>
+      'রিয়েল-টাইম ট্র্যাকিং - উচ্চ নির্ভুলতা, বেশি রিসোর্স';
+
+  @override
+  String get trackingModeChangeError =>
+      'ট্র্যাকিং মোড পরিবর্তন করতে ব্যর্থ। অনুগ্রহ করে আবার চেষ্টা করুন।';
+
+  @override
+  String get errorTitle => 'ত্রুটি';
 }

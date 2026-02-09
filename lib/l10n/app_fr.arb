@@ -1856,5 +1856,13 @@
     }
   },
   "noThemeDataFound": "Aucune donnée de thème trouvée",
-  "invalidThemeFormat": "Format de thème invalide. Veuillez vérifier les données JSON."
+  "invalidThemeFormat": "Format de thème invalide. Veuillez vérifier les données JSON.",
+  "trackingModeTitle": "Mode de suivi",
+"trackingModeDescription": "Choisissez comment l'utilisation de l'application est suivie",
+"trackingModePolling": "Standard (Faibles ressources)",
+"trackingModePrecise": "Précis (Haute précision)",
+"trackingModePollingHint": "Vérifie chaque minute - faible utilisation des ressources",
+"trackingModePreciseHint": "Suivi en temps réel - plus de précision, plus de ressources",
+"trackingModeChangeError": "Échec du changement de mode de suivi. Veuillez réessayer.",
+"errorTitle": "Erreur"
 }

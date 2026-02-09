@@ -2846,4 +2846,32 @@ class AppLocalizationsHi extends AppLocalizations {
   @override
   String get invalidThemeFormat =>
       'अमान्य थीम प्रारूप। कृपया JSON डेटा जांचें।';
+
+  @override
+  String get trackingModeTitle => 'ट्रैकिंग मोड';
+
+  @override
+  String get trackingModeDescription =>
+      'चुनें कि ऐप उपयोग को कैसे ट्रैक किया जाए';
+
+  @override
+  String get trackingModePolling => 'मानक (कम संसाधन)';
+
+  @override
+  String get trackingModePrecise => 'सटीक (उच्च सटीकता)';
+
+  @override
+  String get trackingModePollingHint =>
+      'हर मिनट जाँच करता है - कम संसाधन उपयोग';
+
+  @override
+  String get trackingModePreciseHint =>
+      'रीयल-टाइम ट्रैकिंग - उच्च सटीकता, अधिक संसाधन';
+
+  @override
+  String get trackingModeChangeError =>
+      'ट्रैकिंग मोड बदलने में विफल। कृपया पुनः प्रयास करें।';
+
+  @override
+  String get errorTitle => 'त्रुटि';
 }

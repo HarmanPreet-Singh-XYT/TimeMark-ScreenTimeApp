@@ -1861,5 +1861,13 @@
     }
   },
   "noThemeDataFound": "कोई थीम डेटा नहीं मिला",
-  "invalidThemeFormat": "अमान्य थीम प्रारूप। कृपया JSON डेटा जांचें।"
+  "invalidThemeFormat": "अमान्य थीम प्रारूप। कृपया JSON डेटा जांचें।",
+  "trackingModeTitle": "ट्रैकिंग मोड",
+"trackingModeDescription": "चुनें कि ऐप उपयोग को कैसे ट्रैक किया जाए",
+"trackingModePolling": "मानक (कम संसाधन)",
+"trackingModePrecise": "सटीक (उच्च सटीकता)",
+"trackingModePollingHint": "हर मिनट जाँच करता है - कम संसाधन उपयोग",
+"trackingModePreciseHint": "रीयल-टाइम ट्रैकिंग - उच्च सटीकता, अधिक संसाधन",
+"trackingModeChangeError": "ट्रैकिंग मोड बदलने में विफल। कृपया पुनः प्रयास करें।",
+"errorTitle": "त्रुटि"
 }

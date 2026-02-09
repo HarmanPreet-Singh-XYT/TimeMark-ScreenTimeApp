@@ -35,6 +35,7 @@ class SettingsProvider extends ChangeNotifier {
   bool _notificationsScreenTime = false;
   bool _notificationsAppScreenTime = false;
 
+  String _trackingMode = TrackingModeOptions.defaultMode; // NEW
   bool _idleDetectionEnabled = true;
   int _idleTimeout = IdleTimeoutOptions.defaultTimeout;
   bool _monitorAudio = true;
@@ -42,9 +43,9 @@ class SettingsProvider extends ChangeNotifier {
   bool _monitorHIDDevices = true;
   double _audioThreshold = 0.001;
 
-  String _voiceGender = VoiceGenderOptions.defaultGender; // ADD THIS
+  String _voiceGender = VoiceGenderOptions.defaultGender;
 
-  // All getters remain the same...
+  // Getters
   String get theme => _theme;
   String get language => _language;
   bool get launchAtStartupVar => _launchAtStartupVar;
@@ -55,6 +56,7 @@ class SettingsProvider extends ChangeNotifier {
   bool get notificationsAppScreenTime => _notificationsAppScreenTime;
   Map<String, String> get appVersion => version;
 
+  String get trackingMode => _trackingMode; // NEW
   bool get idleDetectionEnabled => _idleDetectionEnabled;
   int get idleTimeout => _idleTimeout;
   bool get monitorAudio => _monitorAudio;
@@ -62,15 +64,17 @@ class SettingsProvider extends ChangeNotifier {
   bool get monitorHIDDevices => _monitorHIDDevices;
   double get audioThreshold => _audioThreshold;
 
-  String get voiceGender => _voiceGender; // ADD THIS
+  String get voiceGender => _voiceGender;
 
   List<dynamic> get themeOptions => _settingsManager.getAvailableThemes();
   List<Map<String, String>> get languageOptions =>
       _settingsManager.getAvailableLanguages();
   List<Map<String, dynamic>> get idleTimeoutPresets =>
       _settingsManager.getIdleTimeoutPresets();
-  List<Map<String, String>> get voiceGenderOptions => // ADD THIS
+  List<Map<String, String>> get voiceGenderOptions =>
       _settingsManager.getAvailableVoiceGenders();
+  List<String> get trackingModeOptions => // NEW
+      _settingsManager.getAvailableTrackingModes();
 
   int _reminderFrequency = 60;
   int get reminderFrequency => _reminderFrequency;
@@ -96,6 +100,9 @@ class SettingsProvider extends ChangeNotifier {
     _reminderFrequency =
         _settingsManager.getSetting("notificationController.reminderFrequency");
 
+    // NEW: Load tracking mode
+    _trackingMode = _settingsManager.getSetting("tracking.mode") ??
+        TrackingModeOptions.defaultMode;
     _idleDetectionEnabled =
         _settingsManager.getSetting("tracking.idleDetection") ?? true;
     _idleTimeout = _settingsManager.getSetting("tracking.idleTimeout") ??
@@ -109,7 +116,7 @@ class SettingsProvider extends ChangeNotifier {
     _audioThreshold =
         _settingsManager.getSetting("tracking.audioThreshold") ?? 0.001;
 
-    _voiceGender = // ADD THIS
+    _voiceGender =
         _settingsManager.getSetting("focusModeSettings.voiceGender") ??
             VoiceGenderOptions.defaultGender;
   }
@@ -128,8 +135,6 @@ class SettingsProvider extends ChangeNotifier {
       case 'launchAtStartup':
         _launchAtStartupVar = value;
         _settingsManager.updateSetting("launchAtStartup", value);
-
-        // Sync with system on macOS
         if (Platform.isMacOS) {
           if (value) {
             await launchAtStartup.enable();
@@ -137,7 +142,6 @@ class SettingsProvider extends ChangeNotifier {
             await launchAtStartup.disable();
           }
         }
-        // On Windows, MSIX handles this through the manifest
         break;
       case 'launchAsMinimized':
         _launchAsMinimized = value;
@@ -164,9 +168,19 @@ class SettingsProvider extends ChangeNotifier {
         _settingsManager.updateSetting(
             "notificationController.reminderFrequency", value);
         break;
-      case 'voiceGender': // ADD THIS CASE
+      case 'voiceGender':
         _voiceGender = value;
         _settingsManager.updateSetting("focusModeSettings.voiceGender", value);
+        break;
+      // NEW: Tracking mode case
+      case 'trackingMode':
+        _trackingMode = value;
+        _settingsManager.updateSetting("tracking.mode", value);
+        // Switch the tracker mode
+        final mode = value == TrackingModeOptions.precise
+            ? TrackingMode.precise
+            : TrackingMode.polling;
+        await _tracker.setTrackingMode(mode);
         break;
       case 'idleDetectionEnabled':
         _idleDetectionEnabled = value;
@@ -202,8 +216,6 @@ class SettingsProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  /// Enable all notification settings at once
-  /// Useful after user grants permission on macOS
   Future<void> enableAllNotifications() async {
     await updateSetting('notificationsEnabled', true);
     await updateSetting('notificationsFocusMode', true);
@@ -211,8 +223,6 @@ class SettingsProvider extends ChangeNotifier {
     await updateSetting('notificationsAppScreenTime', true);
   }
 
-  /// Disable all notification settings
-  /// Called when permission is denied or revoked
   Future<void> disableAllNotifications() async {
     await updateSetting('notificationsEnabled', false);
     await updateSetting('notificationsFocusMode', false);
@@ -235,7 +245,6 @@ class SettingsProvider extends ChangeNotifier {
 
   Future<void> resetSettings() async {
     await _settingsManager.resetSettings();
-    // Sync with system on macOS
     if (Platform.isMacOS) {
       await launchAtStartup.enable();
     }

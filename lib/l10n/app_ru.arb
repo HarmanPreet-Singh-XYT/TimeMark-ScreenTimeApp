@@ -1857,5 +1857,13 @@
     }
   },
   "noThemeDataFound": "Данные темы не найдены",
-  "invalidThemeFormat": "Неверный формат темы. Пожалуйста, проверьте данные JSON."
+  "invalidThemeFormat": "Неверный формат темы. Пожалуйста, проверьте данные JSON.",
+  "trackingModeTitle": "Режим отслеживания",
+"trackingModeDescription": "Выберите способ отслеживания использования приложения",
+"trackingModePolling": "Стандартный (Низкое потребление)",
+"trackingModePrecise": "Точный (Высокая точность)",
+"trackingModePollingHint": "Проверяет каждую минуту - меньше ресурсов",
+"trackingModePreciseHint": "Отслеживание в реальном времени - выше точность, больше ресурсов",
+"trackingModeChangeError": "Не удалось изменить режим отслеживания. Пожалуйста, попробуйте снова.",
+"errorTitle": "Ошибка"
 }

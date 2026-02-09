@@ -1860,5 +1860,13 @@
     }
   },
   "noThemeDataFound": "لم يتم العثور على بيانات السمة",
-  "invalidThemeFormat": "تنسيق السمة غير صالح. يرجى التحقق من بيانات JSON."
+  "invalidThemeFormat": "تنسيق السمة غير صالح. يرجى التحقق من بيانات JSON.",
+  "trackingModeTitle": "وضع التتبع",
+"trackingModeDescription": "اختر كيفية تتبع استخدام التطبيق",
+"trackingModePolling": "قياسي (موارد منخفضة)",
+"trackingModePrecise": "دقيق (دقة عالية)",
+"trackingModePollingHint": "يتحقق كل دقيقة - استخدام أقل للموارد",
+"trackingModePreciseHint": "تتبع في الوقت الفعلي - دقة أعلى، موارد أكثر",
+"trackingModeChangeError": "فشل في تغيير وضع التتبع. يرجى المحاولة مرة أخرى.",
+"errorTitle": "خطأ"
 }

@@ -59,19 +59,26 @@ class CategoryOptions {
 
 // Idle timeout preset options
 class IdleTimeoutOptions {
-  // Values only - labels are handled via localization in the UI
   static const List<Map<String, dynamic>> presets = [
-    {'value': 30}, // 30 seconds
-    {'value': 60}, // 1 minute
-    {'value': 120}, // 2 minutes
-    {'value': 300}, // 5 minutes
-    {'value': 600}, // 10 minutes
-    {'value': -1}, // Custom
+    {'value': 30},
+    {'value': 60},
+    {'value': 120},
+    {'value': 300},
+    {'value': 600},
+    {'value': -1},
   ];
 
-  static const int defaultTimeout = 600; // 10 minute default
-  static const int minTimeout = 10; // 10 seconds minimum
-  static const int maxTimeout = 3600; // 1 hour maximum
+  static const int defaultTimeout = 600;
+  static const int minTimeout = 10;
+  static const int maxTimeout = 3600;
+}
+
+// NEW: Tracking mode options
+class TrackingModeOptions {
+  static const String polling = "polling";
+  static const String precise = "precise";
+  static const List<String> available = [polling, precise];
+  static const String defaultMode = precise; // Default to precise
 }
 
 class SettingsManager {
@@ -85,27 +92,23 @@ class SettingsManager {
 
   late SharedPreferences _prefs;
 
-  // Check if running on macOS
   bool get _isMacOS => Platform.isMacOS;
 
-  // Get default notification settings based on platform
   Map<String, dynamic> get _defaultNotificationSettings => {
-        "enabled": !_isMacOS, // Disabled by default on macOS
+        "enabled": !_isMacOS,
         "focusMode": !_isMacOS,
         "screenTime": !_isMacOS,
         "appScreenTime": !_isMacOS,
       };
 
-  // Get default limits alerts settings based on platform
   Map<String, dynamic> get _defaultLimitsAlertsSettings => {
         "popup": true,
         "frequent": true,
-        "sound": !_isMacOS, // Disabled by default on macOS
-        "system": !_isMacOS, // Disabled by default on macOS
+        "sound": !_isMacOS,
+        "system": !_isMacOS,
         "overallLimit": {"enabled": false, "hours": 2, "minutes": 0}
       };
 
-  /// Settings Map - initialized with getter for platform-specific defaults
   Map<String, dynamic> get _defaultSettings => {
         "theme": {
           "selected": ThemeOptions.defaultTheme,
@@ -131,12 +134,13 @@ class SettingsManager {
           "blockDistractions": false,
           "enableSoundsNotifications": true,
           "voiceGender": VoiceGenderOptions.defaultGender,
-          "notificationBannerDismissed": false, // ADD THIS LINE
+          "notificationBannerDismissed": false,
         },
         "notificationController": {
-          "reminderFrequency": 5, // minutes
+          "reminderFrequency": 5,
         },
         "tracking": {
+          "mode": TrackingModeOptions.defaultMode, // NEW: Default to precise
           "idleDetection": true,
           "idleTimeout": IdleTimeoutOptions.defaultTimeout,
           "monitorAudio": true,
@@ -153,13 +157,9 @@ class SettingsManager {
     "type": "Stable Build"
   };
 
-  /// Initialize SharedPreferences and load settings
   Future<void> init() async {
     _prefs = await SharedPreferences.getInstance();
-
-    // Initialize settings with platform-specific defaults
     settings = Map<String, dynamic>.from(_defaultSettings);
-
     _loadSettings();
 
     if (_isMacOS) {
@@ -168,13 +168,10 @@ class SettingsManager {
     }
   }
 
-  /// Load settings from SharedPreferences
   void _loadSettings() {
     String? storedSettings = _prefs.getString("screenTime_settings");
     if (storedSettings != null) {
       Map<String, dynamic> loadedSettings = jsonDecode(storedSettings);
-
-      // Merge loaded settings with default settings
       _mergeSettings(settings, loadedSettings);
 
       // Validate theme
@@ -182,7 +179,7 @@ class SettingsManager {
         settings["theme"]["selected"] = ThemeOptions.defaultTheme;
       }
 
-      // Validate language - check if it's a valid language code
+      // Validate language
       String currentLang = settings["language"]["selected"];
       bool isValidLang =
           LanguageOptions.available.any((lang) => lang['code'] == currentLang);
@@ -210,7 +207,14 @@ class SettingsManager {
 
       // Validate tracking settings
       if (settings.containsKey("tracking")) {
-        // Ensure idleTimeout is within reasonable bounds
+        // NEW: Validate tracking mode
+        String trackingMode =
+            settings["tracking"]["mode"] ?? TrackingModeOptions.defaultMode;
+        if (!TrackingModeOptions.available.contains(trackingMode)) {
+          settings["tracking"]["mode"] = TrackingModeOptions.defaultMode;
+        }
+
+        // Validate idleTimeout
         int idleTimeout = settings["tracking"]["idleTimeout"] ??
             IdleTimeoutOptions.defaultTimeout;
         if (idleTimeout < IdleTimeoutOptions.minTimeout) {
@@ -221,7 +225,7 @@ class SettingsManager {
         }
         settings["tracking"]["idleTimeout"] = idleTimeout;
 
-        // Ensure audioThreshold is within valid range (0.0001 - 0.1)
+        // Validate audioThreshold
         double audioThreshold = settings["tracking"]["audioThreshold"] ?? 0.001;
         if (audioThreshold < 0.0001) audioThreshold = 0.0001;
         if (audioThreshold > 0.1) audioThreshold = 0.1;
@@ -230,7 +234,6 @@ class SettingsManager {
     }
   }
 
-  // Recursively merge loaded settings into default settings
   void _mergeSettings(
       Map<String, dynamic> target, Map<String, dynamic> source) {
     source.forEach((key, value) {
@@ -244,12 +247,10 @@ class SettingsManager {
     });
   }
 
-  /// Save settings to SharedPreferences
   void _saveSettings() {
     _prefs.setString("screenTime_settings", jsonEncode(settings));
   }
 
-  /// Update any setting dynamically
   void updateSetting(String key, dynamic value, [BuildContext? context]) async {
     List<String> keys = key.split(".");
 
@@ -262,7 +263,6 @@ class SettingsManager {
     } else {
       Map<String, dynamic> current = settings;
 
-      // Navigate to the nested object
       for (int i = 0; i < keys.length - 1; i++) {
         if (!current.containsKey(keys[i])) {
           current[keys[i]] = <String, dynamic>{};
@@ -279,7 +279,6 @@ class SettingsManager {
 
     _saveSettings();
 
-    // Log specific setting updates
     if (keys.isNotEmpty) {
       if (keys[0] == "notificationController") {
         debugPrint("🔔 Updated notification setting: $key = $value");
@@ -289,7 +288,6 @@ class SettingsManager {
     }
   }
 
-  /// Apply the theme based on the selected theme value
   void applyTheme(String themeName, BuildContext context) {
     switch (themeName) {
       case ThemeOptions.dark:
@@ -308,14 +306,12 @@ class SettingsManager {
     }
   }
 
-  /// Apply current theme setting to the given context
   void applyCurrentTheme(BuildContext context) {
     String currentTheme =
         getSetting("theme.selected") ?? ThemeOptions.defaultTheme;
     applyTheme(currentTheme, context);
   }
 
-  /// Get any setting dynamically
   dynamic getSetting(String key) {
     List<String> keys = key.split(".");
     dynamic current = settings;
@@ -331,40 +327,24 @@ class SettingsManager {
     return current;
   }
 
-  /// Save a setting directly (used for locale storage)
   Future<void> saveSetting(String key, dynamic value) async {
     await _prefs.setString(key, value.toString());
   }
 
-  // Get available theme options
-  List<String> getAvailableThemes() {
-    return ThemeOptions.available;
-  }
+  List<String> getAvailableThemes() => ThemeOptions.available;
+  List<Map<String, String>> getAvailableLanguages() =>
+      LanguageOptions.available;
+  List<String> getAvailableFocusModes() => FocusModeOptions.available;
+  List<String> getAvailableCategories() => CategoryOptions.available;
+  List<Map<String, dynamic>> getIdleTimeoutPresets() =>
+      IdleTimeoutOptions.presets;
+  List<Map<String, String>> getAvailableVoiceGenders() =>
+      VoiceGenderOptions.available;
+  List<String> getAvailableTrackingModes() =>
+      TrackingModeOptions.available; // NEW
 
-  // Get available language options
-  List<Map<String, String>> getAvailableLanguages() {
-    return LanguageOptions.available;
-  }
-
-  // Get available focus mode options
-  List<String> getAvailableFocusModes() {
-    return FocusModeOptions.available;
-  }
-
-  // Get available category options
-  List<String> getAvailableCategories() {
-    return CategoryOptions.available;
-  }
-
-  // Get available idle timeout presets
-  List<Map<String, dynamic>> getIdleTimeoutPresets() {
-    return IdleTimeoutOptions.presets;
-  }
-
-  /// Check if platform requires explicit notification permission
   bool get requiresNotificationPermission => _isMacOS;
 
-  /// Enable all notifications (useful after user grants permission on macOS)
   void enableAllNotifications() {
     settings["notifications"] = {
       "enabled": true,
@@ -379,7 +359,6 @@ class SettingsManager {
     debugPrint("🔔 All notifications enabled");
   }
 
-  /// Reset settings to default
   Future<void> resetSettings([BuildContext? context]) async {
     settings = Map<String, dynamic>.from(_defaultSettings);
     _saveSettings();
@@ -388,10 +367,5 @@ class SettingsManager {
     if (_isMacOS) {
       debugPrint("🍎 macOS detected - notifications reset to disabled");
     }
-  }
-
-  // Get available voice gender options
-  List<Map<String, String>> getAvailableVoiceGenders() {
-    return VoiceGenderOptions.available;
   }
 }

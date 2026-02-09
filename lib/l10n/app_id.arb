@@ -1853,5 +1853,13 @@
     }
   },
   "noThemeDataFound": "Tidak ada data tema ditemukan",
-  "invalidThemeFormat": "Format tema tidak valid. Silakan periksa data JSON."
+  "invalidThemeFormat": "Format tema tidak valid. Silakan periksa data JSON.",
+  "trackingModeTitle": "Mode Pelacakan",
+"trackingModeDescription": "Pilih cara penggunaan aplikasi dilacak",
+"trackingModePolling": "Standar (Sumber Daya Rendah)",
+"trackingModePrecise": "Presisi (Akurasi Tinggi)",
+"trackingModePollingHint": "Memeriksa setiap menit - penggunaan sumber daya lebih rendah",
+"trackingModePreciseHint": "Pelacakan real-time - akurasi lebih tinggi, lebih banyak sumber daya",
+"trackingModeChangeError": "Gagal mengubah mode pelacakan. Silakan coba lagi.",
+"errorTitle": "Kesalahan"
 }

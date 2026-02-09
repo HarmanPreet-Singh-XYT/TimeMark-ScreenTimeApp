@@ -5223,6 +5223,54 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Invalid theme format. Please check the JSON data.'**
   String get invalidThemeFormat;
+
+  /// No description provided for @trackingModeTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Tracking Mode'**
+  String get trackingModeTitle;
+
+  /// No description provided for @trackingModeDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose how app usage is tracked'**
+  String get trackingModeDescription;
+
+  /// No description provided for @trackingModePolling.
+  ///
+  /// In en, this message translates to:
+  /// **'Standard (Low Resource)'**
+  String get trackingModePolling;
+
+  /// No description provided for @trackingModePrecise.
+  ///
+  /// In en, this message translates to:
+  /// **'Precise (High Accuracy)'**
+  String get trackingModePrecise;
+
+  /// No description provided for @trackingModePollingHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Checks every minute - lower resource usage'**
+  String get trackingModePollingHint;
+
+  /// No description provided for @trackingModePreciseHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Real-time tracking - higher accuracy, more resources'**
+  String get trackingModePreciseHint;
+
+  /// No description provided for @trackingModeChangeError.
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to change tracking mode. Please try again.'**
+  String get trackingModeChangeError;
+
+  /// No description provided for @errorTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Error'**
+  String get errorTitle;
 }
 
 class _AppLocalizationsDelegate

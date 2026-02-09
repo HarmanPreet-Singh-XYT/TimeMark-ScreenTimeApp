@@ -2924,4 +2924,32 @@ class AppLocalizationsRu extends AppLocalizations {
   @override
   String get invalidThemeFormat =>
       'Неверный формат темы. Пожалуйста, проверьте данные JSON.';
+
+  @override
+  String get trackingModeTitle => 'Режим отслеживания';
+
+  @override
+  String get trackingModeDescription =>
+      'Выберите способ отслеживания использования приложения';
+
+  @override
+  String get trackingModePolling => 'Стандартный (Низкое потребление)';
+
+  @override
+  String get trackingModePrecise => 'Точный (Высокая точность)';
+
+  @override
+  String get trackingModePollingHint =>
+      'Проверяет каждую минуту - меньше ресурсов';
+
+  @override
+  String get trackingModePreciseHint =>
+      'Отслеживание в реальном времени - выше точность, больше ресурсов';
+
+  @override
+  String get trackingModeChangeError =>
+      'Не удалось изменить режим отслеживания. Пожалуйста, попробуйте снова.';
+
+  @override
+  String get errorTitle => 'Ошибка';
 }

@@ -1863,5 +1863,13 @@
     }
   },
   "noThemeDataFound": "کوئی تھیم ڈیٹا نہیں ملا",
-  "invalidThemeFormat": "غلط تھیم فارمیٹ۔ براہ کرم JSON ڈیٹا چیک کریں۔"
+  "invalidThemeFormat": "غلط تھیم فارمیٹ۔ براہ کرم JSON ڈیٹا چیک کریں۔",
+  "trackingModeTitle": "ٹریکنگ موڈ",
+"trackingModeDescription": "منتخب کریں کہ ایپ کا استعمال کیسے ٹریک کیا جائے",
+"trackingModePolling": "معیاری (کم وسائل)",
+"trackingModePrecise": "درست (اعلیٰ درستگی)",
+"trackingModePollingHint": "ہر منٹ چیک کرتا ہے - کم وسائل کا استعمال",
+"trackingModePreciseHint": "ریئل ٹائم ٹریکنگ - زیادہ درستگی، زیادہ وسائل",
+"trackingModeChangeError": "ٹریکنگ موڈ تبدیل کرنے میں ناکامی۔ براہ کرم دوبارہ کوشش کریں۔",
+"errorTitle": "خرابی"
 }

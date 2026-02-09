@@ -2835,4 +2835,30 @@ class AppLocalizationsAr extends AppLocalizations {
   @override
   String get invalidThemeFormat =>
       'تنسيق السمة غير صالح. يرجى التحقق من بيانات JSON.';
+
+  @override
+  String get trackingModeTitle => 'وضع التتبع';
+
+  @override
+  String get trackingModeDescription => 'اختر كيفية تتبع استخدام التطبيق';
+
+  @override
+  String get trackingModePolling => 'قياسي (موارد منخفضة)';
+
+  @override
+  String get trackingModePrecise => 'دقيق (دقة عالية)';
+
+  @override
+  String get trackingModePollingHint => 'يتحقق كل دقيقة - استخدام أقل للموارد';
+
+  @override
+  String get trackingModePreciseHint =>
+      'تتبع في الوقت الفعلي - دقة أعلى، موارد أكثر';
+
+  @override
+  String get trackingModeChangeError =>
+      'فشل في تغيير وضع التتبع. يرجى المحاولة مرة أخرى.';
+
+  @override
+  String get errorTitle => 'خطأ';
 }

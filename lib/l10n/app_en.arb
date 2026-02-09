@@ -2069,5 +2069,13 @@
     }
   },
   "noThemeDataFound": "No theme data found",
-  "invalidThemeFormat": "Invalid theme format. Please check the JSON data."
+  "invalidThemeFormat": "Invalid theme format. Please check the JSON data.",
+  "trackingModeTitle": "Tracking Mode",
+  "trackingModeDescription": "Choose how app usage is tracked",
+  "trackingModePolling": "Standard (Low Resource)",
+  "trackingModePrecise": "Precise (High Accuracy)",
+  "trackingModePollingHint": "Checks every minute - lower resource usage",
+  "trackingModePreciseHint": "Real-time tracking - higher accuracy, more resources",
+  "trackingModeChangeError": "Failed to change tracking mode. Please try again.",
+  "errorTitle": "Error"
 }

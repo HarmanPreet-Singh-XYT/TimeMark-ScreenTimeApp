@@ -1862,5 +1862,13 @@
     }
   },
   "noThemeDataFound": "কোনো থিম ডেটা পাওয়া যায়নি",
-  "invalidThemeFormat": "অবৈধ থিম ফরম্যাট। অনুগ্রহ করে JSON ডেটা পরীক্ষা করুন।"
+  "invalidThemeFormat": "অবৈধ থিম ফরম্যাট। অনুগ্রহ করে JSON ডেটা পরীক্ষা করুন।",
+  "trackingModeTitle": "ট্র্যাকিং মোড",
+"trackingModeDescription": "অ্যাপ ব্যবহার কীভাবে ট্র্যাক করা হবে তা বেছে নিন",
+"trackingModePolling": "স্ট্যান্ডার্ড (কম রিসোর্স)",
+"trackingModePrecise": "সুনির্দিষ্ট (উচ্চ নির্ভুলতা)",
+"trackingModePollingHint": "প্রতি মিনিটে পরীক্ষা করে - কম রিসোর্স ব্যবহার",
+"trackingModePreciseHint": "রিয়েল-টাইম ট্র্যাকিং - উচ্চ নির্ভুলতা, বেশি রিসোর্স",
+"trackingModeChangeError": "ট্র্যাকিং মোড পরিবর্তন করতে ব্যর্থ। অনুগ্রহ করে আবার চেষ্টা করুন।",
+"errorTitle": "ত্রুটি"
 }

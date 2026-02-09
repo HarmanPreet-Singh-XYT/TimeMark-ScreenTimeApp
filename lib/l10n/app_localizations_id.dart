@@ -2851,4 +2851,32 @@ class AppLocalizationsId extends AppLocalizations {
   @override
   String get invalidThemeFormat =>
       'Format tema tidak valid. Silakan periksa data JSON.';
+
+  @override
+  String get trackingModeTitle => 'Mode Pelacakan';
+
+  @override
+  String get trackingModeDescription =>
+      'Pilih cara penggunaan aplikasi dilacak';
+
+  @override
+  String get trackingModePolling => 'Standar (Sumber Daya Rendah)';
+
+  @override
+  String get trackingModePrecise => 'Presisi (Akurasi Tinggi)';
+
+  @override
+  String get trackingModePollingHint =>
+      'Memeriksa setiap menit - penggunaan sumber daya lebih rendah';
+
+  @override
+  String get trackingModePreciseHint =>
+      'Pelacakan real-time - akurasi lebih tinggi, lebih banyak sumber daya';
+
+  @override
+  String get trackingModeChangeError =>
+      'Gagal mengubah mode pelacakan. Silakan coba lagi.';
+
+  @override
+  String get errorTitle => 'Kesalahan';
 }

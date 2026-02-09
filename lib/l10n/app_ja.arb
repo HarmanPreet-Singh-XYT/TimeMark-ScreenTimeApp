@@ -1860,5 +1860,13 @@
     }
   },
   "noThemeDataFound": "テーマデータが見つかりません",
-  "invalidThemeFormat": "テーマ形式が無効です。JSONデータを確認してください。"
+  "invalidThemeFormat": "テーマ形式が無効です。JSONデータを確認してください。",
+  "trackingModeTitle": "トラッキングモード",
+  "trackingModeDescription": "アプリ使用状況の追跡方法を選択",
+  "trackingModePolling": "標準（低リソース）",
+  "trackingModePrecise": "精密（高精度）",
+  "trackingModePollingHint": "毎分チェック - リソース使用量が少ない",
+  "trackingModePreciseHint": "リアルタイム追跡 - 高精度、リソース消費が多い",
+  "trackingModeChangeError": "トラッキングモードの変更に失敗しました。もう一度お試しください。",
+  "errorTitle": "エラー"
 }

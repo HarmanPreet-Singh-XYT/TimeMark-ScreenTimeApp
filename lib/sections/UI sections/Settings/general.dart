@@ -1,3 +1,4 @@
+// general_section.dart
 import 'dart:io';
 
 import 'package:fluent_ui/fluent_ui.dart';
@@ -63,9 +64,8 @@ class GeneralSection extends StatelessWidget {
           ),
         ),
         SettingRow(
-          title: l10n.voiceGenderTitle, // ADD LOCALIZATION KEY
-          description: l10n.voiceGenderDescription, // ADD LOCALIZATION KEY
-          showDivider: true,
+          title: l10n.voiceGenderTitle,
+          description: l10n.voiceGenderDescription,
           control: SizedBox(
             width: 160,
             child: ComboBox<String>(
@@ -75,7 +75,6 @@ class GeneralSection extends StatelessWidget {
                 return ComboBoxItem<String>(
                   value: gender['value']!,
                   child: Text(
-                    // Use localization for labels
                     gender['labelKey'] == 'voiceGenderMale'
                         ? l10n.voiceGenderMale
                         : l10n.voiceGenderFemale,
@@ -89,6 +88,12 @@ class GeneralSection extends StatelessWidget {
               },
             ),
           ),
+        ),
+        // NEW: Tracking Mode Selection
+        SettingRow(
+          title: l10n.trackingModeTitle, // Add localization
+          description: l10n.trackingModeDescription, // Add localization
+          control: _TrackingModeSelector(l10n: l10n),
         ),
         if (Platform.isMacOS)
           SettingRow(
@@ -113,6 +118,177 @@ class GeneralSection extends StatelessWidget {
             ),
           ),
       ],
+    );
+  }
+}
+
+// ============== TRACKING MODE SELECTOR ==============
+
+class _TrackingModeSelector extends StatelessWidget {
+  final AppLocalizations l10n;
+
+  const _TrackingModeSelector({required this.l10n});
+
+  @override
+  Widget build(BuildContext context) {
+    final settings = context.watch<SettingsProvider>();
+    final isPrecise = settings.trackingMode == TrackingModeOptions.precise;
+
+    return Row(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        _CompactTrackingModeToggle(
+          isPrecise: isPrecise,
+          onChanged: (value) {
+            settings.updateSetting(
+              'trackingMode',
+              value ? TrackingModeOptions.precise : TrackingModeOptions.polling,
+            );
+          },
+          l10n: l10n,
+        ),
+        const SizedBox(width: 8),
+        Tooltip(
+          message: isPrecise
+              ? l10n.trackingModePreciseHint
+              : l10n.trackingModePollingHint,
+          child: Icon(
+            isPrecise ? FluentIcons.warning : FluentIcons.info,
+            size: 14,
+            color: isPrecise ? Colors.orange : Colors.grey[80],
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+// ============== COMPACT TRACKING MODE TOGGLE ==============
+
+class _CompactTrackingModeToggle extends StatelessWidget {
+  final bool isPrecise;
+  final Function(bool) onChanged;
+  final AppLocalizations l10n;
+
+  const _CompactTrackingModeToggle({
+    required this.isPrecise,
+    required this.onChanged,
+    required this.l10n,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = FluentTheme.of(context);
+
+    return Container(
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(6),
+        border: Border.all(
+          color: theme.inactiveBackgroundColor.withValues(alpha: 0.6),
+        ),
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          _TrackingModeButton(
+            icon: FluentIcons.clock,
+            tooltip: l10n.trackingModePolling,
+            isSelected: !isPrecise,
+            onTap: () => onChanged(false),
+            isFirst: true,
+          ),
+          _TrackingModeButton(
+            icon: FluentIcons.bullseye,
+            tooltip: l10n.trackingModePrecise,
+            isSelected: isPrecise,
+            onTap: () => onChanged(true),
+            isLast: true,
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _TrackingModeButton extends StatefulWidget {
+  final IconData icon;
+  final String tooltip;
+  final bool isSelected;
+  final VoidCallback onTap;
+  final bool isFirst;
+  final bool isLast;
+
+  const _TrackingModeButton({
+    required this.icon,
+    required this.tooltip,
+    required this.isSelected,
+    required this.onTap,
+    this.isFirst = false,
+    this.isLast = false,
+  });
+
+  @override
+  State<_TrackingModeButton> createState() => _TrackingModeButtonState();
+}
+
+class _TrackingModeButtonState extends State<_TrackingModeButton> {
+  bool _isHovering = false;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = FluentTheme.of(context);
+
+    Color bgColor;
+    Color iconColor;
+
+    if (widget.isSelected) {
+      bgColor = theme.accentColor;
+      iconColor = Colors.white;
+    } else if (_isHovering) {
+      bgColor = theme.inactiveBackgroundColor.withValues(alpha: 0.5);
+      iconColor = theme.typography.body?.color ?? Colors.white;
+    } else {
+      bgColor = Colors.transparent;
+      iconColor = theme.typography.body?.color?.withValues(alpha: 0.7) ??
+          Colors.grey[100];
+    }
+
+    BorderRadius borderRadius = BorderRadius.zero;
+    if (widget.isFirst) {
+      borderRadius = const BorderRadius.only(
+        topLeft: Radius.circular(5),
+        bottomLeft: Radius.circular(5),
+      );
+    } else if (widget.isLast) {
+      borderRadius = const BorderRadius.only(
+        topRight: Radius.circular(5),
+        bottomRight: Radius.circular(5),
+      );
+    }
+
+    return Tooltip(
+      message: widget.tooltip,
+      child: MouseRegion(
+        onEnter: (_) => setState(() => _isHovering = true),
+        onExit: (_) => setState(() => _isHovering = false),
+        child: GestureDetector(
+          onTap: widget.onTap,
+          behavior: HitTestBehavior.opaque,
+          child: AnimatedContainer(
+            duration: const Duration(milliseconds: 150),
+            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+            decoration: BoxDecoration(
+              color: bgColor,
+              borderRadius: borderRadius,
+            ),
+            child: Icon(
+              widget.icon,
+              size: 14,
+              color: iconColor,
+            ),
+          ),
+        ),
+      ),
     );
   }
 }

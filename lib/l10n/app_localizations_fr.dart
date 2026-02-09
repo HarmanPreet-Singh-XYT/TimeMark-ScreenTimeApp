@@ -2944,4 +2944,32 @@ class AppLocalizationsFr extends AppLocalizations {
   @override
   String get invalidThemeFormat =>
       'Format de thème invalide. Veuillez vérifier les données JSON.';
+
+  @override
+  String get trackingModeTitle => 'Mode de suivi';
+
+  @override
+  String get trackingModeDescription =>
+      'Choisissez comment l\'utilisation de l\'application est suivie';
+
+  @override
+  String get trackingModePolling => 'Standard (Faibles ressources)';
+
+  @override
+  String get trackingModePrecise => 'Précis (Haute précision)';
+
+  @override
+  String get trackingModePollingHint =>
+      'Vérifie chaque minute - faible utilisation des ressources';
+
+  @override
+  String get trackingModePreciseHint =>
+      'Suivi en temps réel - plus de précision, plus de ressources';
+
+  @override
+  String get trackingModeChangeError =>
+      'Échec du changement de mode de suivi. Veuillez réessayer.';
+
+  @override
+  String get errorTitle => 'Erreur';
 }

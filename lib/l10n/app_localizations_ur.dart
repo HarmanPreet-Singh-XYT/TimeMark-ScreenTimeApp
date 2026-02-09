@@ -2838,4 +2838,32 @@ class AppLocalizationsUr extends AppLocalizations {
   @override
   String get invalidThemeFormat =>
       'غلط تھیم فارمیٹ۔ براہ کرم JSON ڈیٹا چیک کریں۔';
+
+  @override
+  String get trackingModeTitle => 'ٹریکنگ موڈ';
+
+  @override
+  String get trackingModeDescription =>
+      'منتخب کریں کہ ایپ کا استعمال کیسے ٹریک کیا جائے';
+
+  @override
+  String get trackingModePolling => 'معیاری (کم وسائل)';
+
+  @override
+  String get trackingModePrecise => 'درست (اعلیٰ درستگی)';
+
+  @override
+  String get trackingModePollingHint =>
+      'ہر منٹ چیک کرتا ہے - کم وسائل کا استعمال';
+
+  @override
+  String get trackingModePreciseHint =>
+      'ریئل ٹائم ٹریکنگ - زیادہ درستگی، زیادہ وسائل';
+
+  @override
+  String get trackingModeChangeError =>
+      'ٹریکنگ موڈ تبدیل کرنے میں ناکامی۔ براہ کرم دوبارہ کوشش کریں۔';
+
+  @override
+  String get errorTitle => 'خرابی';
 }
