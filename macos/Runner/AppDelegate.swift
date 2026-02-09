@@ -5,7 +5,17 @@ import bitsdojo_window_macos
 @main
 class AppDelegate: FlutterAppDelegate, NSWindowDelegate {
   
-  // ✅ CRITICAL FIX: Change to FALSE
+  // ✅ Login item detection property
+  private var launchedAsLogInItem: Bool {
+    guard let event = NSAppleEventManager.shared().currentAppleEvent else { return false }
+    return
+      event.eventID == kAEOpenApplication &&
+      event.paramDescriptor(forKeyword: keyAEPropData)?.enumCodeValue == keyAELaunchedAsLogInItem
+  }
+  
+  // ✅ Store the result at launch (must capture immediately)
+  private var wasLaunchedAsLoginItem: Bool = false
+  
   override func applicationShouldTerminateAfterLastWindowClosed(_ sender: NSApplication) -> Bool {
     return false
   }
@@ -15,6 +25,10 @@ class AppDelegate: FlutterAppDelegate, NSWindowDelegate {
   }
 
   override func applicationDidFinishLaunching(_ aNotification: Notification) {
+    // ✅ IMPORTANT: Capture login item status IMMEDIATELY at launch
+    // This must be done before any async operations as the AppleEvent is transient
+    wasLaunchedAsLoginItem = launchedAsLogInItem
+    
     setupMethodChannel()
     DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
       self.setupWindowDelegate()
@@ -29,16 +43,18 @@ class AppDelegate: FlutterAppDelegate, NSWindowDelegate {
     let registrar = controller.registrar(forPlugin: "ForegroundWindowPlugin")
     ForegroundWindowPlugin.register(with: registrar)
 
-    // Launch detection channel
+    // ✅ Updated launch detection channel with proper login item detection
     let launchChannel = FlutterMethodChannel(
       name: "timemark/launch",
       binaryMessenger: controller.engine.binaryMessenger
     )
 
-    launchChannel.setMethodCallHandler { call, result in
-      if call.method == "wasLaunchedAtLogin" {
-        result(!NSApp.isActive)
-      } else {
+    launchChannel.setMethodCallHandler { [weak self] call, result in
+      switch call.method {
+      case "wasLaunchedAtLogin":
+        // ✅ Return the properly detected login item status
+        result(self?.wasLaunchedAsLoginItem ?? false)
+      default:
         result(FlutterMethodNotImplemented)
       }
     }
@@ -56,11 +72,10 @@ class AppDelegate: FlutterAppDelegate, NSWindowDelegate {
   private func setupWindowDelegate() {
     if let window = NSApplication.shared.windows.first {
       window.delegate = self
-      window.isReleasedWhenClosed = false // ✅ Add this for safety
+      window.isReleasedWhenClosed = false
     }
   }
   
-  // INTERCEPT native close button/Cmd+W - hide instead of close
   func windowShouldClose(_ sender: NSWindow) -> Bool {
     sender.orderOut(nil)
     return false
@@ -97,6 +112,9 @@ class AppDelegate: FlutterAppDelegate, NSWindowDelegate {
       case "exit":
         self?.exitApp()
         result(true)
+      case "wasLaunchedAsLoginItem":
+        // ✅ Also available on main window channel
+        result(self?.wasLaunchedAsLoginItem ?? false)
       default:
         result(FlutterMethodNotImplemented)
       }

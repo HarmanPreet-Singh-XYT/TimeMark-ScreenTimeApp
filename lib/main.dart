@@ -4,6 +4,7 @@ import 'package:screentime/l10n/app_localizations.dart';
 import 'package:hive_flutter/adapters.dart';
 import 'package:screentime/sections/controller/app_data_controller.dart';
 import 'package:screentime/sections/controller/notification_controller.dart';
+import 'package:screentime/utils/mac_launch.dart';
 import 'package:screentime/utils/macos_window.dart';
 import './sections/overview.dart';
 import './sections/applications.dart';
@@ -81,11 +82,9 @@ void main(List<String> args) async {
   }
 
   final bool wasSystemLaunchedWindows = args.contains('--auto-launched');
-  final bool wasSystemLaunchedMacOS = Platform.isMacOS &&
-      Platform.environment.containsKey('__LAUNCH_AT_LOGIN__');
+  // We'll check macOS later when method channel is ready
+  bool wasSystemLaunchedMacOS = false;
 
-  final bool wasSystemLaunched =
-      wasSystemLaunchedWindows || wasSystemLaunchedMacOS;
   // Check if another instance is already running by trying to connect
   bool existingInstanceFound = false;
   try {
@@ -172,9 +171,19 @@ void main(List<String> args) async {
     win.alignment = Alignment.center;
     win.title = 'TimeMark - Track Screen Time & App Usage';
 
+    if (Platform.isMacOS) {
+      wasSystemLaunchedMacOS = await MacOSLaunchService.wasLaunchedAtLogin();
+    }
+
+    final bool wasSystemLaunched =
+        wasSystemLaunchedWindows || wasSystemLaunchedMacOS;
+
     if (wasSystemLaunched || isMinimizeAtLaunch) {
+      debugPrint(
+          '🔽 Starting hidden (login: $wasSystemLaunched, setting: $isMinimizeAtLaunch)');
       Platform.isMacOS ? await MacOSWindow.hide() : win.hide();
     } else {
+      debugPrint('🔼 Starting visible');
       Platform.isMacOS ? await MacOSWindow.show() : win.show();
     }
   });
@@ -627,7 +636,6 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
     );
   }
 }
-
 // ============================================================================
 // ANIMATED BUILDER HELPER (Since AnimatedBuilder doesn't exist)
 // ============================================================================
@@ -883,10 +891,10 @@ class _SidebarHeader extends StatelessWidget {
                   ),
                 ],
               ),
-              child: const Icon(
-                FluentIcons.timer,
-                color: Colors.white,
-                size: 20,
+              child: Image.asset(
+                'assets/icons/tray_icon_mac.png',
+                width: 20,
+                height: 20,
               ),
             ),
 
