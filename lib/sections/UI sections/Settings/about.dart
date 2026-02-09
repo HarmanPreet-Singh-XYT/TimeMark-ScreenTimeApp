@@ -42,8 +42,11 @@ class AboutSection extends StatelessWidget {
                   color: theme.accentColor.withValues(alpha: 0.1),
                   borderRadius: BorderRadius.circular(8),
                 ),
-                child:
-                    Icon(FluentIcons.timer, size: 24, color: theme.accentColor),
+                child: Image.asset(
+                  'assets/icons/tray_icon_windows.png',
+                  width: 24,
+                  height: 24,
+                ),
               ),
               const SizedBox(width: 16),
               Expanded(
