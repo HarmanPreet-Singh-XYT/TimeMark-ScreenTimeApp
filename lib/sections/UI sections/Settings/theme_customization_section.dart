@@ -422,7 +422,7 @@ class _ThemeCustomizationSectionState extends State<ThemeCustomizationSection> {
       // Desktop: Use file picker
       final String? outputPath = await FilePicker.platform.saveFile(
         dialogTitle: 'Save JSON file',
-        fileName: fileName, // e.g. data.json
+        fileName: fileName,
         type: FileType.custom,
         allowedExtensions: ['json'],
       );
@@ -430,6 +430,10 @@ class _ThemeCustomizationSectionState extends State<ThemeCustomizationSection> {
       if (outputPath == null) {
         throw Exception('Save cancelled');
       }
+
+      // ✅ FIX: Actually write the file to the selected path
+      final file = File(outputPath);
+      await file.writeAsString(jsonData);
     }
   }
 
