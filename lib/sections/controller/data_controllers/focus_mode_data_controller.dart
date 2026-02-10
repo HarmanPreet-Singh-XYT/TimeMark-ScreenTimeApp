@@ -23,7 +23,12 @@ class FocusAnalyticsService {
   // HELPER: Extract session type from appsBlocked
   // ═══════════════════════════════════════════════════════════════════════════
 
-  String _getSessionType(List<String> appsBlocked) {
+  String _getSessionType(List<String>? appsBlocked) {
+    // Handle null or empty appsBlocked (legacy data)
+    if (appsBlocked == null || appsBlocked.isEmpty) {
+      return 'LEGACY_SESSION'; // or 'REGULAR_FOCUS'
+    }
+
     const List<String> pomodoroTags = [
       'POMODORO_WORK',
       'POMODORO_SHORT_BREAK',
@@ -36,7 +41,7 @@ class FocusAnalyticsService {
       }
     }
 
-    return 'REGULAR_FOCUS'; // Non-pomodoro focus session
+    return 'REGULAR_FOCUS';
   }
 
   String _getSessionTypeLabel(String sessionType) {
@@ -227,7 +232,7 @@ class FocusAnalyticsService {
       final List<FocusSessionRecord> sessions =
           _dataStore.getFocusSessionsRange(startDate, endDate);
 
-      // Initialize result with all days in the range
+      // Initialize all days
       DateTime current =
           DateTime(startDate.year, startDate.month, startDate.day);
       final DateTime end = DateTime(endDate.year, endDate.month, endDate.day);
@@ -238,13 +243,15 @@ class FocusAnalyticsService {
         current = current.add(const Duration(days: 1));
       }
 
-      // Count COMPLETE sessions by day (only count long breaks as session completion)
+      // Count sessions by day
       for (final session in sessions) {
         if (session.completed) {
           final String sessionType = _getSessionType(session.appsBlocked);
 
-          // Only count complete Pomodoro sessions (marked by long break completion)
-          if (sessionType == 'POMODORO_LONG_BREAK') {
+          // Count BOTH legacy sessions AND long breaks as complete sessions
+          if (sessionType == 'POMODORO_LONG_BREAK' ||
+              sessionType == 'LEGACY_SESSION' ||
+              sessionType == 'REGULAR_FOCUS') {
             final String dateKey = _formatDate(session.date);
             result[dateKey] = (result[dateKey] ?? 0) + 1;
           }
@@ -474,8 +481,14 @@ class FocusAnalyticsService {
     final int weekday = now.weekday;
     final DateTime startOfWeek = DateTime(now.year, now.month, now.day)
         .subtract(Duration(days: weekday - 1));
-    final DateTime endOfWeek = startOfWeek
-        .add(const Duration(days: 6, hours: 23, minutes: 59, seconds: 59));
+    final DateTime endOfWeek = DateTime(
+      startOfWeek.year,
+      startOfWeek.month,
+      startOfWeek.day + 6,
+      23,
+      59,
+      59,
+    );
 
     // Get complete session count by day
     final Map<String, int> sessionsByDay = getSessionCountByDay(
