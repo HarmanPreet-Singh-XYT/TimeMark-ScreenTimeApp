@@ -1,12 +1,12 @@
 {
   "@@locale": "pt",
   
-  "appWindowTitle": "TimeMark - Rastrear Tempo de Tela e Uso de Aplicativos",
+  "appWindowTitle": "Scolect - Rastrear Tempo de Tela e Uso de Aplicativos",
   "@appWindowTitle": {
     "description": "The title shown in the window title bar"
   },
   
-  "appName": "TimeMark",
+  "appName": "Scolect",
   "@appName": {
     "description": "The name of the application"
   },
@@ -1268,7 +1268,7 @@
   "noButton": "Não",
   "shareButton": "Compartilhar",
   "exportStarting": "Iniciando exportação...",
-  "exportSuccessful": "Exportação bem-sucedida! Arquivo salvo em Documentos/TimeMark-Backups",
+  "exportSuccessful": "Exportação bem-sucedida! Arquivo salvo em Documentos/Scolect-Backups",
   "exportFailed": "Falha na exportação",
   "exportComplete": "Exportação Concluída",
   "shareBackupQuestion": "Gostaria de compartilhar o arquivo de backup?",
@@ -1295,7 +1295,7 @@
   "updatedLabel": "Atualizado",
   "skippedLabel": "Ignorado",
   "faqSettingsQ4": "Como posso restaurar ou exportar meus dados?",
-  "faqSettingsA4": "Você pode ir para configurações e lá encontrará a seção Backup e Restauração. Você pode exportar ou importar dados daqui, note que o arquivo de dados exportado é armazenado em Documentos na pasta TimeMark-Backups e apenas este arquivo pode ser usado para restaurar dados, nenhum outro arquivo.",
+  "faqSettingsA4": "Você pode ir para configurações e lá encontrará a seção Backup e Restauração. Você pode exportar ou importar dados daqui, note que o arquivo de dados exportado é armazenado em Documentos na pasta Scolect-Backups e apenas este arquivo pode ser usado para restaurar dados, nenhum outro arquivo.",
   "faqGeneralQ6": "Como posso mudar o idioma e quais idiomas estão disponíveis, também o que fazer se eu encontrar que a tradução está errada?",
   "faqGeneralA6": "O idioma pode ser alterado através da seção Geral das Configurações, todos os idiomas disponíveis estão listados lá, você pode solicitar tradução clicando em Contato e enviando sua solicitação com o idioma desejado. Saiba que a tradução pode estar errada pois é gerada por IA a partir do inglês e se você quiser relatar pode fazer através de relatar bug, ou contato, ou se você é um desenvolvedor pode abrir uma issue no Github. Contribuições relacionadas a idiomas são bem-vindas!",
   "faqGeneralQ7": "E se eu encontrar que a tradução está errada?",
@@ -1487,7 +1487,7 @@
   "notificationsDisabledSystemLevel": "As notificações estão desativadas no nível do sistema. Para ativar:",
   "step1OpenSystemSettings": "1. Abrir Configurações do Sistema (Preferências do Sistema)",
   "step2GoToNotifications": "2. Ir para Notificações",
-  "step3FindApp": "3. Encontrar e selecionar TimeMark",
+  "step3FindApp": "3. Encontrar e selecionar Scolect",
   "step4EnableNotifications": "4. Ativar \"Permitir notificações\"",
   "returnToAppMessage": "Em seguida, retorne a este aplicativo e as notificações funcionarão.",
   "gotIt": "Entendi",
@@ -1614,7 +1614,7 @@
   "secondary": "Secundário",
   "warning": "Aviso",
   "launchAtStartupTitle": "Iniciar na inicialização",
-  "launchAtStartupDescription": "Iniciar automaticamente o TimeMark quando você fizer login no seu computador",
+  "launchAtStartupDescription": "Iniciar automaticamente o Scolect quando você fizer login no seu computador",
   "inputMonitoringPermissionTitle": "Monitoramento do teclado indisponível",
   "inputMonitoringPermissionDescription": "Ative a permissão de monitoramento de entrada para rastrear a atividade do teclado. No momento, apenas o mouse está sendo monitorado.",
   "openSettings": "Abrir ajustes",

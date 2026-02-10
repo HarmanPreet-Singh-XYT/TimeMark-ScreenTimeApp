@@ -9,10 +9,10 @@ class AppLocalizationsEn extends AppLocalizations {
   AppLocalizationsEn([String locale = 'en']) : super(locale);
 
   @override
-  String get appWindowTitle => 'TimeMark - Track Screen Time & App Usage';
+  String get appWindowTitle => 'Scolect - Track Screen Time & App Usage';
 
   @override
-  String get appName => 'TimeMark';
+  String get appName => 'Scolect';
 
   @override
   String get appTitle => 'Productive ScreenTime';
@@ -1527,7 +1527,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get faqSettingsA4 =>
-      'You can go to settings, and there you\'ll find Backup & Restore section. You can export or import data from here, note that Exported data file is stored in Documents at TimeMark-Backups Folder and only this file can be used to restore data, no other file.';
+      'You can go to settings, and there you\'ll find Backup & Restore section. You can export or import data from here, note that Exported data file is stored in Documents at Scolect-Backups Folder and only this file can be used to restore data, no other file.';
 
   @override
   String get faqGeneralQ6 =>
@@ -2061,7 +2061,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get step2GoToNotifications => '2. Go to Notifications';
 
   @override
-  String get step3FindApp => '3. Find and select TimeMark';
+  String get step3FindApp => '3. Find and select Scolect';
 
   @override
   String get step4EnableNotifications => '4. Enable \"Allow notifications\"';
@@ -2370,7 +2370,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get launchAtStartupDescription =>
-      'Automatically start TimeMark when you log in to your computer';
+      'Automatically start Scolect when you log in to your computer';
 
   @override
   String get inputMonitoringPermissionTitle =>

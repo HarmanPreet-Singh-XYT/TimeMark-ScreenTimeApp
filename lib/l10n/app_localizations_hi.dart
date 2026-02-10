@@ -9,11 +9,10 @@ class AppLocalizationsHi extends AppLocalizations {
   AppLocalizationsHi([String locale = 'hi']) : super(locale);
 
   @override
-  String get appWindowTitle =>
-      'टाइममार्क - स्क्रीन टाइम और ऐप उपयोग ट्रैक करें';
+  String get appWindowTitle => 'Scolect - स्क्रीन टाइम और ऐप उपयोग ट्रैक करें';
 
   @override
-  String get appName => 'टाइममार्क';
+  String get appName => 'Scolect';
 
   @override
   String get appTitle => 'उत्पादक स्क्रीनटाइम';
@@ -1536,7 +1535,7 @@ class AppLocalizationsHi extends AppLocalizations {
 
   @override
   String get faqSettingsA4 =>
-      'आप सेटिंग्स में जा सकते हैं, और वहां आपको बैकअप और पुनर्स्थापना सेक्शन मिलेगा। आप यहां से डेटा निर्यात या आयात कर सकते हैं, ध्यान दें कि निर्यात की गई डेटा फाइल Documents में TimeMark-Backups फोल्डर में संग्रहीत है और केवल इस फाइल का उपयोग डेटा पुनर्स्थापित करने के लिए किया जा सकता है, कोई अन्य फाइल नहीं।';
+      'आप सेटिंग्स में जा सकते हैं, और वहां आपको बैकअप और पुनर्स्थापना सेक्शन मिलेगा। आप यहां से डेटा निर्यात या आयात कर सकते हैं, ध्यान दें कि निर्यात की गई डेटा फाइल Documents में Scolect-Backups फोल्डर में संग्रहीत है और केवल इस फाइल का उपयोग डेटा पुनर्स्थापित करने के लिए किया जा सकता है, कोई अन्य फाइल नहीं।';
 
   @override
   String get faqGeneralQ6 =>
@@ -2044,7 +2043,7 @@ class AppLocalizationsHi extends AppLocalizations {
   String get step2GoToNotifications => '2. सूचनाओं पर जाएं';
 
   @override
-  String get step3FindApp => '3. TimeMark ढूंढें और चुनें';
+  String get step3FindApp => '3. Scolect ढूंढें और चुनें';
 
   @override
   String get step4EnableNotifications =>
@@ -2345,7 +2344,7 @@ class AppLocalizationsHi extends AppLocalizations {
 
   @override
   String get launchAtStartupDescription =>
-      'जब आप अपने कंप्यूटर में लॉग इन करें तो स्वचालित रूप से TimeMark प्रारंभ करें';
+      'जब आप अपने कंप्यूटर में लॉग इन करें तो स्वचालित रूप से Scolect प्रारंभ करें';
 
   @override
   String get inputMonitoringPermissionTitle =>

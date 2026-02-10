@@ -10,10 +10,10 @@ class AppLocalizationsPt extends AppLocalizations {
 
   @override
   String get appWindowTitle =>
-      'TimeMark - Rastrear Tempo de Tela e Uso de Aplicativos';
+      'Scolect - Rastrear Tempo de Tela e Uso de Aplicativos';
 
   @override
-  String get appName => 'TimeMark';
+  String get appName => 'Scolect';
 
   @override
   String get appTitle => 'Tempo de Tela Produtivo';
@@ -1543,7 +1543,7 @@ class AppLocalizationsPt extends AppLocalizations {
 
   @override
   String get faqSettingsA4 =>
-      'Você pode ir para configurações e lá encontrará a seção Backup e Restauração. Você pode exportar ou importar dados daqui, note que o arquivo de dados exportado é armazenado em Documentos na pasta TimeMark-Backups e apenas este arquivo pode ser usado para restaurar dados, nenhum outro arquivo.';
+      'Você pode ir para configurações e lá encontrará a seção Backup e Restauração. Você pode exportar ou importar dados daqui, note que o arquivo de dados exportado é armazenado em Documentos na pasta Scolect-Backups e apenas este arquivo pode ser usado para restaurar dados, nenhum outro arquivo.';
 
   @override
   String get faqGeneralQ6 =>
@@ -2082,7 +2082,7 @@ class AppLocalizationsPt extends AppLocalizations {
   String get step2GoToNotifications => '2. Ir para Notificações';
 
   @override
-  String get step3FindApp => '3. Encontrar e selecionar TimeMark';
+  String get step3FindApp => '3. Encontrar e selecionar Scolect';
 
   @override
   String get step4EnableNotifications => '4. Ativar \"Permitir notificações\"';
@@ -2392,7 +2392,7 @@ class AppLocalizationsPt extends AppLocalizations {
 
   @override
   String get launchAtStartupDescription =>
-      'Iniciar automaticamente o TimeMark quando você fizer login no seu computador';
+      'Iniciar automaticamente o Scolect quando você fizer login no seu computador';
 
   @override
   String get inputMonitoringPermissionTitle =>

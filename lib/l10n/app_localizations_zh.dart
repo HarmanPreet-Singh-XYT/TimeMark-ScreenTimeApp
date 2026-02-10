@@ -9,10 +9,10 @@ class AppLocalizationsZh extends AppLocalizations {
   AppLocalizationsZh([String locale = 'zh']) : super(locale);
 
   @override
-  String get appWindowTitle => 'TimeMark - 屏幕时间和应用使用追踪';
+  String get appWindowTitle => 'Scolect - 屏幕时间和应用使用追踪';
 
   @override
-  String get appName => 'TimeMark';
+  String get appName => 'Scolect';
 
   @override
   String get appTitle => '高效屏幕时间';
@@ -1495,7 +1495,7 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get faqSettingsA4 =>
-      '您可以进入设置，在那里您会找到备份与恢复部分。您可以在这里导出或导入数据。请注意，导出的数据文件存储在文档的 TimeMark-Backups 文件夹中，只有这个文件可以用于恢复数据，其他文件不可以。';
+      '您可以进入设置，在那里您会找到备份与恢复部分。您可以在这里导出或导入数据。请注意，导出的数据文件存储在文档的 Scolect-Backups 文件夹中，只有这个文件可以用于恢复数据，其他文件不可以。';
 
   @override
   String get faqGeneralQ6 => '我如何更改语言？有哪些可用的语言？如果我发现翻译有误怎么办？';
@@ -1984,7 +1984,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get step2GoToNotifications => '2. 前往通知';
 
   @override
-  String get step3FindApp => '3. 查找并选择 TimeMark';
+  String get step3FindApp => '3. 查找并选择 Scolect';
 
   @override
   String get step4EnableNotifications => '4. 启用\"允许通知\"';
@@ -2281,7 +2281,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get launchAtStartupTitle => '开机启动';
 
   @override
-  String get launchAtStartupDescription => '登录计算机时自动启动 TimeMark';
+  String get launchAtStartupDescription => '登录计算机时自动启动 Scolect';
 
   @override
   String get inputMonitoringPermissionTitle => '键盘监控不可用';

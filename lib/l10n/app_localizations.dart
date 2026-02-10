@@ -121,13 +121,13 @@ abstract class AppLocalizations {
   /// The title shown in the window title bar
   ///
   /// In en, this message translates to:
-  /// **'TimeMark - Track Screen Time & App Usage'**
+  /// **'Scolect - Track Screen Time & App Usage'**
   String get appWindowTitle;
 
   /// The name of the application
   ///
   /// In en, this message translates to:
-  /// **'TimeMark'**
+  /// **'Scolect'**
   String get appName;
 
   /// The app title/tagline
@@ -2923,7 +2923,7 @@ abstract class AppLocalizations {
   /// No description provided for @faqSettingsA4.
   ///
   /// In en, this message translates to:
-  /// **'You can go to settings, and there you\'ll find Backup & Restore section. You can export or import data from here, note that Exported data file is stored in Documents at TimeMark-Backups Folder and only this file can be used to restore data, no other file.'**
+  /// **'You can go to settings, and there you\'ll find Backup & Restore section. You can export or import data from here, note that Exported data file is stored in Documents at Scolect-Backups Folder and only this file can be used to restore data, no other file.'**
   String get faqSettingsA4;
 
   /// No description provided for @faqGeneralQ6.
@@ -3787,7 +3787,7 @@ abstract class AppLocalizations {
   /// No description provided for @step3FindApp.
   ///
   /// In en, this message translates to:
-  /// **'3. Find and select TimeMark'**
+  /// **'3. Find and select Scolect'**
   String get step3FindApp;
 
   /// No description provided for @step4EnableNotifications.
@@ -4357,7 +4357,7 @@ abstract class AppLocalizations {
   /// No description provided for @launchAtStartupDescription.
   ///
   /// In en, this message translates to:
-  /// **'Automatically start TimeMark when you log in to your computer'**
+  /// **'Automatically start Scolect when you log in to your computer'**
   String get launchAtStartupDescription;
 
   /// No description provided for @inputMonitoringPermissionTitle.

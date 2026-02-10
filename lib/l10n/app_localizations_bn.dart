@@ -1536,7 +1536,7 @@ class AppLocalizationsBn extends AppLocalizations {
 
   @override
   String get faqSettingsA4 =>
-      'আপনি সেটিংসে যেতে পারেন, এবং সেখানে আপনি ব্যাকআপ এবং পুনরুদ্ধার বিভাগ পাবেন। আপনি এখান থেকে ডেটা রপ্তানি বা আমদানি করতে পারেন, মনে রাখবেন যে রপ্তানি করা ডেটা ফাইল Documents-এ TimeMark-Backups ফোল্ডারে সংরক্ষিত হয় এবং শুধুমাত্র এই ফাইলটি ডেটা পুনরুদ্ধার করতে ব্যবহার করা যেতে পারে, অন্য কোন ফাইল নয়।';
+      'আপনি সেটিংসে যেতে পারেন, এবং সেখানে আপনি ব্যাকআপ এবং পুনরুদ্ধার বিভাগ পাবেন। আপনি এখান থেকে ডেটা রপ্তানি বা আমদানি করতে পারেন, মনে রাখবেন যে রপ্তানি করা ডেটা ফাইল Documents-এ Scolect-Backups ফোল্ডারে সংরক্ষিত হয় এবং শুধুমাত্র এই ফাইলটি ডেটা পুনরুদ্ধার করতে ব্যবহার করা যেতে পারে, অন্য কোন ফাইল নয়।';
 
   @override
   String get faqGeneralQ6 =>
@@ -2048,7 +2048,7 @@ class AppLocalizationsBn extends AppLocalizations {
   String get step2GoToNotifications => '2. বিজ্ঞপ্তিতে যান';
 
   @override
-  String get step3FindApp => '3. TimeMark খুঁজুন এবং নির্বাচন করুন';
+  String get step3FindApp => '3. Scolect খুঁজুন এবং নির্বাচন করুন';
 
   @override
   String get step4EnableNotifications =>
@@ -2348,7 +2348,7 @@ class AppLocalizationsBn extends AppLocalizations {
 
   @override
   String get launchAtStartupDescription =>
-      'আপনার কম্পিউটারে লগ ইন করার সময় স্বয়ংক্রিয়ভাবে TimeMark শুরু করুন';
+      'আপনার কম্পিউটারে লগ ইন করার সময় স্বয়ংক্রিয়ভাবে Scolect শুরু করুন';
 
   @override
   String get inputMonitoringPermissionTitle => 'কীবোর্ড মনিটরিং উপলব্ধ নয়';

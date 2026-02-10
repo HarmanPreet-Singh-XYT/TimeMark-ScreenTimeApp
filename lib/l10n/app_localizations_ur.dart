@@ -10,10 +10,10 @@ class AppLocalizationsUr extends AppLocalizations {
 
   @override
   String get appWindowTitle =>
-      'ٹائم مارک - اسکرین ٹائم اور ایپ استعمال کی نگرانی';
+      'Scolect - اسکرین ٹائم اور ایپ استعمال کی نگرانی';
 
   @override
-  String get appName => 'ٹائم مارک';
+  String get appName => 'Scolect';
 
   @override
   String get appTitle => 'پیداواری اسکرین ٹائم';
@@ -1530,7 +1530,7 @@ class AppLocalizationsUr extends AppLocalizations {
 
   @override
   String get faqSettingsA4 =>
-      'آپ ترتیبات میں جا سکتے ہیں، اور وہاں آپ کو بیک اپ اور بحالی سیکشن ملے گا۔ آپ یہاں سے ڈیٹا برآمد یا درآمد کر سکتے ہیں، نوٹ کریں کہ برآمد شدہ ڈیٹا فائل Documents میں TimeMark-Backups فولڈر میں محفوظ ہے اور صرف یہ فائل ڈیٹا بحال کرنے کے لیے استعمال کی جا سکتی ہے، کوئی اور فائل نہیں۔';
+      'آپ ترتیبات میں جا سکتے ہیں، اور وہاں آپ کو بیک اپ اور بحالی سیکشن ملے گا۔ آپ یہاں سے ڈیٹا برآمد یا درآمد کر سکتے ہیں، نوٹ کریں کہ برآمد شدہ ڈیٹا فائل Documents میں Scolect-Backups فولڈر میں محفوظ ہے اور صرف یہ فائل ڈیٹا بحال کرنے کے لیے استعمال کی جا سکتی ہے، کوئی اور فائل نہیں۔';
 
   @override
   String get faqGeneralQ6 =>
@@ -2033,7 +2033,7 @@ class AppLocalizationsUr extends AppLocalizations {
   String get step2GoToNotifications => '2. نوٹیفکیشنز پر جائیں';
 
   @override
-  String get step3FindApp => '3. TimeMark تلاش کریں اور منتخب کریں';
+  String get step3FindApp => '3. Scolect تلاش کریں اور منتخب کریں';
 
   @override
   String get step4EnableNotifications =>
@@ -2334,7 +2334,7 @@ class AppLocalizationsUr extends AppLocalizations {
 
   @override
   String get launchAtStartupDescription =>
-      'جب آپ اپنے کمپیوٹر میں لاگ ان کریں تو خودکار طور پر TimeMark شروع کریں';
+      'جب آپ اپنے کمپیوٹر میں لاگ ان کریں تو خودکار طور پر Scolect شروع کریں';
 
   @override
   String get inputMonitoringPermissionTitle => 'کی بورڈ مانیٹرنگ دستیاب نہیں';

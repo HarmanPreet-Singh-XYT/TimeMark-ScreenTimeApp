@@ -1,12 +1,12 @@
 {
   "@@locale": "ja",
   
-  "appWindowTitle": "TimeMark - スクリーンタイム＆アプリ使用状況追跡",
+  "appWindowTitle": "Scolect - スクリーンタイム＆アプリ使用状況追跡",
   "@appWindowTitle": {
     "description": "The title shown in the window title bar"
   },
   
-  "appName": "TimeMark",
+  "appName": "Scolect",
   "@appName": {
     "description": "The name of the application"
   },
@@ -1272,7 +1272,7 @@
   "noButton": "いいえ",
   "shareButton": "共有",
   "exportStarting": "エクスポートを開始しています...",
-  "exportSuccessful": "エクスポート成功！ファイルはドキュメント/TimeMark-Backupsに保存されました",
+  "exportSuccessful": "エクスポート成功！ファイルはドキュメント/Scolect-Backupsに保存されました",
   "exportFailed": "エクスポートに失敗しました",
   "exportComplete": "エクスポート完了",
   "shareBackupQuestion": "バックアップファイルを共有しますか？",
@@ -1300,7 +1300,7 @@
   "skippedLabel": "スキップ済み",
   
   "faqSettingsQ4": "データを復元またはエクスポートするにはどうすればよいですか？",
-  "faqSettingsA4": "設定に移動すると、バックアップ＆復元セクションがあります。ここからデータをエクスポートまたはインポートできます。エクスポートされたデータファイルはドキュメントのTimeMark-Backupsフォルダに保存され、このファイルのみがデータの復元に使用できます。他のファイルは使用できません。",
+  "faqSettingsA4": "設定に移動すると、バックアップ＆復元セクションがあります。ここからデータをエクスポートまたはインポートできます。エクスポートされたデータファイルはドキュメントのScolect-Backupsフォルダに保存され、このファイルのみがデータの復元に使用できます。他のファイルは使用できません。",
   
   "faqGeneralQ6": "言語を変更するにはどうすればよいですか？また、どの言語が利用可能ですか？翻訳が間違っている場合はどうすればよいですか？",
   "faqGeneralA6": "言語は設定の一般セクションから変更できます。利用可能なすべての言語がそこにリストされています。お問い合わせをクリックして、指定された言語でリクエストを送信することで、翻訳をリクエストできます。翻訳はAIによって英語から生成されるため、間違っている可能性があることにご注意ください。報告したい場合は、バグ報告、お問い合わせ、または開発者の場合はGithubでイシューを開くことができます。言語に関する貢献も歓迎します！",
@@ -1494,7 +1494,7 @@
   "notificationsDisabledSystemLevel": "システムレベルで通知が無効になっています。有効にするには:",
   "step1OpenSystemSettings": "1. システム設定（システム環境設定）を開く",
   "step2GoToNotifications": "2. 通知に移動",
-  "step3FindApp": "3. TimeMarkを見つけて選択",
+  "step3FindApp": "3. Scolectを見つけて選択",
   "step4EnableNotifications": "4. 「通知を許可」を有効にする",
   "returnToAppMessage": "その後、このアプリに戻ると通知が機能します。",
   "gotIt": "了解",
@@ -1621,7 +1621,7 @@
   "secondary": "セカンダリ",
   "warning": "警告",
   "launchAtStartupTitle": "スタートアップ時に起動",
-  "launchAtStartupDescription": "コンピュータにログインしたときに自動的にTimeMarkを起動します",
+  "launchAtStartupDescription": "コンピュータにログインしたときに自動的にScolectを起動します",
   "inputMonitoringPermissionTitle": "キーボード監視は利用できません",
   "inputMonitoringPermissionDescription": "キーボードの操作を追跡するには、入力監視の許可を有効にしてください。現在はマウス入力のみが監視されています。",
   "openSettings": "設定を開く",

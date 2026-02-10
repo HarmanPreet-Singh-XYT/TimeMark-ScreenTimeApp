@@ -75,7 +75,7 @@ void main(List<String> args) async {
   // Configure launch at startup package
   if (Platform.isMacOS) {
     launchAtStartup.setup(
-      appName: "TimeMark",
+      appName: "Scolect",
       appPath: Platform.resolvedExecutable,
     );
   }
@@ -168,7 +168,7 @@ void main(List<String> args) async {
     win.minSize = const Size(900, 600);
     win.size = initialSize;
     win.alignment = Alignment.center;
-    win.title = 'TimeMark - Track Screen Time & App Usage';
+    win.title = 'Scolect - Track Screen Time & App Usage';
 
     if (Platform.isMacOS) {
       wasSystemLaunchedMacOS = await MacOSLaunchService.wasLaunchedAtLogin();
@@ -380,7 +380,7 @@ class _MyAppState extends State<MyApp>
           ? 'assets/icons/tray_icon_windows.ico'
           : 'assets/icons/tray_icon_mac.png',
     );
-    await trayManager.setToolTip("TimeMark");
+    await trayManager.setToolTip("Scolect");
     await _updateTrayMenu();
   }
 
@@ -509,7 +509,7 @@ class _AppWithTheme extends StatelessWidget {
       dark: buildDarkTheme(customTheme),
       initial: themeMode, // Use mode from provider
       builder: (theme, darkTheme) => FluentApp(
-        title: 'TimeMark',
+        title: 'Scolect',
         theme: theme,
         darkTheme: darkTheme,
         navigatorKey: navigatorKey,

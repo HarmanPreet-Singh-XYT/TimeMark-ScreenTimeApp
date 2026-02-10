@@ -10,10 +10,10 @@ class AppLocalizationsId extends AppLocalizations {
 
   @override
   String get appWindowTitle =>
-      'TimeMark - Lacak Waktu Layar & Penggunaan Aplikasi';
+      'Scolect - Lacak Waktu Layar & Penggunaan Aplikasi';
 
   @override
-  String get appName => 'TimeMark';
+  String get appName => 'Scolect';
 
   @override
   String get appTitle => 'Waktu Layar Produktif';
@@ -1537,7 +1537,7 @@ class AppLocalizationsId extends AppLocalizations {
 
   @override
   String get faqSettingsA4 =>
-      'Anda dapat pergi ke pengaturan, dan di sana Anda akan menemukan bagian Cadangan & Pemulihan. Anda dapat mengekspor atau mengimpor data dari sini, perhatikan bahwa file data yang diekspor disimpan di Dokumen pada Folder TimeMark-Backups dan hanya file ini yang dapat digunakan untuk memulihkan data, bukan file lain.';
+      'Anda dapat pergi ke pengaturan, dan di sana Anda akan menemukan bagian Cadangan & Pemulihan. Anda dapat mengekspor atau mengimpor data dari sini, perhatikan bahwa file data yang diekspor disimpan di Dokumen pada Folder Scolect-Backups dan hanya file ini yang dapat digunakan untuk memulihkan data, bukan file lain.';
 
   @override
   String get faqGeneralQ6 =>
@@ -2042,7 +2042,7 @@ class AppLocalizationsId extends AppLocalizations {
   String get step2GoToNotifications => '2. Buka Notifikasi';
 
   @override
-  String get step3FindApp => '3. Cari dan pilih TimeMark';
+  String get step3FindApp => '3. Cari dan pilih Scolect';
 
   @override
   String get step4EnableNotifications => '4. Aktifkan \"Izinkan notifikasi\"';
@@ -2345,7 +2345,7 @@ class AppLocalizationsId extends AppLocalizations {
 
   @override
   String get launchAtStartupDescription =>
-      'Mulai TimeMark secara otomatis saat Anda masuk ke komputer Anda';
+      'Mulai Scolect secara otomatis saat Anda masuk ke komputer Anda';
 
   @override
   String get inputMonitoringPermissionTitle =>

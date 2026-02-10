@@ -10,10 +10,10 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get appWindowTitle =>
-      'TimeMark - Отслеживание экранного времени и использования приложений';
+      'Scolect - Отслеживание экранного времени и использования приложений';
 
   @override
-  String get appName => 'TimeMark';
+  String get appName => 'Scolect';
 
   @override
   String get appTitle => 'Продуктивное экранное время';
@@ -1539,7 +1539,7 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get faqSettingsA4 =>
-      'Вы можете перейти в настройки, там вы найдёте раздел Резервное копирование и восстановление. Здесь вы можете экспортировать или импортировать данные. Обратите внимание, что экспортированный файл данных сохраняется в Документах в папке TimeMark-Backups, и только этот файл можно использовать для восстановления данных, никакой другой файл.';
+      'Вы можете перейти в настройки, там вы найдёте раздел Резервное копирование и восстановление. Здесь вы можете экспортировать или импортировать данные. Обратите внимание, что экспортированный файл данных сохраняется в Документах в папке Scolect-Backups, и только этот файл можно использовать для восстановления данных, никакой другой файл.';
 
   @override
   String get faqGeneralQ6 =>
@@ -2090,7 +2090,7 @@ class AppLocalizationsRu extends AppLocalizations {
   String get step2GoToNotifications => '2. Перейдите в Уведомления';
 
   @override
-  String get step3FindApp => '3. Найдите и выберите TimeMark';
+  String get step3FindApp => '3. Найдите и выберите Scolect';
 
   @override
   String get step4EnableNotifications =>
@@ -2402,7 +2402,7 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get launchAtStartupDescription =>
-      'Автоматически запускать TimeMark при входе в систему на вашем компьютере';
+      'Автоматически запускать Scolect при входе в систему на вашем компьютере';
 
   @override
   String get inputMonitoringPermissionTitle =>

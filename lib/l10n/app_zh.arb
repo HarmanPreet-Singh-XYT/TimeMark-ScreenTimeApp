@@ -1,12 +1,12 @@
 {
   "@@locale": "zh",
   
-  "appWindowTitle": "TimeMark - 屏幕时间和应用使用追踪",
+  "appWindowTitle": "Scolect - 屏幕时间和应用使用追踪",
   "@appWindowTitle": {
     "description": "The title shown in the window title bar"
   },
   
-  "appName": "TimeMark",
+  "appName": "Scolect",
   "@appName": {
     "description": "The name of the application"
   },
@@ -1270,7 +1270,7 @@
   "noButton": "否",
   "shareButton": "分享",
   "exportStarting": "正在开始导出...",
-  "exportSuccessful": "导出成功！文件已保存至 Documents/TimeMark-Backups",
+  "exportSuccessful": "导出成功！文件已保存至 Documents/Scolect-Backups",
   "exportFailed": "导出失败",
   "exportComplete": "导出完成",
   "shareBackupQuestion": "您想分享备份文件吗？",
@@ -1297,7 +1297,7 @@
   "updatedLabel": "已更新",
   "skippedLabel": "已跳过",
   "faqSettingsQ4": "我如何恢复或导出我的数据？",
-  "faqSettingsA4": "您可以进入设置，在那里您会找到备份与恢复部分。您可以在这里导出或导入数据。请注意，导出的数据文件存储在文档的 TimeMark-Backups 文件夹中，只有这个文件可以用于恢复数据，其他文件不可以。",
+  "faqSettingsA4": "您可以进入设置，在那里您会找到备份与恢复部分。您可以在这里导出或导入数据。请注意，导出的数据文件存储在文档的 Scolect-Backups 文件夹中，只有这个文件可以用于恢复数据，其他文件不可以。",
   "faqGeneralQ6": "我如何更改语言？有哪些可用的语言？如果我发现翻译有误怎么办？",
   "faqGeneralA6": "语言可以在设置的通用部分进行更改，所有可用的语言都列在那里。您可以点击联系并发送您的请求和所需语言来请求翻译。请注意，翻译可能存在错误，因为它是由人工智能从英语生成的。如果您想报告问题，可以通过报告错误、联系我们，或者如果您是开发者，可以在 Github 上提交问题。我们也欢迎关于语言的贡献！",
   "faqGeneralQ7": "如果我发现翻译有误怎么办？",
@@ -1489,7 +1489,7 @@
   "notificationsDisabledSystemLevel": "系统级别已禁用通知。要启用：",
   "step1OpenSystemSettings": "1. 打开系统设置（系统偏好设置）",
   "step2GoToNotifications": "2. 前往通知",
-  "step3FindApp": "3. 查找并选择 TimeMark",
+  "step3FindApp": "3. 查找并选择 Scolect",
   "step4EnableNotifications": "4. 启用\"允许通知\"",
   "returnToAppMessage": "然后返回此应用，通知将正常工作。",
   "gotIt": "知道了",
@@ -1616,7 +1616,7 @@
   "secondary": "次要",
   "warning": "警告",
   "launchAtStartupTitle": "开机启动",
-  "launchAtStartupDescription": "登录计算机时自动启动 TimeMark",
+  "launchAtStartupDescription": "登录计算机时自动启动 Scolect",
   "inputMonitoringPermissionTitle": "键盘监控不可用",
   "inputMonitoringPermissionDescription": "请启用“输入监控”权限以跟踪键盘活动。目前仅监控鼠标输入。",
   "openSettings": "打开设置",

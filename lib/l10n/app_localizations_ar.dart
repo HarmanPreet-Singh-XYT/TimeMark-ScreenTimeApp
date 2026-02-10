@@ -9,10 +9,10 @@ class AppLocalizationsAr extends AppLocalizations {
   AppLocalizationsAr([String locale = 'ar']) : super(locale);
 
   @override
-  String get appWindowTitle => 'تايم مارك - تتبع وقت الشاشة واستخدام التطبيقات';
+  String get appWindowTitle => 'Scolect - تتبع وقت الشاشة واستخدام التطبيقات';
 
   @override
-  String get appName => 'تايم مارك';
+  String get appName => 'Scolect';
 
   @override
   String get appTitle => 'وقت شاشة منتج';
@@ -1519,7 +1519,7 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get faqSettingsA4 =>
-      'يمكنك الذهاب إلى الإعدادات، وهناك ستجد قسم النسخ الاحتياطي والاستعادة. يمكنك تصدير أو استيراد البيانات من هنا، لاحظ أن ملف البيانات المصدّر يتم تخزينه في المستندات في مجلد TimeMark-Backups ويمكن استخدام هذا الملف فقط لاستعادة البيانات، ولا يمكن استخدام أي ملف آخر.';
+      'يمكنك الذهاب إلى الإعدادات، وهناك ستجد قسم النسخ الاحتياطي والاستعادة. يمكنك تصدير أو استيراد البيانات من هنا، لاحظ أن ملف البيانات المصدّر يتم تخزينه في المستندات في مجلد Scolect-Backups ويمكن استخدام هذا الملف فقط لاستعادة البيانات، ولا يمكن استخدام أي ملف آخر.';
 
   @override
   String get faqGeneralQ6 =>
@@ -2020,7 +2020,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get step2GoToNotifications => '2. انتقل إلى الإشعارات';
 
   @override
-  String get step3FindApp => '3. ابحث عن TimeMark وحدده';
+  String get step3FindApp => '3. ابحث عن Scolect وحدده';
 
   @override
   String get step4EnableNotifications => '4. قم بتمكين \"السماح بالإشعارات\"';
@@ -2320,7 +2320,7 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get launchAtStartupDescription =>
-      'بدء TimeMark تلقائيًا عند تسجيل الدخول إلى جهاز الكمبيوتر الخاص بك';
+      'بدء Scolect تلقائيًا عند تسجيل الدخول إلى جهاز الكمبيوتر الخاص بك';
 
   @override
   String get inputMonitoringPermissionTitle => 'مراقبة لوحة المفاتيح غير متاحة';

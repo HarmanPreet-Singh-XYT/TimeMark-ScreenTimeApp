@@ -96,19 +96,19 @@ flutter:
 #   windows:
 #     pluginClass: ForegroundWindowPlugin
 msix_config:
-  display_name: TimeMark - Track Screen Time & App Usage
+  display_name: Scolect - Track Screen Time & App Usage
   languages: "en-us, zh-cn, hi-in, es-es, fr-fr, ar-sa, bn-bd, pt-br, ru-ru, ur-pk, id-id, ja-jp"
   startup_task:
     enabled: true
     parameters: --auto-launched
   publisher_display_name: Harmanita
-  identity_name: Harmanita.TimeMark-TrackScreenTimeAppUsage
-  msix_version: 1.2.1.0
-  logo_path: C:\Code\TimeMark-ScreenTimeApp\assets\icons\tray_icon.png
+  identity_name: Harmanita.Scolect-TrackScreenTimeAppUsage
+  msix_version: 2.0.0.0
+  logo_path: C:\Code\Scolect-ScreenTimeApp\assets\icons\logo.png
   publisher: CN=5EB16640-AA72-4826-B8B0-95B5C4F31CF0
   store: true
   app_installer: #<-- app installer configuration
-    publish_folder_path: C:\Projects\TimeMark
+    publish_folder_path: C:\Projects\Scolect
     hours_between_update_checks: 0
     automatic_background_task: true
     update_blocks_activation: true

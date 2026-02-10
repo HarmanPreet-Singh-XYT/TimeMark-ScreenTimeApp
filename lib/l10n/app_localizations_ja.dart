@@ -9,10 +9,10 @@ class AppLocalizationsJa extends AppLocalizations {
   AppLocalizationsJa([String locale = 'ja']) : super(locale);
 
   @override
-  String get appWindowTitle => 'TimeMark - スクリーンタイム＆アプリ使用状況追跡';
+  String get appWindowTitle => 'Scolect - スクリーンタイム＆アプリ使用状況追跡';
 
   @override
-  String get appName => 'TimeMark';
+  String get appName => 'Scolect';
 
   @override
   String get appTitle => '生産的なスクリーンタイム';
@@ -1507,7 +1507,7 @@ class AppLocalizationsJa extends AppLocalizations {
 
   @override
   String get faqSettingsA4 =>
-      '設定に移動すると、バックアップ＆復元セクションがあります。ここからデータをエクスポートまたはインポートできます。エクスポートされたデータファイルはドキュメントのTimeMark-Backupsフォルダに保存され、このファイルのみがデータの復元に使用できます。他のファイルは使用できません。';
+      '設定に移動すると、バックアップ＆復元セクションがあります。ここからデータをエクスポートまたはインポートできます。エクスポートされたデータファイルはドキュメントのScolect-Backupsフォルダに保存され、このファイルのみがデータの復元に使用できます。他のファイルは使用できません。';
 
   @override
   String get faqGeneralQ6 =>
@@ -2003,7 +2003,7 @@ class AppLocalizationsJa extends AppLocalizations {
   String get step2GoToNotifications => '2. 通知に移動';
 
   @override
-  String get step3FindApp => '3. TimeMarkを見つけて選択';
+  String get step3FindApp => '3. Scolectを見つけて選択';
 
   @override
   String get step4EnableNotifications => '4. 「通知を許可」を有効にする';
@@ -2300,7 +2300,7 @@ class AppLocalizationsJa extends AppLocalizations {
   String get launchAtStartupTitle => 'スタートアップ時に起動';
 
   @override
-  String get launchAtStartupDescription => 'コンピュータにログインしたときに自動的にTimeMarkを起動します';
+  String get launchAtStartupDescription => 'コンピュータにログインしたときに自動的にScolectを起動します';
 
   @override
   String get inputMonitoringPermissionTitle => 'キーボード監視は利用できません';

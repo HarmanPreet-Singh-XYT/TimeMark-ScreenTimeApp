@@ -1,12 +1,12 @@
 {
   "@@locale": "id",
   
-  "appWindowTitle": "TimeMark - Lacak Waktu Layar & Penggunaan Aplikasi",
+  "appWindowTitle": "Scolect - Lacak Waktu Layar & Penggunaan Aplikasi",
   "@appWindowTitle": {
     "description": "The title shown in the window title bar"
   },
   
-  "appName": "TimeMark",
+  "appName": "Scolect",
   "@appName": {
     "description": "The name of the application"
   },
@@ -1268,7 +1268,7 @@
   "noButton": "Tidak",
   "shareButton": "Bagikan",
   "exportStarting": "Memulai ekspor...",
-  "exportSuccessful": "Ekspor berhasil! File disimpan di Dokumen/TimeMark-Backups",
+  "exportSuccessful": "Ekspor berhasil! File disimpan di Dokumen/Scolect-Backups",
   "exportFailed": "Ekspor gagal",
   "exportComplete": "Ekspor Selesai",
   "shareBackupQuestion": "Apakah Anda ingin membagikan file cadangan?",
@@ -1295,7 +1295,7 @@
   "updatedLabel": "Diperbarui",
   "skippedLabel": "Dilewati",
   "faqSettingsQ4": "Bagaimana cara memulihkan atau mengekspor data saya?",
-  "faqSettingsA4": "Anda dapat pergi ke pengaturan, dan di sana Anda akan menemukan bagian Cadangan & Pemulihan. Anda dapat mengekspor atau mengimpor data dari sini, perhatikan bahwa file data yang diekspor disimpan di Dokumen pada Folder TimeMark-Backups dan hanya file ini yang dapat digunakan untuk memulihkan data, bukan file lain.",
+  "faqSettingsA4": "Anda dapat pergi ke pengaturan, dan di sana Anda akan menemukan bagian Cadangan & Pemulihan. Anda dapat mengekspor atau mengimpor data dari sini, perhatikan bahwa file data yang diekspor disimpan di Dokumen pada Folder Scolect-Backups dan hanya file ini yang dapat digunakan untuk memulihkan data, bukan file lain.",
   "faqGeneralQ6": "Bagaimana cara mengubah bahasa dan bahasa apa yang tersedia, juga bagaimana jika saya menemukan terjemahan yang salah?",
   "faqGeneralA6": "Bahasa dapat diubah melalui bagian Pengaturan Umum, semua bahasa yang tersedia tercantum di sana, Anda dapat meminta terjemahan dengan mengklik Kontak dan mengirim permintaan Anda dengan bahasa yang diberikan. Ketahuilah bahwa terjemahan bisa salah karena dihasilkan oleh AI dari bahasa Inggris dan jika Anda ingin melaporkan maka Anda dapat melaporkan melalui laporkan bug, atau kontak, atau jika Anda seorang pengembang maka buka issue di Github. Kontribusi mengenai bahasa juga diterima!",
   "faqGeneralQ7": "Bagaimana jika saya menemukan terjemahan yang salah?",
@@ -1487,7 +1487,7 @@
   "notificationsDisabledSystemLevel": "Notifikasi dinonaktifkan di tingkat sistem. Untuk mengaktifkan:",
   "step1OpenSystemSettings": "1. Buka Pengaturan Sistem (Preferensi Sistem)",
   "step2GoToNotifications": "2. Buka Notifikasi",
-  "step3FindApp": "3. Cari dan pilih TimeMark",
+  "step3FindApp": "3. Cari dan pilih Scolect",
   "step4EnableNotifications": "4. Aktifkan \"Izinkan notifikasi\"",
   "returnToAppMessage": "Kemudian kembali ke aplikasi ini dan notifikasi akan berfungsi.",
   "gotIt": "Mengerti",
@@ -1614,7 +1614,7 @@
   "secondary": "Sekunder",
   "warning": "Peringatan",
   "launchAtStartupTitle": "Jalankan saat startup",
-  "launchAtStartupDescription": "Mulai TimeMark secara otomatis saat Anda masuk ke komputer Anda",
+  "launchAtStartupDescription": "Mulai Scolect secara otomatis saat Anda masuk ke komputer Anda",
   "inputMonitoringPermissionTitle": "Pemantauan keyboard tidak tersedia",
   "inputMonitoringPermissionDescription": "Aktifkan izin pemantauan input untuk melacak aktivitas keyboard. Saat ini hanya input mouse yang dipantau.",
   "openSettings": "Buka Pengaturan",
