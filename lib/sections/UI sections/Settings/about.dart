@@ -54,7 +54,7 @@ class AboutSection extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      'TimeMark',
+                      'Scolect',
                       style: TextStyle(
                         fontSize: 14,
                         fontWeight: FontWeight.w600,
