@@ -1,7 +1,7 @@
 name: screentime
 description: "Screen Time Tracking and Management Application"
 publish_to: 'none'
-version: 1.0.0
+version: 2.0.0
 
 environment:
   sdk: ">=3.0.0 <4.0.0"
@@ -74,6 +74,7 @@ dev_dependencies:
     sdk: flutter
   flutter_lints: ^6.0.0
   msix: ^3.16.8
+  dmg: ^0.1.7
 
 flutter:
   generate: true
