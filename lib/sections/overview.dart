@@ -1,6 +1,5 @@
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:screentime/l10n/app_localizations.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import './controller/data_controllers/overview_data_controller.dart';
 import 'UI sections/Overview/bottom.dart';
 import 'UI sections/Overview/statCards.dart';
@@ -47,11 +46,6 @@ class _OverviewState extends State<Overview> with TickerProviderStateMixin {
       curve: Curves.easeOutCubic,
     );
     _loadData();
-
-    // Show rebranding modal after first frame
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      RebrandingModal.showIfNeeded(context);
-    });
   }
 
   @override
@@ -792,142 +786,6 @@ class _ResponsiveBottomSection extends StatelessWidget {
         ),
       ),
       child: ApplicationLimitsList(data: applicationLimits),
-    );
-  }
-}
-
-class RebrandingModal extends StatelessWidget {
-  const RebrandingModal({super.key});
-
-  static const String _dismissedKey = 'rebranding_modal_dismissed';
-  static final DateTime _expiryDate = DateTime(2026, 2, 25);
-
-  /// Check if modal should be shown and display it if needed
-  static Future<void> showIfNeeded(BuildContext context) async {
-    final now = DateTime.now();
-
-    // Don't show if date is on or after Feb 25, 2026
-    if (now.isAfter(_expiryDate) || now.isAtSameMomentAs(_expiryDate)) {
-      return;
-    }
-
-    // Check if user has already dismissed it
-    final prefs = await SharedPreferences.getInstance();
-    final dismissed = prefs.getBool(_dismissedKey) ?? false;
-
-    if (dismissed) {
-      return;
-    }
-
-    // Show the modal
-    if (context.mounted) {
-      await showDialog(
-        context: context,
-        barrierDismissible: false,
-        builder: (context) => const RebrandingModal(),
-      );
-    }
-  }
-
-  Future<void> _dismiss(BuildContext context) async {
-    final prefs = await SharedPreferences.getInstance();
-    await prefs.setBool(_dismissedKey, true);
-
-    if (context.mounted) {
-      Navigator.of(context).pop();
-    }
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    final theme = FluentTheme.of(context);
-
-    return ContentDialog(
-      constraints: const BoxConstraints(maxWidth: 480),
-      content: Container(
-        padding: const EdgeInsets.all(32),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            // Celebration icon
-            Container(
-              width: 80,
-              height: 80,
-              decoration: BoxDecoration(
-                gradient: LinearGradient(
-                  begin: Alignment.topLeft,
-                  end: Alignment.bottomRight,
-                  colors: [
-                    theme.accentColor.withValues(alpha: 0.2),
-                    theme.accentColor.withValues(alpha: 0.1),
-                  ],
-                ),
-                borderRadius: BorderRadius.circular(20),
-              ),
-              child: const Center(
-                child: Text(
-                  '🎉',
-                  style: TextStyle(fontSize: 48),
-                ),
-              ),
-            ),
-            const SizedBox(height: 24),
-
-            // Main message
-            RichText(
-              textAlign: TextAlign.center,
-              text: TextSpan(
-                style: TextStyle(
-                  fontSize: 24,
-                  fontWeight: FontWeight.w600,
-                  color: theme.typography.body?.color,
-                  height: 1.3,
-                ),
-                children: const [
-                  TextSpan(text: 'TimeMark is now '),
-                  TextSpan(
-                    text: 'Scolect',
-                    style: TextStyle(
-                      color: Color(0xffA855F7), // Purple accent
-                    ),
-                  ),
-                  TextSpan(text: ' 🎉'),
-                ],
-              ),
-            ),
-            const SizedBox(height: 16),
-
-            // Subtitle
-            Text(
-              'Same powerful productivity tracking,\nnew name and experience!',
-              textAlign: TextAlign.center,
-              style: TextStyle(
-                fontSize: 14,
-                color: theme.inactiveColor,
-                height: 1.5,
-              ),
-            ),
-            const SizedBox(height: 32),
-
-            // Continue button
-            FilledButton(
-              onPressed: () => _dismiss(context),
-              style: ButtonStyle(
-                padding: WidgetStateProperty.all(
-                  const EdgeInsets.symmetric(horizontal: 32, vertical: 12),
-                ),
-              ),
-              child: const Text(
-                'Continue',
-                style: TextStyle(
-                  fontSize: 14,
-                  fontWeight: FontWeight.w600,
-                ),
-              ),
-            ),
-          ],
-        ),
-      ),
     );
   }
 }

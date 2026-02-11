@@ -501,6 +501,14 @@ class BackgroundAppTracker {
       return;
     }
 
+    // ⭐ NEW: Check if tracking is enabled for this app BEFORE buffering
+    final metadata = _metadataCache[_currentApp];
+    if (metadata != null && (!metadata.isTracking || !metadata.isVisible)) {
+      debugPrint(
+          '⏭️ Skipping save: $_currentApp (tracking: ${metadata.isTracking}, visible: ${metadata.isVisible})');
+      return;
+    }
+
     // Calculate elapsed time
     final elapsed = DateTime.now().difference(_currentAppStartTime);
     final elapsedSeconds = elapsed.inSeconds;
