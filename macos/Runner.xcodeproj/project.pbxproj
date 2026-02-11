@@ -29,8 +29,8 @@
 		33CC11132044BFA00003C045 /* MainFlutterWindow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 33CC11122044BFA00003C045 /* MainFlutterWindow.swift */; };
 		AD129A5338CEEB322096CB93 /* Pods_RunnerTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EBD719EC719F0D09456AB85A /* Pods_RunnerTests.framework */; };
 		F3D4656F6210B0BF4DAB2A62 /* Pods_Runner.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E53BC5C16776400D48F4B4BE /* Pods_Runner.framework */; };
+		F613A5102F3C44C000FAA479 /* LaunchAtLogin in Frameworks */ = {isa = PBXBuildFile; productRef = F613A50F2F3C44C000FAA479 /* LaunchAtLogin */; };
 		F6B4EDEC2F2FCE390009E132 /* ForegroundWindowPlugin.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6B4EDEB2F2FCE390009E132 /* ForegroundWindowPlugin.swift */; };
-		F6C24C402F36E33B007A97CA /* LaunchAtLogin in Frameworks */ = {isa = PBXBuildFile; productRef = F6C24C3F2F36E33B007A97CA /* LaunchAtLogin */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -106,7 +106,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				F6C24C402F36E33B007A97CA /* LaunchAtLogin in Frameworks */,
+				F613A5102F3C44C000FAA479 /* LaunchAtLogin in Frameworks */,
 				F3D4656F6210B0BF4DAB2A62 /* Pods_Runner.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -242,10 +242,11 @@
 				33CC10E92044A3C60003C045 /* Sources */,
 				33CC10EA2044A3C60003C045 /* Frameworks */,
 				33CC10EB2044A3C60003C045 /* Resources */,
-				F6C24C3C2F36E1C9007A97CA /* ShellScript */,
+				F613A50D2F3C448300FAA479 /* ShellScript */,
 				33CC110E2044A8840003C045 /* Bundle Framework */,
 				3399D490228B24CF009A79C7 /* ShellScript */,
 				62F00CBFF7A0EFDBA48E8537 /* [CP] Embed Pods Frameworks */,
+				F613A5112F3C455E00FAA479 /* ShellScript */,
 			);
 			buildRules = (
 			);
@@ -297,7 +298,7 @@
 			);
 			mainGroup = 33CC10E42044A3C60003C045;
 			packageReferences = (
-				F6C24C3E2F36E33B007A97CA /* XCRemoteSwiftPackageReference "LaunchAtLogin" */,
+				F613A50E2F3C44C000FAA479 /* XCRemoteSwiftPackageReference "LaunchAtLogin-Legacy" */,
 			);
 			productRefGroup = 33CC10EE2044A3C60003C045 /* Products */;
 			projectDirPath = "";
@@ -420,16 +421,20 @@
 			inputFileListPaths = (
 				"${PODS_ROOT}/Target Support Files/Pods-Runner/Pods-Runner-frameworks-${CONFIGURATION}-input-files.xcfilelist",
 			);
+			inputPaths = (
+			);
 			name = "[CP] Embed Pods Frameworks";
 			outputFileListPaths = (
 				"${PODS_ROOT}/Target Support Files/Pods-Runner/Pods-Runner-frameworks-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			outputPaths = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-Runner/Pods-Runner-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
-		F6C24C3C2F36E1C9007A97CA /* ShellScript */ = {
+		F613A50D2F3C448300FAA479 /* ShellScript */ = {
 			isa = PBXShellScriptBuildPhase;
 			alwaysOutOfDate = 1;
 			buildActionMask = 2147483647;
@@ -446,6 +451,23 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "\"${BUILT_PRODUCTS_DIR}/LaunchAtLogin_LaunchAtLogin.bundle/Contents/Resources/copy-helper-swiftpm.sh\"\n";
+		};
+		F613A5112F3C455E00FAA479 /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "cd \"$BUILT_PRODUCTS_DIR/$PRODUCT_NAME.app/Contents/Frameworks\"\n\nfor framework in *.framework; do\n    if [ -d \"$framework/Versions\" ]; then\n        cd \"$framework\"\n        \n        # Create Resources symlink if missing\n        if [ ! -L \"Resources\" ]; then\n            ln -sf Versions/Current/Resources Resources\n        fi\n        \n        cd ..\n    fi\ndone\n";
 		};
 /* End PBXShellScriptBuildPhase section */
 
@@ -622,6 +644,7 @@
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
+				MACOSX_DEPLOYMENT_TARGET = 11.5;
 				MARKETING_VERSION = 2.0.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.harmanita.scolect;
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -773,6 +796,7 @@
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
+				MACOSX_DEPLOYMENT_TARGET = 11.5;
 				MARKETING_VERSION = 2.0.0;
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
@@ -811,6 +835,7 @@
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
+				MACOSX_DEPLOYMENT_TARGET = 11.5;
 				MARKETING_VERSION = 2.0.0;
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_VERSION = 5.0;
@@ -879,9 +904,9 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
-		F6C24C3E2F36E33B007A97CA /* XCRemoteSwiftPackageReference "LaunchAtLogin" */ = {
+		F613A50E2F3C44C000FAA479 /* XCRemoteSwiftPackageReference "LaunchAtLogin-Legacy" */ = {
 			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/sindresorhus/LaunchAtLogin";
+			repositoryURL = "https://github.com/sindresorhus/LaunchAtLogin-Legacy";
 			requirement = {
 				branch = main;
 				kind = branch;
@@ -890,9 +915,9 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
-		F6C24C3F2F36E33B007A97CA /* LaunchAtLogin */ = {
+		F613A50F2F3C44C000FAA479 /* LaunchAtLogin */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = F6C24C3E2F36E33B007A97CA /* XCRemoteSwiftPackageReference "LaunchAtLogin" */;
+			package = F613A50E2F3C44C000FAA479 /* XCRemoteSwiftPackageReference "LaunchAtLogin-Legacy" */;
 			productName = LaunchAtLogin;
 		};
 /* End XCSwiftPackageProductDependency section */

@@ -11,6 +11,9 @@ PODS:
   - FlutterMacOS (1.0.0)
   - local_notifier (0.1.6):
     - FlutterMacOS
+  - path_provider_foundation (0.0.1):
+    - Flutter
+    - FlutterMacOS
   - screen_retriever_macos (0.0.1):
     - FlutterMacOS
   - share_plus (0.0.1):
@@ -34,6 +37,7 @@ DEPENDENCIES:
   - flutter_localization (from `Flutter/ephemeral/.symlinks/plugins/flutter_localization/macos`)
   - FlutterMacOS (from `Flutter/ephemeral`)
   - local_notifier (from `Flutter/ephemeral/.symlinks/plugins/local_notifier/macos`)
+  - path_provider_foundation (from `Flutter/ephemeral/.symlinks/plugins/path_provider_foundation/darwin`)
   - screen_retriever_macos (from `Flutter/ephemeral/.symlinks/plugins/screen_retriever_macos/macos`)
   - share_plus (from `Flutter/ephemeral/.symlinks/plugins/share_plus/macos`)
   - shared_preferences_foundation (from `Flutter/ephemeral/.symlinks/plugins/shared_preferences_foundation/darwin`)
@@ -55,6 +59,8 @@ EXTERNAL SOURCES:
     :path: Flutter/ephemeral
   local_notifier:
     :path: Flutter/ephemeral/.symlinks/plugins/local_notifier/macos
+  path_provider_foundation:
+    :path: Flutter/ephemeral/.symlinks/plugins/path_provider_foundation/darwin
   screen_retriever_macos:
     :path: Flutter/ephemeral/.symlinks/plugins/screen_retriever_macos/macos
   share_plus:
@@ -77,6 +83,7 @@ SPEC CHECKSUMS:
   flutter_localization: 3cda759884c7dab4466fe963d97fba723a492666
   FlutterMacOS: d0db08ddef1a9af05a5ec4b724367152bb0500b1
   local_notifier: 8eb7c13ff7a3b7d7b710be1a5578bd546db6378d
+  path_provider_foundation: bb55f6dbba17d0dccd6737fe6f7f34fbd0376880
   screen_retriever_macos: 452e51764a9e1cdb74b3c541238795849f21557f
   share_plus: 510bf0af1a42cd602274b4629920c9649c52f4cc
   shared_preferences_foundation: 7036424c3d8ec98dfe75ff1667cb0cd531ec82bb
