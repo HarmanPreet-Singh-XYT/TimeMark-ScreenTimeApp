@@ -15,6 +15,12 @@
 </div>
 
 ---
+<div align="center">
+
+### Scolect - Track Screen Time & App Usage
+![Screen Time](assets/icons/logo.png)
+
+</div>
 
 ## 📖 About
 
@@ -181,9 +187,6 @@ flutter build macos     # For macOS
 
 ### MultiLanguage Support
 ![Settings](demo/8.png)
-
-### Scolect 
-![Screen Time](assets/icons/logo.png)
 
 </div>
 
