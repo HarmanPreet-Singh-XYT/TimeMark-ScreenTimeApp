@@ -2952,4 +2952,11 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get errorTitle => 'Ошибка';
+
+  @override
+  String get monitorKeyboardTitle => 'Отслеживать Клавиатуру';
+
+  @override
+  String get monitorKeyboardDescription =>
+      'Отслеживать активность клавиатуры для обнаружения присутствия пользователя';
 }

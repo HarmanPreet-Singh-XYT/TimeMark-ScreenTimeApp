@@ -2873,4 +2873,11 @@ class AppLocalizationsHi extends AppLocalizations {
 
   @override
   String get errorTitle => 'त्रुटि';
+
+  @override
+  String get monitorKeyboardTitle => 'कीबोर्ड की निगरानी करें';
+
+  @override
+  String get monitorKeyboardDescription =>
+      'उपयोगकर्ता की उपस्थिति का पता लगाने के लिए कीबोर्ड गतिविधि ट्रैक करें';
 }

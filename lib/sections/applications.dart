@@ -1,4 +1,5 @@
 import 'package:fluent_ui/fluent_ui.dart';
+import 'package:screentime/main.dart';
 import 'package:screentime/sections/controller/app_data_controller.dart';
 import 'controller/settings_data_controller.dart';
 import './controller/data_controllers/applications_data_controller.dart';
@@ -41,6 +42,10 @@ class _ApplicationsState extends State<Applications>
     isHidden = settingsManager.getSetting("applications.isHidden");
     selectedCategory =
         settingsManager.getSetting("applications.selectedCategory");
+    // Register this screen's refresh callback
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      navigationState.registerRefreshCallback(_loadData);
+    });
     _loadData();
   }
 

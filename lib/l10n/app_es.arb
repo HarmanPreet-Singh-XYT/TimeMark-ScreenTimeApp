@@ -1858,11 +1858,13 @@
   "noThemeDataFound": "No se encontraron datos del tema",
   "invalidThemeFormat": "Formato de tema inválido. Por favor, verifica los datos JSON.",
   "trackingModeTitle": "Modo de seguimiento",
-"trackingModeDescription": "Elige cómo se rastrea el uso de la aplicación",
-"trackingModePolling": "Estándar (Bajo consumo)",
-"trackingModePrecise": "Preciso (Alta precisión)",
-"trackingModePollingHint": "Comprueba cada minuto - menor uso de recursos",
-"trackingModePreciseHint": "Seguimiento en tiempo real - mayor precisión, más recursos",
-"trackingModeChangeError": "Error al cambiar el modo de seguimiento. Por favor, inténtalo de nuevo.",
-"errorTitle": "Error"
+  "trackingModeDescription": "Elige cómo se rastrea el uso de la aplicación",
+  "trackingModePolling": "Estándar (Bajo consumo)",
+  "trackingModePrecise": "Preciso (Alta precisión)",
+  "trackingModePollingHint": "Comprueba cada minuto - menor uso de recursos",
+  "trackingModePreciseHint": "Seguimiento en tiempo real - mayor precisión, más recursos",
+  "trackingModeChangeError": "Error al cambiar el modo de seguimiento. Por favor, inténtalo de nuevo.",
+  "errorTitle": "Error",
+  "monitorKeyboardTitle": "Monitorear Teclado",
+  "monitorKeyboardDescription": "Rastrear la actividad del teclado para detectar la presencia del usuario"
 }

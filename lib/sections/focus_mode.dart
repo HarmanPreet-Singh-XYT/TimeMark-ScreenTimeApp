@@ -2,6 +2,7 @@ import 'dart:async';
 import 'package:audioplayers/audioplayers.dart';
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:percent_indicator/percent_indicator.dart';
+import 'package:screentime/main.dart' as mn;
 import 'package:screentime/sections/UI%20sections/FocusMode/audio.dart';
 import 'package:screentime/sections/UI%20sections/FocusMode/permissionbanner.dart';
 import 'package:screentime/sections/UI%20sections/FocusMode/sessionHistory.dart';
@@ -65,6 +66,10 @@ class _FocusModeState extends State<FocusMode>
       parent: _animationController,
       curve: Curves.easeOutCubic,
     );
+    // Register this screen's refresh callback
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      mn.navigationState.registerRefreshCallback(_loadData);
+    });
     _loadData();
   }
 

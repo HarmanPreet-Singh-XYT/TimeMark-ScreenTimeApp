@@ -1868,5 +1868,7 @@
   "trackingModePollingHint": "毎分チェック - リソース使用量が少ない",
   "trackingModePreciseHint": "リアルタイム追跡 - 高精度、リソース消費が多い",
   "trackingModeChangeError": "トラッキングモードの変更に失敗しました。もう一度お試しください。",
-  "errorTitle": "エラー"
+  "errorTitle": "エラー",
+  "monitorKeyboardTitle": "キーボードを監視",
+  "monitorKeyboardDescription": "ユーザーの存在を検出するためにキーボードアクティビティを追跡します"
 }

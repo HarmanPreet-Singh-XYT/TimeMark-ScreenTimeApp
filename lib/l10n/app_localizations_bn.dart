@@ -2882,4 +2882,11 @@ class AppLocalizationsBn extends AppLocalizations {
 
   @override
   String get errorTitle => 'ত্রুটি';
+
+  @override
+  String get monitorKeyboardTitle => 'কীবোর্ড পর্যবেক্ষণ';
+
+  @override
+  String get monitorKeyboardDescription =>
+      'ব্যবহারকারীর উপস্থিতি শনাক্ত করতে কীবোর্ডের কার্যকলাপ ট্র্যাক করুন';
 }

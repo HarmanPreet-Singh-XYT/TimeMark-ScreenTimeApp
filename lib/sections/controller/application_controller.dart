@@ -1,5 +1,6 @@
 // background_app_tracker.dart
 import 'dart:async';
+import 'dart:io';
 import 'dart:ui' as ui;
 import 'package:screentime/foreground_window_plugin.dart';
 import 'package:screentime/sections/controller/notification_controller.dart';
@@ -193,6 +194,9 @@ class BackgroundAppTracker {
         SettingsManager().getSetting("tracking.monitorControllers") ?? false;
     bool monitorHIDDevices =
         SettingsManager().getSetting("tracking.monitorHIDDevices") ?? false;
+    bool monitorKeyboard =
+        SettingsManager().getSetting("tracking.monitorKeyboard") ??
+            !Platform.isMacOS; // NEW
     double audioThreshold =
         SettingsManager().getSetting("tracking.audioThreshold") ?? 0.001;
 
@@ -203,6 +207,7 @@ class BackgroundAppTracker {
     debugPrint('   - Monitor Audio: $monitorAudio');
     debugPrint('   - Monitor Controllers: $monitorControllers');
     debugPrint('   - Monitor HID Devices: $monitorHIDDevices');
+    debugPrint('   - Monitor Keyboard: $monitorKeyboard'); // NEW
     debugPrint('   - Audio Threshold: $audioThreshold');
 
     // Create WindowFocus plugin with ALL user settings respected
@@ -213,6 +218,8 @@ class BackgroundAppTracker {
       monitorControllers: monitorControllers,
       monitorHIDDevices: monitorHIDDevices,
       audioThreshold: audioThreshold,
+      monitorKeyboard:
+          monitorKeyboard, // NEW: Use setting instead of hardcoded true
     );
 
     // Add focus change listener (always active, mode determines what happens with events)
@@ -934,6 +941,17 @@ class BackgroundAppTracker {
     }
 
     debugPrint('🔄 HID monitoring ${enabled ? "enabled" : "disabled"}');
+    debugPrint('   Available in both polling and precise modes');
+  }
+
+  Future<void> updateKeyboardMonitoring(bool enabled) async {
+    SettingsManager().updateSetting("tracking.monitorKeyboard", enabled);
+
+    if (_windowFocusPlugin != null) {
+      await _windowFocusPlugin!.setKeyboardMonitoring(enabled);
+    }
+
+    debugPrint('🔄 Keyboard monitoring ${enabled ? "enabled" : "disabled"}');
     debugPrint('   Available in both polling and precise modes');
   }
 

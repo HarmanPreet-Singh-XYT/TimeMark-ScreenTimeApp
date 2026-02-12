@@ -1861,5 +1861,7 @@
 "trackingModePollingHint": "Memeriksa setiap menit - penggunaan sumber daya lebih rendah",
 "trackingModePreciseHint": "Pelacakan real-time - akurasi lebih tinggi, lebih banyak sumber daya",
 "trackingModeChangeError": "Gagal mengubah mode pelacakan. Silakan coba lagi.",
-"errorTitle": "Kesalahan"
+"errorTitle": "Kesalahan",
+"monitorKeyboardTitle": "Pantau Keyboard",
+  "monitorKeyboardDescription": "Lacak aktivitas keyboard untuk mendeteksi kehadiran pengguna"
 }

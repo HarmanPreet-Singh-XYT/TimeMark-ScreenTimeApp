@@ -2972,4 +2972,11 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get errorTitle => 'Erreur';
+
+  @override
+  String get monitorKeyboardTitle => 'Surveiller le Clavier';
+
+  @override
+  String get monitorKeyboardDescription =>
+      'Suivre l\'activité du clavier pour détecter la présence de l\'utilisateur';
 }

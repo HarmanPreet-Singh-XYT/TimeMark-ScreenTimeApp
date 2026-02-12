@@ -2861,4 +2861,11 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get errorTitle => 'خطأ';
+
+  @override
+  String get monitorKeyboardTitle => 'مراقبة لوحة المفاتيح';
+
+  @override
+  String get monitorKeyboardDescription =>
+      'تتبع نشاط لوحة المفاتيح لاكتشاف وجود المستخدم';
 }

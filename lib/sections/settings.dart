@@ -20,7 +20,7 @@ import 'package:screentime/sections/UI sections/Settings/about.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:screentime/sections/UI sections/Settings/theme_customization_section.dart';
 
-// ============== SETTINGS PROVIDER (unchanged logic) ==============
+// ============== SETTINGS PROVIDER (with keyboard monitoring) ==============
 class SettingsProvider extends ChangeNotifier {
   final SettingsManager _settingsManager = SettingsManager();
   final BackgroundAppTracker _tracker = BackgroundAppTracker();
@@ -35,12 +35,14 @@ class SettingsProvider extends ChangeNotifier {
   bool _notificationsScreenTime = false;
   bool _notificationsAppScreenTime = false;
 
-  String _trackingMode = TrackingModeOptions.defaultMode; // NEW
+  String _trackingMode = TrackingModeOptions.defaultMode;
   bool _idleDetectionEnabled = true;
   int _idleTimeout = IdleTimeoutOptions.defaultTimeout;
   bool _monitorAudio = true;
   bool _monitorControllers = true;
   bool _monitorHIDDevices = true;
+  bool _monitorKeyboard =
+      !Platform.isMacOS; // NEW: false on macOS, true on Windows
   double _audioThreshold = 0.001;
 
   String _voiceGender = VoiceGenderOptions.defaultGender;
@@ -56,12 +58,13 @@ class SettingsProvider extends ChangeNotifier {
   bool get notificationsAppScreenTime => _notificationsAppScreenTime;
   Map<String, String> get appVersion => version;
 
-  String get trackingMode => _trackingMode; // NEW
+  String get trackingMode => _trackingMode;
   bool get idleDetectionEnabled => _idleDetectionEnabled;
   int get idleTimeout => _idleTimeout;
   bool get monitorAudio => _monitorAudio;
   bool get monitorControllers => _monitorControllers;
   bool get monitorHIDDevices => _monitorHIDDevices;
+  bool get monitorKeyboard => _monitorKeyboard; // NEW
   double get audioThreshold => _audioThreshold;
 
   String get voiceGender => _voiceGender;
@@ -73,7 +76,7 @@ class SettingsProvider extends ChangeNotifier {
       _settingsManager.getIdleTimeoutPresets();
   List<Map<String, String>> get voiceGenderOptions =>
       _settingsManager.getAvailableVoiceGenders();
-  List<String> get trackingModeOptions => // NEW
+  List<String> get trackingModeOptions =>
       _settingsManager.getAvailableTrackingModes();
 
   int _reminderFrequency = 60;
@@ -100,7 +103,6 @@ class SettingsProvider extends ChangeNotifier {
     _reminderFrequency =
         _settingsManager.getSetting("notificationController.reminderFrequency");
 
-    // NEW: Load tracking mode
     _trackingMode = _settingsManager.getSetting("tracking.mode") ??
         TrackingModeOptions.defaultMode;
     _idleDetectionEnabled =
@@ -113,6 +115,9 @@ class SettingsProvider extends ChangeNotifier {
         _settingsManager.getSetting("tracking.monitorControllers") ?? true;
     _monitorHIDDevices =
         _settingsManager.getSetting("tracking.monitorHIDDevices") ?? true;
+    _monitorKeyboard =
+        _settingsManager.getSetting("tracking.monitorKeyboard") ??
+            !Platform.isMacOS; // NEW
     _audioThreshold =
         _settingsManager.getSetting("tracking.audioThreshold") ?? 0.001;
 
@@ -172,11 +177,9 @@ class SettingsProvider extends ChangeNotifier {
         _voiceGender = value;
         _settingsManager.updateSetting("focusModeSettings.voiceGender", value);
         break;
-      // NEW: Tracking mode case
       case 'trackingMode':
         _trackingMode = value;
         _settingsManager.updateSetting("tracking.mode", value);
-        // Switch the tracker mode
         final mode = value == TrackingModeOptions.precise
             ? TrackingMode.precise
             : TrackingMode.polling;
@@ -206,6 +209,11 @@ class SettingsProvider extends ChangeNotifier {
         _monitorHIDDevices = value;
         _settingsManager.updateSetting("tracking.monitorHIDDevices", value);
         await _tracker.updateHIDMonitoring(value);
+        break;
+      case 'monitorKeyboard': // NEW
+        _monitorKeyboard = value;
+        _settingsManager.updateSetting("tracking.monitorKeyboard", value);
+        await _tracker.updateKeyboardMonitoring(value);
         break;
       case 'audioThreshold':
         _audioThreshold = value;

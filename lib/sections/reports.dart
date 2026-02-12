@@ -1,5 +1,6 @@
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:screentime/l10n/app_localizations.dart';
+import 'package:screentime/main.dart';
 import 'package:screentime/sections/graphs/reports_line_chart.dart';
 import 'package:screentime/sections/graphs/reports_pie_chart.dart';
 import './controller/data_controllers/reports_controller.dart';
@@ -44,7 +45,15 @@ class _ReportsState extends State<Reports> {
         AppLocalizations.of(context)!,
       );
       _initializeAndLoadData();
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        navigationState.registerRefreshCallback(_refreshData);
+      });
     }
+  }
+
+  Future<void> _refreshData() async {
+    // Re-load the analytics data without re-initializing
+    await _loadAnalyticsData();
   }
 
   Future<void> _initializeAndLoadData() async {

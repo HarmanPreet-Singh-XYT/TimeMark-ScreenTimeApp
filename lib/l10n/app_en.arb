@@ -2077,5 +2077,7 @@
   "trackingModePollingHint": "Checks every minute - lower resource usage",
   "trackingModePreciseHint": "Real-time tracking - higher accuracy, more resources",
   "trackingModeChangeError": "Failed to change tracking mode. Please try again.",
-  "errorTitle": "Error"
+  "errorTitle": "Error",
+  "monitorKeyboardTitle": "Monitor Keyboard",
+  "monitorKeyboardDescription": "Track keyboard activity to detect user presence"
 }

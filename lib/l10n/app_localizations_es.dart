@@ -2960,4 +2960,11 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get errorTitle => 'Error';
+
+  @override
+  String get monitorKeyboardTitle => 'Monitorear Teclado';
+
+  @override
+  String get monitorKeyboardDescription =>
+      'Rastrear la actividad del teclado para detectar la presencia del usuario';
 }

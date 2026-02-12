@@ -1861,5 +1861,7 @@
 "trackingModePollingHint": "Verifica a cada minuto - menor uso de recursos",
 "trackingModePreciseHint": "Rastreamento em tempo real - maior precisão, mais recursos",
 "trackingModeChangeError": "Falha ao alterar o modo de rastreamento. Por favor, tente novamente.",
-"errorTitle": "Erro"
+"errorTitle": "Erro",
+"monitorKeyboardTitle": "Monitorar Teclado",
+  "monitorKeyboardDescription": "Rastrear atividade do teclado para detectar presença do usuário"
 }

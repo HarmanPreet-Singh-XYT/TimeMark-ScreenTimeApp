@@ -2912,4 +2912,11 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get errorTitle => 'Error';
+
+  @override
+  String get monitorKeyboardTitle => 'Monitor Keyboard';
+
+  @override
+  String get monitorKeyboardDescription =>
+      'Track keyboard activity to detect user presence';
 }

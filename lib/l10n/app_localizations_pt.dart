@@ -2941,4 +2941,11 @@ class AppLocalizationsPt extends AppLocalizations {
 
   @override
   String get errorTitle => 'Erro';
+
+  @override
+  String get monitorKeyboardTitle => 'Monitorar Teclado';
+
+  @override
+  String get monitorKeyboardDescription =>
+      'Rastrear atividade do teclado para detectar presença do usuário';
 }

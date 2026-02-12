@@ -2879,4 +2879,11 @@ class AppLocalizationsId extends AppLocalizations {
 
   @override
   String get errorTitle => 'Kesalahan';
+
+  @override
+  String get monitorKeyboardTitle => 'Pantau Keyboard';
+
+  @override
+  String get monitorKeyboardDescription =>
+      'Lacak aktivitas keyboard untuk mendeteksi kehadiran pengguna';
 }

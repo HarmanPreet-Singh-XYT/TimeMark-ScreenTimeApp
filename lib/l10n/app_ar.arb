@@ -1868,5 +1868,7 @@
 "trackingModePollingHint": "يتحقق كل دقيقة - استخدام أقل للموارد",
 "trackingModePreciseHint": "تتبع في الوقت الفعلي - دقة أعلى، موارد أكثر",
 "trackingModeChangeError": "فشل في تغيير وضع التتبع. يرجى المحاولة مرة أخرى.",
-"errorTitle": "خطأ"
+"errorTitle": "خطأ",
+"monitorKeyboardTitle": "مراقبة لوحة المفاتيح",
+  "monitorKeyboardDescription": "تتبع نشاط لوحة المفاتيح لاكتشاف وجود المستخدم"
 }

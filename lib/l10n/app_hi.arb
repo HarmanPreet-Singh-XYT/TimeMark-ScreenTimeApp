@@ -1869,5 +1869,7 @@
 "trackingModePollingHint": "हर मिनट जाँच करता है - कम संसाधन उपयोग",
 "trackingModePreciseHint": "रीयल-टाइम ट्रैकिंग - उच्च सटीकता, अधिक संसाधन",
 "trackingModeChangeError": "ट्रैकिंग मोड बदलने में विफल। कृपया पुनः प्रयास करें।",
-"errorTitle": "त्रुटि"
+"errorTitle": "त्रुटि",
+"monitorKeyboardTitle": "कीबोर्ड की निगरानी करें",
+  "monitorKeyboardDescription": "उपयोगकर्ता की उपस्थिति का पता लगाने के लिए कीबोर्ड गतिविधि ट्रैक करें"
 }

@@ -2866,4 +2866,11 @@ class AppLocalizationsUr extends AppLocalizations {
 
   @override
   String get errorTitle => 'خرابی';
+
+  @override
+  String get monitorKeyboardTitle => 'کی بورڈ کی نگرانی';
+
+  @override
+  String get monitorKeyboardDescription =>
+      'صارف کی موجودگی کا پتہ لگانے کے لیے کی بورڈ کی سرگرمی کو ٹریک کریں';
 }

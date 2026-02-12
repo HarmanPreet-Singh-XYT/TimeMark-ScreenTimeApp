@@ -2786,4 +2786,10 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get errorTitle => '错误';
+
+  @override
+  String get monitorKeyboardTitle => '监控键盘';
+
+  @override
+  String get monitorKeyboardDescription => '跟踪键盘活动以检测用户存在';
 }

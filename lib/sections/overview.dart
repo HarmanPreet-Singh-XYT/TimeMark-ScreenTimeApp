@@ -1,5 +1,6 @@
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:screentime/l10n/app_localizations.dart';
+import 'package:screentime/main.dart';
 import './controller/data_controllers/overview_data_controller.dart';
 import 'UI sections/Overview/bottom.dart';
 import 'UI sections/Overview/statCards.dart';
@@ -45,6 +46,10 @@ class _OverviewState extends State<Overview> with TickerProviderStateMixin {
       parent: _fadeController,
       curve: Curves.easeOutCubic,
     );
+    // Register this screen's refresh callback
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      navigationState.registerRefreshCallback(_loadData);
+    });
     _loadData();
   }
 

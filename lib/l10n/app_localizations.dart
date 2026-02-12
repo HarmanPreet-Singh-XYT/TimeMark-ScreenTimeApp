@@ -5271,6 +5271,18 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Error'**
   String get errorTitle;
+
+  /// No description provided for @monitorKeyboardTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Monitor Keyboard'**
+  String get monitorKeyboardTitle;
+
+  /// No description provided for @monitorKeyboardDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'Track keyboard activity to detect user presence'**
+  String get monitorKeyboardDescription;
 }
 
 class _AppLocalizationsDelegate

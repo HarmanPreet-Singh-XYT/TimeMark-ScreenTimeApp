@@ -124,11 +124,15 @@ class AppDelegate: FlutterAppDelegate, NSWindowDelegate {
   private func hideWindow() {
     DispatchQueue.main.async {
       NSApplication.shared.windows.first?.orderOut(nil)
+      // Hide from Dock when window is hidden
+      NSApp.setActivationPolicy(.accessory)
     }
   }
-  
+
   private func showWindow() {
     DispatchQueue.main.async {
+      // Show in Dock when window is shown
+      NSApp.setActivationPolicy(.regular)
       NSApp.unhide(nil)
       if let window = NSApplication.shared.windows.first {
         window.makeKeyAndOrderFront(nil)

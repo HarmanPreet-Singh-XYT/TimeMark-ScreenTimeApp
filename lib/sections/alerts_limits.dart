@@ -1,4 +1,5 @@
 import 'package:fluent_ui/fluent_ui.dart';
+import 'package:screentime/main.dart';
 import 'package:screentime/sections/controller/data_controllers/alerts_limits_data_controller.dart';
 import 'package:screentime/sections/controller/settings_data_controller.dart';
 import 'package:screentime/l10n/app_localizations.dart';
@@ -60,6 +61,11 @@ class _AlertsLimitsState extends State<AlertsLimits> {
             .getSetting("limitsAlerts.overallLimit.minutes")
             ?.toDouble() ??
         0.0;
+
+    // Register this screen's refresh callback
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      navigationState.registerRefreshCallback(_loadData);
+    });
 
     _loadData();
   }

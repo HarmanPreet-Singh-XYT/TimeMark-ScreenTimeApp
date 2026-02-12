@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:io';
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:screentime/l10n/app_localizations.dart';
@@ -34,21 +35,24 @@ import 'package:window_manager/window_manager.dart';
 // NAVIGATION STATE - Add this near the top of the file
 // ============================================================================
 
-// In main.dart - Update NavigationState class
 class NavigationState extends ChangeNotifier {
   int _selectedIndex = 0;
   Map<String, dynamic>? _navigationParams;
+  VoidCallback? _currentScreenRefresh;
+  Timer? _periodicRefreshTimer;
+  bool _isAppVisible = false;
 
   int get selectedIndex => _selectedIndex;
   Map<String, dynamic>? get navigationParams => _navigationParams;
+  bool get isAppVisible => _isAppVisible;
 
   void changeIndex(int value, {Map<String, dynamic>? params}) {
     if (_selectedIndex != value || params != null) {
       _selectedIndex = value;
       _navigationParams = params;
+      _currentScreenRefresh = null;
       notifyListeners();
 
-      // Clear params after a short delay so they're consumed
       if (params != null) {
         Future.delayed(const Duration(milliseconds: 100), () {
           _navigationParams = null;
@@ -58,9 +62,56 @@ class NavigationState extends ChangeNotifier {
     }
   }
 
+  void registerRefreshCallback(VoidCallback callback) {
+    _currentScreenRefresh = callback;
+  }
+
+  void refreshCurrentScreen() {
+    _currentScreenRefresh?.call();
+  }
+
   void clearParams() {
     _navigationParams = null;
     notifyListeners();
+  }
+
+  // ✨ NEW: refreshImmediately parameter
+  void startPeriodicRefresh({bool refreshImmediately = true}) {
+    if (_isAppVisible) return;
+
+    _isAppVisible = true;
+    debugPrint('🔄 Starting periodic UI refresh (every 1 minute)');
+
+    // ⚡ Refresh immediately when regaining focus
+    if (refreshImmediately) {
+      debugPrint('⚡ Immediate refresh on focus');
+      refreshCurrentScreen();
+    }
+
+    _periodicRefreshTimer?.cancel();
+
+    _periodicRefreshTimer = Timer.periodic(const Duration(minutes: 1), (timer) {
+      if (_isAppVisible) {
+        debugPrint('🔄 Periodic refresh triggered');
+        refreshCurrentScreen();
+      }
+    });
+  }
+
+  void stopPeriodicRefresh() {
+    if (!_isAppVisible) return;
+
+    _isAppVisible = false;
+    debugPrint('⏸️ Stopping periodic UI refresh');
+
+    _periodicRefreshTimer?.cancel();
+    _periodicRefreshTimer = null;
+  }
+
+  @override
+  void dispose() {
+    _periodicRefreshTimer?.cancel();
+    super.dispose();
   }
 }
 
@@ -178,12 +229,14 @@ void main(List<String> args) async {
         wasSystemLaunchedWindows || wasSystemLaunchedMacOS;
 
     if (wasSystemLaunched || isMinimizeAtLaunch) {
-      debugPrint(
-          '🔽 Starting hidden (login: $wasSystemLaunched, setting: $isMinimizeAtLaunch)');
+      debugPrint('🔽 Starting hidden');
       Platform.isMacOS ? await MacOSWindow.hide() : win.hide();
+      navigationState.stopPeriodicRefresh();
     } else {
       debugPrint('🔼 Starting visible');
       Platform.isMacOS ? await MacOSWindow.show() : win.show();
+      // ✨ Start with immediate refresh on first show
+      navigationState.startPeriodicRefresh(refreshImmediately: true);
     }
   });
 }
@@ -410,9 +463,14 @@ class _MyAppState extends State<MyApp>
 
   void _showApp() {
     Platform.isMacOS ? MacOSWindow.show() : appWindow.show();
+
+    // ✨ Start refresh with immediate update on focus
+    navigationState.startPeriodicRefresh(refreshImmediately: true);
   }
 
   void _exitApp() {
+    // Stop periodic refresh before exiting
+    navigationState.stopPeriodicRefresh();
     Platform.isMacOS ? MacOSWindow.exit() : appWindow.close();
   }
 
@@ -447,6 +505,29 @@ class _MyAppState extends State<MyApp>
   }
 
   @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    _dataStore.handleAppLifecycleState(state);
+
+    switch (state) {
+      case AppLifecycleState.resumed:
+        debugPrint(
+            '🔼 App resumed - starting periodic refresh with immediate update');
+        // ✨ Refresh immediately when app regains focus
+        navigationState.startPeriodicRefresh(refreshImmediately: true);
+        break;
+      case AppLifecycleState.paused:
+      case AppLifecycleState.inactive:
+      case AppLifecycleState.hidden:
+        debugPrint('🔽 App paused/hidden - stopping periodic refresh');
+        navigationState.stopPeriodicRefresh();
+        break;
+      case AppLifecycleState.detached:
+        navigationState.stopPeriodicRefresh();
+        break;
+    }
+  }
+
+  @override
   void dispose() {
     WidgetsBinding.instance.removeObserver(this);
     BackgroundAppTracker().dispose();
@@ -454,12 +535,8 @@ class _MyAppState extends State<MyApp>
     _dataStore.dispose().then((_) => Hive.close());
     trayManager.removeListener(this);
     SoundManager.dispose();
+    navigationState.stopPeriodicRefresh(); // Clean up timer
     super.dispose();
-  }
-
-  @override
-  void didChangeAppLifecycleState(AppLifecycleState state) {
-    _dataStore.handleAppLifecycleState(state);
   }
 
   @override
@@ -477,6 +554,13 @@ class _MyAppState extends State<MyApp>
       ),
     );
   }
+}
+
+void _hideApp() {
+  Platform.isMacOS ? MacOSWindow.hide() : appWindow.hide();
+
+  // Stop periodic refresh to preserve resources
+  navigationState.stopPeriodicRefresh();
 }
 
 // ============================================================================
@@ -1465,7 +1549,7 @@ class EnhancedWindowButtons extends StatelessWidget {
         ),
         _WindowButton(
           icon: FluentIcons.chrome_close,
-          onPressed: () => appWindow.hide(),
+          onPressed: () => _hideApp(),
           isDark: isDark,
           isClose: true,
         ),
@@ -1578,7 +1662,7 @@ class _EnhancedMacOSButtonsState extends State<EnhancedMacOSButtons> {
               color: const Color(0xFFFF5F57),
               icon: FluentIcons.chrome_close,
               showIcon: _isHoveringGroup,
-              onPressed: () => MacOSWindow.hide(),
+              onPressed: () => _hideApp(),
             ),
             const SizedBox(width: 8),
             _MacOSButton(

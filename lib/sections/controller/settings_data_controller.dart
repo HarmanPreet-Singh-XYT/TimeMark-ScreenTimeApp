@@ -73,12 +73,12 @@ class IdleTimeoutOptions {
   static const int maxTimeout = 3600;
 }
 
-// NEW: Tracking mode options
+// Tracking mode options
 class TrackingModeOptions {
   static const String polling = "polling";
   static const String precise = "precise";
   static const List<String> available = [polling, precise];
-  static const String defaultMode = precise; // Default to precise
+  static const String defaultMode = precise;
 }
 
 class SettingsManager {
@@ -140,12 +140,14 @@ class SettingsManager {
           "reminderFrequency": 5,
         },
         "tracking": {
-          "mode": TrackingModeOptions.defaultMode, // NEW: Default to precise
+          "mode": TrackingModeOptions.defaultMode,
           "idleDetection": true,
           "idleTimeout": IdleTimeoutOptions.defaultTimeout,
           "monitorAudio": true,
           "monitorControllers": true,
           "monitorHIDDevices": true,
+          "monitorKeyboard":
+              !Platform.isMacOS, // NEW: false on macOS, true on Windows
           "audioThreshold": 0.01,
         }
       };
@@ -153,7 +155,7 @@ class SettingsManager {
   late Map<String, dynamic> settings;
 
   Map<String, String> versionInfo = {
-    "version": "2.0.1",
+    "version": "2.0.2",
     "type": "Stable Build"
   };
 
@@ -207,7 +209,7 @@ class SettingsManager {
 
       // Validate tracking settings
       if (settings.containsKey("tracking")) {
-        // NEW: Validate tracking mode
+        // Validate tracking mode
         String trackingMode =
             settings["tracking"]["mode"] ?? TrackingModeOptions.defaultMode;
         if (!TrackingModeOptions.available.contains(trackingMode)) {
@@ -230,6 +232,11 @@ class SettingsManager {
         if (audioThreshold < 0.0001) audioThreshold = 0.0001;
         if (audioThreshold > 0.1) audioThreshold = 0.1;
         settings["tracking"]["audioThreshold"] = audioThreshold;
+
+        // NEW: Ensure monitorKeyboard exists with platform-specific default
+        if (!settings["tracking"].containsKey("monitorKeyboard")) {
+          settings["tracking"]["monitorKeyboard"] = !Platform.isMacOS;
+        }
       }
     }
   }
@@ -340,8 +347,7 @@ class SettingsManager {
       IdleTimeoutOptions.presets;
   List<Map<String, String>> getAvailableVoiceGenders() =>
       VoiceGenderOptions.available;
-  List<String> getAvailableTrackingModes() =>
-      TrackingModeOptions.available; // NEW
+  List<String> getAvailableTrackingModes() => TrackingModeOptions.available;
 
   bool get requiresNotificationPermission => _isMacOS;
 

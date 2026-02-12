@@ -137,7 +137,8 @@ class _TrackingSectionState extends State<TrackingSection>
         // Permission Banner - shown only on macOS when Input Monitoring permission is missing
         if (Platform.isMacOS &&
             !_isCheckingPermission &&
-            !_hasInputMonitoringPermission)
+            !_hasInputMonitoringPermission &&
+            settings.monitorKeyboard)
           InputMonitoringPermissionBanner(
             onOpenSettings: _handleOpenInputMonitoringSettings,
           ),
@@ -249,11 +250,22 @@ class _TrackingSectionState extends State<TrackingSection>
                 title: l10n.monitorHIDTitle,
                 description: l10n.monitorHIDDescription,
                 isSubSetting: true,
-                showDivider: false,
                 control: ToggleSwitch(
                   checked: settings.monitorHIDDevices,
                   onChanged: (value) =>
                       settings.updateSetting('monitorHIDDevices', value),
+                ),
+              ),
+              // NEW: Keyboard Monitoring Toggle
+              SettingRow(
+                title: l10n.monitorKeyboardTitle,
+                description: l10n.monitorKeyboardDescription,
+                isSubSetting: true,
+                showDivider: false,
+                control: ToggleSwitch(
+                  checked: settings.monitorKeyboard,
+                  onChanged: (value) =>
+                      settings.updateSetting('monitorKeyboard', value),
                 ),
               ),
             ],

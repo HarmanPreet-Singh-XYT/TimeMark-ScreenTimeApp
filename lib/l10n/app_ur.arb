@@ -1871,5 +1871,7 @@
 "trackingModePollingHint": "ہر منٹ چیک کرتا ہے - کم وسائل کا استعمال",
 "trackingModePreciseHint": "ریئل ٹائم ٹریکنگ - زیادہ درستگی، زیادہ وسائل",
 "trackingModeChangeError": "ٹریکنگ موڈ تبدیل کرنے میں ناکامی۔ براہ کرم دوبارہ کوشش کریں۔",
-"errorTitle": "خرابی"
+"errorTitle": "خرابی",
+"monitorKeyboardTitle": "کی بورڈ کی نگرانی",
+"monitorKeyboardDescription": "صارف کی موجودگی کا پتہ لگانے کے لیے کی بورڈ کی سرگرمی کو ٹریک کریں"
 }

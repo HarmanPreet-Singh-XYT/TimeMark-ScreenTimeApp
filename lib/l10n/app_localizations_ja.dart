@@ -2815,4 +2815,10 @@ class AppLocalizationsJa extends AppLocalizations {
 
   @override
   String get errorTitle => 'エラー';
+
+  @override
+  String get monitorKeyboardTitle => 'キーボードを監視';
+
+  @override
+  String get monitorKeyboardDescription => 'ユーザーの存在を検出するためにキーボードアクティビティを追跡します';
 }
