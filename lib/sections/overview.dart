@@ -1006,8 +1006,8 @@ class _RebrandingModalState extends State<RebrandingModal>
                           [_iconBounceAnimation, _pulseAnimation]),
                       builder: (context, child) {
                         return Transform.scale(
-                          scale:
-                              _iconBounceAnimation.value * _pulseAnimation.value,
+                          scale: _iconBounceAnimation.value *
+                              _pulseAnimation.value,
                           child: child,
                         );
                       },
@@ -1218,7 +1218,11 @@ class _RebrandingModalState extends State<RebrandingModal>
                                 gradient: const LinearGradient(
                                   begin: Alignment.topLeft,
                                   end: Alignment.bottomRight,
-                                  colors: [deepPurple, primaryPurple, pinkAccent],
+                                  colors: [
+                                    deepPurple,
+                                    primaryPurple,
+                                    pinkAccent
+                                  ],
                                 ),
                                 borderRadius: BorderRadius.circular(12),
                                 boxShadow: [

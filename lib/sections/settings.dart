@@ -248,7 +248,8 @@ class SettingsProvider extends ChangeNotifier {
     final dataStore = AppDataStore();
     await dataStore.init();
     await dataStore.clearAllData();
-    notifyListeners();
+    await _tracker.reanchorTracking();
+    // notifyListeners();
   }
 
   Future<void> resetSettings() async {
