@@ -14,5 +14,10 @@
 	<true/>
 	<key>com.apple.security.network.server</key>
 	<true/>
+	<key>com.apple.security.device.input-monitoring</key>
+	<true/>
+	<key>com.apple.security.device.usb</key>
+	<true/>
+	<key>com.apple.security.device.bluetooth</key>
 </dict>
 </plist>
