@@ -281,6 +281,39 @@ class SettingsProvider extends ChangeNotifier {
       formatTimeout(_idleTimeout, l10n);
 }
 
+String getPlatform() {
+  if (Platform.isMacOS) return 'macos';
+  if (Platform.isWindows) return 'windows';
+  if (Platform.isLinux) return 'linux';
+  if (Platform.isAndroid) return 'android';
+  if (Platform.isIOS) return 'ios';
+  return 'unknown';
+}
+
+String buildUrl(String path, {bool isBugReport = false}) {
+  final platform = getPlatform();
+
+  final params = <String, String>{
+    'source': 'app',
+    'app': 'scolect',
+    'platform': platform,
+    'type': isBugReport ? 'report' : path,
+  };
+  final versionInfo = SettingsManager().versionInfo;
+
+  if (isBugReport) {
+    params['version'] = versionInfo['version'] ?? 'unknown';
+    params['build'] = versionInfo['type'] ?? 'unknown';
+  }
+
+  return Uri(
+    scheme: 'https',
+    host: 'scolect.com',
+    path: path,
+    queryParameters: params,
+  ).toString();
+}
+
 // ============== MAIN SETTINGS WIDGET ==============
 class Settings extends StatelessWidget {
   final Function(Locale) setLocale;
@@ -332,14 +365,12 @@ class _SettingsContentState extends State<SettingsContent> {
     }
   }
 
-  final String urlContact =
-      'https://harmanita.com/details/screentime?intent=contact';
-  final String urlReport =
-      'https://harmanita.com/details/screentime?intent=report';
-  final String urlFeedback =
-      'https://harmanita.com/details/screentime?intent=feedback';
+  final contactUrl = buildUrl('contact');
+  final feedbackUrl = buildUrl('feedback');
+  final reportUrl = buildUrl('report-bug', isBugReport: true);
+
   final String github =
-      'https://github.com/HarmanPreet-Singh-XYT/TimeMark-ScreenTimeApp';
+      'https://github.com/HarmanPreet-Singh-XYT/Scolect-ScreenTimeApp';
 
   @override
   void initState() {
@@ -463,9 +494,9 @@ class _SettingsContentState extends State<SettingsContent> {
                 ),
                 const SizedBox(height: 24),
                 FooterSection(
-                  onContact: () => launchAppropriateUrl(urlContact),
-                  onReport: () => launchAppropriateUrl(urlReport),
-                  onFeedback: () => launchAppropriateUrl(urlFeedback),
+                  onContact: () => launchAppropriateUrl(contactUrl),
+                  onReport: () => launchAppropriateUrl(reportUrl),
+                  onFeedback: () => launchAppropriateUrl(feedbackUrl),
                   onGithub: () => launchAppropriateUrl(github),
                 ),
                 const SizedBox(height: 16),
