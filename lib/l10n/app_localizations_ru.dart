@@ -725,7 +725,7 @@ class AppLocalizationsRu extends AppLocalizations {
   String get searchApplication => 'Поиск приложения';
 
   @override
-  String get tracking => 'Отслеживание';
+  String get tracking => 'Отслеживаемые';
 
   @override
   String get hiddenVisible => 'Скрытые/Видимые';
@@ -2979,17 +2979,17 @@ class AppLocalizationsRu extends AppLocalizations {
       'Не удалось получить список изменений для этой версии. Проверьте подключение к интернету или посетите страницу релизов на GitHub.';
 
   @override
-  String get allTracking => 'All Apps';
+  String get allTracking => 'Все приложения';
 
   @override
-  String get notTracking => 'Not Tracked';
+  String get notTracking => 'Не отслеживаемые';
 
   @override
-  String get allVisibility => 'All';
+  String get allVisibility => 'Все';
 
   @override
-  String get visible => 'Visible';
+  String get visible => 'Видимые';
 
   @override
-  String get hidden => 'Hidden';
+  String get hidden => 'Скрытые';
 }

@@ -705,7 +705,7 @@ class AppLocalizationsJa extends AppLocalizations {
   String get searchApplication => 'アプリケーションを検索';
 
   @override
-  String get tracking => '追跡';
+  String get tracking => '追跡中';
 
   @override
   String get hiddenVisible => '非表示/表示';
@@ -2841,17 +2841,17 @@ class AppLocalizationsJa extends AppLocalizations {
       'このバージョンの変更履歴を取得できませんでした。インターネット接続を確認するか、GitHubのリリースページをご覧ください。';
 
   @override
-  String get allTracking => 'All Apps';
+  String get allTracking => 'すべてのアプリ';
 
   @override
-  String get notTracking => 'Not Tracked';
+  String get notTracking => '未追跡';
 
   @override
-  String get allVisibility => 'All';
+  String get allVisibility => 'すべて';
 
   @override
-  String get visible => 'Visible';
+  String get visible => '表示';
 
   @override
-  String get hidden => 'Hidden';
+  String get hidden => '非表示';
 }

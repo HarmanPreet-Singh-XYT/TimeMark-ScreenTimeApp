@@ -1907,5 +1907,11 @@
   "continueButton": "Продолжить",
   "@continueButton": {
     "description": "Continue button label"
-  }
+  },
+  "allTracking": "Все приложения",
+  "tracking": "Отслеживаемые",
+  "notTracking": "Не отслеживаемые",
+  "allVisibility": "Все",
+  "visible": "Видимые",
+  "hidden": "Скрытые"
 }

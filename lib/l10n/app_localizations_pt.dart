@@ -726,7 +726,7 @@ class AppLocalizationsPt extends AppLocalizations {
   String get searchApplication => 'Pesquisar Aplicativo';
 
   @override
-  String get tracking => 'Rastreamento';
+  String get tracking => 'Monitorados';
 
   @override
   String get hiddenVisible => 'Oculto/Visível';
@@ -2970,17 +2970,17 @@ class AppLocalizationsPt extends AppLocalizations {
       'Não foi possível recuperar o registro de alterações desta versão. Verifique sua conexão com a internet ou visite a página de lançamentos do GitHub.';
 
   @override
-  String get allTracking => 'All Apps';
+  String get allTracking => 'Todos os apps';
 
   @override
-  String get notTracking => 'Not Tracked';
+  String get notTracking => 'Não monitorados';
 
   @override
-  String get allVisibility => 'All';
+  String get allVisibility => 'Todos';
 
   @override
-  String get visible => 'Visible';
+  String get visible => 'Visíveis';
 
   @override
-  String get hidden => 'Hidden';
+  String get hidden => 'Ocultos';
 }

@@ -722,7 +722,7 @@ class AppLocalizationsUr extends AppLocalizations {
   String get searchApplication => 'ایپلیکیشن تلاش کریں';
 
   @override
-  String get tracking => 'ٹریکنگ';
+  String get tracking => 'ٹریک شدہ';
 
   @override
   String get hiddenVisible => 'پوشیدہ/نظر آنے والا';
@@ -2894,17 +2894,17 @@ class AppLocalizationsUr extends AppLocalizations {
       'اس ورژن کے لیے تبدیلی کا ریکارڈ حاصل نہیں کیا جا سکا۔ براہ کرم اپنا انٹرنیٹ کنکشن چیک کریں یا GitHub کے ریلیز صفحہ پر جائیں۔';
 
   @override
-  String get allTracking => 'All Apps';
+  String get allTracking => 'تمام ایپس';
 
   @override
-  String get notTracking => 'Not Tracked';
+  String get notTracking => 'غیر ٹریک شدہ';
 
   @override
-  String get allVisibility => 'All';
+  String get allVisibility => 'تمام';
 
   @override
-  String get visible => 'Visible';
+  String get visible => 'نمایاں';
 
   @override
-  String get hidden => 'Hidden';
+  String get hidden => 'چھپے ہوئے';
 }

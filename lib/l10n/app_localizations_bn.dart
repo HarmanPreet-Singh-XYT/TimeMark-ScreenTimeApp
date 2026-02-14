@@ -725,7 +725,7 @@ class AppLocalizationsBn extends AppLocalizations {
   String get searchApplication => 'অ্যাপ্লিকেশন অনুসন্ধান করুন';
 
   @override
-  String get tracking => 'ট্র্যাকিং';
+  String get tracking => 'ট্র্যাক করা';
 
   @override
   String get hiddenVisible => 'লুকানো/দৃশ্যমান';
@@ -2909,17 +2909,17 @@ class AppLocalizationsBn extends AppLocalizations {
       'এই সংস্করণের চেঞ্জলগ পুনরুদ্ধার করা যায়নি। অনুগ্রহ করে আপনার ইন্টারনেট সংযোগ পরীক্ষা করুন অথবা GitHub রিলিজ পেজ দেখুন।';
 
   @override
-  String get allTracking => 'All Apps';
+  String get allTracking => 'সব অ্যাপ';
 
   @override
-  String get notTracking => 'Not Tracked';
+  String get notTracking => 'ট্র্যাক করা নয়';
 
   @override
-  String get allVisibility => 'All';
+  String get allVisibility => 'সব';
 
   @override
-  String get visible => 'Visible';
+  String get visible => 'দৃশ্যমান';
 
   @override
-  String get hidden => 'Hidden';
+  String get hidden => 'লুকানো';
 }

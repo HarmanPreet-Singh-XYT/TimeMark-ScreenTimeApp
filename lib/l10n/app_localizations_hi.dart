@@ -723,7 +723,7 @@ class AppLocalizationsHi extends AppLocalizations {
   String get searchApplication => 'एप्लिकेशन खोजें';
 
   @override
-  String get tracking => 'ट्रैकिंग';
+  String get tracking => 'ट्रैक किए गए';
 
   @override
   String get hiddenVisible => 'छिपा/दृश्यमान';
@@ -2901,17 +2901,17 @@ class AppLocalizationsHi extends AppLocalizations {
       'इस संस्करण का चेंजलॉग प्राप्त नहीं किया जा सका। कृपया अपना इंटरनेट कनेक्शन जांचें या GitHub रिलीज़ पेज पर जाएं।';
 
   @override
-  String get allTracking => 'All Apps';
+  String get allTracking => 'सभी ऐप्स';
 
   @override
-  String get notTracking => 'Not Tracked';
+  String get notTracking => 'ट्रैक नहीं किए गए';
 
   @override
-  String get allVisibility => 'All';
+  String get allVisibility => 'सभी';
 
   @override
-  String get visible => 'Visible';
+  String get visible => 'दृश्यमान';
 
   @override
-  String get hidden => 'Hidden';
+  String get hidden => 'छिपे हुए';
 }

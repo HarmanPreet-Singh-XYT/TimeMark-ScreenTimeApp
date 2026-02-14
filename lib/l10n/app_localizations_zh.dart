@@ -697,7 +697,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get searchApplication => '搜索应用';
 
   @override
-  String get tracking => '追踪';
+  String get tracking => '已跟踪';
 
   @override
   String get hiddenVisible => '隐藏/可见';
@@ -2812,17 +2812,17 @@ class AppLocalizationsZh extends AppLocalizations {
       '无法检索此版本的更新日志。请检查您的网络连接或访问 GitHub 发布页面。';
 
   @override
-  String get allTracking => 'All Apps';
+  String get allTracking => '所有应用';
 
   @override
-  String get notTracking => 'Not Tracked';
+  String get notTracking => '未跟踪';
 
   @override
-  String get allVisibility => 'All';
+  String get allVisibility => '全部';
 
   @override
-  String get visible => 'Visible';
+  String get visible => '可见';
 
   @override
-  String get hidden => 'Hidden';
+  String get hidden => '隐藏';
 }

@@ -725,7 +725,7 @@ class AppLocalizationsId extends AppLocalizations {
   String get searchApplication => 'Cari Aplikasi';
 
   @override
-  String get tracking => 'Pelacakan';
+  String get tracking => 'Dilacak';
 
   @override
   String get hiddenVisible => 'Tersembunyi/Terlihat';
@@ -2907,17 +2907,17 @@ class AppLocalizationsId extends AppLocalizations {
       'Tidak dapat mengambil catatan perubahan untuk versi ini. Silakan periksa koneksi internet Anda atau kunjungi halaman rilis GitHub.';
 
   @override
-  String get allTracking => 'All Apps';
+  String get allTracking => 'Semua Aplikasi';
 
   @override
-  String get notTracking => 'Not Tracked';
+  String get notTracking => 'Tidak Dilacak';
 
   @override
-  String get allVisibility => 'All';
+  String get allVisibility => 'Semua';
 
   @override
-  String get visible => 'Visible';
+  String get visible => 'Terlihat';
 
   @override
-  String get hidden => 'Hidden';
+  String get hidden => 'Tersembunyi';
 }

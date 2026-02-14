@@ -1906,5 +1906,11 @@
   "continueButton": "Continuer",
   "@continueButton": {
     "description": "Continue button label"
-  }
+  },
+  "allTracking": "Toutes les apps",
+  "tracking": "Suivies",
+  "notTracking": "Non suivies",
+  "allVisibility": "Toutes",
+  "visible": "Visibles",
+  "hidden": "Masquées"
 }

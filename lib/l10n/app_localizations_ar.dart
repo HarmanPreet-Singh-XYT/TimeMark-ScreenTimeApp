@@ -712,7 +712,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get searchApplication => 'البحث عن تطبيق';
 
   @override
-  String get tracking => 'التتبع';
+  String get tracking => 'قيد التتبع';
 
   @override
   String get hiddenVisible => 'مخفي/مرئي';
@@ -2888,17 +2888,17 @@ class AppLocalizationsAr extends AppLocalizations {
       'تعذر استرداد سجل التغييرات لهذا الإصدار. يرجى التحقق من اتصالك بالإنترنت أو زيارة صفحة الإصدارات على GitHub.';
 
   @override
-  String get allTracking => 'All Apps';
+  String get allTracking => 'كل التطبيقات';
 
   @override
-  String get notTracking => 'Not Tracked';
+  String get notTracking => 'غير متتبعة';
 
   @override
-  String get allVisibility => 'All';
+  String get allVisibility => 'الكل';
 
   @override
-  String get visible => 'Visible';
+  String get visible => 'مرئية';
 
   @override
-  String get hidden => 'Hidden';
+  String get hidden => 'مخفية';
 }

@@ -740,7 +740,7 @@ class AppLocalizationsFr extends AppLocalizations {
   String get searchApplication => 'Rechercher une Application';
 
   @override
-  String get tracking => 'Suivi';
+  String get tracking => 'Suivies';
 
   @override
   String get hiddenVisible => 'Masqué/Visible';
@@ -3001,17 +3001,17 @@ class AppLocalizationsFr extends AppLocalizations {
       'Impossible de récupérer le journal des modifications pour cette version. Veuillez vérifier votre connexion internet ou consulter la page des versions GitHub.';
 
   @override
-  String get allTracking => 'All Apps';
+  String get allTracking => 'Toutes les apps';
 
   @override
-  String get notTracking => 'Not Tracked';
+  String get notTracking => 'Non suivies';
 
   @override
-  String get allVisibility => 'All';
+  String get allVisibility => 'Toutes';
 
   @override
-  String get visible => 'Visible';
+  String get visible => 'Visibles';
 
   @override
-  String get hidden => 'Hidden';
+  String get hidden => 'Masquées';
 }

@@ -1903,5 +1903,11 @@
   "continueButton": "Lanjutkan",
   "@continueButton": {
     "description": "Continue button label"
-  }
+  },
+  "allTracking": "Semua Aplikasi",
+  "tracking": "Dilacak",
+  "notTracking": "Tidak Dilacak",
+  "allVisibility": "Semua",
+  "visible": "Terlihat",
+  "hidden": "Tersembunyi"
 }

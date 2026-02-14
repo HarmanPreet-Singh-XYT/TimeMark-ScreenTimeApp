@@ -1910,5 +1910,11 @@
   "continueButton": "続ける",
   "@continueButton": {
     "description": "Continue button label"
-  }
+  },
+  "allTracking": "すべてのアプリ",
+  "tracking": "追跡中",
+  "notTracking": "未追跡",
+  "allVisibility": "すべて",
+  "visible": "表示",
+  "hidden": "非表示"
 }

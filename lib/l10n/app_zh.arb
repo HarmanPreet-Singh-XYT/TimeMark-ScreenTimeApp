@@ -1912,5 +1912,11 @@
   "continueButton": "继续",
   "@continueButton": {
     "description": "Continue button label"
-  }
+  },
+  "allTracking": "所有应用",
+  "tracking": "已跟踪",
+  "notTracking": "未跟踪",
+  "allVisibility": "全部",
+  "visible": "可见",
+  "hidden": "隐藏"
 }

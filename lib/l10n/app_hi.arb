@@ -1911,5 +1911,11 @@
   "continueButton": "जारी रखें",
   "@continueButton": {
     "description": "Continue button label"
-  }
+  },
+  "allTracking": "सभी ऐप्स",
+  "tracking": "ट्रैक किए गए",
+  "notTracking": "ट्रैक नहीं किए गए",
+  "allVisibility": "सभी",
+  "visible": "दृश्यमान",
+  "hidden": "छिपे हुए"
 }

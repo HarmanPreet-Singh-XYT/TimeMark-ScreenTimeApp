@@ -1910,5 +1910,11 @@
   "continueButton": "متابعة",
   "@continueButton": {
     "description": "Continue button label"
-  }
+  },
+  "allTracking": "كل التطبيقات",
+  "tracking": "قيد التتبع",
+  "notTracking": "غير متتبعة",
+  "allVisibility": "الكل",
+  "visible": "مرئية",
+  "hidden": "مخفية"
 }

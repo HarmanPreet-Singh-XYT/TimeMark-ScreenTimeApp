@@ -1913,5 +1913,11 @@
   "continueButton": "جاری رکھیں",
   "@continueButton": {
     "description": "Continue button label"
-  }
+  },
+  "allTracking": "تمام ایپس",
+  "tracking": "ٹریک شدہ",
+  "notTracking": "غیر ٹریک شدہ",
+  "allVisibility": "تمام",
+  "visible": "نمایاں",
+  "hidden": "چھپے ہوئے"
 }
