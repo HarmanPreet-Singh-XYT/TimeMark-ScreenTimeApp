@@ -8,6 +8,7 @@ import 'UI sections/Overview/bottom.dart';
 import 'UI sections/Overview/statCards.dart';
 import 'UI sections/Overview/main_app.dart';
 import 'rebranding.dart';
+import 'UI Sections/overview/changelog.dart';
 
 class Overview extends StatefulWidget {
   const Overview({super.key});
@@ -57,6 +58,17 @@ class _OverviewState extends State<Overview> with TickerProviderStateMixin {
     if (Platform.isWindows) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
         RebrandingModal.showIfNeeded(context);
+        // Show changelog after rebranding modal (if any)
+        Future.delayed(const Duration(milliseconds: 500), () {
+          if (mounted) {
+            ChangelogModal.showIfNeeded(context);
+          }
+        });
+      });
+    } else {
+      // For non-Windows platforms, show changelog immediately
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        ChangelogModal.showIfNeeded(context);
       });
     }
   }
