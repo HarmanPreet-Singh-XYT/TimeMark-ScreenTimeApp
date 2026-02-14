@@ -70,6 +70,7 @@ class BackgroundAppTracker {
   String _currentApp = '';
   DateTime _currentAppStartTime = DateTime.now();
   Timer? _selfTrackingHeartbeat;
+  Timer? _universalHeartbeat;
 
   static const String _selfAppName = 'Scolect - Track Screen Time & App Usage';
 
@@ -100,6 +101,53 @@ class BackgroundAppTracker {
     _selfTrackingHeartbeat?.cancel();
     _selfTrackingHeartbeat = null;
     debugPrint('💓 Self-tracking heartbeat stopped');
+  }
+
+  void _startUniversalHeartbeat() {
+    _universalHeartbeat?.cancel();
+    _universalHeartbeat = Timer.periodic(
+      const Duration(seconds: 60), // 👈 Every 60s, lightweight
+      (_) => _heartbeatCurrentApp(),
+    );
+    debugPrint('💓 Universal heartbeat started (every 60s)');
+  }
+
+  void _stopUniversalHeartbeat() {
+    _universalHeartbeat?.cancel();
+    _universalHeartbeat = null;
+  }
+
+  void _heartbeatCurrentApp() {
+    if (_trackingMode != TrackingMode.precise) return;
+    if (!_isTracking) return;
+    if (_currentApp.isEmpty) return;
+    if (_currentApp == _selfAppName) return; // 👈 Self-heartbeat handles this
+
+    bool idleDetectionEnabled =
+        SettingsManager().getSetting("tracking.idleDetection") ?? true;
+
+    if (idleDetectionEnabled && !_isUserActive) return;
+
+    final metadata = _appDataStore?.getAppMetadata(_currentApp);
+    if (metadata != null && (!metadata.isTracking || !metadata.isVisible))
+      return;
+
+    final now = DateTime.now();
+    final elapsed = now.difference(_currentAppStartTime);
+
+    if (elapsed.inSeconds <= 0) return;
+
+    _appDataStore?.recordAppUsage(
+      _currentApp,
+      now,
+      elapsed,
+      0,
+      [TimeRange(startTime: _currentAppStartTime, endTime: now)],
+    );
+
+    _currentAppStartTime = now;
+
+    debugPrint('💓 Universal heartbeat: $_currentApp (+${elapsed.inSeconds}s)');
   }
 
   void _heartbeatSelfApp() {
@@ -324,6 +372,7 @@ class BackgroundAppTracker {
       // The AppDataStore runtime cache will handle everything else
       _saveCurrentAppTime();
       _stopSelfTrackingHeartbeat();
+      _stopUniversalHeartbeat();
 
       _currentApp = '';
       _currentAppStartTime = DateTime.now();
@@ -452,7 +501,7 @@ class BackgroundAppTracker {
     if (!_metadataCacheLoaded) {
       await _loadMetadataCache();
     }
-
+    _startUniversalHeartbeat();
     // NOTE: We no longer start a commit timer here!
     // The AppDataStore handles all periodic commits internally
 
@@ -991,8 +1040,6 @@ class BackgroundAppTracker {
     if (_trackingMode == TrackingMode.precise) {
       _saveCurrentAppTime();
     }
-
-    _stopSelfTrackingHeartbeat();
 
     await _stopCurrentMode();
 
