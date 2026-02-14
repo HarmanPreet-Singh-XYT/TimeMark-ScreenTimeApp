@@ -516,8 +516,15 @@ class BackgroundAppTracker {
     if (_trackingMode == TrackingMode.polling) {
       return;
     }
-
+    if ((window.appName != "Widgets.exe" && window.windowTitle == "") ||
+        (window.appName == "explorer.exe" &&
+            window.windowTitle == "Program Manager")) {
+      return;
+    }
     String newApp = await _getCurrentActiveApp();
+    if (newApp == "SearchHost" || newApp == "Application Frame Host") {
+      newApp = window.windowTitle;
+    }
 
     if (newApp == "Productive ScreenTime") {
       return;
