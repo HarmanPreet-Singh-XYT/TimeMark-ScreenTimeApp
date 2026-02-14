@@ -2899,4 +2899,19 @@ class AppLocalizationsHi extends AppLocalizations {
   @override
   String get changelogErrorDescription =>
       'इस संस्करण का चेंजलॉग प्राप्त नहीं किया जा सका। कृपया अपना इंटरनेट कनेक्शन जांचें या GitHub रिलीज़ पेज पर जाएं।';
+
+  @override
+  String get allTracking => 'All Apps';
+
+  @override
+  String get notTracking => 'Not Tracked';
+
+  @override
+  String get allVisibility => 'All';
+
+  @override
+  String get visible => 'Visible';
+
+  @override
+  String get hidden => 'Hidden';
 }

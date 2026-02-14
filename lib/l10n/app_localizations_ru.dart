@@ -2977,4 +2977,19 @@ class AppLocalizationsRu extends AppLocalizations {
   @override
   String get changelogErrorDescription =>
       'Не удалось получить список изменений для этой версии. Проверьте подключение к интернету или посетите страницу релизов на GitHub.';
+
+  @override
+  String get allTracking => 'All Apps';
+
+  @override
+  String get notTracking => 'Not Tracked';
+
+  @override
+  String get allVisibility => 'All';
+
+  @override
+  String get visible => 'Visible';
+
+  @override
+  String get hidden => 'Hidden';
 }

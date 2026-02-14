@@ -2892,4 +2892,19 @@ class AppLocalizationsUr extends AppLocalizations {
   @override
   String get changelogErrorDescription =>
       'اس ورژن کے لیے تبدیلی کا ریکارڈ حاصل نہیں کیا جا سکا۔ براہ کرم اپنا انٹرنیٹ کنکشن چیک کریں یا GitHub کے ریلیز صفحہ پر جائیں۔';
+
+  @override
+  String get allTracking => 'All Apps';
+
+  @override
+  String get notTracking => 'Not Tracked';
+
+  @override
+  String get allVisibility => 'All';
+
+  @override
+  String get visible => 'Visible';
+
+  @override
+  String get hidden => 'Hidden';
 }

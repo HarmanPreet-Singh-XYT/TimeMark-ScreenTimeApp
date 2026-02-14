@@ -2905,4 +2905,19 @@ class AppLocalizationsId extends AppLocalizations {
   @override
   String get changelogErrorDescription =>
       'Tidak dapat mengambil catatan perubahan untuk versi ini. Silakan periksa koneksi internet Anda atau kunjungi halaman rilis GitHub.';
+
+  @override
+  String get allTracking => 'All Apps';
+
+  @override
+  String get notTracking => 'Not Tracked';
+
+  @override
+  String get allVisibility => 'All';
+
+  @override
+  String get visible => 'Visible';
+
+  @override
+  String get hidden => 'Hidden';
 }

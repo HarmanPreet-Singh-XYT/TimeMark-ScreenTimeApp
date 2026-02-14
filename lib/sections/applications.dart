@@ -1,6 +1,7 @@
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:screentime/main.dart';
 import 'package:screentime/sections/controller/app_data_controller.dart';
+import 'package:screentime/sections/controller/application_controller.dart';
 import 'controller/settings_data_controller.dart';
 import './controller/data_controllers/applications_data_controller.dart';
 import './controller/categories_controller.dart';
@@ -17,8 +18,11 @@ class Applications extends StatefulWidget {
 class _ApplicationsState extends State<Applications>
     with SingleTickerProviderStateMixin {
   SettingsManager settingsManager = SettingsManager();
-  bool isTracking = false;
-  bool isHidden = false;
+
+  // Filter states (for viewing ONLY - does not change app settings)
+  String trackingFilter = "all"; // "all", "tracked", "untracked"
+  String visibilityFilter = "all"; // "all", "visible", "hidden"
+
   List<dynamic> apps = [];
   String selectedCategory = "All";
   String searchValue = '';
@@ -38,10 +42,14 @@ class _ApplicationsState extends State<Applications>
       curve: Curves.easeOutCubic,
     );
 
-    isTracking = settingsManager.getSetting("applications.tracking");
-    isHidden = settingsManager.getSetting("applications.isHidden");
+    // Load saved filter preferences
+    trackingFilter =
+        settingsManager.getSetting("applications.trackingFilter") ?? "all";
+    visibilityFilter =
+        settingsManager.getSetting("applications.visibilityFilter") ?? "all";
     selectedCategory =
-        settingsManager.getSetting("applications.selectedCategory");
+        settingsManager.getSetting("applications.selectedCategory") ?? "All";
+
     // Register this screen's refresh callback
     WidgetsBinding.instance.addPostFrameCallback((_) {
       navigationState.registerRefreshCallback(_loadData);
@@ -114,23 +122,6 @@ class _ApplicationsState extends State<Applications>
     final l10n = AppLocalizations.of(context)!;
     final theme = FluentTheme.of(context);
 
-    void setSetting(String key, dynamic value) {
-      switch (key) {
-        case 'tracking':
-          setState(() {
-            isTracking = value;
-            settingsManager.updateSetting("applications.tracking", value);
-          });
-          break;
-        case 'isHidden':
-          setState(() {
-            isHidden = value;
-            settingsManager.updateSetting("applications.isHidden", value);
-          });
-          break;
-      }
-    }
-
     void changeCategory(String category) {
       setState(() {
         selectedCategory = category;
@@ -139,7 +130,22 @@ class _ApplicationsState extends State<Applications>
       });
     }
 
-    void changeIndividualParam(String type, bool value, String name) async {
+    void changeTrackingFilter(String filter) {
+      setState(() {
+        trackingFilter = filter;
+        settingsManager.updateSetting("applications.trackingFilter", filter);
+      });
+    }
+
+    void changeVisibilityFilter(String filter) {
+      setState(() {
+        visibilityFilter = filter;
+        settingsManager.updateSetting("applications.visibilityFilter", filter);
+      });
+    }
+
+    // Toggle individual app settings (this CHANGES the app, not just filters view)
+    void toggleAppSetting(String type, bool value, String name) async {
       switch (type) {
         case 'isTracking':
           apps = apps
@@ -147,6 +153,14 @@ class _ApplicationsState extends State<Applications>
                   app['name'] == name ? {...app, "isTracking": value} : app)
               .toList();
           await AppDataStore().updateAppMetadata(name, isTracking: value);
+
+          // Check if this is the currently active app
+          final tracker = BackgroundAppTracker();
+          final trackingInfo = tracker.getTrackingInfo();
+          if (!value && trackingInfo['currentApp'] == name) {
+            debugPrint('🛑 Tracking disabled for currently active app: $name');
+          }
+
           setState(() {});
           break;
         case 'isHidden':
@@ -155,21 +169,59 @@ class _ApplicationsState extends State<Applications>
                   app['name'] == name ? {...app, "isHidden": value} : app)
               .toList();
           await AppDataStore().updateAppMetadata(name, isVisible: !value);
+
+          // Check if this is the currently active app
+          final tracker = BackgroundAppTracker();
+          final trackingInfo = tracker.getTrackingInfo();
+          if (value && trackingInfo['currentApp'] == name) {
+            debugPrint(
+                '🛑 Visibility disabled for currently active app: $name');
+          }
+
           setState(() {});
           break;
       }
     }
 
-    final filteredApps = apps
-        .where((app) =>
-            (app["isTracking"] == isTracking && app["isHidden"] == isHidden) &&
-            app["screenTime"] != "0s" &&
-            app['name'] != '' &&
-            (selectedCategory == "All" ||
-                selectedCategory.contains(app["category"])) &&
-            (searchValue.isEmpty ||
-                app["name"].toLowerCase().contains(searchValue.toLowerCase())))
-        .toList();
+    // Apply filters to get visible apps
+    final filteredApps = apps.where((app) {
+      // Filter by tracking status
+      bool matchesTracking = false;
+      if (trackingFilter == "all") {
+        matchesTracking = true;
+      } else if (trackingFilter == "tracked") {
+        matchesTracking = app["isTracking"] == true;
+      } else if (trackingFilter == "untracked") {
+        matchesTracking = app["isTracking"] == false;
+      }
+
+      // Filter by visibility status
+      bool matchesVisibility = false;
+      if (visibilityFilter == "all") {
+        matchesVisibility = true;
+      } else if (visibilityFilter == "visible") {
+        matchesVisibility = app["isHidden"] == false;
+      } else if (visibilityFilter == "hidden") {
+        matchesVisibility = app["isHidden"] == true;
+      }
+
+      // Filter by category
+      bool matchesCategory = selectedCategory == "All" ||
+          selectedCategory.contains(app["category"]);
+
+      // Filter by search
+      bool matchesSearch = searchValue.isEmpty ||
+          app["name"].toLowerCase().contains(searchValue.toLowerCase());
+
+      // Must have screen time and name
+      bool hasData = app["screenTime"] != "0s" && app['name'] != '';
+
+      return matchesTracking &&
+          matchesVisibility &&
+          matchesCategory &&
+          matchesSearch &&
+          hasData;
+    }).toList();
 
     if (_isLoading) {
       return ScaffoldPage(
@@ -203,13 +255,13 @@ class _ApplicationsState extends State<Applications>
               ),
               const SizedBox(height: 20),
 
-              // Filter Bar
+              // Filter Bar (for viewing only)
               _FilterBar(
-                isTracking: isTracking,
-                isHidden: isHidden,
+                trackingFilter: trackingFilter,
+                visibilityFilter: visibilityFilter,
                 selectedCategory: selectedCategory,
-                onTrackingChanged: (v) => setSetting('tracking', v),
-                onHiddenChanged: (v) => setSetting('isHidden', v),
+                onTrackingFilterChanged: changeTrackingFilter,
+                onVisibilityFilterChanged: changeVisibilityFilter,
                 onCategoryChanged: changeCategory,
               ),
               const SizedBox(height: 16),
@@ -232,7 +284,7 @@ class _ApplicationsState extends State<Applications>
               Expanded(
                 child: _DataTable(
                   apps: filteredApps,
-                  changeIndividualParam: changeIndividualParam,
+                  toggleAppSetting: toggleAppSetting,
                   refreshData: refreshData,
                 ),
               ),
@@ -376,19 +428,19 @@ class _Header extends StatelessWidget {
 }
 
 class _FilterBar extends StatelessWidget {
-  final bool isTracking;
-  final bool isHidden;
+  final String trackingFilter;
+  final String visibilityFilter;
   final String selectedCategory;
-  final ValueChanged<bool> onTrackingChanged;
-  final ValueChanged<bool> onHiddenChanged;
+  final ValueChanged<String> onTrackingFilterChanged;
+  final ValueChanged<String> onVisibilityFilterChanged;
   final ValueChanged<String> onCategoryChanged;
 
   const _FilterBar({
-    required this.isTracking,
-    required this.isHidden,
+    required this.trackingFilter,
+    required this.visibilityFilter,
     required this.selectedCategory,
-    required this.onTrackingChanged,
-    required this.onHiddenChanged,
+    required this.onTrackingFilterChanged,
+    required this.onVisibilityFilterChanged,
     required this.onCategoryChanged,
   });
 
@@ -419,23 +471,70 @@ class _FilterBar extends StatelessWidget {
         children: [
           Row(
             children: [
-              _FilterChip(
+              // Tracking Filter Dropdown
+              _FilterDropdown(
                 icon: FluentIcons.checkbox_composite,
-                label: l10n.tracking,
-                isActive: isTracking,
-                onChanged: onTrackingChanged,
+                label: trackingFilter == "all"
+                    ? l10n.allTracking
+                    : trackingFilter == "tracked"
+                        ? l10n.tracking
+                        : l10n.notTracking,
                 activeColor: const Color(0xFF10B981),
+                items: [
+                  _DropdownItem(
+                    icon: FluentIcons.view_all,
+                    label: l10n.allTracking,
+                    value: "all",
+                  ),
+                  _DropdownItem(
+                    icon: FluentIcons.check_mark,
+                    label: l10n.tracking,
+                    value: "tracked",
+                  ),
+                  _DropdownItem(
+                    icon: FluentIcons.cancel,
+                    label: l10n.notTracking,
+                    value: "untracked",
+                  ),
+                ],
+                selectedValue: trackingFilter,
+                onChanged: onTrackingFilterChanged,
               ),
-              const SizedBox(width: 24),
-              _FilterChip(
-                icon: FluentIcons.hide3,
-                label: l10n.hiddenVisible,
-                isActive: isHidden,
-                onChanged: onHiddenChanged,
+              const SizedBox(width: 16),
+
+              // Visibility Filter Dropdown
+              _FilterDropdown(
+                icon: FluentIcons.view,
+                label: visibilityFilter == "all"
+                    ? l10n.allVisibility
+                    : visibilityFilter == "visible"
+                        ? l10n.visible
+                        : l10n.hidden,
                 activeColor: const Color(0xFF8B5CF6),
+                items: [
+                  _DropdownItem(
+                    icon: FluentIcons.view_all,
+                    label: l10n.allVisibility,
+                    value: "all",
+                  ),
+                  _DropdownItem(
+                    icon: FluentIcons.red_eye,
+                    label: l10n.visible,
+                    value: "visible",
+                  ),
+                  _DropdownItem(
+                    icon: FluentIcons.hide3,
+                    label: l10n.hidden,
+                    value: "hidden",
+                  ),
+                ],
+                selectedValue: visibilityFilter,
+                onChanged: onVisibilityFilterChanged,
               ),
             ],
           ),
+
+          // Category Dropdown
           _CategoryDropdown(
             selectedCategory: selectedCategory,
             onChanged: onCategoryChanged,
@@ -446,105 +545,94 @@ class _FilterBar extends StatelessWidget {
   }
 }
 
-class _FilterChip extends StatefulWidget {
+class _DropdownItem {
   final IconData icon;
   final String label;
-  final bool isActive;
-  final ValueChanged<bool> onChanged;
-  final Color activeColor;
+  final String value;
 
-  const _FilterChip({
+  const _DropdownItem({
     required this.icon,
     required this.label,
-    required this.isActive,
-    required this.onChanged,
-    required this.activeColor,
+    required this.value,
   });
-
-  @override
-  State<_FilterChip> createState() => _FilterChipState();
 }
 
-class _FilterChipState extends State<_FilterChip> {
-  bool _isHovered = false;
+class _FilterDropdown extends StatelessWidget {
+  final IconData icon;
+  final String label;
+  final Color activeColor;
+  final List<_DropdownItem> items;
+  final String selectedValue;
+  final ValueChanged<String> onChanged;
+
+  const _FilterDropdown({
+    required this.icon,
+    required this.label,
+    required this.activeColor,
+    required this.items,
+    required this.selectedValue,
+    required this.onChanged,
+  });
 
   @override
   Widget build(BuildContext context) {
     final theme = FluentTheme.of(context);
 
-    return MouseRegion(
-      onEnter: (_) => setState(() => _isHovered = true),
-      onExit: (_) => setState(() => _isHovered = false),
-      child: GestureDetector(
-        onTap: () => widget.onChanged(!widget.isActive),
-        child: AnimatedContainer(
-          duration: const Duration(milliseconds: 200),
-          padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
-          decoration: BoxDecoration(
-            color: widget.isActive
-                ? widget.activeColor.withValues(alpha: 0.15)
-                : _isHovered
-                    ? theme.inactiveBackgroundColor.withValues(alpha: 0.5)
-                    : Colors.transparent,
-            borderRadius: BorderRadius.circular(8),
-            border: Border.all(
-              color: widget.isActive
-                  ? widget.activeColor.withValues(alpha: 0.5)
-                  : Colors.transparent,
-              width: 1,
-            ),
-          ),
-          child: Row(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              AnimatedContainer(
-                duration: const Duration(milliseconds: 200),
-                padding: const EdgeInsets.all(4),
-                decoration: BoxDecoration(
-                  color: widget.isActive
-                      ? widget.activeColor.withValues(alpha: 0.2)
-                      : Colors.transparent,
-                  borderRadius: BorderRadius.circular(4),
-                ),
-                child: Icon(
-                  widget.icon,
-                  size: 12,
-                  color: widget.isActive
-                      ? widget.activeColor
-                      : theme.typography.body?.color?.withValues(alpha: 0.6),
-                ),
-              ),
-              const SizedBox(width: 8),
-              Text(
-                widget.label,
-                style: TextStyle(
-                  fontSize: 13,
-                  fontWeight:
-                      widget.isActive ? FontWeight.w600 : FontWeight.w500,
-                  color: widget.isActive
-                      ? widget.activeColor
-                      : theme.typography.body?.color,
-                ),
-              ),
-              const SizedBox(width: 10),
-              AnimatedContainer(
-                duration: const Duration(milliseconds: 200),
-                width: 18,
-                height: 18,
-                decoration: BoxDecoration(
-                  color: widget.isActive
-                      ? widget.activeColor
-                      : theme.inactiveBackgroundColor,
-                  borderRadius: BorderRadius.circular(4),
-                ),
-                child: widget.isActive
-                    ? const Icon(FluentIcons.check_mark,
-                        size: 10, color: Colors.white)
-                    : null,
-              ),
-            ],
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 4),
+      decoration: BoxDecoration(
+        color: activeColor.withValues(alpha: 0.1),
+        borderRadius: BorderRadius.circular(8),
+        border: Border.all(
+          color: activeColor.withValues(alpha: 0.3),
+          width: 1,
+        ),
+      ),
+      child: DropDownButton(
+        style: ButtonStyle(
+          padding: WidgetStateProperty.all(
+            const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
           ),
         ),
+        title: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Icon(
+              icon,
+              size: 12,
+              color: activeColor,
+            ),
+            const SizedBox(width: 8),
+            Text(
+              label,
+              style: TextStyle(
+                fontSize: 13,
+                fontWeight: FontWeight.w500,
+                color: activeColor,
+              ),
+            ),
+          ],
+        ),
+        items: items.map((item) {
+          final isSelected = item.value == selectedValue;
+          return MenuFlyoutItem(
+            leading: Icon(
+              item.icon,
+              size: 14,
+              color: isSelected
+                  ? activeColor
+                  : theme.typography.body?.color?.withValues(alpha: 0.6),
+            ),
+            text: Text(
+              item.label,
+              style: TextStyle(
+                fontWeight: isSelected ? FontWeight.w600 : FontWeight.normal,
+                color: isSelected ? activeColor : null,
+              ),
+            ),
+            onPressed: () => onChanged(item.value),
+          );
+        }).toList(),
       ),
     );
   }
@@ -610,13 +698,12 @@ class _CategoryDropdown extends StatelessWidget {
 
 class _DataTable extends StatelessWidget {
   final List<dynamic> apps;
-  final void Function(String type, bool value, String name)
-      changeIndividualParam;
+  final void Function(String type, bool value, String name) toggleAppSetting;
   final Future<void> Function() refreshData;
 
   const _DataTable({
     required this.apps,
-    required this.changeIndividualParam,
+    required this.toggleAppSetting,
     required this.refreshData,
   });
 
@@ -719,7 +806,7 @@ class _DataTable extends StatelessWidget {
                     isProductive: app["isProductive"] ?? false,
                     dailyLimit: app["dailyLimit"] ?? const Duration(),
                     limitStatus: app["limitStatus"] ?? false,
-                    changeIndividualParam: changeIndividualParam,
+                    toggleAppSetting: toggleAppSetting,
                     refreshData: refreshData,
                     isLast: index == apps.length - 1,
                   );
@@ -775,8 +862,7 @@ class _ApplicationRow extends StatefulWidget {
   final bool isProductive;
   final Duration dailyLimit;
   final bool limitStatus;
-  final void Function(String type, bool value, String name)
-      changeIndividualParam;
+  final void Function(String type, bool value, String name) toggleAppSetting;
   final Future<void> Function() refreshData;
   final bool isLast;
 
@@ -789,7 +875,7 @@ class _ApplicationRow extends StatefulWidget {
     required this.isProductive,
     required this.dailyLimit,
     required this.limitStatus,
-    required this.changeIndividualParam,
+    required this.toggleAppSetting,
     required this.refreshData,
     required this.isLast,
   });
@@ -1114,27 +1200,6 @@ class _ApplicationRowState extends State<_ApplicationRow> {
               flex: 3,
               child: Row(
                 children: [
-                  // Container(
-                  //   width: 32,
-                  //   height: 32,
-                  //   decoration: BoxDecoration(
-                  //     color: theme.accentColor.withValues(alpha:0.1),
-                  //     borderRadius: BorderRadius.circular(6),
-                  //   ),
-                  //   child: Center(
-                  //     child: Text(
-                  //       widget.name.isNotEmpty
-                  //           ? widget.name[0].toUpperCase()
-                  //           : '?',
-                  //       style: TextStyle(
-                  //         fontSize: 14,
-                  //         fontWeight: FontWeight.w600,
-                  //         color: theme.accentColor,
-                  //       ),
-                  //     ),
-                  //   ),
-                  // ),
-                  // const SizedBox(width: 12),
                   Expanded(
                     child: Text(
                       widget.name,
@@ -1193,27 +1258,27 @@ class _ApplicationRowState extends State<_ApplicationRow> {
               ),
             ),
 
-            // Tracking Toggle
+            // Tracking Toggle (changes app setting)
             Expanded(
               flex: 1,
               child: Center(
                 child: _CompactToggle(
                   value: widget.tracking,
-                  onChanged: (v) => widget.changeIndividualParam(
-                      'isTracking', v, widget.name),
+                  onChanged: (v) =>
+                      widget.toggleAppSetting('isTracking', v, widget.name),
                   activeColor: const Color(0xFF10B981),
                 ),
               ),
             ),
 
-            // Hidden Toggle
+            // Hidden Toggle (changes app setting)
             Expanded(
               flex: 1,
               child: Center(
                 child: _CompactToggle(
                   value: widget.isHidden,
                   onChanged: (v) =>
-                      widget.changeIndividualParam('isHidden', v, widget.name),
+                      widget.toggleAppSetting('isHidden', v, widget.name),
                   activeColor: const Color(0xFF8B5CF6),
                 ),
               ),

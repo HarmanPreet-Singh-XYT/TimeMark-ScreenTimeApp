@@ -2839,4 +2839,19 @@ class AppLocalizationsJa extends AppLocalizations {
   @override
   String get changelogErrorDescription =>
       'このバージョンの変更履歴を取得できませんでした。インターネット接続を確認するか、GitHubのリリースページをご覧ください。';
+
+  @override
+  String get allTracking => 'All Apps';
+
+  @override
+  String get notTracking => 'Not Tracked';
+
+  @override
+  String get allVisibility => 'All';
+
+  @override
+  String get visible => 'Visible';
+
+  @override
+  String get hidden => 'Hidden';
 }

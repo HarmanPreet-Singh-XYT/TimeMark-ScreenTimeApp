@@ -69,7 +69,7 @@ class BackgroundAppTracker {
 
   String _currentApp = '';
   DateTime _currentAppStartTime = DateTime.now();
-  Timer? _selfTrackingHeartbeat; // 👈 ADD THIS
+  Timer? _selfTrackingHeartbeat;
 
   static const String _selfAppName = 'Scolect - Track Screen Time & App Usage';
 
@@ -112,14 +112,18 @@ class BackgroundAppTracker {
 
     if (idleDetectionEnabled && !_isUserActive) return;
 
+    // 🔒 FIX #1: CHECK TRACKING STATUS BEFORE CALCULATING ELAPSED TIME
+    final metadata = _appDataStore?.getAppMetadata(_currentApp);
+    if (metadata != null && (!metadata.isTracking || !metadata.isVisible)) {
+      debugPrint(
+          '💓 Self-heartbeat skipped: tracking disabled for $_currentApp');
+      return;
+    }
+
     final now = DateTime.now();
     final elapsed = now.difference(_currentAppStartTime);
 
     if (elapsed.inSeconds <= 0) return;
-
-    final metadata = _appDataStore?.getAppMetadata(_currentApp);
-    if (metadata != null && (!metadata.isTracking || !metadata.isVisible))
-      return;
 
     _appDataStore?.recordAppUsage(
       _currentApp,
@@ -372,6 +376,7 @@ class BackgroundAppTracker {
 
       AppMetadata? metadata = await _getOrCreateMetadata(appTitle);
 
+      // 🔒 ALREADY HAS CORRECT CHECK: Only record if tracking is enabled
       if (metadata != null && metadata.isTracking && metadata.isVisible) {
         final now = DateTime.now();
         final startTime = now.subtract(const Duration(minutes: 1));
@@ -387,6 +392,8 @@ class BackgroundAppTracker {
         );
 
         debugPrint('📊 Polling recorded: $appTitle (1 min) → runtime cache');
+      } else if (metadata != null && !metadata.isTracking) {
+        debugPrint('⏭️ Polling skipped: $appTitle (tracking disabled)');
       }
 
       _notificationController.checkAndSendNotifications();
@@ -403,7 +410,7 @@ class BackgroundAppTracker {
 
     debugPrint(
         '🔄 Re-anchoring tracking state after 2 seconds by data clear...');
-    // 👈 Wait 5 seconds so the UI has time to show the "empty" state
+    // 👈 Wait 2 seconds so the UI has time to show the "empty" state
     await Future.delayed(const Duration(seconds: 2));
 
     if (_trackingMode == TrackingMode.precise) {
@@ -479,8 +486,22 @@ class BackgroundAppTracker {
       // Save the current app's time before switching
       _saveCurrentAppTime();
 
+      // 🔒 FIX #2: CHECK IF NEW APP SHOULD BE TRACKED
       _currentApp = newApp;
       _currentAppStartTime = DateTime.now();
+
+      // Ensure metadata exists for the new app
+      await _ensureMetadataExists(newApp);
+
+      // Check if this app should be tracked
+      final metadata = _appDataStore?.getAppMetadata(newApp);
+      if (metadata != null && (!metadata.isTracking || !metadata.isVisible)) {
+        debugPrint(
+            '📱 App changed to: $newApp (tracking disabled - will not record)');
+        _stopSelfTrackingHeartbeat(); // Don't heartbeat if not tracking
+        _appUpdateController.add(_currentApp);
+        return;
+      }
 
       if (_currentApp == _selfAppName) {
         _startSelfTrackingHeartbeat();
@@ -488,9 +509,7 @@ class BackgroundAppTracker {
         _stopSelfTrackingHeartbeat();
       }
 
-      debugPrint('📱 App changed to: $newApp');
-
-      _ensureMetadataExists(newApp);
+      debugPrint('📱 App changed to: $newApp (tracking enabled)');
       _appUpdateController.add(_currentApp);
     }
   }
@@ -632,8 +651,8 @@ class BackgroundAppTracker {
     return null;
   }
 
-  void _ensureMetadataExists(String appTitle) {
-    _getOrCreateMetadata(appTitle).then((metadata) {
+  Future<void> _ensureMetadataExists(String appTitle) async {
+    await _getOrCreateMetadata(appTitle).then((metadata) {
       if (metadata != null) {
         debugPrint('✅ Metadata ready: $appTitle');
       }

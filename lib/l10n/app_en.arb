@@ -2119,5 +2119,11 @@
   "continueButton": "Continue",
   "@continueButton": {
     "description": "Continue button label"
-  }
+  },
+  "allTracking": "All Apps",
+  "tracking": "Tracked", 
+  "notTracking": "Not Tracked",
+  "allVisibility": "All",
+  "visible": "Visible",
+  "hidden": "Hidden"
 }

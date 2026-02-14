@@ -2968,4 +2968,19 @@ class AppLocalizationsPt extends AppLocalizations {
   @override
   String get changelogErrorDescription =>
       'Não foi possível recuperar o registro de alterações desta versão. Verifique sua conexão com a internet ou visite a página de lançamentos do GitHub.';
+
+  @override
+  String get allTracking => 'All Apps';
+
+  @override
+  String get notTracking => 'Not Tracked';
+
+  @override
+  String get allVisibility => 'All';
+
+  @override
+  String get visible => 'Visible';
+
+  @override
+  String get hidden => 'Hidden';
 }

@@ -1381,7 +1381,7 @@ abstract class AppLocalizations {
   /// No description provided for @tracking.
   ///
   /// In en, this message translates to:
-  /// **'Tracking'**
+  /// **'Tracked'**
   String get tracking;
 
   /// No description provided for @hiddenVisible.
@@ -5313,6 +5313,36 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Could not retrieve the changelog for this version. Please check your internet connection or visit the GitHub releases page.'**
   String get changelogErrorDescription;
+
+  /// No description provided for @allTracking.
+  ///
+  /// In en, this message translates to:
+  /// **'All Apps'**
+  String get allTracking;
+
+  /// No description provided for @notTracking.
+  ///
+  /// In en, this message translates to:
+  /// **'Not Tracked'**
+  String get notTracking;
+
+  /// No description provided for @allVisibility.
+  ///
+  /// In en, this message translates to:
+  /// **'All'**
+  String get allVisibility;
+
+  /// No description provided for @visible.
+  ///
+  /// In en, this message translates to:
+  /// **'Visible'**
+  String get visible;
+
+  /// No description provided for @hidden.
+  ///
+  /// In en, this message translates to:
+  /// **'Hidden'**
+  String get hidden;
 }
 
 class _AppLocalizationsDelegate

@@ -1,1 +1,89 @@
-{}
+{
+  "ar": [
+    "allTracking",
+    "notTracking",
+    "allVisibility",
+    "visible",
+    "hidden"
+  ],
+
+  "bn": [
+    "allTracking",
+    "notTracking",
+    "allVisibility",
+    "visible",
+    "hidden"
+  ],
+
+  "es": [
+    "allTracking",
+    "notTracking",
+    "allVisibility",
+    "visible",
+    "hidden"
+  ],
+
+  "fr": [
+    "allTracking",
+    "notTracking",
+    "allVisibility",
+    "visible",
+    "hidden"
+  ],
+
+  "hi": [
+    "allTracking",
+    "notTracking",
+    "allVisibility",
+    "visible",
+    "hidden"
+  ],
+
+  "id": [
+    "allTracking",
+    "notTracking",
+    "allVisibility",
+    "visible",
+    "hidden"
+  ],
+
+  "ja": [
+    "allTracking",
+    "notTracking",
+    "allVisibility",
+    "visible",
+    "hidden"
+  ],
+
+  "pt": [
+    "allTracking",
+    "notTracking",
+    "allVisibility",
+    "visible",
+    "hidden"
+  ],
+
+  "ru": [
+    "allTracking",
+    "notTracking",
+    "allVisibility",
+    "visible",
+    "hidden"
+  ],
+
+  "ur": [
+    "allTracking",
+    "notTracking",
+    "allVisibility",
+    "visible",
+    "hidden"
+  ],
+
+  "zh": [
+    "allTracking",
+    "notTracking",
+    "allVisibility",
+    "visible",
+    "hidden"
+  ]
+}

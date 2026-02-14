@@ -2810,4 +2810,19 @@ class AppLocalizationsZh extends AppLocalizations {
   @override
   String get changelogErrorDescription =>
       '无法检索此版本的更新日志。请检查您的网络连接或访问 GitHub 发布页面。';
+
+  @override
+  String get allTracking => 'All Apps';
+
+  @override
+  String get notTracking => 'Not Tracked';
+
+  @override
+  String get allVisibility => 'All';
+
+  @override
+  String get visible => 'Visible';
+
+  @override
+  String get hidden => 'Hidden';
 }

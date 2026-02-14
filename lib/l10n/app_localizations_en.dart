@@ -717,7 +717,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get searchApplication => 'Search Application';
 
   @override
-  String get tracking => 'Tracking';
+  String get tracking => 'Tracked';
 
   @override
   String get hiddenVisible => 'Hidden/Visible';
@@ -2937,4 +2937,19 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get changelogErrorDescription =>
       'Could not retrieve the changelog for this version. Please check your internet connection or visit the GitHub releases page.';
+
+  @override
+  String get allTracking => 'All Apps';
+
+  @override
+  String get notTracking => 'Not Tracked';
+
+  @override
+  String get allVisibility => 'All';
+
+  @override
+  String get visible => 'Visible';
+
+  @override
+  String get hidden => 'Hidden';
 }

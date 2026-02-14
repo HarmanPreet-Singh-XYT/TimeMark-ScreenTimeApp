@@ -2907,4 +2907,19 @@ class AppLocalizationsBn extends AppLocalizations {
   @override
   String get changelogErrorDescription =>
       'এই সংস্করণের চেঞ্জলগ পুনরুদ্ধার করা যায়নি। অনুগ্রহ করে আপনার ইন্টারনেট সংযোগ পরীক্ষা করুন অথবা GitHub রিলিজ পেজ দেখুন।';
+
+  @override
+  String get allTracking => 'All Apps';
+
+  @override
+  String get notTracking => 'Not Tracked';
+
+  @override
+  String get allVisibility => 'All';
+
+  @override
+  String get visible => 'Visible';
+
+  @override
+  String get hidden => 'Hidden';
 }

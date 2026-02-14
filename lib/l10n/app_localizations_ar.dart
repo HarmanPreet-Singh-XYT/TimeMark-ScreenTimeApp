@@ -2886,4 +2886,19 @@ class AppLocalizationsAr extends AppLocalizations {
   @override
   String get changelogErrorDescription =>
       'تعذر استرداد سجل التغييرات لهذا الإصدار. يرجى التحقق من اتصالك بالإنترنت أو زيارة صفحة الإصدارات على GitHub.';
+
+  @override
+  String get allTracking => 'All Apps';
+
+  @override
+  String get notTracking => 'Not Tracked';
+
+  @override
+  String get allVisibility => 'All';
+
+  @override
+  String get visible => 'Visible';
+
+  @override
+  String get hidden => 'Hidden';
 }

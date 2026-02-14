@@ -2999,4 +2999,19 @@ class AppLocalizationsFr extends AppLocalizations {
   @override
   String get changelogErrorDescription =>
       'Impossible de récupérer le journal des modifications pour cette version. Veuillez vérifier votre connexion internet ou consulter la page des versions GitHub.';
+
+  @override
+  String get allTracking => 'All Apps';
+
+  @override
+  String get notTracking => 'Not Tracked';
+
+  @override
+  String get allVisibility => 'All';
+
+  @override
+  String get visible => 'Visible';
+
+  @override
+  String get hidden => 'Hidden';
 }
