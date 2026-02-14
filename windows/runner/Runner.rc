@@ -90,7 +90,7 @@ BEGIN
         BLOCK "040904e4"
         BEGIN
             VALUE "CompanyName", "Scolect" "\0"
-            VALUE "FileDescription", "Scolect is a comprehensive screen time management and productivity application that helps you understand, control, and optimize how you spend time on your computer. Whether you're looking to boost work productivity, reduce digital distractions, or simply gain insights into your daily habits, Scolect provides the tools you need." "\0"
+            VALUE "FileDescription", "Scolect - Track Screen Time & App Usage" "\0"
             VALUE "FileVersion", VERSION_AS_STRING "\0"
             VALUE "InternalName", "screentime" "\0"
             VALUE "LegalCopyright", "Copyright (C) 2026 Scolect. All rights reserved." "\0"

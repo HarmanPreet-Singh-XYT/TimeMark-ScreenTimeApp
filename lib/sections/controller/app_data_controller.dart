@@ -189,6 +189,7 @@ class AppDataStore extends ChangeNotifier {
   factory AppDataStore() {
     return _instance;
   }
+  
 
   // Private constructor
   AppDataStore._internal();
@@ -618,13 +619,24 @@ class AppDataStore extends ChangeNotifier {
   // APP USAGE OPERATIONS (Using runtime cache)
   // ============================================================
 
+  String _makeUsageKey(String appName, DateTime date) {
+    // Date part is always "YYYY-MM-DD" = 10 chars, plus ":" separator = 11 chars
+    // Leave room: 255 - 11 = 244 chars max for appName
+    final safeName = appName.length > 244 ? appName.substring(0, 244) : appName;
+    return '$safeName:${_formatDateKey(date)}';
+  }
+
+  String _makeFocusKey(DateTime date, int millisecondsSinceEpoch) {
+    // "YYYY-MM-DD:1234567890123" - always well under 255
+    return '${_formatDateKey(date)}:$millisecondsSinceEpoch';
+  }
   Future<bool> recordAppUsage(String appName, DateTime date, Duration timeSpent,
       int openCount, List<TimeRange> usagePeriods) async {
     if (!_ensureInitialized()) return false;
 
     try {
       return await _runtimeCacheLock.synchronized(() async {
-        final String key = '$appName:${_formatDateKey(date)}';
+        final String key = _makeUsageKey(appName, date);
         AppUsageRecord? existing = _usageRuntimeCache[key];
 
         if (existing != null) {
@@ -699,7 +711,7 @@ class AppDataStore extends ChangeNotifier {
     if (!_ensureInitialized()) return null;
 
     try {
-      final String key = '$appName:${_formatDateKey(date)}';
+      final String key = _makeUsageKey(appName, date);
       return _usageRuntimeCache[key];
     } catch (e) {
       _lastError =
