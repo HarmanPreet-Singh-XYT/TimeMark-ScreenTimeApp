@@ -2979,4 +2979,24 @@ class AppLocalizationsFr extends AppLocalizations {
   @override
   String get monitorKeyboardDescription =>
       'Suivre l\'activité du clavier pour détecter la présence de l\'utilisateur';
+
+  @override
+  String get changelogWhatsNew => 'Nouveautés';
+
+  @override
+  String changelogReleasedOn(String date) {
+    return 'Publié le $date';
+  }
+
+  @override
+  String get changelogNoContent =>
+      'Aucun journal des modifications disponible pour cette version.';
+
+  @override
+  String get changelogUnableToLoad =>
+      'Impossible de charger le journal des modifications';
+
+  @override
+  String get changelogErrorDescription =>
+      'Impossible de récupérer le journal des modifications pour cette version. Veuillez vérifier votre connexion internet ou consulter la page des versions GitHub.';
 }

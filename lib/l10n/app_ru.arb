@@ -1867,5 +1867,45 @@
 "trackingModeChangeError": "Не удалось изменить режим отслеживания. Пожалуйста, попробуйте снова.",
 "errorTitle": "Ошибка",
 "monitorKeyboardTitle": "Отслеживать Клавиатуру",
-  "monitorKeyboardDescription": "Отслеживать активность клавиатуры для обнаружения присутствия пользователя"
+  "monitorKeyboardDescription": "Отслеживать активность клавиатуры для обнаружения присутствия пользователя",
+   "changelogWhatsNew": "Что нового",
+  "@changelogWhatsNew": {
+    "description": "Title for the changelog dialog"
+  },
+
+  "changelogReleasedOn": "Выпущено {date}",
+  "@changelogReleasedOn": {
+    "description": "Release date label in changelog",
+    "placeholders": {
+      "date": {
+        "type": "String",
+        "example": "15/6/2025"
+      }
+    }
+  },
+
+  "changelogNoContent": "Для этой версии нет списка изменений.",
+  "@changelogNoContent": {
+    "description": "Shown when the changelog body is empty"
+  },
+
+  "changelogUnableToLoad": "Не удалось загрузить список изменений",
+  "@changelogUnableToLoad": {
+    "description": "Error dialog title when changelog fetch fails"
+  },
+
+  "changelogErrorDescription": "Не удалось получить список изменений для этой версии. Проверьте подключение к интернету или посетите страницу релизов на GitHub.",
+  "@changelogErrorDescription": {
+    "description": "Error dialog body when changelog fetch fails"
+  },
+
+  "ok": "ОК",
+  "@ok": {
+    "description": "Generic OK button label"
+  },
+
+  "continueButton": "Продолжить",
+  "@continueButton": {
+    "description": "Continue button label"
+  }
 }

@@ -2873,4 +2873,23 @@ class AppLocalizationsUr extends AppLocalizations {
   @override
   String get monitorKeyboardDescription =>
       'صارف کی موجودگی کا پتہ لگانے کے لیے کی بورڈ کی سرگرمی کو ٹریک کریں';
+
+  @override
+  String get changelogWhatsNew => 'نیا کیا ہے';
+
+  @override
+  String changelogReleasedOn(String date) {
+    return '$date کو جاری کیا گیا';
+  }
+
+  @override
+  String get changelogNoContent =>
+      'اس ورژن کے لیے کوئی تبدیلی کا ریکارڈ دستیاب نہیں ہے۔';
+
+  @override
+  String get changelogUnableToLoad => 'تبدیلی کا ریکارڈ لوڈ نہیں ہو سکا';
+
+  @override
+  String get changelogErrorDescription =>
+      'اس ورژن کے لیے تبدیلی کا ریکارڈ حاصل نہیں کیا جا سکا۔ براہ کرم اپنا انٹرنیٹ کنکشن چیک کریں یا GitHub کے ریلیز صفحہ پر جائیں۔';
 }

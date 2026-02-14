@@ -341,7 +341,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get apply => 'تطبيق';
 
   @override
-  String get ok => 'حسنًا';
+  String get ok => 'حسناً';
 
   @override
   String get invalidDateRange => 'نطاق تاريخ غير صالح';
@@ -2868,4 +2868,22 @@ class AppLocalizationsAr extends AppLocalizations {
   @override
   String get monitorKeyboardDescription =>
       'تتبع نشاط لوحة المفاتيح لاكتشاف وجود المستخدم';
+
+  @override
+  String get changelogWhatsNew => 'ما الجديد';
+
+  @override
+  String changelogReleasedOn(String date) {
+    return 'صدر في $date';
+  }
+
+  @override
+  String get changelogNoContent => 'لا يتوفر سجل تغييرات لهذا الإصدار.';
+
+  @override
+  String get changelogUnableToLoad => 'تعذر تحميل سجل التغييرات';
+
+  @override
+  String get changelogErrorDescription =>
+      'تعذر استرداد سجل التغييرات لهذا الإصدار. يرجى التحقق من اتصالك بالإنترنت أو زيارة صفحة الإصدارات على GitHub.';
 }

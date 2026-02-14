@@ -2886,4 +2886,23 @@ class AppLocalizationsId extends AppLocalizations {
   @override
   String get monitorKeyboardDescription =>
       'Lacak aktivitas keyboard untuk mendeteksi kehadiran pengguna';
+
+  @override
+  String get changelogWhatsNew => 'Yang Baru';
+
+  @override
+  String changelogReleasedOn(String date) {
+    return 'Dirilis pada $date';
+  }
+
+  @override
+  String get changelogNoContent =>
+      'Tidak ada catatan perubahan untuk versi ini.';
+
+  @override
+  String get changelogUnableToLoad => 'Tidak Dapat Memuat Catatan Perubahan';
+
+  @override
+  String get changelogErrorDescription =>
+      'Tidak dapat mengambil catatan perubahan untuk versi ini. Silakan periksa koneksi internet Anda atau kunjungi halaman rilis GitHub.';
 }

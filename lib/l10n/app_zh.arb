@@ -1872,5 +1872,45 @@
   "trackingModeChangeError": "更改追踪模式失败，请重试。",
   "errorTitle": "错误",
   "monitorKeyboardTitle": "监控键盘",
-  "monitorKeyboardDescription": "跟踪键盘活动以检测用户存在"
+  "monitorKeyboardDescription": "跟踪键盘活动以检测用户存在",
+  "changelogWhatsNew": "更新内容",
+  "@changelogWhatsNew": {
+    "description": "Title for the changelog dialog"
+  },
+
+  "changelogReleasedOn": "发布于 {date}",
+  "@changelogReleasedOn": {
+    "description": "Release date label in changelog",
+    "placeholders": {
+      "date": {
+        "type": "String",
+        "example": "15/6/2025"
+      }
+    }
+  },
+
+  "changelogNoContent": "此版本暂无更新日志。",
+  "@changelogNoContent": {
+    "description": "Shown when the changelog body is empty"
+  },
+
+  "changelogUnableToLoad": "无法加载更新日志",
+  "@changelogUnableToLoad": {
+    "description": "Error dialog title when changelog fetch fails"
+  },
+
+  "changelogErrorDescription": "无法检索此版本的更新日志。请检查您的网络连接或访问 GitHub 发布页面。",
+  "@changelogErrorDescription": {
+    "description": "Error dialog body when changelog fetch fails"
+  },
+
+  "ok": "确定",
+  "@ok": {
+    "description": "Generic OK button label"
+  },
+
+  "continueButton": "继续",
+  "@continueButton": {
+    "description": "Continue button label"
+  }
 }

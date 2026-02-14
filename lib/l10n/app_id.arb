@@ -1863,5 +1863,45 @@
 "trackingModeChangeError": "Gagal mengubah mode pelacakan. Silakan coba lagi.",
 "errorTitle": "Kesalahan",
 "monitorKeyboardTitle": "Pantau Keyboard",
-  "monitorKeyboardDescription": "Lacak aktivitas keyboard untuk mendeteksi kehadiran pengguna"
+  "monitorKeyboardDescription": "Lacak aktivitas keyboard untuk mendeteksi kehadiran pengguna",
+  "changelogWhatsNew": "Yang Baru",
+  "@changelogWhatsNew": {
+    "description": "Title for the changelog dialog"
+  },
+
+  "changelogReleasedOn": "Dirilis pada {date}",
+  "@changelogReleasedOn": {
+    "description": "Release date label in changelog",
+    "placeholders": {
+      "date": {
+        "type": "String",
+        "example": "15/6/2025"
+      }
+    }
+  },
+
+  "changelogNoContent": "Tidak ada catatan perubahan untuk versi ini.",
+  "@changelogNoContent": {
+    "description": "Shown when the changelog body is empty"
+  },
+
+  "changelogUnableToLoad": "Tidak Dapat Memuat Catatan Perubahan",
+  "@changelogUnableToLoad": {
+    "description": "Error dialog title when changelog fetch fails"
+  },
+
+  "changelogErrorDescription": "Tidak dapat mengambil catatan perubahan untuk versi ini. Silakan periksa koneksi internet Anda atau kunjungi halaman rilis GitHub.",
+  "@changelogErrorDescription": {
+    "description": "Error dialog body when changelog fetch fails"
+  },
+
+  "ok": "OK",
+  "@ok": {
+    "description": "Generic OK button label"
+  },
+
+  "continueButton": "Lanjutkan",
+  "@continueButton": {
+    "description": "Continue button label"
+  }
 }

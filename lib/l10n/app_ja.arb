@@ -1870,5 +1870,45 @@
   "trackingModeChangeError": "トラッキングモードの変更に失敗しました。もう一度お試しください。",
   "errorTitle": "エラー",
   "monitorKeyboardTitle": "キーボードを監視",
-  "monitorKeyboardDescription": "ユーザーの存在を検出するためにキーボードアクティビティを追跡します"
+  "monitorKeyboardDescription": "ユーザーの存在を検出するためにキーボードアクティビティを追跡します",
+  "changelogWhatsNew": "新機能",
+  "@changelogWhatsNew": {
+    "description": "Title for the changelog dialog"
+  },
+
+  "changelogReleasedOn": "{date}にリリース",
+  "@changelogReleasedOn": {
+    "description": "Release date label in changelog",
+    "placeholders": {
+      "date": {
+        "type": "String",
+        "example": "15/6/2025"
+      }
+    }
+  },
+
+  "changelogNoContent": "このバージョンの変更履歴はありません。",
+  "@changelogNoContent": {
+    "description": "Shown when the changelog body is empty"
+  },
+
+  "changelogUnableToLoad": "変更履歴を読み込めません",
+  "@changelogUnableToLoad": {
+    "description": "Error dialog title when changelog fetch fails"
+  },
+
+  "changelogErrorDescription": "このバージョンの変更履歴を取得できませんでした。インターネット接続を確認するか、GitHubのリリースページをご覧ください。",
+  "@changelogErrorDescription": {
+    "description": "Error dialog body when changelog fetch fails"
+  },
+
+  "ok": "OK",
+  "@ok": {
+    "description": "Generic OK button label"
+  },
+
+  "continueButton": "続ける",
+  "@continueButton": {
+    "description": "Continue button label"
+  }
 }

@@ -718,7 +718,7 @@ abstract class AppLocalizations {
   /// **'Apply'**
   String get apply;
 
-  /// OK button text
+  /// Generic OK button label
   ///
   /// In en, this message translates to:
   /// **'OK'**
@@ -4390,7 +4390,7 @@ abstract class AppLocalizations {
   /// **'The app needs to restart for Input Monitoring to take effect.'**
   String get permissionGrantedDescription;
 
-  /// No description provided for @continueButton.
+  /// Continue button label
   ///
   /// In en, this message translates to:
   /// **'Continue'**
@@ -5283,6 +5283,36 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Track keyboard activity to detect user presence'**
   String get monitorKeyboardDescription;
+
+  /// Title for the changelog dialog
+  ///
+  /// In en, this message translates to:
+  /// **'What\'s New'**
+  String get changelogWhatsNew;
+
+  /// Release date label in changelog
+  ///
+  /// In en, this message translates to:
+  /// **'Released on {date}'**
+  String changelogReleasedOn(String date);
+
+  /// Shown when the changelog body is empty
+  ///
+  /// In en, this message translates to:
+  /// **'No changelog available for this version.'**
+  String get changelogNoContent;
+
+  /// Error dialog title when changelog fetch fails
+  ///
+  /// In en, this message translates to:
+  /// **'Unable to Load Changelog'**
+  String get changelogUnableToLoad;
+
+  /// Error dialog body when changelog fetch fails
+  ///
+  /// In en, this message translates to:
+  /// **'Could not retrieve the changelog for this version. Please check your internet connection or visit the GitHub releases page.'**
+  String get changelogErrorDescription;
 }
 
 class _AppLocalizationsDelegate

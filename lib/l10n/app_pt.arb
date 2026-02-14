@@ -1863,5 +1863,45 @@
 "trackingModeChangeError": "Falha ao alterar o modo de rastreamento. Por favor, tente novamente.",
 "errorTitle": "Erro",
 "monitorKeyboardTitle": "Monitorar Teclado",
-  "monitorKeyboardDescription": "Rastrear atividade do teclado para detectar presença do usuário"
+  "monitorKeyboardDescription": "Rastrear atividade do teclado para detectar presença do usuário",
+  "changelogWhatsNew": "Novidades",
+  "@changelogWhatsNew": {
+    "description": "Title for the changelog dialog"
+  },
+
+  "changelogReleasedOn": "Lançado em {date}",
+  "@changelogReleasedOn": {
+    "description": "Release date label in changelog",
+    "placeholders": {
+      "date": {
+        "type": "String",
+        "example": "15/6/2025"
+      }
+    }
+  },
+
+  "changelogNoContent": "Nenhum registro de alterações disponível para esta versão.",
+  "@changelogNoContent": {
+    "description": "Shown when the changelog body is empty"
+  },
+
+  "changelogUnableToLoad": "Não foi possível carregar o registro de alterações",
+  "@changelogUnableToLoad": {
+    "description": "Error dialog title when changelog fetch fails"
+  },
+
+  "changelogErrorDescription": "Não foi possível recuperar o registro de alterações desta versão. Verifique sua conexão com a internet ou visite a página de lançamentos do GitHub.",
+  "@changelogErrorDescription": {
+    "description": "Error dialog body when changelog fetch fails"
+  },
+
+  "ok": "OK",
+  "@ok": {
+    "description": "Generic OK button label"
+  },
+
+  "continueButton": "Continuar",
+  "@continueButton": {
+    "description": "Continue button label"
+  }
 }

@@ -2889,4 +2889,22 @@ class AppLocalizationsBn extends AppLocalizations {
   @override
   String get monitorKeyboardDescription =>
       'ব্যবহারকারীর উপস্থিতি শনাক্ত করতে কীবোর্ডের কার্যকলাপ ট্র্যাক করুন';
+
+  @override
+  String get changelogWhatsNew => 'নতুন কী আছে';
+
+  @override
+  String changelogReleasedOn(String date) {
+    return '$date তারিখে প্রকাশিত';
+  }
+
+  @override
+  String get changelogNoContent => 'এই সংস্করণের জন্য কোনো চেঞ্জলগ উপলব্ধ নেই।';
+
+  @override
+  String get changelogUnableToLoad => 'চেঞ্জলগ লোড করা যায়নি';
+
+  @override
+  String get changelogErrorDescription =>
+      'এই সংস্করণের চেঞ্জলগ পুনরুদ্ধার করা যায়নি। অনুগ্রহ করে আপনার ইন্টারনেট সংযোগ পরীক্ষা করুন অথবা GitHub রিলিজ পেজ দেখুন।';
 }

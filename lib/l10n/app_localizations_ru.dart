@@ -2959,4 +2959,22 @@ class AppLocalizationsRu extends AppLocalizations {
   @override
   String get monitorKeyboardDescription =>
       'Отслеживать активность клавиатуры для обнаружения присутствия пользователя';
+
+  @override
+  String get changelogWhatsNew => 'Что нового';
+
+  @override
+  String changelogReleasedOn(String date) {
+    return 'Выпущено $date';
+  }
+
+  @override
+  String get changelogNoContent => 'Для этой версии нет списка изменений.';
+
+  @override
+  String get changelogUnableToLoad => 'Не удалось загрузить список изменений';
+
+  @override
+  String get changelogErrorDescription =>
+      'Не удалось получить список изменений для этой версии. Проверьте подключение к интернету или посетите страницу релизов на GitHub.';
 }

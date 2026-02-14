@@ -2967,4 +2967,24 @@ class AppLocalizationsEs extends AppLocalizations {
   @override
   String get monitorKeyboardDescription =>
       'Rastrear la actividad del teclado para detectar la presencia del usuario';
+
+  @override
+  String get changelogWhatsNew => 'Novedades';
+
+  @override
+  String changelogReleasedOn(String date) {
+    return 'Publicado el $date';
+  }
+
+  @override
+  String get changelogNoContent =>
+      'No hay registro de cambios disponible para esta versión.';
+
+  @override
+  String get changelogUnableToLoad =>
+      'No se puede cargar el registro de cambios';
+
+  @override
+  String get changelogErrorDescription =>
+      'No se pudo recuperar el registro de cambios de esta versión. Comprueba tu conexión a internet o visita la página de versiones de GitHub.';
 }

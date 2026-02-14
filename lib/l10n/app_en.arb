@@ -2079,5 +2079,45 @@
   "trackingModeChangeError": "Failed to change tracking mode. Please try again.",
   "errorTitle": "Error",
   "monitorKeyboardTitle": "Monitor Keyboard",
-  "monitorKeyboardDescription": "Track keyboard activity to detect user presence"
+  "monitorKeyboardDescription": "Track keyboard activity to detect user presence",
+  "changelogWhatsNew": "What's New",
+  "@changelogWhatsNew": {
+    "description": "Title for the changelog dialog"
+  },
+
+  "changelogReleasedOn": "Released on {date}",
+  "@changelogReleasedOn": {
+    "description": "Release date label in changelog",
+    "placeholders": {
+      "date": {
+        "type": "String",
+        "example": "15/6/2025"
+      }
+    }
+  },
+
+  "changelogNoContent": "No changelog available for this version.",
+  "@changelogNoContent": {
+    "description": "Shown when the changelog body is empty"
+  },
+
+  "changelogUnableToLoad": "Unable to Load Changelog",
+  "@changelogUnableToLoad": {
+    "description": "Error dialog title when changelog fetch fails"
+  },
+
+  "changelogErrorDescription": "Could not retrieve the changelog for this version. Please check your internet connection or visit the GitHub releases page.",
+  "@changelogErrorDescription": {
+    "description": "Error dialog body when changelog fetch fails"
+  },
+
+  "ok": "OK",
+  "@ok": {
+    "description": "Generic OK button label"
+  },
+
+  "continueButton": "Continue",
+  "@continueButton": {
+    "description": "Continue button label"
+  }
 }

@@ -1870,5 +1870,45 @@
 "trackingModeChangeError": "فشل في تغيير وضع التتبع. يرجى المحاولة مرة أخرى.",
 "errorTitle": "خطأ",
 "monitorKeyboardTitle": "مراقبة لوحة المفاتيح",
-  "monitorKeyboardDescription": "تتبع نشاط لوحة المفاتيح لاكتشاف وجود المستخدم"
+  "monitorKeyboardDescription": "تتبع نشاط لوحة المفاتيح لاكتشاف وجود المستخدم",
+  "changelogWhatsNew": "ما الجديد",
+  "@changelogWhatsNew": {
+    "description": "Title for the changelog dialog"
+  },
+
+  "changelogReleasedOn": "صدر في {date}",
+  "@changelogReleasedOn": {
+    "description": "Release date label in changelog",
+    "placeholders": {
+      "date": {
+        "type": "String",
+        "example": "15/6/2025"
+      }
+    }
+  },
+
+  "changelogNoContent": "لا يتوفر سجل تغييرات لهذا الإصدار.",
+  "@changelogNoContent": {
+    "description": "Shown when the changelog body is empty"
+  },
+
+  "changelogUnableToLoad": "تعذر تحميل سجل التغييرات",
+  "@changelogUnableToLoad": {
+    "description": "Error dialog title when changelog fetch fails"
+  },
+
+  "changelogErrorDescription": "تعذر استرداد سجل التغييرات لهذا الإصدار. يرجى التحقق من اتصالك بالإنترنت أو زيارة صفحة الإصدارات على GitHub.",
+  "@changelogErrorDescription": {
+    "description": "Error dialog body when changelog fetch fails"
+  },
+
+  "ok": "حسناً",
+  "@ok": {
+    "description": "Generic OK button label"
+  },
+
+  "continueButton": "متابعة",
+  "@continueButton": {
+    "description": "Continue button label"
+  }
 }

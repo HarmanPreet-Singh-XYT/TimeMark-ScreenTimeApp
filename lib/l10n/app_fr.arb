@@ -1866,5 +1866,45 @@
   "trackingModeChangeError": "Échec du changement de mode de suivi. Veuillez réessayer.",
   "errorTitle": "Erreur",
   "monitorKeyboardTitle": "Surveiller le Clavier",
-  "monitorKeyboardDescription": "Suivre l'activité du clavier pour détecter la présence de l'utilisateur"
+  "monitorKeyboardDescription": "Suivre l'activité du clavier pour détecter la présence de l'utilisateur",
+  "changelogWhatsNew": "Nouveautés",
+  "@changelogWhatsNew": {
+    "description": "Title for the changelog dialog"
+  },
+
+  "changelogReleasedOn": "Publié le {date}",
+  "@changelogReleasedOn": {
+    "description": "Release date label in changelog",
+    "placeholders": {
+      "date": {
+        "type": "String",
+        "example": "15/6/2025"
+      }
+    }
+  },
+
+  "changelogNoContent": "Aucun journal des modifications disponible pour cette version.",
+  "@changelogNoContent": {
+    "description": "Shown when the changelog body is empty"
+  },
+
+  "changelogUnableToLoad": "Impossible de charger le journal des modifications",
+  "@changelogUnableToLoad": {
+    "description": "Error dialog title when changelog fetch fails"
+  },
+
+  "changelogErrorDescription": "Impossible de récupérer le journal des modifications pour cette version. Veuillez vérifier votre connexion internet ou consulter la page des versions GitHub.",
+  "@changelogErrorDescription": {
+    "description": "Error dialog body when changelog fetch fails"
+  },
+
+  "ok": "OK",
+  "@ok": {
+    "description": "Generic OK button label"
+  },
+
+  "continueButton": "Continuer",
+  "@continueButton": {
+    "description": "Continue button label"
+  }
 }

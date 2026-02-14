@@ -2880,4 +2880,23 @@ class AppLocalizationsHi extends AppLocalizations {
   @override
   String get monitorKeyboardDescription =>
       'उपयोगकर्ता की उपस्थिति का पता लगाने के लिए कीबोर्ड गतिविधि ट्रैक करें';
+
+  @override
+  String get changelogWhatsNew => 'नया क्या है';
+
+  @override
+  String changelogReleasedOn(String date) {
+    return '$date को जारी किया गया';
+  }
+
+  @override
+  String get changelogNoContent =>
+      'इस संस्करण के लिए कोई चेंजलॉग उपलब्ध नहीं है।';
+
+  @override
+  String get changelogUnableToLoad => 'चेंजलॉग लोड नहीं किया जा सका';
+
+  @override
+  String get changelogErrorDescription =>
+      'इस संस्करण का चेंजलॉग प्राप्त नहीं किया जा सका। कृपया अपना इंटरनेट कनेक्शन जांचें या GitHub रिलीज़ पेज पर जाएं।';
 }

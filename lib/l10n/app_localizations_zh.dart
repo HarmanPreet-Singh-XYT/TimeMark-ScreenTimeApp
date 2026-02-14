@@ -2792,4 +2792,22 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get monitorKeyboardDescription => '跟踪键盘活动以检测用户存在';
+
+  @override
+  String get changelogWhatsNew => '更新内容';
+
+  @override
+  String changelogReleasedOn(String date) {
+    return '发布于 $date';
+  }
+
+  @override
+  String get changelogNoContent => '此版本暂无更新日志。';
+
+  @override
+  String get changelogUnableToLoad => '无法加载更新日志';
+
+  @override
+  String get changelogErrorDescription =>
+      '无法检索此版本的更新日志。请检查您的网络连接或访问 GitHub 发布页面。';
 }

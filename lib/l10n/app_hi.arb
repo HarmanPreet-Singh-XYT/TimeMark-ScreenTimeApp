@@ -1871,5 +1871,45 @@
 "trackingModeChangeError": "ट्रैकिंग मोड बदलने में विफल। कृपया पुनः प्रयास करें।",
 "errorTitle": "त्रुटि",
 "monitorKeyboardTitle": "कीबोर्ड की निगरानी करें",
-  "monitorKeyboardDescription": "उपयोगकर्ता की उपस्थिति का पता लगाने के लिए कीबोर्ड गतिविधि ट्रैक करें"
+  "monitorKeyboardDescription": "उपयोगकर्ता की उपस्थिति का पता लगाने के लिए कीबोर्ड गतिविधि ट्रैक करें",
+  "changelogWhatsNew": "नया क्या है",
+  "@changelogWhatsNew": {
+    "description": "Title for the changelog dialog"
+  },
+
+  "changelogReleasedOn": "{date} को जारी किया गया",
+  "@changelogReleasedOn": {
+    "description": "Release date label in changelog",
+    "placeholders": {
+      "date": {
+        "type": "String",
+        "example": "15/6/2025"
+      }
+    }
+  },
+
+  "changelogNoContent": "इस संस्करण के लिए कोई चेंजलॉग उपलब्ध नहीं है।",
+  "@changelogNoContent": {
+    "description": "Shown when the changelog body is empty"
+  },
+
+  "changelogUnableToLoad": "चेंजलॉग लोड नहीं किया जा सका",
+  "@changelogUnableToLoad": {
+    "description": "Error dialog title when changelog fetch fails"
+  },
+
+  "changelogErrorDescription": "इस संस्करण का चेंजलॉग प्राप्त नहीं किया जा सका। कृपया अपना इंटरनेट कनेक्शन जांचें या GitHub रिलीज़ पेज पर जाएं।",
+  "@changelogErrorDescription": {
+    "description": "Error dialog body when changelog fetch fails"
+  },
+
+  "ok": "ठीक है",
+  "@ok": {
+    "description": "Generic OK button label"
+  },
+
+  "continueButton": "जारी रखें",
+  "@continueButton": {
+    "description": "Continue button label"
+  }
 }

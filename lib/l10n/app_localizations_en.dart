@@ -2919,4 +2919,22 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get monitorKeyboardDescription =>
       'Track keyboard activity to detect user presence';
+
+  @override
+  String get changelogWhatsNew => 'What\'s New';
+
+  @override
+  String changelogReleasedOn(String date) {
+    return 'Released on $date';
+  }
+
+  @override
+  String get changelogNoContent => 'No changelog available for this version.';
+
+  @override
+  String get changelogUnableToLoad => 'Unable to Load Changelog';
+
+  @override
+  String get changelogErrorDescription =>
+      'Could not retrieve the changelog for this version. Please check your internet connection or visit the GitHub releases page.';
 }

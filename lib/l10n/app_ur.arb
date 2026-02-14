@@ -1873,5 +1873,45 @@
 "trackingModeChangeError": "ٹریکنگ موڈ تبدیل کرنے میں ناکامی۔ براہ کرم دوبارہ کوشش کریں۔",
 "errorTitle": "خرابی",
 "monitorKeyboardTitle": "کی بورڈ کی نگرانی",
-"monitorKeyboardDescription": "صارف کی موجودگی کا پتہ لگانے کے لیے کی بورڈ کی سرگرمی کو ٹریک کریں"
+"monitorKeyboardDescription": "صارف کی موجودگی کا پتہ لگانے کے لیے کی بورڈ کی سرگرمی کو ٹریک کریں",
+"changelogWhatsNew": "نیا کیا ہے",
+  "@changelogWhatsNew": {
+    "description": "Title for the changelog dialog"
+  },
+
+  "changelogReleasedOn": "{date} کو جاری کیا گیا",
+  "@changelogReleasedOn": {
+    "description": "Release date label in changelog",
+    "placeholders": {
+      "date": {
+        "type": "String",
+        "example": "15/6/2025"
+      }
+    }
+  },
+
+  "changelogNoContent": "اس ورژن کے لیے کوئی تبدیلی کا ریکارڈ دستیاب نہیں ہے۔",
+  "@changelogNoContent": {
+    "description": "Shown when the changelog body is empty"
+  },
+
+  "changelogUnableToLoad": "تبدیلی کا ریکارڈ لوڈ نہیں ہو سکا",
+  "@changelogUnableToLoad": {
+    "description": "Error dialog title when changelog fetch fails"
+  },
+
+  "changelogErrorDescription": "اس ورژن کے لیے تبدیلی کا ریکارڈ حاصل نہیں کیا جا سکا۔ براہ کرم اپنا انٹرنیٹ کنکشن چیک کریں یا GitHub کے ریلیز صفحہ پر جائیں۔",
+  "@changelogErrorDescription": {
+    "description": "Error dialog body when changelog fetch fails"
+  },
+
+  "ok": "ٹھیک ہے",
+  "@ok": {
+    "description": "Generic OK button label"
+  },
+
+  "continueButton": "جاری رکھیں",
+  "@continueButton": {
+    "description": "Continue button label"
+  }
 }

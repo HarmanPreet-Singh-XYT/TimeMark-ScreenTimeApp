@@ -2319,7 +2319,7 @@ class AppLocalizationsJa extends AppLocalizations {
   String get permissionGrantedDescription => '入力監視を有効にするには、アプリを再起動する必要があります。';
 
   @override
-  String get continueButton => '続行';
+  String get continueButton => '続ける';
 
   @override
   String get restartRequiredTitle => '再起動が必要です';
@@ -2821,4 +2821,22 @@ class AppLocalizationsJa extends AppLocalizations {
 
   @override
   String get monitorKeyboardDescription => 'ユーザーの存在を検出するためにキーボードアクティビティを追跡します';
+
+  @override
+  String get changelogWhatsNew => '新機能';
+
+  @override
+  String changelogReleasedOn(String date) {
+    return '$dateにリリース';
+  }
+
+  @override
+  String get changelogNoContent => 'このバージョンの変更履歴はありません。';
+
+  @override
+  String get changelogUnableToLoad => '変更履歴を読み込めません';
+
+  @override
+  String get changelogErrorDescription =>
+      'このバージョンの変更履歴を取得できませんでした。インターネット接続を確認するか、GitHubのリリースページをご覧ください。';
 }

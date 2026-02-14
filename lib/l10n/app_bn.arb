@@ -1872,6 +1872,46 @@
 "trackingModeChangeError": "ট্র্যাকিং মোড পরিবর্তন করতে ব্যর্থ। অনুগ্রহ করে আবার চেষ্টা করুন।",
 "errorTitle": "ত্রুটি",
 "monitorKeyboardTitle": "কীবোর্ড পর্যবেক্ষণ",
-"monitorKeyboardDescription": "ব্যবহারকারীর উপস্থিতি শনাক্ত করতে কীবোর্ডের কার্যকলাপ ট্র্যাক করুন"
+"monitorKeyboardDescription": "ব্যবহারকারীর উপস্থিতি শনাক্ত করতে কীবোর্ডের কার্যকলাপ ট্র্যাক করুন",
+"changelogWhatsNew": "নতুন কী আছে",
+  "@changelogWhatsNew": {
+    "description": "Title for the changelog dialog"
+  },
+
+  "changelogReleasedOn": "{date} তারিখে প্রকাশিত",
+  "@changelogReleasedOn": {
+    "description": "Release date label in changelog",
+    "placeholders": {
+      "date": {
+        "type": "String",
+        "example": "15/6/2025"
+      }
+    }
+  },
+
+  "changelogNoContent": "এই সংস্করণের জন্য কোনো চেঞ্জলগ উপলব্ধ নেই।",
+  "@changelogNoContent": {
+    "description": "Shown when the changelog body is empty"
+  },
+
+  "changelogUnableToLoad": "চেঞ্জলগ লোড করা যায়নি",
+  "@changelogUnableToLoad": {
+    "description": "Error dialog title when changelog fetch fails"
+  },
+
+  "changelogErrorDescription": "এই সংস্করণের চেঞ্জলগ পুনরুদ্ধার করা যায়নি। অনুগ্রহ করে আপনার ইন্টারনেট সংযোগ পরীক্ষা করুন অথবা GitHub রিলিজ পেজ দেখুন।",
+  "@changelogErrorDescription": {
+    "description": "Error dialog body when changelog fetch fails"
+  },
+
+  "ok": "ঠিক আছে",
+  "@ok": {
+    "description": "Generic OK button label"
+  },
+
+  "continueButton": "চালিয়ে যান",
+  "@continueButton": {
+    "description": "Continue button label"
+  }
 
 }
