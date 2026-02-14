@@ -3,9 +3,7 @@ import 'package:flutter/foundation.dart';
 import 'package:intl/intl.dart';
 import 'focus_mode_data_controller.dart';
 
-// Import your AppDataStore class
-// import 'app_data_store.dart';
-// Analytics data models
+// Analytics data models (unchanged)
 class AnalyticsSummary {
   final Duration totalScreenTime;
   final double screenTimeComparisonPercent;
@@ -18,7 +16,7 @@ class AnalyticsSummary {
   final List<DailyScreenTime> dailyScreenTimeData;
   final Map<String, double> categoryBreakdown;
   final List<AppUsageSummary> appUsageDetails;
-  
+
   AnalyticsSummary({
     required this.totalScreenTime,
     required this.screenTimeComparisonPercent,
@@ -37,7 +35,7 @@ class AnalyticsSummary {
 class DailyScreenTime {
   final DateTime date;
   final Duration screenTime;
-  
+
   DailyScreenTime({
     required this.date,
     required this.screenTime,
@@ -50,91 +48,86 @@ class AppUsageSummary {
   final Duration totalTime;
   final bool isProductive;
   final bool isVisible;
-  
-  AppUsageSummary({
-    required this.appName,
-    required this.category,
-    required this.totalTime,
-    required this.isProductive,
-    required this.isVisible
-  });
+
+  AppUsageSummary(
+      {required this.appName,
+      required this.category,
+      required this.totalTime,
+      required this.isProductive,
+      required this.isVisible});
 }
+
 class UsageAnalyticsController extends ChangeNotifier {
   final AppDataStore _dataStore = AppDataStore();
-  
+
   bool _isLoading = false;
   String? _error;
-  
+
   bool get isLoading => _isLoading;
   String? get error => _error;
-  
-  
-  
-  // Initialize the controller
+
   Future<bool> initialize() async {
     _setLoading(true);
     final bool success = await _dataStore.init();
     _setLoading(false);
-    
+
     if (!success) {
       _error = _dataStore.lastError;
     }
-    
+
     return success;
   }
-  
-  // Format duration to "Xh Ym" format
+
   String formatDuration(Duration duration) {
     final hours = duration.inHours;
     final minutes = duration.inMinutes.remainder(60);
-    
+
     if (hours > 0) {
       return "${hours}h ${minutes}m";
     } else {
       return "${minutes}m";
     }
   }
-  
-  // Calculate percentage change between two values
+
   double calculatePercentageChange(num current, num previous) {
     if (previous == 0) return 0;
     return ((current - previous) / previous) * 100;
   }
-  // Get data for specific date range
-  Future<AnalyticsSummary> getSpecificDateRangeAnalytics(DateTime startDate, DateTime endDate, {bool compareWithPrevious = true}) async {
+
+  Future<AnalyticsSummary> getSpecificDateRangeAnalytics(
+      DateTime startDate, DateTime endDate,
+      {bool compareWithPrevious = true}) async {
     _setLoading(true);
-    
+
     try {
-      // Normalize the dates to remove time component
-      final normalizedStartDate = DateTime(startDate.year, startDate.month, startDate.day);
-      final normalizedEndDate = DateTime(endDate.year, endDate.month, endDate.day);
-      
-      // Validate date range
+      final normalizedStartDate =
+          DateTime(startDate.year, startDate.month, startDate.day);
+      final normalizedEndDate =
+          DateTime(endDate.year, endDate.month, endDate.day);
+
       if (normalizedEndDate.isBefore(normalizedStartDate)) {
         throw ArgumentError('End date must be after start date');
       }
-      
+
       Map<String, DateTime>? comparisonPeriod;
-      
+
       if (compareWithPrevious) {
-        // Calculate the comparison period
-        final int daysDifference = normalizedEndDate.difference(normalizedStartDate).inDays + 1;
-        
-        final DateTime previousEndDate = normalizedStartDate.subtract(const Duration(days: 1));
-        final DateTime previousStartDate = previousEndDate.subtract(Duration(days: daysDifference - 1));
-        
-        comparisonPeriod = {
-          "start": previousStartDate,
-          "end": previousEndDate
-        };
+        final int daysDifference =
+            normalizedEndDate.difference(normalizedStartDate).inDays + 1;
+        final DateTime previousEndDate =
+            normalizedStartDate.subtract(const Duration(days: 1));
+        final DateTime previousStartDate =
+            previousEndDate.subtract(Duration(days: daysDifference - 1));
+
+        comparisonPeriod = {"start": previousStartDate, "end": previousEndDate};
       }
-      
+
       final result = await _getAnalyticsForDateRange(
         normalizedStartDate,
         normalizedEndDate,
         comparisonPeriod,
       );
-      
+
       _setLoading(false);
       return result;
     } catch (e) {
@@ -143,40 +136,33 @@ class UsageAnalyticsController extends ChangeNotifier {
       return _getEmptyAnalyticsSummary();
     }
   }
-  // Get data for specific date
-  Future<AnalyticsSummary> getSpecificDayAnalytics(DateTime date, {bool compareWithToday = true}) async {
+
+  Future<AnalyticsSummary> getSpecificDayAnalytics(DateTime date,
+      {bool compareWithToday = true}) async {
     _setLoading(true);
-    
+
     try {
-      // Normalize the date to remove time component
       final normalizedDate = DateTime(date.year, date.month, date.day);
-      
-      // For a single day, start and end date are the same
       final DateTime startDate = normalizedDate;
       final DateTime endDate = normalizedDate;
-      
+
       Map<String, DateTime>? comparisonPeriod;
-      
+
       if (compareWithToday) {
-        // Compare with today
         final DateTime now = DateTime.now();
         final DateTime today = DateTime(now.year, now.month, now.day);
-        
-        // Skip comparison if the selected date is today
+
         if (normalizedDate != today) {
-          comparisonPeriod = {
-            "start": today,
-            "end": today
-          };
+          comparisonPeriod = {"start": today, "end": today};
         }
       }
-      
+
       final result = await _getAnalyticsForDateRange(
         startDate,
         endDate,
         comparisonPeriod,
       );
-      
+
       _setLoading(false);
       return result;
     } catch (e) {
@@ -185,20 +171,16 @@ class UsageAnalyticsController extends ChangeNotifier {
       return _getEmptyAnalyticsSummary();
     }
   }
-  
-  // Get data for lifetime
+
   Future<AnalyticsSummary> getLifetimeAnalytics() async {
     _setLoading(true);
-    
+
     try {
-      // Get the earliest recorded date
       final DateTime now = DateTime.now();
       final DateTime today = DateTime(now.year, now.month, now.day);
-      
-      // Default to 1 year if no data is found
+
       DateTime earliestDate = today.subtract(const Duration(days: 365));
-      
-      // Try to find the earliest date with data
+
       for (final appName in _dataStore.allAppNames) {
         for (int i = 365; i >= 0; i--) {
           final DateTime checkDate = today.subtract(Duration(days: i));
@@ -211,13 +193,13 @@ class UsageAnalyticsController extends ChangeNotifier {
           }
         }
       }
-      
+
       final result = await _getAnalyticsForDateRange(
         earliestDate,
         today,
-        null, // No comparison for lifetime
+        null,
       );
-      
+
       _setLoading(false);
       return result;
     } catch (e) {
@@ -226,36 +208,34 @@ class UsageAnalyticsController extends ChangeNotifier {
       return _getEmptyAnalyticsSummary();
     }
   }
-  
-  // Get data for last 3 months
+
   Future<AnalyticsSummary> getLastThreeMonthsAnalytics() async {
     _setLoading(true);
-    
+
     try {
       final DateTime now = DateTime.now();
       final DateTime today = DateTime(now.year, now.month, now.day);
-      
-      // Current period
+
       final DateTime startDate = DateTime(
         today.year,
         today.month - 3,
         today.day,
       );
-      
-      // Previous period (for comparison)
+
       final DateTime previousStartDate = DateTime(
         startDate.year,
         startDate.month - 3,
         startDate.day,
       );
-      final DateTime previousEndDate = startDate.subtract(const Duration(days: 1));
-      
+      final DateTime previousEndDate =
+          startDate.subtract(const Duration(days: 1));
+
       final result = await _getAnalyticsForDateRange(
         startDate,
         today,
         {"start": previousStartDate, "end": previousEndDate},
       );
-      
+
       _setLoading(false);
       return result;
     } catch (e) {
@@ -264,36 +244,34 @@ class UsageAnalyticsController extends ChangeNotifier {
       return _getEmptyAnalyticsSummary();
     }
   }
-  
-  // Get data for last month
+
   Future<AnalyticsSummary> getLastMonthAnalytics() async {
     _setLoading(true);
-    
+
     try {
       final DateTime now = DateTime.now();
       final DateTime today = DateTime(now.year, now.month, now.day);
-      
-      // Current period
+
       final DateTime startDate = DateTime(
         today.year,
         today.month - 1,
         today.day,
       );
-      
-      // Previous period (for comparison)
+
       final DateTime previousStartDate = DateTime(
         startDate.year,
         startDate.month - 1,
         startDate.day,
       );
-      final DateTime previousEndDate = startDate.subtract(const Duration(days: 1));
-      
+      final DateTime previousEndDate =
+          startDate.subtract(const Duration(days: 1));
+
       final result = await _getAnalyticsForDateRange(
         startDate,
         today,
         {"start": previousStartDate, "end": previousEndDate},
       );
-      
+
       _setLoading(false);
       return result;
     } catch (e) {
@@ -302,28 +280,27 @@ class UsageAnalyticsController extends ChangeNotifier {
       return _getEmptyAnalyticsSummary();
     }
   }
-  
-  // Get data for last 7 days
+
   Future<AnalyticsSummary> getLastSevenDaysAnalytics() async {
     _setLoading(true);
-    
+
     try {
       final DateTime now = DateTime.now();
       final DateTime today = DateTime(now.year, now.month, now.day);
-      
-      // Current period
+
       final DateTime startDate = today.subtract(const Duration(days: 6));
-      
-      // Previous period (for comparison)
-      final DateTime previousStartDate = startDate.subtract(const Duration(days: 7));
-      final DateTime previousEndDate = startDate.subtract(const Duration(days: 1));
-      
+
+      final DateTime previousStartDate =
+          startDate.subtract(const Duration(days: 7));
+      final DateTime previousEndDate =
+          startDate.subtract(const Duration(days: 1));
+
       final result = await _getAnalyticsForDateRange(
         startDate,
         today,
         {"start": previousStartDate, "end": previousEndDate},
       );
-      
+
       _setLoading(false);
       return result;
     } catch (e) {
@@ -332,8 +309,11 @@ class UsageAnalyticsController extends ChangeNotifier {
       return _getEmptyAnalyticsSummary();
     }
   }
-  
-  // Core analytics calculation for a given date range
+
+  // ============================================================
+  // CORE ANALYTICS - OPTIMIZED WITH BATCH OPERATIONS
+  // ============================================================
+
   Future<AnalyticsSummary> _getAnalyticsForDateRange(
     DateTime startDate,
     DateTime endDate,
@@ -341,8 +321,9 @@ class UsageAnalyticsController extends ChangeNotifier {
   ) async {
     try {
       // 1. Calculate total screen time
-      final Duration totalScreenTime = await _calculateTotalScreenTime(startDate, endDate);
-      
+      final Duration totalScreenTime =
+          await _calculateTotalScreenTime(startDate, endDate);
+
       // 2. Calculate screen time comparison
       double screenTimeComparisonPercent = 0;
       if (comparisonPeriod != null) {
@@ -355,10 +336,11 @@ class UsageAnalyticsController extends ChangeNotifier {
           previousScreenTime.inMinutes,
         );
       }
-      
+
       // 3. Calculate productive time
-      final Duration productiveTime = await _calculateProductiveTime(startDate, endDate);
-      
+      final Duration productiveTime =
+          await _calculateProductiveTime(startDate, endDate);
+
       // 4. Calculate productive time comparison
       double productiveTimeComparisonPercent = 0;
       if (comparisonPeriod != null) {
@@ -371,15 +353,16 @@ class UsageAnalyticsController extends ChangeNotifier {
           previousProductiveTime.inMinutes,
         );
       }
-      
-      // 5. Find most used app and its usage time
+
+      // 5. Find most used app - OPTIMIZED (uses batch query)
       final mostUsedAppData = await _findMostUsedApp(startDate, endDate);
       final String mostUsedApp = mostUsedAppData["appName"] as String;
       final Duration mostUsedAppTime = mostUsedAppData["duration"] as Duration;
-      
+
       // 6. Count focus sessions
-      final int focusSessionsCount = await _countFocusSessions(startDate, endDate);
-      
+      final int focusSessionsCount =
+          await _countFocusSessions(startDate, endDate);
+
       // 7. Calculate focus sessions comparison
       double focusSessionsComparisonPercent = 0;
       if (comparisonPeriod != null) {
@@ -392,25 +375,26 @@ class UsageAnalyticsController extends ChangeNotifier {
           previousFocusSessionsCount,
         );
       }
-      
+
       // 8. Get daily screen time data
-      final List<DailyScreenTime> dailyScreenTimeData = await _getDailyScreenTimeData(
+      final List<DailyScreenTime> dailyScreenTimeData =
+          await _getDailyScreenTimeData(
         startDate,
         endDate,
       );
-      
+
       // 9. Get category breakdown
       final Map<String, double> categoryBreakdown = await _getCategoryBreakdown(
         startDate,
         endDate,
       );
-      
-      // 10. Get detailed app usage
+
+      // 10. Get detailed app usage - OPTIMIZED (uses batch query)
       final List<AppUsageSummary> appUsageDetails = await _getAppUsageDetails(
         startDate,
         endDate,
       );
-      
+
       return AnalyticsSummary(
         totalScreenTime: totalScreenTime,
         screenTimeComparisonPercent: screenTimeComparisonPercent,
@@ -429,78 +413,59 @@ class UsageAnalyticsController extends ChangeNotifier {
       return _getEmptyAnalyticsSummary();
     }
   }
-  
-  // Helper method to calculate total screen time
-  Future<Duration> _calculateTotalScreenTime(DateTime startDate, DateTime endDate) async {
+
+  // ============================================================
+  // OPTIMIZED HELPER METHODS
+  // ============================================================
+
+  Future<Duration> _calculateTotalScreenTime(
+      DateTime startDate, DateTime endDate) async {
     try {
-      Duration total = Duration.zero;
-      DateTime currentDate = DateTime(startDate.year, startDate.month, startDate.day);
-      
-      while (!currentDate.isAfter(endDate)) {
-        total += _dataStore.getTotalScreenTime(currentDate);
-        currentDate = currentDate.add(const Duration(days: 1));
-      }
-      
-      return total;
+      // Use the optimized range method if available
+      return _dataStore.getTotalScreenTimeRange(startDate, endDate);
     } catch (e) {
       _setError("Error calculating total screen time: $e");
       return Duration.zero;
     }
   }
-  
-  // Helper method to calculate productive time
-  Future<Duration> _calculateProductiveTime(DateTime startDate, DateTime endDate) async {
+
+  Future<Duration> _calculateProductiveTime(
+      DateTime startDate, DateTime endDate) async {
     try {
       Duration total = Duration.zero;
-      DateTime currentDate = DateTime(startDate.year, startDate.month, startDate.day);
-      
+      DateTime currentDate =
+          DateTime(startDate.year, startDate.month, startDate.day);
+
       while (!currentDate.isAfter(endDate)) {
         total += _dataStore.getProductiveTime(currentDate);
         currentDate = currentDate.add(const Duration(days: 1));
       }
-      
+
       return total;
     } catch (e) {
       _setError("Error calculating productive time: $e");
       return Duration.zero;
     }
   }
-  
-  // Helper method to find most used app
-  Future<Map<String, dynamic>> _findMostUsedApp(DateTime startDate, DateTime endDate) async {
+
+  /// OPTIMIZED - Uses batch query instead of loop
+  Future<Map<String, dynamic>> _findMostUsedApp(
+      DateTime startDate, DateTime endDate) async {
     try {
-      final Map<String, Duration> appUsageTotals = {};
-      
-      // Iterate through all apps
-      for (final appName in _dataStore.allAppNames) {
-        Duration total = Duration.zero;
-        DateTime currentDate = DateTime(startDate.year, startDate.month, startDate.day);
-        
-        // Calculate total usage for this app in the date range
-        while (!currentDate.isAfter(endDate)) {
-          final usage = _dataStore.getAppUsage(appName, currentDate);
-          if (usage != null) {
-            total += usage.timeSpent;
-          }
-          currentDate = currentDate.add(const Duration(days: 1));
-        }
-        
-        if (total.inSeconds > 0) {
-          appUsageTotals[appName] = total;
-        }
-      }
-      
+      // 🚀 ONE batch query instead of N×M individual queries
+      final appUsageTotals = _dataStore.getAppUsageTotals(startDate, endDate);
+
       // Find the app with maximum usage
       String mostUsedApp = "None";
       Duration maxDuration = Duration.zero;
-      
+
       appUsageTotals.forEach((app, duration) {
         if (duration > maxDuration) {
           mostUsedApp = app;
           maxDuration = duration;
         }
       });
-      
+
       return {
         "appName": mostUsedApp,
         "duration": maxDuration,
@@ -513,31 +478,32 @@ class UsageAnalyticsController extends ChangeNotifier {
       };
     }
   }
-  
-  // Helper method to count focus sessions
+
   Future<int> _countFocusSessions(DateTime startDate, DateTime endDate) async {
     try {
       int count = 0;
-      DateTime currentDate = DateTime(startDate.year, startDate.month, startDate.day);
-      
+      DateTime currentDate =
+          DateTime(startDate.year, startDate.month, startDate.day);
+
       while (!currentDate.isAfter(endDate)) {
         count += _dataStore.getFocusSessionsCount(currentDate);
         currentDate = currentDate.add(const Duration(days: 1));
       }
-      
+
       return count;
     } catch (e) {
       _setError("Error counting focus sessions: $e");
       return 0;
     }
   }
-  
-  // Helper method to get daily screen time data
-  Future<List<DailyScreenTime>> _getDailyScreenTimeData(DateTime startDate, DateTime endDate) async {
+
+  Future<List<DailyScreenTime>> _getDailyScreenTimeData(
+      DateTime startDate, DateTime endDate) async {
     try {
       final List<DailyScreenTime> result = [];
-      DateTime currentDate = DateTime(startDate.year, startDate.month, startDate.day);
-      
+      DateTime currentDate =
+          DateTime(startDate.year, startDate.month, startDate.day);
+
       while (!currentDate.isAfter(endDate)) {
         final screenTime = _dataStore.getTotalScreenTime(currentDate);
         result.add(DailyScreenTime(
@@ -546,96 +512,74 @@ class UsageAnalyticsController extends ChangeNotifier {
         ));
         currentDate = currentDate.add(const Duration(days: 1));
       }
-      
+
       return result;
     } catch (e) {
       _setError("Error getting daily screen time data: $e");
       return [];
     }
   }
-  
-  // Helper method to get category breakdown
-  Future<Map<String, double>> _getCategoryBreakdown(DateTime startDate, DateTime endDate) async {
+
+  Future<Map<String, double>> _getCategoryBreakdown(
+      DateTime startDate, DateTime endDate) async {
     try {
-      final Map<String, Duration> categoryDurations = {};
+      // Use optimized range method
+      final categoryDurations =
+          _dataStore.getCategoryBreakdownRange(startDate, endDate);
+
+      // Calculate total duration
       Duration totalDuration = Duration.zero;
-      DateTime currentDate = DateTime(startDate.year, startDate.month, startDate.day);
-      
-      // Calculate total duration per category
-      while (!currentDate.isAfter(endDate)) {
-        final Map<String, Duration> dailyBreakdown = _dataStore.getCategoryBreakdown(currentDate);
-        
-        dailyBreakdown.forEach((category, duration) {
-          categoryDurations[category] = (categoryDurations[category] ?? Duration.zero) + duration;
-          totalDuration += duration;
-        });
-        
-        currentDate = currentDate.add(const Duration(days: 1));
-      }
-      
+      categoryDurations.forEach((category, duration) {
+        totalDuration += duration;
+      });
+
       // Convert durations to percentages
       final Map<String, double> percentages = {};
       if (totalDuration.inSeconds > 0) {
         categoryDurations.forEach((category, duration) {
-          percentages[category] = (duration.inSeconds / totalDuration.inSeconds) * 100;
+          percentages[category] =
+              (duration.inSeconds / totalDuration.inSeconds) * 100;
         });
       }
-      
+
       return percentages;
     } catch (e) {
       _setError("Error getting category breakdown: $e");
       return {};
     }
   }
-  
-  // Helper method to get detailed app usage
-  Future<List<AppUsageSummary>> _getAppUsageDetails(DateTime startDate, DateTime endDate) async {
+
+  /// OPTIMIZED - Uses batch query instead of loop
+  Future<List<AppUsageSummary>> _getAppUsageDetails(
+      DateTime startDate, DateTime endDate) async {
     try {
-      final Map<String, Duration> appUsageTotals = {};
+      // 🚀 ONE batch query instead of N×M individual queries
+      final appUsageTotals = _dataStore.getAppUsageTotals(startDate, endDate);
       final List<AppUsageSummary> result = [];
-      
-      // Calculate total usage for each app
-      for (final appName in _dataStore.allAppNames) {
-        Duration total = Duration.zero;
-        DateTime currentDate = DateTime(startDate.year, startDate.month, startDate.day);
-        
-        while (!currentDate.isAfter(endDate)) {
-          final usage = _dataStore.getAppUsage(appName, currentDate);
-          if (usage != null) {
-            total += usage.timeSpent;
-          }
-          currentDate = currentDate.add(const Duration(days: 1));
-        }
-        
-        if (total.inSeconds > 0) {
-          appUsageTotals[appName] = total;
-        }
-      }
-      
+
       // Create detailed summary objects
-      for (final appName in appUsageTotals.keys) {
-        final AppMetadata? metadata = _dataStore.getAppMetadata(appName);
-        
+      for (final entry in appUsageTotals.entries) {
+        final AppMetadata? metadata = _dataStore.getAppMetadata(entry.key);
+
         result.add(AppUsageSummary(
-          appName: appName,
+          appName: entry.key,
           category: metadata?.category ?? 'Uncategorized',
-          totalTime: appUsageTotals[appName]!,
+          totalTime: entry.value,
           isProductive: metadata?.isProductive ?? false,
-          isVisible:metadata?.isVisible ?? false
+          isVisible: metadata?.isVisible ?? false,
         ));
       }
-      
+
       // Sort by usage time (descending)
       result.sort((a, b) => b.totalTime.compareTo(a.totalTime));
-      
+
       return result;
     } catch (e) {
       _setError("Error getting app usage details: $e");
       return [];
     }
   }
-  
-  // Helper to create an empty analytics summary (for error cases)
+
   AnalyticsSummary _getEmptyAnalyticsSummary() {
     return AnalyticsSummary(
       totalScreenTime: Duration.zero,
@@ -651,13 +595,12 @@ class UsageAnalyticsController extends ChangeNotifier {
       appUsageDetails: [],
     );
   }
-  
-  // Helper methods for state management
+
   void _setLoading(bool loading) {
     _isLoading = loading;
     notifyListeners();
   }
-  
+
   void _setError(String? errorMessage) {
     _error = errorMessage;
     debugPrint("UsageAnalyticsController Error: $_error");
@@ -665,113 +608,93 @@ class UsageAnalyticsController extends ChangeNotifier {
   }
 }
 
+// Focus mode analytics unchanged
 class FocusModeAnalytics {
-  // Get data for the last 7 days
   final FocusAnalyticsService _analyticsService = FocusAnalyticsService();
+
   Map<String, dynamic> getLastSevenDaysData({DateTime? endDate}) {
     final DateTime now = endDate ?? DateTime.now();
     final DateTime startDate = now.subtract(const Duration(days: 6));
-    
+
     return _getPeriodData(startDate: startDate, endDate: now);
   }
-  
-  // Get data for the last month (30 days)
+
   Map<String, dynamic> getLastMonthData({DateTime? endDate}) {
     final DateTime now = endDate ?? DateTime.now();
     final DateTime startDate = now.subtract(const Duration(days: 29));
-    
+
     return _getPeriodData(startDate: startDate, endDate: now);
   }
-  
-  // Get data for the last 3 months (90 days)
+
   Map<String, dynamic> getLastThreeMonthsData({DateTime? endDate}) {
     final DateTime now = endDate ?? DateTime.now();
     final DateTime startDate = now.subtract(const Duration(days: 89));
-    
+
     return _getPeriodData(startDate: startDate, endDate: now);
   }
-  
-  // Get lifetime data
+
   Map<String, dynamic> getLifetimeData() {
-    // You need to define how to get the start date for lifetime data
-    // This could be the first recorded session, app installation date, etc.
     final DateTime now = DateTime.now();
     final DateTime startDate = _getFirstRecordedSessionDate();
-    
+
     return _getPeriodData(startDate: startDate, endDate: now);
   }
-  
-  // Helper method to get the date of the first recorded session
+
   DateTime _getFirstRecordedSessionDate() {
-    // Implementation depends on how your data is stored
-    // This is a placeholder - replace with actual implementation
-    // For example, query your database for the oldest session
-    
-    // Default fallback to 1 year if no data is found
     return DateTime.now().subtract(const Duration(days: 365));
   }
-  
-  // Core method to get data for any time period
-  Map<String, dynamic> _getPeriodData({required DateTime startDate, required DateTime endDate}) {
-    // Get session count by day
-    final Map<String, int> sessionsByDay = _analyticsService.getSessionCountByDay(
+
+  Map<String, dynamic> _getPeriodData(
+      {required DateTime startDate, required DateTime endDate}) {
+    final Map<String, int> sessionsByDay =
+        _analyticsService.getSessionCountByDay(
       startDate: startDate,
       endDate: endDate,
     );
-    
-    // Get time distribution
-    final Map<String, dynamic> timeDistribution = _analyticsService.getTimeDistribution(
+
+    final Map<String, dynamic> timeDistribution =
+        _analyticsService.getTimeDistribution(
       startDate: startDate,
       endDate: endDate,
     );
-    
-    // Get detailed sessions
-    final List<Map<String, dynamic>> sessions = _analyticsService.getSessionHistory(
+
+    final List<Map<String, dynamic>> sessions =
+        _analyticsService.getSessionHistory(
       startDate: startDate,
       endDate: endDate,
     );
-    
-    // Calculate total sessions for the period
-    final int totalSessions = sessionsByDay.values.fold(0, (sum, count) => sum + count);
-    
-    // Calculate days in period
+
+    final int totalSessions =
+        sessionsByDay.values.fold(0, (sum, count) => sum + count);
     final int daysInPeriod = endDate.difference(startDate).inDays + 1;
-    
-    // Calculate average daily sessions
     final double avgDailySessions = totalSessions / daysInPeriod;
-    
-    // Find the day with most sessions
+
     String mostProductiveDay = "None";
     int maxSessions = 0;
-    
+
     sessionsByDay.forEach((day, count) {
       if (count > maxSessions) {
         maxSessions = count;
         mostProductiveDay = day;
       }
     });
-    
-    // Format the most productive day to be more readable
+
     if (mostProductiveDay != "None") {
       try {
         final DateTime date = DateFormat('yyyy-MM-dd').parse(mostProductiveDay);
-        mostProductiveDay = DateFormat('EEEE').format(date); // Day name (e.g., "Monday")
+        mostProductiveDay = DateFormat('EEEE').format(date);
       } catch (e) {
         debugPrint("Error formatting most productive day: $e");
       }
     }
-    
-    // Calculate total focus time
+
     final Duration totalFocusTime = _calculateTotalFocusTime(sessions);
-    
-    // Calculate average focus session length
-    final Duration avgSessionLength = totalSessions > 0 
+    final Duration avgSessionLength = totalSessions > 0
         ? Duration(minutes: totalFocusTime.inMinutes ~/ totalSessions)
         : const Duration();
-    
-    // Calculate streak (consecutive days with focus sessions)
+
     final int currentStreak = _calculateCurrentStreak(sessionsByDay, endDate);
-    
+
     return {
       'periodStart': startDate,
       'periodEnd': endDate,
@@ -787,42 +710,37 @@ class FocusModeAnalytics {
       'daysInPeriod': daysInPeriod,
     };
   }
-  
-  // Helper method to calculate total focus time from sessions
+
   Duration _calculateTotalFocusTime(List<Map<String, dynamic>> sessions) {
     int totalMinutes = 0;
-    
+
     for (final session in sessions) {
-      // Assuming each session has a 'duration' field in minutes
       if (session.containsKey('duration') && session['duration'] is int) {
         totalMinutes += session['duration'] as int;
       }
     }
-    
+
     return Duration(minutes: totalMinutes);
   }
-  
-  // Helper method to calculate current streak
-  int _calculateCurrentStreak(Map<String, int> sessionsByDay, DateTime endDate) {
-    // Sort days in descending order
+
+  int _calculateCurrentStreak(
+      Map<String, int> sessionsByDay, DateTime endDate) {
     final List<String> sortedDays = sessionsByDay.keys.toList()
       ..sort((a, b) => b.compareTo(a));
-    
+
     if (sortedDays.isEmpty) return 0;
-    
-    // Check if the most recent day with sessions is the end date
+
     final String endDateStr = DateFormat('yyyy-MM-dd').format(endDate);
     if (!sortedDays.contains(endDateStr) && sessionsByDay[endDateStr] == 0) {
-      return 0; // No sessions on the most recent day, streak is 0
+      return 0;
     }
-    
+
     int streak = 0;
     DateTime currentDate = endDate;
-    
-    // Count consecutive days with sessions
+
     while (true) {
       final String dateStr = DateFormat('yyyy-MM-dd').format(currentDate);
-      
+
       if (sessionsByDay.containsKey(dateStr) && sessionsByDay[dateStr]! > 0) {
         streak++;
         currentDate = currentDate.subtract(const Duration(days: 1));
@@ -830,7 +748,7 @@ class FocusModeAnalytics {
         break;
       }
     }
-    
+
     return streak;
   }
 }

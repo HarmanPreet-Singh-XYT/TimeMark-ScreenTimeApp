@@ -1,20 +1,16 @@
-import '../app_data_controller.dart'; // Import the AppDataStore class
+import '../app_data_controller.dart';
 
 class DailyOverviewData {
-  // Singleton instance
   static final DailyOverviewData _instance = DailyOverviewData._internal();
   factory DailyOverviewData() => _instance;
   DailyOverviewData._internal();
 
-  // AppDataStore instance
   final AppDataStore _dataStore = AppDataStore();
 
-  // Fetch today's overview data
+  /// Fetch today's overview data - OPTIMIZED
   Future<OverviewData> fetchTodayOverview() async {
-    // Ensure AppDataStore is initialized
     await _dataStore.init();
 
-    // Get today's date
     final DateTime today = DateTime.now();
     final DateTime weekAgo = today.subtract(const Duration(days: 7));
 
@@ -35,15 +31,11 @@ class DailyOverviewData {
     final int focusSessionsCount = _dataStore.getFocusSessionsCount(today);
     final Duration totalFocusTime = _dataStore.getTotalFocusTime(today);
 
-    // Top applications
+    // 🚀 OPTIMIZED: Use batch operations
     final List<ApplicationDetail> topApplications =
         _calculateTopApplications(today);
-
-    // Category breakdown
     final List<CategoryDetail> categoryBreakdown =
         _calculateCategoryBreakdown(today);
-
-    // Application limits
     final List<ApplicationLimitDetail> applicationLimits =
         _calculateApplicationLimits(today);
 
@@ -63,17 +55,21 @@ class DailyOverviewData {
     );
   }
 
+  /// OPTIMIZED: Single pass through apps
   List<ApplicationDetail> _calculateTopApplications(DateTime date) {
     final List<ApplicationDetail> applications = [];
     final Duration totalScreenTime = _dataStore.getTotalScreenTime(date);
 
+    // 🚀 Single loop - check cache/hive once per app
     for (final appName in _dataStore.allAppNames) {
       final AppUsageRecord? usageRecord = _dataStore.getAppUsage(appName, date);
       final AppMetadata? metadata = _dataStore.getAppMetadata(appName);
 
       if (usageRecord != null && metadata != null) {
-        final double percentageOfTotalTime =
-            (usageRecord.timeSpent.inSeconds / totalScreenTime.inSeconds) * 100;
+        final double percentageOfTotalTime = totalScreenTime.inSeconds > 0
+            ? (usageRecord.timeSpent.inSeconds / totalScreenTime.inSeconds) *
+                100
+            : 0.0;
 
         applications.add(ApplicationDetail(
           name: appName,
@@ -85,16 +81,17 @@ class DailyOverviewData {
       }
     }
 
-    // Sort applications by screen time in descending order
     applications.sort((a, b) => b.screenTime.compareTo(a.screenTime));
-
     return applications;
   }
 
+  /// Already optimized - uses getCategoryBreakdown which is cached
   List<CategoryDetail> _calculateCategoryBreakdown(DateTime date) {
     final Map<String, Duration> categoryBreakdown =
         _dataStore.getCategoryBreakdown(date);
     final Duration totalScreenTime = _dataStore.getTotalScreenTime(date);
+
+    if (totalScreenTime.inSeconds == 0) return [];
 
     return categoryBreakdown.entries.map((entry) {
       return CategoryDetail(
@@ -107,17 +104,18 @@ class DailyOverviewData {
       ..sort((a, b) => b.totalScreenTime.compareTo(a.totalScreenTime));
   }
 
+  /// OPTIMIZED: Single pass through apps
   List<ApplicationLimitDetail> _calculateApplicationLimits(DateTime date) {
     final List<ApplicationLimitDetail> limitDetails = [];
     final Duration totalScreenTime = _dataStore.getTotalScreenTime(date);
 
+    // 🚀 Single loop through all apps
     for (final appName in _dataStore.allAppNames) {
       final AppMetadata? metadata = _dataStore.getAppMetadata(appName);
-      final AppUsageRecord? usageRecord = _dataStore.getAppUsage(appName, date);
 
-      // Only proceed if we have metadata
-      if (metadata != null && (metadata.limitStatus)) {
-        // Handle null usageRecord by defaulting to Duration.zero
+      if (metadata != null && metadata.limitStatus) {
+        final AppUsageRecord? usageRecord =
+            _dataStore.getAppUsage(appName, date);
         final Duration timeSpent = usageRecord?.timeSpent ?? Duration.zero;
 
         double percentageOfLimit = 0.0;
@@ -149,13 +147,11 @@ class DailyOverviewData {
 
   double _calculatePercentage(Duration current, Duration average) {
     if (average.inSeconds < 300) {
-      return 100.0; // baseline not ready
+      return 100.0;
     }
-
     return ((current.inSeconds / average.inSeconds) * 100).clamp(0.0, 200.0);
   }
 
-  // Helper function to format Duration as "3h 15m"
   static String formatDuration(Duration duration) {
     final hours = duration.inHours;
     final minutes = duration.inMinutes.remainder(60);
@@ -171,7 +167,7 @@ class DailyOverviewData {
   }
 }
 
-// Data classes to hold overview information
+// Data classes (unchanged)
 class OverviewData {
   final Duration totalScreenTime;
   final Duration averageScreenTime;
@@ -185,7 +181,6 @@ class OverviewData {
   final List<CategoryDetail> categoryBreakdown;
   final List<ApplicationLimitDetail> applicationLimits;
 
-  // Formatted strings
   final String formattedTotalScreenTime;
   final String formattedAverageScreenTime;
   final String formattedProductiveTime;
@@ -221,13 +216,13 @@ class ApplicationDetail {
   final String formattedScreenTime;
   final bool isVisible;
 
-  ApplicationDetail(
-      {required this.name,
-      required this.category,
-      required this.screenTime,
-      required this.percentageOfTotalTime,
-      required this.isVisible})
-      : formattedScreenTime = DailyOverviewData.formatDuration(screenTime);
+  ApplicationDetail({
+    required this.name,
+    required this.category,
+    required this.screenTime,
+    required this.percentageOfTotalTime,
+    required this.isVisible,
+  }) : formattedScreenTime = DailyOverviewData.formatDuration(screenTime);
 }
 
 class CategoryDetail {

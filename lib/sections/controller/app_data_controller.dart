@@ -29,7 +29,6 @@ class AppUsageRecord {
     required this.usagePeriods,
   });
 
-  // Helper method to merge two records
   AppUsageRecord merge(AppUsageRecord other) {
     return AppUsageRecord(
       date: date,
@@ -39,7 +38,6 @@ class AppUsageRecord {
     );
   }
 
-  // Helper method to create a copy
   AppUsageRecord copyWith({
     DateTime? date,
     Duration? timeSpent,
@@ -151,7 +149,7 @@ class AppDataStore extends ChangeNotifier {
   String? _lastError;
   DateTime? _lastMaintenanceDate;
 
-  // Add locks for box operations
+  // Locks for thread safety
   final Lock _initLock = Lock();
   final Lock _usageBoxLock = Lock();
   final Lock _focusBoxLock = Lock();
@@ -159,63 +157,72 @@ class AppDataStore extends ChangeNotifier {
   final Lock _runtimeCacheLock = Lock();
 
   // ============================================================
-  // RUNTIME CACHE - The key addition for instant data access
+  // OPTIMIZED CACHE CONFIGURATION - BALANCED FOR < 2 MB
   // ============================================================
-  // This cache holds ALL data in memory and is updated immediately
-  // Hive is only used for persistence (loading on startup, saving periodically)
 
-  /// Runtime cache for app usage records: "appName:YYYY-MM-DD" -> AppUsageRecord
-  final Map<String, AppUsageRecord> _usageRuntimeCache = {};
+  /// Usage records: Keep last 60 days (balance between speed and memory)
+  static const int _usageCacheDays = 60;
 
-  /// Runtime cache for focus sessions: "YYYY-MM-DD:timestamp" -> FocusSessionRecord
-  final Map<String, FocusSessionRecord> _focusRuntimeCache = {};
+  /// Focus sessions: Keep last 1 year (very lightweight, ~365 KB)
+  static const int _focusCacheDays = 365;
 
-  /// Metadata cache (already existed, but now explicitly part of runtime cache)
+  /// Maximum usage records in cache (prevents unbounded growth)
+  static const int _maxUsageCacheSize = 6000;
+
+  // ============================================================
+  // OPTIMIZED RUNTIME CACHE - Restructured for faster queries
+  // ============================================================
+
+  /// NEW: Date-indexed usage cache for O(1) date lookups
+  /// Structure: "YYYY-MM-DD" -> {"appName" -> AppUsageRecord}
+  final Map<String, Map<String, AppUsageRecord>> _usageCacheByDate = {};
+
+  /// Focus cache: "YYYY-MM-DD" -> [FocusSessionRecord, ...]
+  final Map<String, List<FocusSessionRecord>> _focusCacheByDate = {};
+
+  /// Metadata cache: Always fully cached (tiny, ~10 KB)
   final Map<String, AppMetadata> _metadataCache = {};
 
-  /// Track which usage records have been modified since last Hive commit
-  final Set<String> _dirtyUsageKeys = {};
+  /// Cached list of app names (rebuilt only when metadata changes)
+  List<String>? _cachedAppNames;
 
-  /// Track which focus sessions have been modified since last Hive commit
+  /// Date string cache to avoid repeated formatting
+  final Map<DateTime, String> _dateStringCache = {};
+
+  /// Track dirty records for periodic commits
+  final Set<String> _dirtyUsageKeys = {};
   final Set<String> _dirtyFocusKeys = {};
 
-  /// Timer for periodic Hive commits
+  /// Periodic persistence
   Timer? _persistenceTimer;
-
-  /// How often to commit to Hive (default: 1 minute)
   final Duration _persistenceInterval = const Duration(minutes: 1);
+  bool _hasDirtyData = false;
 
-  // Factory constructor to return the singleton instance
-  factory AppDataStore() {
-    return _instance;
-  }
-  
-
-  // Private constructor
+  factory AppDataStore() => _instance;
   AppDataStore._internal();
 
   bool get isInitialized => _isInitialized;
   String? get lastError => _lastError;
 
-  // Initialize Hive with proper error handling
+  // ============================================================
+  // INITIALIZATION
+  // ============================================================
+
   Future<bool> init() async {
     return await _initLock.synchronized(() async {
       if (_isInitialized) return true;
 
       try {
-        // Only use custom path for macOS
+        // Platform-specific initialization
         if (Platform.isMacOS) {
           final directory = await getApplicationSupportDirectory();
           final hivePath = '${directory.path}/harman_screentime';
-
           final dir = Directory(hivePath);
           if (!await dir.exists()) {
             await dir.create(recursive: true);
           }
-
           Hive.init(hivePath);
         } else {
-          // Default behavior for all other platforms
           await Hive.initFlutter();
         }
 
@@ -231,37 +238,31 @@ class AppDataStore extends ChangeNotifier {
         if (!Hive.isAdapterRegistered(5))
           Hive.registerAdapter(DurationAdapter());
 
-        // Open boxes with retry logic
+        // Open boxes
         _usageBox = await _openBoxWithRetry<AppUsageRecord>(_usageBoxName);
         _focusBox = await _openBoxWithRetry<FocusSessionRecord>(_focusBoxName);
         _metadataBox = await _openBoxWithRetry<AppMetadata>(_metadataBoxName);
 
         if (_usageBox == null || _focusBox == null || _metadataBox == null) {
-          _lastError =
-              "Failed to open one or more Hive boxes after multiple attempts";
+          _lastError = "Failed to open one or more Hive boxes";
           return false;
         }
 
-        // ============================================================
-        // LOAD RUNTIME CACHE FROM HIVE
-        // ============================================================
-        await _loadRuntimeCacheFromHive();
+        // Load optimized cache
+        await _loadOptimizedRuntimeCache();
 
         _isInitialized = true;
-
-        // Start periodic persistence timer
         _startPeriodicPersistence();
-
         _schedulePeriodicMaintenance();
         notifyListeners();
 
         debugPrint('═══════════════════════════════════════════════════════');
-        debugPrint('✅ AppDataStore initialized with runtime cache');
-        debugPrint('   Usage records in cache: ${_usageRuntimeCache.length}');
-        debugPrint('   Focus sessions in cache: ${_focusRuntimeCache.length}');
-        debugPrint('   Metadata in cache: ${_metadataCache.length}');
+        debugPrint('✅ AppDataStore initialized with OPTIMIZED cache');
+        debugPrint('   Usage dates cached: ${_usageCacheByDate.length}');
+        debugPrint('   Focus dates cached: ${_focusCacheByDate.length}');
+        debugPrint('   Metadata cache: ${_metadataCache.length} apps');
         debugPrint(
-            '   Persistence interval: ${_persistenceInterval.inSeconds}s');
+            '   Est. memory: ${getEstimatedMemoryUsageMB().toStringAsFixed(2)} MB');
         debugPrint('═══════════════════════════════════════════════════════');
 
         return true;
@@ -274,69 +275,119 @@ class AppDataStore extends ChangeNotifier {
   }
 
   // ============================================================
-  // RUNTIME CACHE INITIALIZATION
+  // OPTIMIZED CACHE LOADING
   // ============================================================
-  Future<void> _loadRuntimeCacheFromHive() async {
-    debugPrint('📦 Loading runtime cache from Hive...');
+
+  Future<void> _loadOptimizedRuntimeCache() async {
+    debugPrint('📦 Loading optimized runtime cache...');
     final stopwatch = Stopwatch()..start();
 
     try {
-      // Load all usage records into runtime cache
+      final usageCutoff =
+          DateTime.now().subtract(Duration(days: _usageCacheDays));
+      final focusCutoff =
+          DateTime.now().subtract(Duration(days: _focusCacheDays));
+
+      int loadedUsage = 0;
+      int skippedUsage = 0;
+      int loadedFocus = 0;
+      int skippedFocus = 0;
+
+      // Load recent usage records - using values iterator for efficiency
       if (_usageBox != null) {
-        for (var key in _usageBox!.keys) {
-          final record = _usageBox!.get(key);
-          if (record != null) {
-            _usageRuntimeCache[key.toString()] = record;
+        for (var entry in _usageBox!.toMap().entries) {
+          final record = entry.value;
+          if (record.date.isAfter(usageCutoff)) {
+            final dateKey = _formatDateKey(record.date);
+            final appName = _extractAppNameFromKey(entry.key.toString());
+
+            _usageCacheByDate.putIfAbsent(dateKey, () => {});
+            _usageCacheByDate[dateKey]![appName] = record;
+            loadedUsage++;
+          } else {
+            skippedUsage++;
           }
         }
-        debugPrint('   ✓ Loaded ${_usageRuntimeCache.length} usage records');
       }
 
-      // Load all focus sessions into runtime cache
+      // Load focus sessions from last year - grouped by date
       if (_focusBox != null) {
-        for (var key in _focusBox!.keys) {
-          final record = _focusBox!.get(key);
-          if (record != null) {
-            _focusRuntimeCache[key.toString()] = record;
+        for (var entry in _focusBox!.toMap().entries) {
+          final record = entry.value;
+          if (record.date.isAfter(focusCutoff)) {
+            final dateKey = _formatDateKey(record.date);
+
+            _focusCacheByDate.putIfAbsent(dateKey, () => []);
+            _focusCacheByDate[dateKey]!.add(record);
+            loadedFocus++;
+          } else {
+            skippedFocus++;
           }
         }
-        debugPrint('   ✓ Loaded ${_focusRuntimeCache.length} focus sessions');
       }
 
-      // Load all metadata into runtime cache
+      // Load ALL metadata (always needed, tiny ~10 KB)
       if (_metadataBox != null) {
-        for (var key in _metadataBox!.keys) {
-          final metadata = _metadataBox!.get(key);
-          if (metadata != null) {
-            _metadataCache[key.toString()] = metadata;
-          }
+        for (var entry in _metadataBox!.toMap().entries) {
+          _metadataCache[entry.key.toString()] = entry.value;
         }
-        debugPrint('   ✓ Loaded ${_metadataCache.length} metadata entries');
       }
 
       stopwatch.stop();
+
+      final usageMemKB = loadedUsage * 500 ~/ 1024; // More realistic estimate
+      final focusMemKB = loadedFocus * 200 ~/ 1024;
+      final metaMemKB = _metadataCache.length * 100 ~/ 1024;
+
       debugPrint(
-          '✅ Runtime cache loaded in ${stopwatch.elapsedMilliseconds}ms');
+          '   ✓ Usage: $loadedUsage cached (~${usageMemKB}KB), $skippedUsage on disk');
+      debugPrint(
+          '   ✓ Focus: $loadedFocus cached (~${focusMemKB}KB), $skippedFocus on disk');
+      debugPrint(
+          '   ✓ Metadata: ${_metadataCache.length} apps (~${metaMemKB}KB)');
+      debugPrint('✅ Cache loaded in ${stopwatch.elapsedMilliseconds}ms');
+      debugPrint(
+          '   Total: ~${(usageMemKB + focusMemKB + metaMemKB) ~/ 1024}MB in memory');
     } catch (e) {
       debugPrint('❌ Error loading runtime cache: $e');
     }
   }
 
-  // ============================================================
-  // PERIODIC PERSISTENCE TO HIVE
-  // ============================================================
-  void _startPeriodicPersistence() {
-    _persistenceTimer?.cancel();
-    _persistenceTimer = Timer.periodic(_persistenceInterval, (_) {
-      _commitRuntimeCacheToHive();
-    });
-    debugPrint(
-        '⏰ Periodic Hive persistence started (every ${_persistenceInterval.inSeconds}s)');
+  String _extractAppNameFromKey(String key) {
+    final colonIndex = key.lastIndexOf(':');
+    if (colonIndex != -1) {
+      return key.substring(0, colonIndex);
+    }
+    return key;
   }
 
-  /// Commit only dirty (modified) records to Hive
+  // ============================================================
+  // PERIODIC PERSISTENCE - Only runs when needed
+  // ============================================================
+
+  void _startPeriodicPersistence() {
+    // Don't start timer immediately - schedule only when data is dirty
+    _scheduleNextPersistence();
+  }
+
+  void _scheduleNextPersistence() {
+    if (!_hasDirtyData) return;
+
+    _persistenceTimer?.cancel();
+    _persistenceTimer = Timer(_persistenceInterval, () {
+      _commitRuntimeCacheToHive();
+    });
+  }
+
+  void _markDirty() {
+    if (!_hasDirtyData) {
+      _hasDirtyData = true;
+      _scheduleNextPersistence();
+    }
+  }
+
   Future<void> _commitRuntimeCacheToHive() async {
-    if (!_isInitialized) return;
+    if (!_isInitialized || !_hasDirtyData) return;
 
     try {
       final stopwatch = Stopwatch()..start();
@@ -344,49 +395,76 @@ class AppDataStore extends ChangeNotifier {
       int focusCommitted = 0;
 
       await _runtimeCacheLock.synchronized(() async {
-        // Commit dirty usage records
         if (_dirtyUsageKeys.isNotEmpty && _usageBox != null) {
+          // Batch write for better performance
+          final batch = <String, AppUsageRecord>{};
+
           for (var key in _dirtyUsageKeys) {
-            final record = _usageRuntimeCache[key];
-            if (record != null) {
-              await _usageBox!.put(key, record);
-              usageCommitted++;
+            final parts = key.split('::');
+            if (parts.length == 2) {
+              final dateKey = parts[0];
+              final appName = parts[1];
+              final record = _usageCacheByDate[dateKey]?[appName];
+              if (record != null) {
+                final hiveKey = _makeUsageKey(appName, record.date);
+                batch[hiveKey] = record;
+              }
             }
           }
+
+          await _usageBox!.putAll(batch);
+          usageCommitted = batch.length;
           _dirtyUsageKeys.clear();
         }
 
-        // Commit dirty focus sessions
         if (_dirtyFocusKeys.isNotEmpty && _focusBox != null) {
+          final batch = <String, FocusSessionRecord>{};
+
           for (var key in _dirtyFocusKeys) {
-            final record = _focusRuntimeCache[key];
-            if (record != null) {
-              await _focusBox!.put(key, record);
-              focusCommitted++;
+            final parts = key.split('::');
+            if (parts.length == 2) {
+              final dateKey = parts[0];
+              final index = int.tryParse(parts[1]);
+              if (index != null) {
+                final sessions = _focusCacheByDate[dateKey];
+                if (sessions != null && index < sessions.length) {
+                  final session = sessions[index];
+                  final hiveKey = _makeFocusKey(
+                      session.date, session.startTime.millisecondsSinceEpoch);
+                  batch[hiveKey] = session;
+                }
+              }
             }
           }
+
+          await _focusBox!.putAll(batch);
+          focusCommitted = batch.length;
           _dirtyFocusKeys.clear();
         }
+
+        _hasDirtyData = false;
       });
 
       stopwatch.stop();
 
       if (usageCommitted > 0 || focusCommitted > 0) {
         debugPrint(
-            '💾 Hive commit: $usageCommitted usage, $focusCommitted focus (${stopwatch.elapsedMilliseconds}ms)');
+            '💾 Committed: $usageCommitted usage, $focusCommitted focus (${stopwatch.elapsedMilliseconds}ms)');
       }
     } catch (e) {
       debugPrint('❌ Error committing to Hive: $e');
     }
   }
 
-  /// Force immediate commit (useful before app closes)
   Future<void> forceCommitToHive() async {
     debugPrint('🔄 Force committing all data to Hive...');
     await _commitRuntimeCacheToHive();
   }
 
-  // Helper method to open a box with retry logic
+  // ============================================================
+  // BOX MANAGEMENT
+  // ============================================================
+
   Future<Box<T>?> _openBoxWithRetry<T>(String boxName,
       {int maxRetries = 3}) async {
     int attempts = 0;
@@ -434,7 +512,6 @@ class AppDataStore extends ChangeNotifier {
     return null;
   }
 
-  // New method to periodically check and repair boxes
   Future<void> checkAndRepairBoxes() async {
     debugPrint("Running database maintenance check...");
 
@@ -501,7 +578,6 @@ class AppDataStore extends ChangeNotifier {
     });
   }
 
-  // Schedule daily maintenance
   void _schedulePeriodicMaintenance() {
     final now = DateTime.now();
     if (_lastMaintenanceDate == null ||
@@ -510,7 +586,6 @@ class AppDataStore extends ChangeNotifier {
     }
   }
 
-  // Ensure boxes are initialized
   bool _ensureInitialized() {
     if (!_isInitialized ||
         _usageBox == null ||
@@ -524,13 +599,14 @@ class AppDataStore extends ChangeNotifier {
   }
 
   // ============================================================
-  // METADATA OPERATIONS (Using runtime cache)
+  // METADATA OPERATIONS
   // ============================================================
 
   List<String> get allAppNames {
     if (!_ensureInitialized()) return [];
     try {
-      return _metadataCache.keys.toList();
+      // Return cached list if available
+      return _cachedAppNames ??= _metadataCache.keys.toList();
     } catch (e) {
       _lastError = "Error getting app names: $e";
       debugPrint(_lastError);
@@ -551,7 +627,6 @@ class AppDataStore extends ChangeNotifier {
 
     try {
       AppMetadata? existing = _metadataCache[appName];
-
       String defaultCategory =
           appName.startsWith(':') ? 'Idle' : 'Uncategorized';
 
@@ -564,10 +639,11 @@ class AppDataStore extends ChangeNotifier {
         limitStatus: limitStatus ?? existing?.limitStatus ?? false,
       );
 
-      // Update runtime cache immediately
       _metadataCache[appName] = updated;
 
-      // Update Hive asynchronously (don't wait)
+      // Invalidate cached app names list
+      _cachedAppNames = null;
+
       _metadataBox!.put(appName, updated).catchError((e) {
         debugPrint('⚠️ Error saving metadata to Hive: $e');
       });
@@ -596,10 +672,11 @@ class AppDataStore extends ChangeNotifier {
     if (!_ensureInitialized()) return false;
 
     try {
-      // Remove from runtime cache immediately
       _metadataCache.remove(appName);
 
-      // Remove from Hive asynchronously
+      // Invalidate cached app names list
+      _cachedAppNames = null;
+
       if (_metadataBox!.containsKey(appName)) {
         _metadataBox!.delete(appName).catchError((e) {
           debugPrint('⚠️ Error deleting metadata from Hive: $e');
@@ -616,43 +693,49 @@ class AppDataStore extends ChangeNotifier {
   }
 
   // ============================================================
-  // APP USAGE OPERATIONS (Using runtime cache)
+  // APP USAGE OPERATIONS
   // ============================================================
 
   String _makeUsageKey(String appName, DateTime date) {
-    // Date part is always "YYYY-MM-DD" = 10 chars, plus ":" separator = 11 chars
-    // Leave room: 255 - 11 = 244 chars max for appName
     final safeName = appName.length > 244 ? appName.substring(0, 244) : appName;
     return '$safeName:${_formatDateKey(date)}';
   }
 
   String _makeFocusKey(DateTime date, int millisecondsSinceEpoch) {
-    // "YYYY-MM-DD:1234567890123" - always well under 255
     return '${_formatDateKey(date)}:$millisecondsSinceEpoch';
   }
-  Future<bool> recordAppUsage(String appName, DateTime date, Duration timeSpent,
-      int openCount, List<TimeRange> usagePeriods) async {
+
+  Future<bool> recordAppUsage(
+    String appName,
+    DateTime date,
+    Duration timeSpent,
+    int openCount,
+    List<TimeRange> usagePeriods,
+  ) async {
     if (!_ensureInitialized()) return false;
 
     try {
       return await _runtimeCacheLock.synchronized(() async {
-        final String key = _makeUsageKey(appName, date);
-        AppUsageRecord? existing = _usageRuntimeCache[key];
+        final dateKey = _formatDateKey(date);
+
+        // Initialize date map if needed
+        _usageCacheByDate.putIfAbsent(dateKey, () => {});
+
+        final existing = _usageCacheByDate[dateKey]![appName];
 
         if (existing != null) {
-          final List<TimeRange> optimizedUsagePeriods = _optimizeUsagePeriods(
-              [...existing.usagePeriods, ...usagePeriods]);
+          final List<TimeRange> optimizedPeriods = _optimizeUsagePeriods(
+            [...existing.usagePeriods, ...usagePeriods],
+          );
 
           final AppUsageRecord updated = AppUsageRecord(
             date: date,
             timeSpent: existing.timeSpent + timeSpent,
             openCount: existing.openCount + openCount,
-            usagePeriods: optimizedUsagePeriods,
+            usagePeriods: optimizedPeriods,
           );
 
-          // Update runtime cache immediately
-          _usageRuntimeCache[key] = updated;
-          _dirtyUsageKeys.add(key);
+          _usageCacheByDate[dateKey]![appName] = updated;
         } else {
           final AppUsageRecord record = AppUsageRecord(
             date: date,
@@ -661,12 +744,13 @@ class AppDataStore extends ChangeNotifier {
             usagePeriods: usagePeriods,
           );
 
-          // Add to runtime cache immediately
-          _usageRuntimeCache[key] = record;
-          _dirtyUsageKeys.add(key);
+          _usageCacheByDate[dateKey]![appName] = record;
         }
 
-        // Notify listeners immediately (UI updates instantly!)
+        // Mark as dirty for persistence
+        _dirtyUsageKeys.add('$dateKey::$appName');
+        _markDirty();
+
         notifyListeners();
         return true;
       });
@@ -680,7 +764,18 @@ class AppDataStore extends ChangeNotifier {
   List<TimeRange> _optimizeUsagePeriods(List<TimeRange> periods) {
     if (periods.length <= 10) return periods;
 
-    periods.sort((a, b) => a.startTime.compareTo(b.startTime));
+    // Check if already sorted
+    bool isSorted = true;
+    for (int i = 1; i < periods.length; i++) {
+      if (periods[i].startTime.isBefore(periods[i - 1].startTime)) {
+        isSorted = false;
+        break;
+      }
+    }
+
+    if (!isSorted) {
+      periods.sort((a, b) => a.startTime.compareTo(b.startTime));
+    }
 
     List<TimeRange> optimizedPeriods = [];
     TimeRange current = periods.first;
@@ -706,24 +801,53 @@ class AppDataStore extends ChangeNotifier {
     return optimizedPeriods;
   }
 
-  /// Get app usage from runtime cache (instant!)
+  /// Get single app usage - O(1) lookup with date-indexed cache
   AppUsageRecord? getAppUsage(String appName, DateTime date) {
     if (!_ensureInitialized()) return null;
 
     try {
-      final String key = _makeUsageKey(appName, date);
-      return _usageRuntimeCache[key];
+      final dateKey = _formatDateKey(date);
+
+      // O(1) lookup in cache
+      final record = _usageCacheByDate[dateKey]?[appName];
+      if (record != null) {
+        return record;
+      }
+
+      // Fallback to Hive (slower but works)
+      if (_usageBox != null) {
+        final hiveKey = _makeUsageKey(appName, date);
+        final record = _usageBox!.get(hiveKey);
+
+        // Cache if within extended window (90 days) and space available
+        if (record != null) {
+          final age = DateTime.now().difference(record.date).inDays;
+          final totalRecords =
+              _usageCacheByDate.values.fold(0, (sum, map) => sum + map.length);
+
+          if (age <= 90 && totalRecords < _maxUsageCacheSize) {
+            _usageCacheByDate.putIfAbsent(dateKey, () => {});
+            _usageCacheByDate[dateKey]![appName] = record;
+          }
+        }
+
+        return record;
+      }
+
+      return null;
     } catch (e) {
-      _lastError =
-          "Error getting app usage for $appName on ${_formatDateKey(date)}: $e";
+      _lastError = "Error getting app usage for $appName: $e";
       debugPrint(_lastError);
       return null;
     }
   }
 
-  /// Get app usage for a date range from runtime cache
+  /// Get app usage for date range - optimized for batch queries
   List<AppUsageRecord> getAppUsageRange(
-      String appName, DateTime startDate, DateTime endDate) {
+    String appName,
+    DateTime startDate,
+    DateTime endDate,
+  ) {
     if (!_ensureInitialized()) return [];
 
     try {
@@ -733,9 +857,8 @@ class AppDataStore extends ChangeNotifier {
       final DateTime endOfRange =
           DateTime(endDate.year, endDate.month, endDate.day);
 
-      while (currentDate.isBefore(endOfRange) ||
-          currentDate.day == endOfRange.day) {
-        final AppUsageRecord? record = getAppUsage(appName, currentDate);
+      while (!currentDate.isAfter(endOfRange)) {
+        final record = getAppUsage(appName, currentDate);
         if (record != null) {
           result.add(record);
         }
@@ -751,7 +874,138 @@ class AppDataStore extends ChangeNotifier {
   }
 
   // ============================================================
-  // FOCUS SESSION OPERATIONS (Using runtime cache)
+  // OPTIMIZED BATCH OPERATIONS FOR ANALYTICS
+  // ============================================================
+
+  /// Get total usage per app for date range (HIGHLY OPTIMIZED)
+  Map<String, Duration> getAppUsageTotals(
+      DateTime startDate, DateTime endDate) {
+    if (!_ensureInitialized()) return {};
+
+    try {
+      final Map<String, Duration> totals = {};
+      final DateTime start =
+          DateTime(startDate.year, startDate.month, startDate.day);
+      final DateTime end = DateTime(endDate.year, endDate.month, endDate.day);
+
+      int cacheHits = 0;
+      int hiveReads = 0;
+
+      // Iterate through cache efficiently - O(days) instead of O(days * apps)
+      for (var dateEntry in _usageCacheByDate.entries) {
+        final date = _parseDate(dateEntry.key);
+        if (date != null && !date.isBefore(start) && !date.isAfter(end)) {
+          for (var appEntry in dateEntry.value.entries) {
+            totals[appEntry.key] = (totals[appEntry.key] ?? Duration.zero) +
+                appEntry.value.timeSpent;
+            cacheHits++;
+          }
+        }
+      }
+
+      // Check Hive for any dates not in cache
+      if (_usageBox != null) {
+        DateTime current = start;
+        while (!current.isAfter(end)) {
+          final dateKey = _formatDateKey(current);
+
+          // Skip if date already in cache
+          if (!_usageCacheByDate.containsKey(dateKey)) {
+            for (final appName in allAppNames) {
+              final hiveKey = _makeUsageKey(appName, current);
+              final record = _usageBox!.get(hiveKey);
+              if (record != null) {
+                totals[appName] =
+                    (totals[appName] ?? Duration.zero) + record.timeSpent;
+                hiveReads++;
+              }
+            }
+          }
+
+          current = current.add(const Duration(days: 1));
+        }
+      }
+
+      if (hiveReads > 0) {
+        debugPrint(
+            '📊 Batch query: $cacheHits cache hits, $hiveReads Hive reads');
+      }
+
+      return totals;
+    } catch (e) {
+      _lastError = "Error getting app usage totals: $e";
+      debugPrint(_lastError);
+      return {};
+    }
+  }
+
+  /// Get all usage records for date range (all apps) - HIGHLY OPTIMIZED
+  Map<String, List<AppUsageRecord>> getAllAppUsageForRange(
+    DateTime startDate,
+    DateTime endDate,
+  ) {
+    if (!_ensureInitialized()) return {};
+
+    try {
+      final Map<String, List<AppUsageRecord>> result = {};
+      final stopwatch = Stopwatch()..start();
+      final DateTime start =
+          DateTime(startDate.year, startDate.month, startDate.day);
+      final DateTime end = DateTime(endDate.year, endDate.month, endDate.day);
+
+      int cacheHits = 0;
+      int hiveReads = 0;
+
+      // Efficiently scan cache
+      for (var dateEntry in _usageCacheByDate.entries) {
+        final date = _parseDate(dateEntry.key);
+        if (date != null && !date.isBefore(start) && !date.isAfter(end)) {
+          for (var appEntry in dateEntry.value.entries) {
+            result.putIfAbsent(appEntry.key, () => []);
+            result[appEntry.key]!.add(appEntry.value);
+            cacheHits++;
+          }
+        }
+      }
+
+      // Check Hive for missing dates
+      if (_usageBox != null) {
+        DateTime current = start;
+        while (!current.isAfter(end)) {
+          final dateKey = _formatDateKey(current);
+
+          if (!_usageCacheByDate.containsKey(dateKey)) {
+            for (final appName in allAppNames) {
+              final hiveKey = _makeUsageKey(appName, current);
+              final record = _usageBox!.get(hiveKey);
+              if (record != null) {
+                result.putIfAbsent(appName, () => []);
+                result[appName]!.add(record);
+                hiveReads++;
+              }
+            }
+          }
+
+          current = current.add(const Duration(days: 1));
+        }
+      }
+
+      stopwatch.stop();
+
+      if (hiveReads > 0) {
+        debugPrint(
+            '📊 Batch load: $cacheHits cache hits, $hiveReads Hive reads in ${stopwatch.elapsedMilliseconds}ms');
+      }
+
+      return result;
+    } catch (e) {
+      debugPrint('❌ Error in batch load: $e');
+      return {};
+    }
+  }
+
+  // ============================================================
+  // FOCUS SESSION OPERATIONS
   // ============================================================
 
   Future<bool> recordFocusSession(FocusSessionRecord session) async {
@@ -759,14 +1013,17 @@ class AppDataStore extends ChangeNotifier {
 
     try {
       return await _runtimeCacheLock.synchronized(() async {
-        final String key =
-            '${_formatDateKey(session.date)}:${session.startTime.millisecondsSinceEpoch}';
+        final dateKey = _formatDateKey(session.date);
 
-        // Add to runtime cache immediately
-        _focusRuntimeCache[key] = session;
-        _dirtyFocusKeys.add(key);
+        _focusCacheByDate.putIfAbsent(dateKey, () => []);
+        final sessions = _focusCacheByDate[dateKey]!;
+        sessions.add(session);
 
-        // Notify listeners immediately
+        // Mark as dirty
+        final index = sessions.length - 1;
+        _dirtyFocusKeys.add('$dateKey::$index');
+        _markDirty();
+
         notifyListeners();
         return true;
       });
@@ -777,31 +1034,44 @@ class AppDataStore extends ChangeNotifier {
     }
   }
 
-  /// Get focus sessions from runtime cache
+  /// Get focus sessions - O(1) lookup with date-indexed cache
   List<FocusSessionRecord> getFocusSessions(DateTime date) {
     if (!_ensureInitialized()) return [];
 
     try {
-      final String dateKey = _formatDateKey(date);
-      final List<FocusSessionRecord> result = [];
+      final dateKey = _formatDateKey(date);
 
-      for (final entry in _focusRuntimeCache.entries) {
-        if (entry.key.startsWith(dateKey)) {
-          result.add(entry.value);
+      // Check cache first (should have everything from last year)
+      final cached = _focusCacheByDate[dateKey];
+      if (cached != null) {
+        return List.from(cached);
+      }
+
+      // Check Hive for old sessions not in cache
+      final List<FocusSessionRecord> result = [];
+      if (_focusBox != null) {
+        for (final key in _focusBox!.keys) {
+          if (key.toString().startsWith(dateKey)) {
+            final session = _focusBox!.get(key);
+            if (session != null) {
+              result.add(session);
+            }
+          }
         }
       }
 
       return result;
     } catch (e) {
-      _lastError =
-          "Error getting focus sessions for ${_formatDateKey(date)}: $e";
+      _lastError = "Error getting focus sessions for : $e";
       debugPrint(_lastError);
       return [];
     }
   }
 
   List<FocusSessionRecord> getFocusSessionsRange(
-      DateTime startDate, DateTime endDate) {
+    DateTime startDate,
+    DateTime endDate,
+  ) {
     if (!_ensureInitialized()) return [];
 
     try {
@@ -811,8 +1081,7 @@ class AppDataStore extends ChangeNotifier {
       final DateTime endOfRange =
           DateTime(endDate.year, endDate.month, endDate.day);
 
-      while (currentDate.isBefore(endOfRange) ||
-          currentDate.day == endOfRange.day) {
+      while (!currentDate.isAfter(endOfRange)) {
         result.addAll(getFocusSessions(currentDate));
         currentDate = currentDate.add(const Duration(days: 1));
       }
@@ -825,21 +1094,22 @@ class AppDataStore extends ChangeNotifier {
     }
   }
 
-  Future<bool> deleteFocusSession(String key) async {
+  Future<bool> deleteFocusSession(DateTime date, int sessionIndex) async {
     if (!_ensureInitialized()) return false;
 
     try {
       return await _runtimeCacheLock.synchronized(() async {
-        // Remove from runtime cache immediately
-        final removed = _focusRuntimeCache.remove(key);
+        final dateKey = _formatDateKey(date);
+        final sessions = _focusCacheByDate[dateKey];
 
-        if (removed != null) {
-          // Also remove from dirty keys
-          _dirtyFocusKeys.remove(key);
+        if (sessions != null && sessionIndex < sessions.length) {
+          final session = sessions.removeAt(sessionIndex);
 
-          // Delete from Hive asynchronously
-          if (_focusBox!.containsKey(key)) {
-            _focusBox!.delete(key).catchError((e) {
+          // Remove from Hive
+          final hiveKey = _makeFocusKey(
+              session.date, session.startTime.millisecondsSinceEpoch);
+          if (_focusBox!.containsKey(hiveKey)) {
+            _focusBox!.delete(hiveKey).catchError((e) {
               debugPrint('⚠️ Error deleting focus session from Hive: $e');
             });
           }
@@ -850,33 +1120,83 @@ class AppDataStore extends ChangeNotifier {
         return false;
       });
     } catch (e) {
-      _lastError = "Error deleting focus session for key $key: $e";
+      _lastError = "Error deleting focus session: $e";
       debugPrint(_lastError);
       return false;
     }
   }
 
   // ============================================================
-  // ANALYTICS & DERIVED DATA (All use runtime cache now)
+  // ANALYTICS & DERIVED DATA
   // ============================================================
 
   Duration getTotalScreenTime(DateTime date) {
     if (!_ensureInitialized()) return Duration.zero;
 
     try {
-      Duration total = Duration.zero;
+      final dateKey = _formatDateKey(date);
+      final dayRecords = _usageCacheByDate[dateKey];
 
-      for (final appName in allAppNames) {
-        final AppUsageRecord? record = getAppUsage(appName, date);
-        if (record != null) {
-          total += record.timeSpent;
+      if (dayRecords != null) {
+        // Fast path: sum from cache
+        return dayRecords.values.fold(
+          Duration.zero,
+          (sum, record) => sum + record.timeSpent,
+        );
+      }
+
+      // Slow path: check Hive
+      Duration total = Duration.zero;
+      if (_usageBox != null) {
+        for (final appName in allAppNames) {
+          final record = getAppUsage(appName, date);
+          if (record != null) {
+            total += record.timeSpent;
+          }
         }
       }
 
       return total;
     } catch (e) {
-      _lastError =
-          "Error calculating total screen time for ${_formatDateKey(date)}: $e";
+      _lastError = "Error calculating total screen time: $e";
+      debugPrint(_lastError);
+      return Duration.zero;
+    }
+  }
+
+  /// Get total screen time for range - OPTIMIZED
+  Duration getTotalScreenTimeRange(DateTime startDate, DateTime endDate) {
+    if (!_ensureInitialized()) return Duration.zero;
+
+    try {
+      Duration total = Duration.zero;
+      final DateTime start =
+          DateTime(startDate.year, startDate.month, startDate.day);
+      final DateTime end = DateTime(endDate.year, endDate.month, endDate.day);
+
+      // Fast path: scan cache
+      for (var dateEntry in _usageCacheByDate.entries) {
+        final date = _parseDate(dateEntry.key);
+        if (date != null && !date.isBefore(start) && !date.isAfter(end)) {
+          for (var record in dateEntry.value.values) {
+            total += record.timeSpent;
+          }
+        }
+      }
+
+      // Check Hive for missing dates
+      DateTime current = start;
+      while (!current.isAfter(end)) {
+        final dateKey = _formatDateKey(current);
+        if (!_usageCacheByDate.containsKey(dateKey)) {
+          total += getTotalScreenTime(current);
+        }
+        current = current.add(Duration(days: 1));
+      }
+
+      return total;
+    } catch (e) {
+      _lastError = "Error calculating total screen time range: $e";
       debugPrint(_lastError);
       return Duration.zero;
     }
@@ -886,22 +1206,34 @@ class AppDataStore extends ChangeNotifier {
     if (!_ensureInitialized()) return Duration.zero;
 
     try {
+      final dateKey = _formatDateKey(date);
+      final dayRecords = _usageCacheByDate[dateKey];
+
       Duration total = Duration.zero;
 
-      for (final appName in allAppNames) {
-        final AppMetadata? metadata = getAppMetadata(appName);
-        if (metadata != null && metadata.isProductive) {
-          final AppUsageRecord? record = getAppUsage(appName, date);
-          if (record != null) {
-            total += record.timeSpent;
+      if (dayRecords != null) {
+        for (var entry in dayRecords.entries) {
+          final metadata = _metadataCache[entry.key];
+          if (metadata?.isProductive ?? false) {
+            total += entry.value.timeSpent;
+          }
+        }
+      } else if (_usageBox != null) {
+        // Fallback to Hive
+        for (final appName in allAppNames) {
+          final metadata = _metadataCache[appName];
+          if (metadata?.isProductive ?? false) {
+            final record = getAppUsage(appName, date);
+            if (record != null) {
+              total += record.timeSpent;
+            }
           }
         }
       }
 
       return total;
     } catch (e) {
-      _lastError =
-          "Error calculating productive time for ${_formatDateKey(date)}: $e";
+      _lastError = "Error calculating productive time: $e";
       debugPrint(_lastError);
       return Duration.zero;
     }
@@ -911,21 +1243,32 @@ class AppDataStore extends ChangeNotifier {
     if (!_ensureInitialized()) return "None";
 
     try {
+      final dateKey = _formatDateKey(date);
+      final dayRecords = _usageCacheByDate[dateKey];
+
       String mostUsed = "None";
       Duration maxTime = Duration.zero;
 
-      for (final appName in allAppNames) {
-        final AppUsageRecord? record = getAppUsage(appName, date);
-        if (record != null && record.timeSpent > maxTime) {
-          maxTime = record.timeSpent;
-          mostUsed = appName;
+      if (dayRecords != null) {
+        for (var entry in dayRecords.entries) {
+          if (entry.value.timeSpent > maxTime) {
+            maxTime = entry.value.timeSpent;
+            mostUsed = entry.key;
+          }
+        }
+      } else if (_usageBox != null) {
+        for (final appName in allAppNames) {
+          final record = getAppUsage(appName, date);
+          if (record != null && record.timeSpent > maxTime) {
+            maxTime = record.timeSpent;
+            mostUsed = appName;
+          }
         }
       }
 
       return mostUsed;
     } catch (e) {
-      _lastError =
-          "Error finding most used app for ${_formatDateKey(date)}: $e";
+      _lastError = "Error finding most used app: $e";
       debugPrint(_lastError);
       return "Error";
     }
@@ -939,8 +1282,7 @@ class AppDataStore extends ChangeNotifier {
           .where((session) => session.completed)
           .length;
     } catch (e) {
-      _lastError =
-          "Error counting focus sessions for ${_formatDateKey(date)}: $e";
+      _lastError = "Error counting focus sessions: $e";
       debugPrint(_lastError);
       return 0;
     }
@@ -960,8 +1302,7 @@ class AppDataStore extends ChangeNotifier {
 
       return total;
     } catch (e) {
-      _lastError =
-          "Error calculating total focus time for ${_formatDateKey(date)}: $e";
+      _lastError = "Error calculating total focus time: $e";
       debugPrint(_lastError);
       return Duration.zero;
     }
@@ -972,24 +1313,109 @@ class AppDataStore extends ChangeNotifier {
 
     try {
       final Map<String, Duration> result = {};
+      final dateKey = _formatDateKey(date);
+      final dayRecords = _usageCacheByDate[dateKey];
 
-      for (final appName in allAppNames) {
-        final AppMetadata? metadata = getAppMetadata(appName);
-        final AppUsageRecord? record = getAppUsage(appName, date);
+      if (dayRecords != null) {
+        for (var entry in dayRecords.entries) {
+          final metadata = _metadataCache[entry.key];
+          if (metadata != null) {
+            final category = metadata.category;
+            result[category] =
+                (result[category] ?? Duration.zero) + entry.value.timeSpent;
+          }
+        }
+      } else if (_usageBox != null) {
+        for (final appName in allAppNames) {
+          final metadata = _metadataCache[appName];
+          final record = getAppUsage(appName, date);
 
-        if (metadata != null && record != null) {
-          final String category = metadata.category;
-          result[category] =
-              (result[category] ?? Duration.zero) + record.timeSpent;
+          if (metadata != null && record != null) {
+            final category = metadata.category;
+            result[category] =
+                (result[category] ?? Duration.zero) + record.timeSpent;
+          }
         }
       }
 
       return result;
     } catch (e) {
-      _lastError =
-          "Error calculating category breakdown for ${_formatDateKey(date)}: $e";
+      _lastError = "Error calculating category breakdown: $e";
       debugPrint(_lastError);
       return {};
+    }
+  }
+
+  /// Get category breakdown for range - HIGHLY OPTIMIZED
+  Map<String, Duration> getCategoryBreakdownRange(
+    DateTime startDate,
+    DateTime endDate,
+  ) {
+    if (!_ensureInitialized()) return {};
+
+    try {
+      final Map<String, Duration> aggregated = {};
+      final DateTime start =
+          DateTime(startDate.year, startDate.month, startDate.day);
+      final DateTime end = DateTime(endDate.year, endDate.month, endDate.day);
+
+      // Fast path: scan cache
+      for (var dateEntry in _usageCacheByDate.entries) {
+        final date = _parseDate(dateEntry.key);
+        if (date != null && !date.isBefore(start) && !date.isAfter(end)) {
+          for (var appEntry in dateEntry.value.entries) {
+            final metadata = _metadataCache[appEntry.key];
+            if (metadata != null) {
+              aggregated[metadata.category] =
+                  (aggregated[metadata.category] ?? Duration.zero) +
+                      appEntry.value.timeSpent;
+            }
+          }
+        }
+      }
+
+      // Check Hive for missing dates
+      DateTime current = start;
+      while (!current.isAfter(end)) {
+        final dateKey = _formatDateKey(current);
+        if (!_usageCacheByDate.containsKey(dateKey)) {
+          final dayBreakdown = getCategoryBreakdown(current);
+          for (final entry in dayBreakdown.entries) {
+            aggregated[entry.key] =
+                (aggregated[entry.key] ?? Duration.zero) + entry.value;
+          }
+        }
+        current = current.add(Duration(days: 1));
+      }
+
+      return aggregated;
+    } catch (e) {
+      _lastError = "Error calculating category breakdown range: $e";
+      debugPrint(_lastError);
+      return {};
+    }
+  }
+
+  /// Get top N apps for date range - HIGHLY OPTIMIZED
+  List<MapEntry<String, Duration>> getTopAppsRange(
+    DateTime startDate,
+    DateTime endDate, {
+    int limit = 10,
+  }) {
+    if (!_ensureInitialized()) return [];
+
+    try {
+      // Use optimized batch method
+      final appTotals = getAppUsageTotals(startDate, endDate);
+
+      final sorted = appTotals.entries.toList()
+        ..sort((a, b) => b.value.compareTo(a.value));
+
+      return sorted.take(limit).toList();
+    } catch (e) {
+      _lastError = "Error getting top apps range: $e";
+      debugPrint(_lastError);
+      return [];
     }
   }
 
@@ -1011,8 +1437,7 @@ class AppDataStore extends ChangeNotifier {
 
       return rawScore.clamp(0.0, 100.0);
     } catch (e) {
-      _lastError =
-          "Error calculating productivity score for ${_formatDateKey(date)}: $e";
+      _lastError = "Error calculating productivity score: $e";
       debugPrint(_lastError);
       return 0.0;
     }
@@ -1025,17 +1450,9 @@ class AppDataStore extends ChangeNotifier {
       int totalSeconds = 0;
       int daysWithData = 0;
 
-      DateTime current = DateTime(
-        startDate.year,
-        startDate.month,
-        startDate.day,
-      );
-
-      final DateTime end = DateTime(
-        endDate.year,
-        endDate.month,
-        endDate.day,
-      );
+      DateTime current =
+          DateTime(startDate.year, startDate.month, startDate.day);
+      final DateTime end = DateTime(endDate.year, endDate.month, endDate.day);
 
       while (!current.isAfter(end)) {
         final Duration dayTotal = getTotalScreenTime(current);
@@ -1052,9 +1469,7 @@ class AppDataStore extends ChangeNotifier {
         return Duration.zero;
       }
 
-      return Duration(
-        seconds: totalSeconds ~/ daysWithData,
-      );
+      return Duration(seconds: totalSeconds ~/ daysWithData);
     } catch (e) {
       _lastError = "Error calculating average screen time: $e";
       debugPrint(_lastError);
@@ -1094,34 +1509,52 @@ class AppDataStore extends ChangeNotifier {
   }
 
   String _formatDateKey(DateTime date) {
-    return '${date.year}-${date.month.toString().padLeft(2, '0')}-${date.day.toString().padLeft(2, '0')}';
+    // Cache date strings to avoid repeated formatting
+    return _dateStringCache.putIfAbsent(date, () {
+      return '${date.year}-${date.month.toString().padLeft(2, '0')}-${date.day.toString().padLeft(2, '0')}';
+    });
+  }
+
+  DateTime? _parseDate(String dateKey) {
+    try {
+      final parts = dateKey.split('-');
+      if (parts.length != 3) return null;
+      return DateTime(
+        int.parse(parts[0]),
+        int.parse(parts[1]),
+        int.parse(parts[2]),
+      );
+    } catch (e) {
+      return null;
+    }
   }
 
   // ============================================================
   // CLEAR ALL DATA
   // ============================================================
+
   Future<bool> clearAllData({Function(double)? progressCallback}) async {
     return await _initLock.synchronized(() async {
-      if (!(_ensureInitialized())) return false;
+      if (!_ensureInitialized()) return false;
 
       try {
         debugPrint('🗑️ Clearing all data...');
 
         if (progressCallback != null) progressCallback(0.1);
 
-        // Clear runtime caches first
         await _runtimeCacheLock.synchronized(() async {
-          _usageRuntimeCache.clear();
-          _focusRuntimeCache.clear();
+          _usageCacheByDate.clear();
+          _focusCacheByDate.clear();
           _metadataCache.clear();
+          _cachedAppNames = null;
+          _dateStringCache.clear();
           _dirtyUsageKeys.clear();
           _dirtyFocusKeys.clear();
-          debugPrint('   ✓ Runtime caches cleared');
+          _hasDirtyData = false;
         });
 
         if (progressCallback != null) progressCallback(0.2);
 
-        // Close all boxes
         if (_usageBox != null && _usageBox!.isOpen) await _usageBox!.close();
         if (_focusBox != null && _focusBox!.isOpen) await _focusBox!.close();
         if (_metadataBox != null && _metadataBox!.isOpen)
@@ -1129,20 +1562,15 @@ class AppDataStore extends ChangeNotifier {
 
         if (progressCallback != null) progressCallback(0.4);
 
-        // Delete boxes from disk
         await Hive.deleteBoxFromDisk(_usageBoxName);
-        debugPrint('   ✓ Usage box deleted');
         if (progressCallback != null) progressCallback(0.6);
 
         await Hive.deleteBoxFromDisk(_focusBoxName);
-        debugPrint('   ✓ Focus box deleted');
         if (progressCallback != null) progressCallback(0.8);
 
         await Hive.deleteBoxFromDisk(_metadataBoxName);
-        debugPrint('   ✓ Metadata box deleted');
         if (progressCallback != null) progressCallback(0.9);
 
-        // Reinitialize boxes
         _usageBox = await _openBoxWithRetry<AppUsageRecord>(_usageBoxName);
         _focusBox = await _openBoxWithRetry<FocusSessionRecord>(_focusBoxName);
         _metadataBox = await _openBoxWithRetry<AppMetadata>(_metadataBoxName);
@@ -1150,14 +1578,7 @@ class AppDataStore extends ChangeNotifier {
         if (progressCallback != null) progressCallback(1.0);
 
         debugPrint('✅ All data cleared successfully');
-        debugPrint('   📊 Final state:');
-        debugPrint('      - Usage cache: ${_usageRuntimeCache.length}');
-        debugPrint('      - Focus cache: ${_focusRuntimeCache.length}');
-        debugPrint('      - Metadata cache: ${_metadataCache.length}');
-
-        // Notify all listeners that data has been cleared
         notifyListeners();
-
         return true;
       } catch (e) {
         _lastError = "Error clearing data: $e";
@@ -1170,13 +1591,12 @@ class AppDataStore extends ChangeNotifier {
   // ============================================================
   // CLOSE & DISPOSE
   // ============================================================
+
   Future<void> closeHive() async {
     return await _initLock.synchronized(() async {
       try {
-        // Commit any pending changes before closing
         await forceCommitToHive();
 
-        // Stop persistence timer
         _persistenceTimer?.cancel();
         _persistenceTimer = null;
 
@@ -1198,10 +1618,8 @@ class AppDataStore extends ChangeNotifier {
   Future<void> dispose() async {
     await _initLock.synchronized(() async {
       try {
-        // Commit any pending changes before disposing
         await forceCommitToHive();
 
-        // Stop persistence timer
         _persistenceTimer?.cancel();
         _persistenceTimer = null;
 
@@ -1233,16 +1651,56 @@ class AppDataStore extends ChangeNotifier {
   // ============================================================
   // DEBUG INFO
   // ============================================================
+
   Map<String, dynamic> getRuntimeCacheStats() {
+    final totalUsageRecords =
+        _usageCacheByDate.values.fold(0, (sum, map) => sum + map.length);
+    final totalFocusSessions =
+        _focusCacheByDate.values.fold(0, (sum, list) => sum + list.length);
+
     return {
-      'usageRecordsInCache': _usageRuntimeCache.length,
-      'focusSessionsInCache': _focusRuntimeCache.length,
+      'usageDatesInCache': _usageCacheByDate.length,
+      'usageRecordsInCache': totalUsageRecords,
+      'focusDatesInCache': _focusCacheByDate.length,
+      'focusSessionsInCache': totalFocusSessions,
       'metadataInCache': _metadataCache.length,
       'dirtyUsageRecords': _dirtyUsageKeys.length,
       'dirtyFocusSessions': _dirtyFocusKeys.length,
+      'hasDirtyData': _hasDirtyData,
       'persistenceIntervalSeconds': _persistenceInterval.inSeconds,
-      'persistenceTimerActive': _persistenceTimer != null,
+      'persistenceTimerActive': _persistenceTimer?.isActive ?? false,
+      'usageCacheDays': _usageCacheDays,
+      'focusCacheDays': _focusCacheDays,
+      'maxUsageCacheSize': _maxUsageCacheSize,
+      'dateStringsCached': _dateStringCache.length,
+      'cachedAppNamesValid': _cachedAppNames != null,
     };
+  }
+
+  /// Get estimated memory usage in MB (more realistic calculations)
+  double getEstimatedMemoryUsageMB() {
+    final totalUsageRecords =
+        _usageCacheByDate.values.fold(0, (sum, map) => sum + map.length);
+    final totalFocusSessions =
+        _focusCacheByDate.values.fold(0, (sum, list) => sum + list.length);
+
+    // More realistic byte estimates (including Dart object overhead)
+    final usageBytes = totalUsageRecords * 500; // ~500 bytes per record
+    final focusBytes = totalFocusSessions * 200; // ~200 bytes per session
+    final metadataBytes =
+        _metadataCache.length * 100; // ~100 bytes per metadata
+    final dateMapOverhead = _usageCacheByDate.length * 64; // Map overhead
+    final focusMapOverhead = _focusCacheByDate.length * 64;
+    final dateStringBytes = _dateStringCache.length * 24; // Small strings
+
+    final totalBytes = usageBytes +
+        focusBytes +
+        metadataBytes +
+        dateMapOverhead +
+        focusMapOverhead +
+        dateStringBytes;
+
+    return totalBytes / (1024 * 1024);
   }
 }
 

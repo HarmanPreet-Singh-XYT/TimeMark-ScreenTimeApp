@@ -440,7 +440,7 @@ class DataExportService {
     return {'imported': imported, 'skipped': skipped, 'updated': updated};
   }
 
-  /// Import focus sessions
+  /// Import focus sessions (UPDATED for new API)
   Future<Map<String, int>> _importFocusSessions(
     List<ExportableFocusSession> data,
     ImportMode mode,
@@ -451,29 +451,36 @@ class DataExportService {
 
     for (final item in data) {
       final date = DateTime.parse(item.date);
+      final startTime = DateTime.parse(item.startTime);
       final existingSessions = _dataStore.getFocusSessions(date);
 
-      // Check if this session already exists
-      final startTime = DateTime.parse(item.startTime);
-      final exists = existingSessions.any((s) =>
-          s.startTime.millisecondsSinceEpoch ==
-          startTime.millisecondsSinceEpoch);
+      // Check if this session already exists and get its index
+      int? existingIndex;
+      for (int i = 0; i < existingSessions.length; i++) {
+        if (existingSessions[i].startTime.millisecondsSinceEpoch ==
+            startTime.millisecondsSinceEpoch) {
+          existingIndex = i;
+          break;
+        }
+      }
 
-      if (exists) {
+      final sessionRecord = FocusSessionRecord(
+        date: date,
+        startTime: startTime,
+        duration: Duration(microseconds: item.durationMicroseconds),
+        appsBlocked: item.appsBlocked,
+        completed: item.completed,
+        breakCount: item.breakCount,
+        totalBreakTime: Duration(microseconds: item.totalBreakTimeMicroseconds),
+      );
+
+      if (existingIndex != null) {
+        // Session exists
         switch (mode) {
           case ImportMode.replace:
             // Delete existing and add new
-            await _dataStore.deleteFocusSession(item.key);
-            await _dataStore.recordFocusSession(FocusSessionRecord(
-              date: date,
-              startTime: startTime,
-              duration: Duration(microseconds: item.durationMicroseconds),
-              appsBlocked: item.appsBlocked,
-              completed: item.completed,
-              breakCount: item.breakCount,
-              totalBreakTime:
-                  Duration(microseconds: item.totalBreakTimeMicroseconds),
-            ));
+            await _dataStore.deleteFocusSession(date, existingIndex);
+            await _dataStore.recordFocusSession(sessionRecord);
             updated++;
             break;
           case ImportMode.merge:
@@ -482,16 +489,8 @@ class DataExportService {
             break;
         }
       } else {
-        await _dataStore.recordFocusSession(FocusSessionRecord(
-          date: date,
-          startTime: startTime,
-          duration: Duration(microseconds: item.durationMicroseconds),
-          appsBlocked: item.appsBlocked,
-          completed: item.completed,
-          breakCount: item.breakCount,
-          totalBreakTime:
-              Duration(microseconds: item.totalBreakTimeMicroseconds),
-        ));
+        // New session
+        await _dataStore.recordFocusSession(sessionRecord);
         imported++;
       }
     }
