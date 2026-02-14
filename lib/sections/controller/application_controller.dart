@@ -463,8 +463,12 @@ class BackgroundAppTracker {
 
     String newApp = await _getCurrentActiveApp();
 
-    if (newApp == "Productive ScreenTime" || newApp == "screentime") {
+    if (newApp == "Productive ScreenTime") {
       return;
+    }
+
+    if (newApp == "screentime") {
+      newApp = "Scolect - Track Screen Time & App Usage";
     }
 
     if (newApp == "loginwindow") {
