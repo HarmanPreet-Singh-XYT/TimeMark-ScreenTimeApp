@@ -29,12 +29,12 @@ class AppUsageSummary {
     return AppUsageSummary(
       appName: json['appName'] as String,
       category: json['category'] as String,
-      dailyLimit: Duration(minutes: json['dailyLimit'] as int),
-      currentUsage: Duration(minutes: json['currentUsage'] as int),
+      dailyLimit: Duration(seconds: json['dailyLimit'] as int),
+      currentUsage: Duration(seconds: json['currentUsage'] as int),
       limitStatus: json['limitStatus'] as bool,
       isProductive: json['isProductive'] as bool,
       isAboutToReachLimit: json['isAboutToReachLimit'] as bool,
-      percentageOfLimitUsed: json['percentageOfLimitUsed'] as double,
+      percentageOfLimitUsed: (json['percentageOfLimitUsed'] as num).toDouble(),
       trend: UsageTrend.values.firstWhere(
         (e) => e.toString() == json['trend'],
         orElse: () => UsageTrend.noData,
@@ -47,8 +47,8 @@ class AppUsageSummary {
     return {
       'appName': appName,
       'category': category,
-      'dailyLimit': dailyLimit.inMinutes,
-      'currentUsage': currentUsage.inMinutes,
+      'dailyLimit': dailyLimit.inSeconds,
+      'currentUsage': currentUsage.inSeconds,
       'limitStatus': limitStatus,
       'isProductive': isProductive,
       'isAboutToReachLimit': isAboutToReachLimit,
@@ -58,67 +58,47 @@ class AppUsageSummary {
   }
 }
 
-enum UsageTrend {
-  increasing,
-  decreasing,
-  stable,
-  noData
-}
+enum UsageTrend { increasing, decreasing, stable, noData }
 
 class ScreenTimeDataController extends ChangeNotifier {
   // Singleton implementation
-  static final ScreenTimeDataController _instance = ScreenTimeDataController._internal();
+  static final ScreenTimeDataController _instance =
+      ScreenTimeDataController._internal();
   factory ScreenTimeDataController() => _instance;
   ScreenTimeDataController._internal();
 
   final AppDataStore _dataStore = AppDataStore();
-  
+
+  Duration _overallLimit = Duration.zero;
+  bool _overallLimitEnabled = false;
+
   // Initialize the controller
   Future<bool> initialize() async {
     return await _dataStore.init();
   }
 
-  // Get a list of all apps with their current data
-  List<AppUsageSummary> getAllAppsSummary() {
-    final List<AppUsageSummary> result = _getAppSummariesWithoutNotificationChecks();
-    return result;
-  }
-  Duration _overallLimit = Duration.zero;
-  bool _overallLimitEnabled = false;
-  
+  // ============================================================
+  // OVERALL LIMIT MANAGEMENT
+  // ============================================================
+
   // Update overall screen time limit
   void updateOverallLimit(Duration limit, bool enabled) {
     _overallLimit = limit;
     _overallLimitEnabled = enabled;
-    
-    // Save to storage or database as needed
     _saveOverallLimitToStorage();
-    
     notifyListeners();
   }
-  
-  // Calculate total screen time across all apps
-  Duration _calculateTotalScreenTime() {
-    final List<AppUsageSummary> apps = _getAppSummariesWithoutNotificationChecks();
-    return Duration(minutes: apps.fold(0, (sum, app) => sum + app.currentUsage.inMinutes));
-  }
-  
-  // Save overall limit settings to storage
-  void _saveOverallLimitToStorage() {
-    // Implementation depends on your storage mechanism
-    // Here we'll just log it
-    debugPrint('Saving overall limit: $_overallLimitEnabled, $_overallLimit');
-  }
-  
+
   // Get current overall limit
   Duration getOverallLimit() {
     return _overallLimit;
   }
-  Duration getOverallUsage(){
-    Duration totalScreenTime = _calculateTotalScreenTime();
-    return totalScreenTime;
+
+  // Get overall usage using datastore directly (consistent with overview)
+  Duration getOverallUsage() {
+    return _dataStore.getTotalScreenTime(DateTime.now());
   }
-  
+
   // Get overall limit status
   bool isOverallLimitEnabled() {
     return _overallLimitEnabled;
@@ -127,17 +107,44 @@ class ScreenTimeDataController extends ChangeNotifier {
   // Check if overall limit is reached
   bool isOverallLimitReached() {
     if (!_overallLimitEnabled || _overallLimit == Duration.zero) return false;
-    
-    Duration totalScreenTime = _calculateTotalScreenTime();
-    return totalScreenTime >= _overallLimit;
+    return getOverallUsage() >= _overallLimit;
   }
 
   // Get percentage of overall limit used
   double getOverallLimitPercentage() {
     if (!_overallLimitEnabled || _overallLimit == Duration.zero) return 0.0;
-    
-    Duration totalScreenTime = _calculateTotalScreenTime();
-    return (totalScreenTime.inMinutes / _overallLimit.inMinutes).clamp(0.0, 1.0);
+
+    final Duration totalScreenTime = getOverallUsage();
+    if (_overallLimit.inSeconds == 0) return 0.0;
+
+    return (totalScreenTime.inSeconds / _overallLimit.inSeconds)
+        .clamp(0.0, 1.0);
+  }
+
+  // Check if approaching overall limit
+  bool isApproachingOverallLimit(
+      {Duration threshold = const Duration(minutes: 15)}) {
+    if (!_overallLimitEnabled || _overallLimit == Duration.zero) return false;
+
+    final Duration totalScreenTime = getOverallUsage();
+    final Duration remaining = _overallLimit - totalScreenTime;
+
+    return remaining > Duration.zero && remaining <= threshold;
+  }
+
+  // Save overall limit settings to storage
+  void _saveOverallLimitToStorage() {
+    debugPrint(
+        'Saving overall limit: enabled=$_overallLimitEnabled, limit=$_overallLimit');
+  }
+
+  // ============================================================
+  // APP SUMMARIES
+  // ============================================================
+
+  // Get a list of all apps with their current data
+  List<AppUsageSummary> getAllAppsSummary() {
+    return _buildAppSummaries();
   }
 
   // Get a single app's summary
@@ -147,70 +154,43 @@ class ScreenTimeDataController extends ChangeNotifier {
 
     final DateTime today = DateTime.now();
     final AppUsageRecord? todayUsage = _dataStore.getAppUsage(appName, today);
-
-    final UsageTrend trend = _calculateUsageTrend(appName);
     final Duration currentUsage = todayUsage?.timeSpent ?? Duration.zero;
 
-    double percentOfLimit = 0.0;
-    bool isApproachingLimit = false;
-
-    if (metadata.limitStatus && metadata.dailyLimit > Duration.zero) {
-      percentOfLimit = currentUsage.inSeconds / metadata.dailyLimit.inSeconds;
-
-      // Check if approaching limit
-      final Duration remainingTime = metadata.dailyLimit - currentUsage;
-      isApproachingLimit = remainingTime > Duration.zero &&
-                          remainingTime <= const Duration(minutes: 5); // Default threshold
-    }
-
-    return AppUsageSummary(
+    return _createAppSummary(
       appName: appName,
-      category: metadata.category,
-      dailyLimit: metadata.dailyLimit,
+      metadata: metadata,
       currentUsage: currentUsage,
-      limitStatus: metadata.limitStatus,
-      isProductive: metadata.isProductive,
-      isAboutToReachLimit: isApproachingLimit,
-      percentageOfLimitUsed: percentOfLimit,
-      trend: trend,
     );
   }
 
-  // Calculate the usage trend for an app
-  UsageTrend _calculateUsageTrend(String appName) {
-    final DateTime today = DateTime.now();
-    final DateTime weekAgo = today.subtract(const Duration(days: 7));
-
-    final List<AppUsageRecord> weekUsage = _dataStore.getAppUsageRange(
-      appName,
-      weekAgo,
-      today.subtract(const Duration(days: 1)), // Exclude today
-    );
-
-    if (weekUsage.length < 3) return UsageTrend.noData;
-
-    // Calculate average daily change
-    double totalChange = 0;
-    int comparisons = 0;
-
-    for (int i = 1; i < weekUsage.length; i++) {
-      final Duration previous = weekUsage[i - 1].timeSpent;
-      final Duration current = weekUsage[i].timeSpent;
-      totalChange += current.inMinutes - previous.inMinutes;
-      comparisons++;
-    }
-
-    if (comparisons == 0) return UsageTrend.noData;
-
-    final double avgChange = totalChange / comparisons;
-
-    if (avgChange > 5) return UsageTrend.increasing;
-    if (avgChange < -5) return UsageTrend.decreasing;
-    return UsageTrend.stable;
+  // Get only apps that have limits set
+  List<AppUsageSummary> getAppsWithLimits() {
+    return getAllAppsSummary().where((app) => app.limitStatus).toList()
+      ..sort(
+          (a, b) => b.percentageOfLimitUsed.compareTo(a.percentageOfLimitUsed));
   }
+
+  // Get apps that are approaching or exceeded their limits
+  List<AppUsageSummary> getAppsNearLimit({double threshold = 0.8}) {
+    return getAppsWithLimits()
+        .where((app) => app.percentageOfLimitUsed >= threshold)
+        .toList();
+  }
+
+  // Get apps that have exceeded their limits
+  List<AppUsageSummary> getAppsExceededLimit() {
+    return getAppsWithLimits()
+        .where((app) => app.percentageOfLimitUsed >= 1.0)
+        .toList();
+  }
+
+  // ============================================================
+  // APP LIMIT MANAGEMENT
+  // ============================================================
 
   // Update app limit
-  Future<bool> updateAppLimit(String appName, Duration limit, bool enableLimit) async {
+  Future<bool> updateAppLimit(
+      String appName, Duration limit, bool enableLimit) async {
     return await _dataStore.updateAppMetadata(
       appName,
       dailyLimit: limit,
@@ -219,7 +199,8 @@ class ScreenTimeDataController extends ChangeNotifier {
   }
 
   // Update app category
-  Future<bool> updateAppCategory(String appName, String category, bool isProductive) async {
+  Future<bool> updateAppCategory(
+      String appName, String category, bool isProductive) async {
     return await _dataStore.updateAppMetadata(
       appName,
       category: category,
@@ -227,16 +208,18 @@ class ScreenTimeDataController extends ChangeNotifier {
     );
   }
 
+  // ============================================================
+  // ANALYTICS
+  // ============================================================
+
   // Get usage statistics by category
   Map<String, Duration> getUsageByCategory() {
     final Map<String, Duration> result = {};
     final List<AppUsageSummary> apps = getAllAppsSummary();
 
     for (final app in apps) {
-      if (!result.containsKey(app.category)) {
-        result[app.category] = Duration.zero;
-      }
-      result[app.category] = result[app.category]! + app.currentUsage;
+      result[app.category] =
+          (result[app.category] ?? Duration.zero) + app.currentUsage;
     }
 
     return result;
@@ -256,52 +239,109 @@ class ScreenTimeDataController extends ChangeNotifier {
     final List<AppUsageSummary> mostUsedApps = getMostUsedApps();
 
     return {
-      'appSummaries': appSummaries.map((summary) => summary.toJson()).toList(),
-      'usageByCategory': usageByCategory.map((key, value) => MapEntry(key, value.inMinutes)),
+      'appSummaries': appSummaries.map((s) => s.toJson()).toList(),
+      'usageByCategory':
+          usageByCategory.map((key, value) => MapEntry(key, value.inSeconds)),
       'mostUsedApps': mostUsedApps.map((app) => app.toJson()).toList(),
+      'overallUsageSeconds': getOverallUsage().inSeconds,
+      'overallLimitSeconds': _overallLimit.inSeconds,
+      'overallLimitEnabled': _overallLimitEnabled,
+      'overallLimitPercentage': getOverallLimitPercentage(),
     };
   }
 
-  // Add this method that gets app summaries
-  List<AppUsageSummary> _getAppSummariesWithoutNotificationChecks() {
+  // ============================================================
+  // PRIVATE HELPERS
+  // ============================================================
+
+  /// Build all app summaries from the data store
+  List<AppUsageSummary> _buildAppSummaries() {
     final List<String> appNames = _dataStore.allAppNames;
     final List<AppUsageSummary> result = [];
+    final DateTime today = DateTime.now();
 
     for (final String appName in appNames) {
       final AppMetadata? metadata = _dataStore.getAppMetadata(appName);
       if (metadata == null || !metadata.isVisible) continue;
 
-      final DateTime today = DateTime.now();
       final AppUsageRecord? todayUsage = _dataStore.getAppUsage(appName, today);
-
-      final UsageTrend trend = _calculateUsageTrend(appName);
       final Duration currentUsage = todayUsage?.timeSpent ?? Duration.zero;
 
-      double percentOfLimit = 0.0;
-      bool isApproachingLimit = false;
-
-      if (metadata.limitStatus && metadata.dailyLimit > Duration.zero) {
-        percentOfLimit = currentUsage.inSeconds / metadata.dailyLimit.inSeconds;
-
-        // Check if approaching limit
-        final Duration remainingTime = metadata.dailyLimit - currentUsage;
-        isApproachingLimit = remainingTime > Duration.zero &&
-                            remainingTime <= const Duration(minutes: 5);
-      }
-
-      result.add(AppUsageSummary(
+      result.add(_createAppSummary(
         appName: appName,
-        category: metadata.category,
-        dailyLimit: metadata.dailyLimit,
+        metadata: metadata,
         currentUsage: currentUsage,
-        limitStatus: metadata.limitStatus,
-        isProductive: metadata.isProductive,
-        isAboutToReachLimit: isApproachingLimit,
-        percentageOfLimitUsed: percentOfLimit,
-        trend: trend,
       ));
     }
 
     return result;
+  }
+
+  /// Create a single AppUsageSummary from raw data
+  AppUsageSummary _createAppSummary({
+    required String appName,
+    required AppMetadata metadata,
+    required Duration currentUsage,
+  }) {
+    final UsageTrend trend = _calculateUsageTrend(appName);
+
+    double percentOfLimit = 0.0;
+    bool isApproachingLimit = false;
+
+    if (metadata.limitStatus && metadata.dailyLimit > Duration.zero) {
+      // Use inSeconds for precision
+      percentOfLimit = currentUsage.inSeconds / metadata.dailyLimit.inSeconds;
+
+      // Check if approaching limit (within 5 minutes)
+      final Duration remainingTime = metadata.dailyLimit - currentUsage;
+      isApproachingLimit = remainingTime > Duration.zero &&
+          remainingTime <= const Duration(minutes: 5);
+    }
+
+    return AppUsageSummary(
+      appName: appName,
+      category: metadata.category,
+      dailyLimit: metadata.dailyLimit,
+      currentUsage: currentUsage,
+      limitStatus: metadata.limitStatus,
+      isProductive: metadata.isProductive,
+      isAboutToReachLimit: isApproachingLimit,
+      percentageOfLimitUsed: percentOfLimit,
+      trend: trend,
+    );
+  }
+
+  /// Calculate the usage trend for an app over the past week
+  UsageTrend _calculateUsageTrend(String appName) {
+    final DateTime today = DateTime.now();
+    final DateTime weekAgo = today.subtract(const Duration(days: 7));
+
+    final List<AppUsageRecord> weekUsage = _dataStore.getAppUsageRange(
+      appName,
+      weekAgo,
+      today.subtract(const Duration(days: 1)),
+    );
+
+    if (weekUsage.length < 3) return UsageTrend.noData;
+
+    double totalChange = 0;
+    int comparisons = 0;
+
+    for (int i = 1; i < weekUsage.length; i++) {
+      final Duration previous = weekUsage[i - 1].timeSpent;
+      final Duration current = weekUsage[i].timeSpent;
+      // Use inSeconds instead of inMinutes for precision
+      totalChange += current.inSeconds - previous.inSeconds;
+      comparisons++;
+    }
+
+    if (comparisons == 0) return UsageTrend.noData;
+
+    final double avgChangeSeconds = totalChange / comparisons;
+
+    // Threshold: 5 minutes in seconds = 300 seconds
+    if (avgChangeSeconds > 300) return UsageTrend.increasing;
+    if (avgChangeSeconds < -300) return UsageTrend.decreasing;
+    return UsageTrend.stable;
   }
 }
