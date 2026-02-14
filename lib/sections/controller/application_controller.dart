@@ -512,6 +512,18 @@ class BackgroundAppTracker {
   // ============================================================
   // FOCUS CHANGE HANDLER
   // ============================================================
+  String sanitizeWindowTitle(String title) {
+    return title
+        // Remove null terminators
+        .replaceAll('\u0000', '')
+        // Remove zero-width and control characters
+        .replaceAll(RegExp(r'[\u200B-\u200D\uFEFF]'), '')
+        // Remove other non-printable chars
+        .replaceAll(RegExp(r'[\x00-\x1F\x7F]'), '')
+        // Normalize whitespace
+        .trim();
+  }
+
   void _handleFocusChange(AppWindowDto window) async {
     if (_trackingMode == TrackingMode.polling) {
       return;
@@ -523,9 +535,9 @@ class BackgroundAppTracker {
     }
     String newApp = await _getCurrentActiveApp();
     if (newApp == "SearchHost" || newApp == "Application Frame Host") {
-      newApp = window.windowTitle;
+      newApp = sanitizeWindowTitle(window.windowTitle);
     }
-
+    debugPrint(window.windowTitle);
     if (newApp == "Productive ScreenTime") {
       return;
     }
