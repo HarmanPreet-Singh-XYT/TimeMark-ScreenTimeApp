@@ -1,3 +1,4 @@
+#include "include/foreground_window/foreground_window_plugin.h"
 #include "my_application.h"
 
 #include <flutter_linux/flutter_linux.h>
@@ -58,6 +59,11 @@ static void my_application_activate(GApplication* application) {
   gtk_container_add(GTK_CONTAINER(window), GTK_WIDGET(view));
 
   fl_register_plugins(FL_PLUGIN_REGISTRY(view));
+
+  FlPluginRegistrar* registrar = 
+      fl_plugin_registry_get_registrar_for_plugin(
+          FL_PLUGIN_REGISTRY(view), "ForegroundWindowPlugin");
+  foreground_window_plugin_register_with_registrar(registrar);
 
   gtk_widget_grab_focus(GTK_WIDGET(view));
 }
