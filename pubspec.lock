@@ -201,6 +201,15 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "0.7.12"
+  desktop_screenstate:
+    dependency: "direct main"
+    description:
+      path: "."
+      ref: main
+      resolved-ref: "42faf96855a1520a16f380dae766b317c1b1e93c"
+      url: "https://github.com/HarmanPreet-Singh-XYT/Screenstate"
+    source: git
+    version: "0.0.6+1"
   dmg:
     dependency: "direct dev"
     description:

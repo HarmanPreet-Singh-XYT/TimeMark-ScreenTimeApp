@@ -70,6 +70,11 @@ dependencies:
   # native_window_tracker:
   #   path: path/to/your/local/plugin
 
+  desktop_screenstate:
+    git:
+      url: https://github.com/HarmanPreet-Singh-XYT/Screenstate
+      ref: main
+
 dev_dependencies:
   flutter_test:
     sdk: flutter

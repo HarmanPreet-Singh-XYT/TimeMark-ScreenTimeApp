@@ -5,10 +5,9 @@
 #include <flutter/flutter_view_controller.h>
 #include <flutter/method_channel.h>
 #include <flutter/standard_method_codec.h>
-
 #include <memory>
 #include <windows.h>
-
+#include <powrprof.h>
 #include "win32_window.h"
 
 // Restarts the current application.
@@ -25,9 +24,9 @@ class FlutterWindow : public Win32Window {
   bool OnCreate() override;
   void OnDestroy() override;
   LRESULT MessageHandler(HWND window,
-                         UINT message,
-                         WPARAM wparam,
-                         LPARAM lparam) noexcept override;
+                         UINT const message,
+                         WPARAM const wparam,
+                         LPARAM const lparam) noexcept override;
 
  private:
   // The project to run.
@@ -38,6 +37,12 @@ class FlutterWindow : public Win32Window {
 
   // Method channel for app restart
   std::unique_ptr<flutter::MethodChannel<>> restart_channel_;
+
+  // Handle for GUID_CONSOLE_DISPLAY_STATE (screen on/off)
+  HPOWERNOTIFY power_notification_handle_ = nullptr;
+
+  // Handle for true system sleep/resume callback (fires on system thread)
+  HPOWERNOTIFY suspend_resume_handle_ = nullptr;
 };
 
 #endif  // RUNNER_FLUTTER_WINDOW_H_

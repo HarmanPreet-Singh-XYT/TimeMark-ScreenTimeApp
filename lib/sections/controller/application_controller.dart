@@ -2,6 +2,7 @@
 import 'dart:async';
 import 'dart:io';
 import 'dart:ui' as ui;
+import 'package:desktop_screenstate/desktop_screenstate.dart';
 import 'package:screentime/foreground_window_plugin.dart';
 import 'package:screentime/sections/controller/notification_controller.dart';
 import 'package:screentime/sections/controller/settings_data_controller.dart';
@@ -12,13 +13,13 @@ import 'app_data_controller.dart';
 import 'categories_controller.dart';
 
 enum TrackingMode {
-  polling, // Standard method: 1-minute polling (lightweight, less accurate)
-  precise, // Precise method: Event-based tracking (resource-intensive, accurate)
+  polling,
+  precise,
 }
 
 class BackgroundAppTracker {
   // ============================================================
-  // SINGLETON INSTANCE
+  // SINGLETON
   // ============================================================
   static final BackgroundAppTracker _instance =
       BackgroundAppTracker._internal();
@@ -32,23 +33,64 @@ class BackgroundAppTracker {
       NotificationController();
 
   // ============================================================
-  // TRACKING MODE
+  // STATE
   // ============================================================
   TrackingMode _trackingMode = TrackingMode.polling;
-
-  // ============================================================
-  // SHARED STATE (Used by both modes)
-  // ============================================================
   bool _isTracking = false;
   bool _isUserActive = true;
   AppLocalizations? _localizations;
   String _currentLocale = 'en';
   AppDataStore? _appDataStore;
 
-  // Stream controller to broadcast app updates
   final StreamController<String> _appUpdateController =
       StreamController<String>.broadcast();
   Stream<String> get appUpdates => _appUpdateController.stream;
+
+  // ============================================================
+  // SCREEN STATE — three independent flags
+  // ALL must be false for tracking to be active.
+  // ============================================================
+  bool _systemAsleep = false;
+  bool _screenOff = false;
+  bool _locked = false;
+
+  bool get _screenStateAllowsTracking =>
+      !_systemAsleep && !_screenOff && !_locked;
+
+  // Called by the DesktopScreenState listener
+  void _onScreenStateEvent(String event) {
+    debugPrint('🖥️ Screen state: $event');
+
+    final wasAllowed = _screenStateAllowsTracking;
+
+    // For PAUSE events: save BEFORE flipping the flag.
+    // If we flip first, _screenStateAllowsTracking becomes false and
+    // _saveCurrentAppTime would skip the save — losing elapsed time.
+    if ((event == 'sleep' || event == 'screenOff' || event == 'locked') &&
+        wasAllowed) {
+      if (_trackingMode == TrackingMode.precise) {
+        _commitCurrentAppTime(); // unconditional save
+      }
+    }
+
+    // Flip the flag
+    switch (event) {
+      case 'sleep':     _systemAsleep = true;  break;
+      case 'awaked':    _systemAsleep = false; break;
+      case 'screenOff': _screenOff = true;     break;
+      case 'screenOn':  _screenOff = false;    break;
+      case 'locked':    _locked = true;        break;
+      case 'unlocked':  _locked = false;       break;
+    }
+
+    // For RESUME events: reset start time so sleep duration is never counted
+    if (!wasAllowed && _screenStateAllowsTracking) {
+      debugPrint('▶️ Resuming tracking');
+      if (_trackingMode == TrackingMode.precise) {
+        _currentAppStartTime = DateTime.now();
+      }
+    }
+  }
 
   // ============================================================
   // WINDOW FOCUS PLUGIN
@@ -56,17 +98,13 @@ class BackgroundAppTracker {
   WindowFocus? _windowFocusPlugin;
 
   // ============================================================
-  // POLLING MODE STATE
+  // POLLING STATE
   // ============================================================
   Timer? _pollingTimer;
 
   // ============================================================
   // PRECISE MODE STATE
   // ============================================================
-  // NOTE: We no longer need _commitTimer or _appUsageBuffer here!
-  // The AppDataStore now handles all buffering and committing internally
-  // with its runtime cache + periodic Hive persistence
-
   String _currentApp = '';
   DateTime _currentAppStartTime = DateTime.now();
   Timer? _selfTrackingHeartbeat;
@@ -74,7 +112,6 @@ class BackgroundAppTracker {
 
   static const String _selfAppName = 'Scolect - Track Screen Time & App Usage';
 
-  // Metadata cache - shared by both modes for performance
   final Map<String, AppMetadata> _metadataCache = {};
   bool _metadataCacheLoaded = false;
 
@@ -84,107 +121,6 @@ class BackgroundAppTracker {
   TrackingMode get trackingMode => _trackingMode;
   bool get isTracking => _isTracking;
   bool get isUserActive => _isUserActive;
-
-  // ============================================================
-  // PRECISE MODE HEARTBEAT (SELF-APP ONLY)
-  // ============================================================
-  void _startSelfTrackingHeartbeat() {
-    _selfTrackingHeartbeat?.cancel();
-    _selfTrackingHeartbeat = Timer.periodic(
-      const Duration(seconds: 5),
-      (_) => _heartbeatSelfApp(),
-    );
-    debugPrint('💓 Self-tracking heartbeat started');
-  }
-
-  void _stopSelfTrackingHeartbeat() {
-    _selfTrackingHeartbeat?.cancel();
-    _selfTrackingHeartbeat = null;
-    debugPrint('💓 Self-tracking heartbeat stopped');
-  }
-
-  void _startUniversalHeartbeat() {
-    _universalHeartbeat?.cancel();
-    _universalHeartbeat = Timer.periodic(
-      const Duration(seconds: 60), // 👈 Every 60s, lightweight
-      (_) => _heartbeatCurrentApp(),
-    );
-    debugPrint('💓 Universal heartbeat started (every 60s)');
-  }
-
-  void _stopUniversalHeartbeat() {
-    _universalHeartbeat?.cancel();
-    _universalHeartbeat = null;
-  }
-
-  void _heartbeatCurrentApp() {
-    if (_trackingMode != TrackingMode.precise) return;
-    if (!_isTracking) return;
-    if (_currentApp.isEmpty) return;
-    if (_currentApp == _selfAppName) return; // 👈 Self-heartbeat handles this
-
-    bool idleDetectionEnabled =
-        SettingsManager().getSetting("tracking.idleDetection") ?? true;
-
-    if (idleDetectionEnabled && !_isUserActive) return;
-
-    final metadata = _appDataStore?.getAppMetadata(_currentApp);
-    if (metadata != null && (!metadata.isTracking || !metadata.isVisible))
-      return;
-
-    final now = DateTime.now();
-    final elapsed = now.difference(_currentAppStartTime);
-
-    if (elapsed.inSeconds <= 0) return;
-
-    _appDataStore?.recordAppUsage(
-      _currentApp,
-      now,
-      elapsed,
-      0,
-      [TimeRange(startTime: _currentAppStartTime, endTime: now)],
-    );
-
-    _currentAppStartTime = now;
-
-    debugPrint('💓 Universal heartbeat: $_currentApp (+${elapsed.inSeconds}s)');
-  }
-
-  void _heartbeatSelfApp() {
-    if (_trackingMode != TrackingMode.precise) return;
-    if (!_isTracking) return;
-    if (_currentApp != _selfAppName) return; // 👈 ONLY for our app
-
-    bool idleDetectionEnabled =
-        SettingsManager().getSetting("tracking.idleDetection") ?? true;
-
-    if (idleDetectionEnabled && !_isUserActive) return;
-
-    // 🔒 FIX #1: CHECK TRACKING STATUS BEFORE CALCULATING ELAPSED TIME
-    final metadata = _appDataStore?.getAppMetadata(_currentApp);
-    if (metadata != null && (!metadata.isTracking || !metadata.isVisible)) {
-      debugPrint(
-          '💓 Self-heartbeat skipped: tracking disabled for $_currentApp');
-      return;
-    }
-
-    final now = DateTime.now();
-    final elapsed = now.difference(_currentAppStartTime);
-
-    if (elapsed.inSeconds <= 0) return;
-
-    _appDataStore?.recordAppUsage(
-      _currentApp,
-      now,
-      elapsed,
-      0, // Continuation, not a new open
-      [TimeRange(startTime: _currentAppStartTime, endTime: now)],
-    );
-
-    _currentAppStartTime = now;
-
-    debugPrint('💓 Self-heartbeat: +${elapsed.inSeconds}s');
-  }
 
   // ============================================================
   // INITIALIZATION
@@ -202,90 +138,67 @@ class BackgroundAppTracker {
 
       debugPrint('═══════════════════════════════════════════════════════');
       debugPrint('🚀 INITIALIZING BACKGROUND APP TRACKER');
+      debugPrint('   Locale: $_currentLocale | Mode: ${_trackingMode.name}');
       debugPrint('═══════════════════════════════════════════════════════');
-      debugPrint('🌍 Locale: $_currentLocale');
-      debugPrint('📊 Tracking mode: ${_trackingMode.name}');
 
-      // Initialize AppDataStore (now with runtime cache!)
       await _initializeAppDataStore();
-
-      // Load metadata cache early
       await _loadMetadataCache();
-
-      // Initialize WindowFocus plugin
       await _initializeWindowFocusPlugin();
 
-      // Start tracking based on mode
+      // Wire up screen state listener BEFORE starting tracking
+      DesktopScreenState.instance.isActive.addListener(_onScreenStateChanged);
+      debugPrint('✅ ScreenState listener attached');
+
       if (_trackingMode == TrackingMode.polling) {
-        debugPrint('🔄 Starting POLLING mode');
         await _startPollingMode();
       } else {
-        debugPrint('🔄 Starting PRECISE mode');
         await _startPreciseMode();
       }
 
       _isTracking = true;
 
-      debugPrint('═══════════════════════════════════════════════════════');
-      debugPrint('✅ BACKGROUND TRACKER INITIALIZED');
-      debugPrint('   Mode: ${_trackingMode.name}');
-      debugPrint('   Runtime cache enabled: Yes');
-      debugPrint('   Metadata cache: ${_metadataCache.length} apps');
-      debugPrint('═══════════════════════════════════════════════════════');
+      debugPrint('✅ BACKGROUND TRACKER INITIALIZED — mode: ${_trackingMode.name}');
     } catch (e) {
       debugPrint('❌ Tracking initialization error: $e');
     }
   }
 
+  void _onScreenStateChanged() {
+    final state = DesktopScreenState.instance.isActive.value;
+    _onScreenStateEvent(state.name); // .name gives the enum string e.g. 'sleep'
+  }
+
   // ============================================================
-  // APP DATA STORE INITIALIZATION
+  // APP DATA STORE
   // ============================================================
   Future<void> _initializeAppDataStore() async {
     if (_appDataStore == null) {
       _appDataStore = AppDataStore();
       await _appDataStore!.init();
-      debugPrint('✅ AppDataStore initialized with runtime cache');
-
-      // Log runtime cache stats
-      final stats = _appDataStore!.getRuntimeCacheStats();
-      debugPrint('   📊 Runtime cache stats:');
-      debugPrint('      - Usage records: ${stats['usageRecordsInCache']}');
-      debugPrint('      - Focus sessions: ${stats['focusSessionsInCache']}');
-      debugPrint('      - Metadata: ${stats['metadataInCache']}');
-      debugPrint(
-          '      - Persistence interval: ${stats['persistenceIntervalSeconds']}s');
+      debugPrint('✅ AppDataStore initialized');
     }
   }
 
   // ============================================================
-  // METADATA CACHE LOADING
+  // METADATA CACHE
   // ============================================================
   Future<void> _loadMetadataCache() async {
     if (_appDataStore == null) return;
-
     try {
-      debugPrint('📦 Loading metadata cache...');
-
       final allApps = _appDataStore!.allAppNames;
-      int loadedCount = 0;
-
       for (final appName in allApps) {
         final metadata = _appDataStore!.getAppMetadata(appName);
-        if (metadata != null) {
-          _metadataCache[appName] = metadata;
-          loadedCount++;
-        }
+        if (metadata != null) _metadataCache[appName] = metadata;
       }
-
       _metadataCacheLoaded = true;
-      debugPrint('✅ Metadata cache loaded: $loadedCount apps');
+      debugPrint('✅ Metadata cache loaded: ${_metadataCache.length} apps');
     } catch (e) {
       debugPrint('❌ Error loading metadata cache: $e');
     }
   }
 
   // ============================================================
-  // WINDOW FOCUS PLUGIN INITIALIZATION
+  // WINDOW FOCUS PLUGIN
   // ============================================================
   Future<void> _initializeWindowFocusPlugin() async {
     bool idleDetectionEnabled =
@@ -304,10 +217,6 @@ class BackgroundAppTracker {
     double audioThreshold =
         SettingsManager().getSetting("tracking.audioThreshold") ?? 0.001;
 
-    debugPrint('🔧 Initializing WindowFocus plugin:');
-    debugPrint('   - Idle Detection: $idleDetectionEnabled');
-    debugPrint('   - Idle Timeout: ${idleTimeoutSeconds}s');
-
     _windowFocusPlugin = WindowFocus(
       debug: false,
       duration: Duration(seconds: idleTimeoutSeconds),
@@ -319,14 +228,11 @@ class BackgroundAppTracker {
     );
 
     _windowFocusPlugin!.addFocusChangeListener(_handleFocusChange);
-    debugPrint('✅ Focus change listener added');
 
     if (idleDetectionEnabled) {
       _windowFocusPlugin!.addUserActiveListener(_handleUserActivityChange);
-      debugPrint('✅ User activity listener added');
     } else {
       _isUserActive = true;
-      debugPrint('⚠️ Idle detection disabled');
     }
 
     debugPrint('✅ WindowFocus plugin initialized');
@@ -336,15 +242,9 @@ class BackgroundAppTracker {
   // MODE SWITCHING
   // ============================================================
   Future<void> setTrackingMode(TrackingMode mode) async {
-    if (_trackingMode == mode) {
-      debugPrint('ℹ️ Already in ${mode.name} mode');
-      return;
-    }
+    if (_trackingMode == mode) return;
 
-    debugPrint('═══════════════════════════════════════════════════════');
-    debugPrint('🔄 SWITCHING TRACKING MODE');
-    debugPrint('   From: ${_trackingMode.name} → To: ${mode.name}');
-    debugPrint('═══════════════════════════════════════════════════════');
+    debugPrint('🔄 Switching mode: ${_trackingMode.name} → ${mode.name}');
 
     await _stopCurrentMode();
     _trackingMode = mode;
@@ -355,28 +255,18 @@ class BackgroundAppTracker {
     } else {
       await _startPreciseMode();
     }
-
-    debugPrint('✅ TRACKING MODE CHANGED TO: ${mode.name}');
   }
 
-  // ============================================================
-  // STOP CURRENT MODE
-  // ============================================================
   Future<void> _stopCurrentMode() async {
     if (_trackingMode == TrackingMode.polling) {
       _pollingTimer?.cancel();
       _pollingTimer = null;
-      debugPrint('🛑 Polling timer stopped');
     } else {
-      // In precise mode, just save the current app time
-      // The AppDataStore runtime cache will handle everything else
       _saveCurrentAppTime();
       _stopSelfTrackingHeartbeat();
       _stopUniversalHeartbeat();
-
       _currentApp = '';
       _currentAppStartTime = DateTime.now();
-      debugPrint('🛑 Precise mode stopped');
     }
   }
 
@@ -384,26 +274,24 @@ class BackgroundAppTracker {
   // POLLING MODE
   // ============================================================
   Future<void> _startPollingMode() async {
-    debugPrint('🔄 Starting polling mode (1-minute intervals)');
-
     _pollingTimer = Timer.periodic(
       const Duration(minutes: 1),
       (_) => _executePollingTracking(),
     );
-
     _executePollingTracking();
-    debugPrint('✅ Polling timer started');
+    debugPrint('✅ Polling mode started');
   }
 
   Future<void> _executePollingTracking() async {
     try {
-      bool idleDetectionEnabled =
-          SettingsManager().getSetting("tracking.idleDetection") ?? true;
-
-      if (idleDetectionEnabled && !_isUserActive) {
-        debugPrint('⏸️ Polling skipped: user is idle');
+      if (!_screenStateAllowsTracking) {
+        debugPrint('⏸️ Polling skipped: screen inactive');
         return;
       }
+
+      bool idleDetectionEnabled =
+          SettingsManager().getSetting("tracking.idleDetection") ?? true;
+      if (idleDetectionEnabled && !_isUserActive) return;
 
       final Map<String, dynamic>? currentAppInfo =
           await _getCurrentActiveAppInfo();
@@ -411,84 +299,44 @@ class BackgroundAppTracker {
 
       String appTitle = currentAppInfo['title'] ?? '';
 
-      if (appTitle.contains("Windows Explorer")) {
-        appTitle = "";
-      }
-
-      if (appTitle == "Productive ScreenTime" || appTitle == "screentime") {
-        return;
-      }
-
-      if (appTitle == "loginwindow") {
-        return;
-      }
+      if (appTitle.contains("Windows Explorer")) appTitle = "";
+      if (appTitle == "Productive ScreenTime" || appTitle == "screentime") return;
+      if (appTitle == "loginwindow") return;
 
       AppMetadata? metadata = await _getOrCreateMetadata(appTitle);
 
-      // 🔒 ALREADY HAS CORRECT CHECK: Only record if tracking is enabled
       if (metadata != null && metadata.isTracking && metadata.isVisible) {
         final now = DateTime.now();
         final startTime = now.subtract(const Duration(minutes: 1));
-
-        // 🎯 DATA GOES TO RUNTIME CACHE INSTANTLY!
-        // User can see it immediately, no waiting for Hive commit
         await _appDataStore?.recordAppUsage(
-          appTitle,
-          now,
-          const Duration(minutes: 1),
-          1,
+          appTitle, now, const Duration(minutes: 1), 1,
           [TimeRange(startTime: startTime, endTime: now)],
         );
-
-        debugPrint('📊 Polling recorded: $appTitle (1 min) → runtime cache');
-      } else if (metadata != null && !metadata.isTracking) {
-        debugPrint('⏭️ Polling skipped: $appTitle (tracking disabled)');
+        debugPrint('📊 Polling: $appTitle (+1 min)');
       }
 
       _notificationController.checkAndSendNotifications();
       _appUpdateController.add(appTitle);
     } catch (e) {
-      debugPrint('❌ Polling tracking error: $e');
+      debugPrint('❌ Polling error: $e');
     }
   }
 
-  /// Call this after clearing all data to re-anchor tracking state
-  /// so the current app starts being tracked again immediately
   Future<void> reanchorTracking() async {
     if (!_isTracking) return;
-
-    debugPrint(
-        '🔄 Re-anchoring tracking state after 2 seconds by data clear...');
-    // 👈 Wait 2 seconds so the UI has time to show the "empty" state
     await Future.delayed(const Duration(seconds: 2));
 
     if (_trackingMode == TrackingMode.precise) {
-      // Don't save old time — data was just cleared, old elapsed is irrelevant
-      // Just reset the start time to NOW
       _currentAppStartTime = DateTime.now();
-
-      // Re-ensure metadata exists for the current app
       if (_currentApp.isNotEmpty) {
         await _getOrCreateMetadata(_currentApp);
-
-        // Immediately record a small entry so the app shows up in the UI
         final now = DateTime.now();
-        await _appDataStore?.recordAppUsage(
-          _currentApp,
-          now,
-          Duration.zero,
-          1,
-          [],
-        );
-
-        debugPrint('✅ Re-anchored: $_currentApp (tracking from now)');
+        await _appDataStore?.recordAppUsage(_currentApp, now, Duration.zero, 1, []);
+        debugPrint('✅ Re-anchored: $_currentApp');
       }
-    } else if (_trackingMode == TrackingMode.polling) {
-      // Force an immediate poll so current app appears right away
+    } else {
       await _executePollingTracking();
-      debugPrint('✅ Re-anchored: forced immediate poll');
     }
-
     _appUpdateController.add(_currentApp);
   }
 
@@ -496,77 +344,122 @@ class BackgroundAppTracker {
   // PRECISE MODE
   // ============================================================
   Future<void> _startPreciseMode() async {
-    debugPrint('🔄 Starting precise mode (event-based tracking)');
-
-    if (!_metadataCacheLoaded) {
-      await _loadMetadataCache();
-    }
+    if (!_metadataCacheLoaded) await _loadMetadataCache();
     _startUniversalHeartbeat();
-    // NOTE: We no longer start a commit timer here!
-    // The AppDataStore handles all periodic commits internally
-
     debugPrint('✅ Precise mode started');
-    debugPrint('   ℹ️ Data commits handled by AppDataStore runtime cache');
+  }
+
+  void _startSelfTrackingHeartbeat() {
+    _selfTrackingHeartbeat?.cancel();
+    _selfTrackingHeartbeat = Timer.periodic(
+      const Duration(seconds: 5),
+      (_) => _heartbeatSelfApp(),
+    );
+  }
+
+  void _stopSelfTrackingHeartbeat() {
+    _selfTrackingHeartbeat?.cancel();
+    _selfTrackingHeartbeat = null;
+  }
+
+  void _startUniversalHeartbeat() {
+    _universalHeartbeat?.cancel();
+    _universalHeartbeat = Timer.periodic(
+      const Duration(seconds: 60),
+      (_) => _heartbeatCurrentApp(),
+    );
+  }
+
+  void _stopUniversalHeartbeat() {
+    _universalHeartbeat?.cancel();
+    _universalHeartbeat = null;
+  }
+
+  void _heartbeatCurrentApp() {
+    if (!_isTracking) return;
+    if (_currentApp.isEmpty || _currentApp == _selfAppName) return;
+    if (!_screenStateAllowsTracking) return;
+
+    bool idleDetectionEnabled =
+        SettingsManager().getSetting("tracking.idleDetection") ?? true;
+    if (idleDetectionEnabled && !_isUserActive) return;
+
+    final metadata = _appDataStore?.getAppMetadata(_currentApp);
+    if (metadata != null && (!metadata.isTracking || !metadata.isVisible)) return;
+
+    final now = DateTime.now();
+    final elapsed = now.difference(_currentAppStartTime);
+    if (elapsed.inSeconds <= 0) return;
+
+    _appDataStore?.recordAppUsage(
+      _currentApp, now, elapsed, 0,
+      [TimeRange(startTime: _currentAppStartTime, endTime: now)],
+    );
+    _currentAppStartTime = now;
+    debugPrint('💓 Heartbeat: $_currentApp (+${elapsed.inSeconds}s)');
+  }
+
+  void _heartbeatSelfApp() {
+    if (!_isTracking || _currentApp != _selfAppName) return;
+    if (!_screenStateAllowsTracking) return;
+
+    bool idleDetectionEnabled =
+        SettingsManager().getSetting("tracking.idleDetection") ?? true;
+    if (idleDetectionEnabled && !_isUserActive) return;
+
+    final metadata = _appDataStore?.getAppMetadata(_currentApp);
+    if (metadata != null && (!metadata.isTracking || !metadata.isVisible)) return;
+
+    final now = DateTime.now();
+    final elapsed = now.difference(_currentAppStartTime);
+    if (elapsed.inSeconds <= 0) return;
+
+    _appDataStore?.recordAppUsage(
+      _currentApp, now, elapsed, 0,
+      [TimeRange(startTime: _currentAppStartTime, endTime: now)],
+    );
+    _currentAppStartTime = now;
+    debugPrint('💓 Self-heartbeat: +${elapsed.inSeconds}s');
   }
 
   // ============================================================
-  // FOCUS CHANGE HANDLER
+  // FOCUS CHANGE
   // ============================================================
-  String sanitizeWindowTitle(String title) {
+  String _sanitizeWindowTitle(String title) {
     return title
-        // Remove null terminators
         .replaceAll('\u0000', '')
-        // Remove zero-width and control characters
         .replaceAll(RegExp(r'[\u200B-\u200D\uFEFF]'), '')
-        // Remove other non-printable chars
         .replaceAll(RegExp(r'[\x00-\x1F\x7F]'), '')
-        // Normalize whitespace
         .trim();
   }
 
   void _handleFocusChange(AppWindowDto window) async {
-    if (_trackingMode == TrackingMode.polling) {
-      return;
-    }
+    if (_trackingMode == TrackingMode.polling) return;
+
     if ((window.appName != "Widgets.exe" && window.windowTitle == "") ||
         (window.appName == "explorer.exe" &&
-            window.windowTitle == "Program Manager")) {
-      return;
-    }
+            window.windowTitle == "Program Manager")) return;
+
     String newApp = await _getCurrentActiveApp();
     if (newApp == "SearchHost" || newApp == "Application Frame Host") {
-      newApp = sanitizeWindowTitle(window.windowTitle);
-    }
-    debugPrint(window.windowTitle);
-    if (newApp == "Productive ScreenTime") {
-      return;
+      newApp = _sanitizeWindowTitle(window.windowTitle);
     }
 
-    if (newApp == "screentime") {
-      newApp = "Scolect - Track Screen Time & App Usage";
-    }
-
-    if (newApp == "loginwindow") {
-      return;
-    }
+    if (newApp == "Productive ScreenTime") return;
+    if (newApp == "screentime") newApp = _selfAppName;
+    if (newApp == "loginwindow" || newApp == "LockApp") return;
 
     if (newApp != _currentApp) {
-      // Save the current app's time before switching
       _saveCurrentAppTime();
 
-      // 🔒 FIX #2: CHECK IF NEW APP SHOULD BE TRACKED
       _currentApp = newApp;
       _currentAppStartTime = DateTime.now();
 
-      // Ensure metadata exists for the new app
       await _ensureMetadataExists(newApp);
 
-      // Check if this app should be tracked
       final metadata = _appDataStore?.getAppMetadata(newApp);
       if (metadata != null && (!metadata.isTracking || !metadata.isVisible)) {
-        debugPrint(
-            '📱 App changed to: $newApp (tracking disabled - will not record)');
-        _stopSelfTrackingHeartbeat(); // Don't heartbeat if not tracking
+        _stopSelfTrackingHeartbeat();
         _appUpdateController.add(_currentApp);
         return;
       }
@@ -577,142 +470,91 @@ class BackgroundAppTracker {
         _stopSelfTrackingHeartbeat();
       }
 
-      debugPrint('📱 App changed to: $newApp (tracking enabled)');
+      debugPrint('📱 App: $newApp');
       _appUpdateController.add(_currentApp);
     }
   }
 
   // ============================================================
-  // USER ACTIVITY CHANGE HANDLER
+  // USER ACTIVITY
   // ============================================================
   void _handleUserActivityChange(bool isActive) {
-    debugPrint('👤 User activity: ${isActive ? "ACTIVE" : "IDLE"}');
-
     if (_trackingMode == TrackingMode.precise) {
-      if (!isActive && _isUserActive) {
-        _saveCurrentAppTime();
-      }
-
-      if (isActive && !_isUserActive) {
-        _currentAppStartTime = DateTime.now();
-      }
+      if (!isActive && _isUserActive) _saveCurrentAppTime();
+      if (isActive && !_isUserActive) _currentAppStartTime = DateTime.now();
     }
-
     _isUserActive = isActive;
+    debugPrint('👤 User: ${isActive ? "active" : "idle"}');
   }
 
   // ============================================================
-  // PRECISE MODE: SAVE CURRENT APP TIME
+  // SAVE CURRENT APP TIME
+  // Two variants:
+  //   _saveCurrentAppTime()    — checks screen state (normal use)
+  //   _commitCurrentAppTime()  — skips screen state check (used by
+  //                              _onScreenStateEvent BEFORE flag is flipped)
   // ============================================================
   void _saveCurrentAppTime() {
     if (_trackingMode != TrackingMode.precise) return;
+    if (!_screenStateAllowsTracking) return;
 
     bool idleDetectionEnabled =
         SettingsManager().getSetting("tracking.idleDetection") ?? true;
+    if (idleDetectionEnabled && !_isUserActive) return;
 
-    if (idleDetectionEnabled && !_isUserActive) {
-      debugPrint('⏸️ Skipping save: user is idle');
-      return;
-    }
+    _commitCurrentAppTime();
+  }
 
-    if (_currentApp.isEmpty) {
-      return;
-    }
+  void _commitCurrentAppTime() {
+    if (_currentApp.isEmpty) return;
 
-    // ⭐ CRITICAL FIX: Get fresh metadata from AppDataStore, not stale local cache
     final metadata = _appDataStore?.getAppMetadata(_currentApp);
+    if (metadata != null && (!metadata.isTracking || !metadata.isVisible)) return;
 
-    if (metadata != null && (!metadata.isTracking || !metadata.isVisible)) {
-      debugPrint(
-          '⏭️ Skipping save: $_currentApp (tracking: ${metadata.isTracking}, visible: ${metadata.isVisible})');
-      return;
-    }
-
-    final elapsed = DateTime.now().difference(_currentAppStartTime);
-    final elapsedSeconds = elapsed.inSeconds;
-
-    if (elapsedSeconds <= 0) {
-      return;
-    }
-
-    // 🎯 SAVE DIRECTLY TO RUNTIME CACHE!
-    // No intermediate buffer needed - AppDataStore handles it
     final now = DateTime.now();
+    final elapsed = now.difference(_currentAppStartTime);
+    if (elapsed.inSeconds <= 0) return;
+
     _appDataStore?.recordAppUsage(
-      _currentApp,
-      now,
-      Duration(seconds: elapsedSeconds),
-      1,
+      _currentApp, now, elapsed, 1,
       [TimeRange(startTime: _currentAppStartTime, endTime: now)],
     ).then((_) {
-      debugPrint('💾 Saved: $_currentApp (${elapsedSeconds}s) → runtime cache');
+      debugPrint('💾 Committed: $_currentApp (${elapsed.inSeconds}s)');
     }).catchError((e) {
-      debugPrint('❌ Error saving to runtime cache: $e');
+      debugPrint('❌ Commit error: $e');
     });
 
-    // Reset timer for next save
     _currentAppStartTime = now;
-
-    // Check notifications
     _notificationController.checkAndSendNotifications();
   }
 
   // ============================================================
-  // METADATA MANAGEMENT
+  // METADATA
   // ============================================================
-
   Future<AppMetadata?> _getOrCreateMetadata(String appTitle) async {
-    // CRITICAL FIX: Always check AppDataStore first for fresh data
-    // The local cache might be stale, especially after clearing data
+    if (appTitle == "Productive ScreenTime" || appTitle == "screentime") return null;
 
-    if (appTitle == "Productive ScreenTime" || appTitle == "screentime") {
-      return null;
-    }
-
-    // First, check if AppDataStore has this metadata
     if (_appDataStore != null) {
-      final existingMetadata = _appDataStore!.getAppMetadata(appTitle);
-
-      if (existingMetadata != null) {
-        // Update local cache with fresh data from AppDataStore
-        _metadataCache[appTitle] = existingMetadata;
-        return existingMetadata;
+      final existing = _appDataStore!.getAppMetadata(appTitle);
+      if (existing != null) {
+        _metadataCache[appTitle] = existing;
+        return existing;
       }
     }
 
-    // App doesn't exist in AppDataStore, create new metadata
-    bool isProductive = true;
-    String appCategory = 'Uncategorized';
-
-    if (appTitle.isEmpty) {
-      appCategory = 'Idle';
-    } else {
-      appCategory = _categorizeAppWithLocale(appTitle);
-    }
-
-    if (appCategory == "Social Media" ||
+    String appCategory = appTitle.isEmpty ? 'Idle' : _categorizeAppWithLocale(appTitle);
+    bool isProductive = !(appCategory == "Social Media" ||
         appCategory == "Entertainment" ||
         appCategory == "Gaming" ||
-        appCategory == "Uncategorized") {
-      isProductive = false;
-    }
+        appCategory == "Uncategorized");
 
-    // Create metadata in AppDataStore
     if (_appDataStore != null) {
-      await _appDataStore!.updateAppMetadata(
-        appTitle,
-        category: appCategory,
-        isProductive: isProductive,
-      );
-
-      // Fetch the newly created metadata from AppDataStore
-      final newMetadata = _appDataStore!.getAppMetadata(appTitle);
-      if (newMetadata != null) {
-        // Cache it locally
-        _metadataCache[appTitle] = newMetadata;
-        debugPrint(
-            '✨ Created metadata: $appTitle ($appCategory, productive: $isProductive)');
-        return newMetadata;
+      await _appDataStore!.updateAppMetadata(appTitle,
+          category: appCategory, isProductive: isProductive);
+      final created = _appDataStore!.getAppMetadata(appTitle);
+      if (created != null) {
+        _metadataCache[appTitle] = created;
+        return created;
       }
     }
 
@@ -720,12 +562,8 @@ class BackgroundAppTracker {
   }
 
   Future<void> _ensureMetadataExists(String appTitle) async {
-    await _getOrCreateMetadata(appTitle).then((metadata) {
-      if (metadata != null) {
-        debugPrint('✅ Metadata ready: $appTitle');
-      }
-    }).catchError((error) {
-      debugPrint('⚠️ Error creating metadata for $appTitle: $error');
+    await _getOrCreateMetadata(appTitle).catchError((e) {
+      debugPrint('⚠️ Metadata error for $appTitle: $e');
     });
   }
 
@@ -733,52 +571,35 @@ class BackgroundAppTracker {
     _metadataCache.clear();
     _metadataCacheLoaded = false;
     await _loadMetadataCache();
-    debugPrint('🔄 Metadata cache refreshed');
   }
 
-  /// Clear the metadata cache completely (call this after clearing all data)
-  /// This should be called AFTER AppDataStore.clearAllData() to sync with empty database
   Future<void> clearMetadataCache() async {
-    debugPrint('🗑️ Clearing BackgroundAppTracker metadata cache...');
-
     _metadataCache.clear();
     _metadataCacheLoaded = false;
-
-    // Reload from AppDataStore (which should now be empty after clearAllData)
     await _loadMetadataCache();
-
-    debugPrint('✅ Metadata cache cleared and reloaded');
-    debugPrint(
-        '   Cache size after clear: ${_metadataCache.length} (should be 0)');
   }
 
-  Future<void> updateMetadataInCache(
-      String appTitle, AppMetadata metadata) async {
+  Future<void> updateMetadataInCache(String appTitle, AppMetadata metadata) async {
     _metadataCache[appTitle] = metadata;
-
     if (_appDataStore != null) {
-      await _appDataStore!.updateAppMetadata(
-        appTitle,
-        category: metadata.category,
-        isProductive: metadata.isProductive,
-        isTracking: metadata.isTracking,
-        isVisible: metadata.isVisible,
-        dailyLimit: metadata.dailyLimit,
-        limitStatus: metadata.limitStatus,
-      );
+      await _appDataStore!.updateAppMetadata(appTitle,
+          category: metadata.category,
+          isProductive: metadata.isProductive,
+          isTracking: metadata.isTracking,
+          isVisible: metadata.isVisible,
+          dailyLimit: metadata.dailyLimit,
+          limitStatus: metadata.limitStatus);
     }
   }
 
   // ============================================================
-  // HELPER METHODS
+  // HELPERS
   // ============================================================
-
   Future<Map<String, dynamic>?> _getCurrentActiveAppInfo() async {
     try {
       WindowInfo info = await ForegroundWindowPlugin.getForegroundWindowInfo();
       return {'title': info.programName};
     } catch (e) {
-      debugPrint('❌ Error getting current app info: $e');
       return null;
     }
   }
@@ -788,7 +609,6 @@ class BackgroundAppTracker {
       WindowInfo info = await ForegroundWindowPlugin.getForegroundWindowInfo();
       return info.programName;
     } catch (e) {
-      debugPrint('❌ Error getting current app: $e');
       return '';
     }
   }
@@ -796,57 +616,44 @@ class BackgroundAppTracker {
   // ============================================================
   // LOCALIZATION
   // ============================================================
-
   Future<void> _loadLocalizations(String localeCode) async {
     try {
       final locale = ui.Locale(localeCode);
       _localizations = await AppLocalizations.delegate.load(locale);
-      debugPrint('✅ Localizations loaded: $localeCode');
     } catch (e) {
-      debugPrint('❌ Failed to load localizations: $e');
-      final fallbackLocale = const ui.Locale('en');
-      _localizations = await AppLocalizations.delegate.load(fallbackLocale);
+      _localizations = await AppLocalizations.delegate.load(const ui.Locale('en'));
     }
   }
 
   Future<void> updateLocale(String locale) async {
     _currentLocale = locale;
     await _loadLocalizations(locale);
-    debugPrint('🌍 Locale updated: $_currentLocale');
   }
 
   // ============================================================
-  // APP CATEGORIZATION
+  // CATEGORIZATION
   // ============================================================
-
   String _categorizeAppWithLocale(String appTitle) {
-    if (_localizations == null) {
-      return _categorizeAppEnglishOnly(appTitle);
-    }
+    if (_localizations == null) return _categorizeAppEnglishOnly(appTitle);
 
     for (var category in AppCategories.categories) {
-      if (category.apps
-          .any((app) => appTitle.toLowerCase().contains(app.toLowerCase()))) {
+      if (category.apps.any((app) => appTitle.toLowerCase().contains(app.toLowerCase()))) {
         return category.name;
       }
     }
-
     for (var category in AppCategories.categories) {
       for (var app in category.apps) {
-        String localizedAppName = _getLocalizedAppName(app);
-        if (appTitle.toLowerCase().contains(localizedAppName.toLowerCase())) {
+        if (appTitle.toLowerCase().contains(_getLocalizedAppName(app).toLowerCase())) {
           return category.name;
         }
       }
     }
-
     return "Uncategorized";
   }
 
   String _categorizeAppEnglishOnly(String appTitle) {
     for (var category in AppCategories.categories) {
-      if (category.apps
-          .any((app) => appTitle.toLowerCase().contains(app.toLowerCase()))) {
+      if (category.apps.any((app) => appTitle.toLowerCase().contains(app.toLowerCase()))) {
         return category.name;
       }
     }
@@ -855,228 +662,123 @@ class BackgroundAppTracker {
 
   String _getLocalizedAppName(String appName) {
     if (_localizations == null) return appName;
-
     try {
       switch (appName) {
-        case "Microsoft Word":
-          return _localizations!.appMicrosoftWord;
-        case "Excel":
-          return _localizations!.appExcel;
-        case "PowerPoint":
-          return _localizations!.appPowerPoint;
-        case "Google Docs":
-          return _localizations!.appGoogleDocs;
-        case "Notion":
-          return _localizations!.appNotion;
-        case "Evernote":
-          return _localizations!.appEvernote;
-        case "Trello":
-          return _localizations!.appTrello;
-        case "Asana":
-          return _localizations!.appAsana;
-        case "Slack":
-          return _localizations!.appSlack;
-        case "Microsoft Teams":
-          return _localizations!.appMicrosoftTeams;
-        case "Zoom":
-          return _localizations!.appZoom;
-        case "Google Calendar":
-          return _localizations!.appGoogleCalendar;
-        case "Apple Calendar":
-          return _localizations!.appAppleCalendar;
-        case "Visual Studio Code":
-          return _localizations!.appVisualStudioCode;
-        case "Terminal":
-          return _localizations!.appTerminal;
-        case "Command Prompt":
-          return _localizations!.appCommandPrompt;
-        case "Chrome":
-          return _localizations!.appChrome;
-        case "Firefox":
-          return _localizations!.appFirefox;
-        case "Safari":
-          return _localizations!.appSafari;
-        case "Edge":
-          return _localizations!.appEdge;
-        case "Opera":
-          return _localizations!.appOpera;
-        case "Brave":
-          return _localizations!.appBrave;
-        case "Netflix":
-          return _localizations!.appNetflix;
-        case "YouTube":
-          return _localizations!.appYouTube;
-        case "Spotify":
-          return _localizations!.appSpotify;
-        case "Apple Music":
-          return _localizations!.appAppleMusic;
-        case "Calculator":
-          return _localizations!.appCalculator;
-        case "Notes":
-          return _localizations!.appNotes;
-        case "System Preferences":
-          return _localizations!.appSystemPreferences;
-        case "Task Manager":
-          return _localizations!.appTaskManager;
-        case "File Explorer":
-          return _localizations!.appFileExplorer;
-        case "Dropbox":
-          return _localizations!.appDropbox;
-        case "Google Drive":
-          return _localizations!.appGoogleDrive;
-        default:
-          return appName;
+        case "Microsoft Word":    return _localizations!.appMicrosoftWord;
+        case "Excel":             return _localizations!.appExcel;
+        case "PowerPoint":        return _localizations!.appPowerPoint;
+        case "Google Docs":       return _localizations!.appGoogleDocs;
+        case "Notion":            return _localizations!.appNotion;
+        case "Evernote":          return _localizations!.appEvernote;
+        case "Trello":            return _localizations!.appTrello;
+        case "Asana":             return _localizations!.appAsana;
+        case "Slack":             return _localizations!.appSlack;
+        case "Microsoft Teams":   return _localizations!.appMicrosoftTeams;
+        case "Zoom":              return _localizations!.appZoom;
+        case "Google Calendar":   return _localizations!.appGoogleCalendar;
+        case "Apple Calendar":    return _localizations!.appAppleCalendar;
+        case "Visual Studio Code":return _localizations!.appVisualStudioCode;
+        case "Terminal":          return _localizations!.appTerminal;
+        case "Command Prompt":    return _localizations!.appCommandPrompt;
+        case "Chrome":            return _localizations!.appChrome;
+        case "Firefox":           return _localizations!.appFirefox;
+        case "Safari":            return _localizations!.appSafari;
+        case "Edge":              return _localizations!.appEdge;
+        case "Opera":             return _localizations!.appOpera;
+        case "Brave":             return _localizations!.appBrave;
+        case "Netflix":           return _localizations!.appNetflix;
+        case "YouTube":           return _localizations!.appYouTube;
+        case "Spotify":           return _localizations!.appSpotify;
+        case "Apple Music":       return _localizations!.appAppleMusic;
+        case "Calculator":        return _localizations!.appCalculator;
+        case "Notes":             return _localizations!.appNotes;
+        case "System Preferences":return _localizations!.appSystemPreferences;
+        case "Task Manager":      return _localizations!.appTaskManager;
+        case "File Explorer":     return _localizations!.appFileExplorer;
+        case "Dropbox":           return _localizations!.appDropbox;
+        case "Google Drive":      return _localizations!.appGoogleDrive;
+        default:                  return appName;
       }
     } catch (e) {
-      debugPrint('⚠️ Translation not found: $appName');
       return appName;
     }
   }
 
   // ============================================================
-  // SETTINGS UPDATE METHODS
+  // SETTINGS
   // ============================================================
-
   Future<void> updateIdleDetection(bool enabled) async {
     SettingsManager().updateSetting("tracking.idleDetection", enabled);
-
-    if (!enabled) {
-      _isUserActive = true;
-    }
-
-    debugPrint('🔄 Idle detection ${enabled ? "enabled" : "disabled"}');
+    if (!enabled) _isUserActive = true;
   }
 
   Future<void> updateIdleTimeout(int seconds) async {
     SettingsManager().updateSetting("tracking.idleTimeout", seconds);
-
-    if (_windowFocusPlugin != null) {
-      await _windowFocusPlugin!
-          .setIdleThreshold(duration: Duration(seconds: seconds));
-    }
-
-    debugPrint('🔄 Idle timeout: ${seconds}s');
+    await _windowFocusPlugin?.setIdleThreshold(duration: Duration(seconds: seconds));
   }
 
   Future<void> updateAudioMonitoring(bool enabled) async {
     SettingsManager().updateSetting("tracking.monitorAudio", enabled);
-
-    if (_windowFocusPlugin != null) {
-      await _windowFocusPlugin!.setAudioMonitoring(enabled);
-    }
-
-    debugPrint('🔄 Audio monitoring ${enabled ? "enabled" : "disabled"}');
+    await _windowFocusPlugin?.setAudioMonitoring(enabled);
   }
 
   Future<void> updateControllerMonitoring(bool enabled) async {
     SettingsManager().updateSetting("tracking.monitorControllers", enabled);
-
-    if (_windowFocusPlugin != null) {
-      await _windowFocusPlugin!.setControllerMonitoring(enabled);
-    }
-
-    debugPrint('🔄 Controller monitoring ${enabled ? "enabled" : "disabled"}');
+    await _windowFocusPlugin?.setControllerMonitoring(enabled);
   }
 
   Future<void> updateHIDMonitoring(bool enabled) async {
     SettingsManager().updateSetting("tracking.monitorHIDDevices", enabled);
-
-    if (_windowFocusPlugin != null) {
-      await _windowFocusPlugin!.setHIDMonitoring(enabled);
-    }
-
-    debugPrint('🔄 HID monitoring ${enabled ? "enabled" : "disabled"}');
+    await _windowFocusPlugin?.setHIDMonitoring(enabled);
   }
 
   Future<void> updateKeyboardMonitoring(bool enabled) async {
     SettingsManager().updateSetting("tracking.monitorKeyboard", enabled);
-
-    if (_windowFocusPlugin != null) {
-      await _windowFocusPlugin!.setKeyboardMonitoring(enabled);
-    }
-
-    debugPrint('🔄 Keyboard monitoring ${enabled ? "enabled" : "disabled"}');
+    await _windowFocusPlugin?.setKeyboardMonitoring(enabled);
   }
 
   Future<void> updateAudioThreshold(double threshold) async {
     SettingsManager().updateSetting("tracking.audioThreshold", threshold);
-
-    if (_windowFocusPlugin != null) {
-      await _windowFocusPlugin!.setAudioThreshold(threshold);
-    }
-
-    debugPrint('🔄 Audio threshold: $threshold');
+    await _windowFocusPlugin?.setAudioThreshold(threshold);
   }
 
   // ============================================================
   // PERMISSIONS
   // ============================================================
-
   Future<bool> checkInputMonitoringPermission() async {
     if (_windowFocusPlugin == null) return true;
-    try {
-      return await _windowFocusPlugin!.checkInputMonitoringPermission();
-    } catch (e) {
-      debugPrint('❌ Error checking input monitoring permission: $e');
-      return false;
-    }
+    try { return await _windowFocusPlugin!.checkInputMonitoringPermission(); }
+    catch (e) { return false; }
   }
 
   Future<void> openInputMonitoringSettings() async {
-    if (_windowFocusPlugin == null) return;
-    try {
-      await _windowFocusPlugin!.openInputMonitoringSettings();
-    } catch (e) {
-      debugPrint('❌ Error opening input monitoring settings: $e');
-      rethrow;
-    }
+    await _windowFocusPlugin?.openInputMonitoringSettings();
   }
 
   Future<PermissionStatus> checkAllPermissions() async {
     if (_windowFocusPlugin == null) {
       return PermissionStatus(screenRecording: true, inputMonitoring: true);
     }
-    try {
-      return await _windowFocusPlugin!.checkAllPermissions();
-    } catch (e) {
-      debugPrint('❌ Error checking permissions: $e');
-      return PermissionStatus(screenRecording: false, inputMonitoring: false);
-    }
+    try { return await _windowFocusPlugin!.checkAllPermissions(); }
+    catch (e) { return PermissionStatus(screenRecording: false, inputMonitoring: false); }
   }
 
   // ============================================================
   // STOP & DISPOSE
   // ============================================================
-
   Future<void> stopTracking() async {
-    debugPrint('═══════════════════════════════════════════════════════');
-    debugPrint('🛑 STOPPING TRACKING');
-    debugPrint('═══════════════════════════════════════════════════════');
-
+    debugPrint('🛑 Stopping tracking');
     _isTracking = false;
 
-    // Save any current app time in precise mode
-    if (_trackingMode == TrackingMode.precise) {
-      _saveCurrentAppTime();
-    }
+    DesktopScreenState.instance.isActive.removeListener(_onScreenStateChanged);
 
+    if (_trackingMode == TrackingMode.precise) _saveCurrentAppTime();
     await _stopCurrentMode();
+    await _appDataStore?.forceCommitToHive();
 
-    // Force commit any pending data to Hive
-    if (_appDataStore != null) {
-      await _appDataStore!.forceCommitToHive();
-      debugPrint('💾 Forced commit to Hive before stopping');
-    }
-
-    if (_windowFocusPlugin != null) {
-      _windowFocusPlugin!.dispose();
-      _windowFocusPlugin = null;
-      debugPrint('✅ WindowFocus plugin disposed');
-    }
-
+    _windowFocusPlugin?.dispose();
+    _windowFocusPlugin = null;
     _isUserActive = true;
-
-    debugPrint('🛑 TRACKING FULLY STOPPED');
   }
 
   void dispose() {
@@ -1086,65 +788,35 @@ class BackgroundAppTracker {
   }
 
   // ============================================================
-  // DEBUG & INFO METHODS
+  // DEBUG
   // ============================================================
-
   Map<String, dynamic> getTrackingInfo() {
-    final baseInfo = {
+    return {
       'trackingMode': _trackingMode.name,
       'isTracking': _isTracking,
       'currentApp': _currentApp,
       'isUserActive': _isUserActive,
-      'currentAppElapsed':
-          DateTime.now().difference(_currentAppStartTime).inSeconds,
+      'screenState': {
+        'systemAsleep': _systemAsleep,
+        'screenOff': _screenOff,
+        'locked': _locked,
+        'allowsTracking': _screenStateAllowsTracking,
+      },
+      'currentAppElapsed': DateTime.now().difference(_currentAppStartTime).inSeconds,
       'metadataCacheSize': _metadataCache.length,
-      'metadataCacheLoaded': _metadataCacheLoaded,
-      'windowFocusPluginActive': _windowFocusPlugin != null,
-      'pollingTimerActive': _pollingTimer != null,
+      if (_appDataStore != null) 'runtimeCache': _appDataStore!.getRuntimeCacheStats(),
     };
-
-    // Add runtime cache stats if available
-    if (_appDataStore != null) {
-      final cacheStats = _appDataStore!.getRuntimeCacheStats();
-      baseInfo.addAll({
-        'runtimeCache': cacheStats,
-      });
-    }
-
-    return baseInfo;
   }
 
-  Map<String, AppMetadata> getMetadataCache() {
-    return Map.unmodifiable(_metadataCache);
-  }
+  Map<String, AppMetadata> getMetadataCache() => Map.unmodifiable(_metadataCache);
 
   String getStatusSummary() {
-    final info = getTrackingInfo();
-    final cacheStats = info['runtimeCache'] as Map<String, dynamic>?;
-
     return '''
 ═══════════════════════════════════════════════════════
-📊 BACKGROUND TRACKER STATUS
-═══════════════════════════════════════════════════════
-Mode: ${_trackingMode.name}
-Is Tracking: $_isTracking
-Is User Active: $_isUserActive
-Current App: $_currentApp
-
-WindowFocus: ${_windowFocusPlugin != null ? "Active" : "Inactive"}
-Polling Timer: ${_pollingTimer != null ? "Active" : "Inactive"}
-
-Metadata Cache: ${_metadataCache.length} apps
-
-${cacheStats != null ? '''
-Runtime Cache (AppDataStore):
-  - Usage records: ${cacheStats['usageRecordsInCache']}
-  - Focus sessions: ${cacheStats['focusSessionsInCache']}
-  - Dirty usage: ${cacheStats['dirtyUsageRecords']}
-  - Dirty focus: ${cacheStats['dirtyFocusSessions']}
-  - Persistence: ${cacheStats['persistenceIntervalSeconds']}s
-''' : ''}
-═══════════════════════════════════════════════════════
-''';
+📊 TRACKER STATUS
+   Mode: ${_trackingMode.name} | Tracking: $_isTracking | User Active: $_isUserActive
+   Current App: $_currentApp
+   Screen: asleep=$_systemAsleep off=$_screenOff locked=$_locked → allows=${_screenStateAllowsTracking}
+═══════════════════════════════════════════════════════''';
   }
 }
