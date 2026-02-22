@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:screentime/l10n/app_localizations.dart';
 import 'package:screentime/main.dart' as mn;
@@ -7,7 +5,6 @@ import './controller/data_controllers/overview_data_controller.dart';
 import 'UI sections/Overview/bottom.dart';
 import 'UI sections/Overview/statCards.dart';
 import 'UI sections/Overview/main_app.dart';
-import 'rebranding.dart';
 import 'UI Sections/overview/changelog.dart';
 
 class Overview extends StatefulWidget {
@@ -55,22 +52,9 @@ class _OverviewState extends State<Overview> with TickerProviderStateMixin {
       mn.navigationState.registerRefreshCallback(_loadData);
     });
     _loadData();
-    if (Platform.isWindows) {
-      WidgetsBinding.instance.addPostFrameCallback((_) {
-        RebrandingModal.showIfNeeded(context);
-        // Show changelog after rebranding modal (if any)
-        Future.delayed(const Duration(milliseconds: 500), () {
-          if (mounted) {
-            ChangelogModal.showIfNeeded(context);
-          }
-        });
-      });
-    } else {
-      // For non-Windows platforms, show changelog immediately
-      WidgetsBinding.instance.addPostFrameCallback((_) {
-        ChangelogModal.showIfNeeded(context);
-      });
-    }
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      ChangelogModal.showIfNeeded(context);
+    });
   }
 
   @override
