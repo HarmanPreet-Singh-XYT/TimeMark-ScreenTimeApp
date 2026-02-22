@@ -155,7 +155,7 @@ class SettingsManager {
   late Map<String, dynamic> settings;
 
   Map<String, String> versionInfo = {
-    "version": "2.0.5",
+    "version": "2.0.6",
     "type": "Stable Build"
   };
 
