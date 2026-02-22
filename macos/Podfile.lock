@@ -4,6 +4,8 @@ PODS:
     - FlutterMacOS
   - bitsdojo_window_macos (0.0.1):
     - FlutterMacOS
+  - desktop_screenstate (0.0.1):
+    - FlutterMacOS
   - file_picker (0.0.1):
     - FlutterMacOS
   - flutter_localization (0.0.1):
@@ -33,6 +35,7 @@ PODS:
 DEPENDENCIES:
   - audioplayers_darwin (from `Flutter/ephemeral/.symlinks/plugins/audioplayers_darwin/darwin`)
   - bitsdojo_window_macos (from `Flutter/ephemeral/.symlinks/plugins/bitsdojo_window_macos/macos`)
+  - desktop_screenstate (from `Flutter/ephemeral/.symlinks/plugins/desktop_screenstate/macos`)
   - file_picker (from `Flutter/ephemeral/.symlinks/plugins/file_picker/macos`)
   - flutter_localization (from `Flutter/ephemeral/.symlinks/plugins/flutter_localization/macos`)
   - FlutterMacOS (from `Flutter/ephemeral`)
@@ -51,6 +54,8 @@ EXTERNAL SOURCES:
     :path: Flutter/ephemeral/.symlinks/plugins/audioplayers_darwin/darwin
   bitsdojo_window_macos:
     :path: Flutter/ephemeral/.symlinks/plugins/bitsdojo_window_macos/macos
+  desktop_screenstate:
+    :path: Flutter/ephemeral/.symlinks/plugins/desktop_screenstate/macos
   file_picker:
     :path: Flutter/ephemeral/.symlinks/plugins/file_picker/macos
   flutter_localization:
@@ -79,6 +84,7 @@ EXTERNAL SOURCES:
 SPEC CHECKSUMS:
   audioplayers_darwin: 4f9ca89d92d3d21cec7ec580e78ca888e5fb68bd
   bitsdojo_window_macos: 7959fb0ca65a3ccda30095c181ecb856fae48ea9
+  desktop_screenstate: 976b8f315e4dd718260e58c2adabf3a7decd341a
   file_picker: 7584aae6fa07a041af2b36a2655122d42f578c1a
   flutter_localization: 3cda759884c7dab4466fe963d97fba723a492666
   FlutterMacOS: d0db08ddef1a9af05a5ec4b724367152bb0500b1

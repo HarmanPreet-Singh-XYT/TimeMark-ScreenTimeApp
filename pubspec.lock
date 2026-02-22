@@ -206,7 +206,7 @@ packages:
     description:
       path: "."
       ref: main
-      resolved-ref: "42faf96855a1520a16f380dae766b317c1b1e93c"
+      resolved-ref: "3dc62c18c6c12d461bef173a32d1d40da62cf65a"
       url: "https://github.com/HarmanPreet-Singh-XYT/Screenstate"
     source: git
     version: "0.0.6+1"

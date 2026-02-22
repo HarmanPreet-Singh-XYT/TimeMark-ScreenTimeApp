@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:fluent_ui/fluent_ui.dart';
+import 'package:screentime/main.dart';
 
 import 'data_controllers/focus_mode_data_controller.dart';
 import './notification_controller.dart';
@@ -452,6 +453,9 @@ class PomodoroTimerService {
     _currentSessionEnd = null;
     _currentPhaseStart = null;
     _sessionPhases = [];
+
+    // ✨ Refresh the UI so graphs update with new session data
+    navigationState.refreshCurrentScreen();
 
     // Call completion callback
     if (_onTimerComplete != null) {

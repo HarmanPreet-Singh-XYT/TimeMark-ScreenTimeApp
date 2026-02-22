@@ -22,7 +22,6 @@ import 'package:tray_manager/tray_manager.dart';
 import './sections/controller/application_controller.dart';
 import 'utils/single_instance_ipc.dart';
 import 'dart:ui' show lerpDouble;
-// ADD THESE IMPORTS
 import 'package:provider/provider.dart';
 import 'package:screentime/sections/UI sections/Settings/theme_provider.dart';
 import 'package:screentime/sections/UI sections/Settings/theme_customization_model.dart';
@@ -32,7 +31,7 @@ import 'package:screentime/sections/UI sections/FocusMode/audio.dart';
 import 'package:launch_at_startup/launch_at_startup.dart';
 import 'package:window_manager/window_manager.dart';
 // ============================================================================
-// NAVIGATION STATE - Add this near the top of the file
+// NAVIGATION STATE
 // ============================================================================
 
 class NavigationState extends ChangeNotifier {
