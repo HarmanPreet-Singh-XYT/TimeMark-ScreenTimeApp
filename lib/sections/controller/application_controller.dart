@@ -54,6 +54,11 @@ class BackgroundAppTracker {
   bool _screenOff = false;
   bool _locked = false;
 
+  // Debounce timers for resume events — macOS fires spurious unlock/awaked
+  // before screenOff/locked, so we delay acting on them briefly.
+  Timer? _unlockDebounce;
+  Timer? _awakedDebounce;
+
   bool get _screenStateAllowsTracking =>
       !_systemAsleep && !_screenOff && !_locked;
 
@@ -61,6 +66,38 @@ class BackgroundAppTracker {
   void _onScreenStateEvent(String event) {
     debugPrint('🖥️ Screen state: $event');
 
+    // Debounce resume events — macOS emits:
+    //   locked → unlocked → screenOff → locked → unlocked (real)
+    // The spurious unlocked/awaked in the middle must be ignored.
+    if (event == 'unlocked') {
+      _unlockDebounce?.cancel();
+      _unlockDebounce = Timer(const Duration(milliseconds: 500), () {
+        _applyScreenStateEvent('unlocked');
+      });
+      return;
+    }
+
+    if (event == 'awaked') {
+      _awakedDebounce?.cancel();
+      _awakedDebounce = Timer(const Duration(milliseconds: 500), () {
+        _applyScreenStateEvent('awaked');
+      });
+      return;
+    }
+
+    // For immediate pause events, cancel any pending resume debounces
+    // so a spurious unlock doesn't fire after we've already locked again.
+    if (event == 'locked' || event == 'screenOff' || event == 'sleep') {
+      _unlockDebounce?.cancel();
+      _unlockDebounce = null;
+      _awakedDebounce?.cancel();
+      _awakedDebounce = null;
+    }
+
+    _applyScreenStateEvent(event);
+  }
+
+  void _applyScreenStateEvent(String event) {
     final wasAllowed = _screenStateAllowsTracking;
 
     // For PAUSE events: save BEFORE flipping the flag.
@@ -69,27 +106,43 @@ class BackgroundAppTracker {
     if ((event == 'sleep' || event == 'screenOff' || event == 'locked') &&
         wasAllowed) {
       if (_trackingMode == TrackingMode.precise) {
-        _commitCurrentAppTime(); // unconditional save
+        _commitCurrentAppTime();
       }
     }
 
     // Flip the flag
     switch (event) {
-      case 'sleep':     _systemAsleep = true;  break;
-      case 'awaked':    _systemAsleep = false; break;
-      case 'screenOff': _screenOff = true;     break;
-      case 'screenOn':  _screenOff = false;    break;
-      case 'locked':    _locked = true;        break;
-      case 'unlocked':  _locked = false;       break;
+      case 'sleep':
+        _systemAsleep = true;
+        break;
+      case 'screenOff':
+        _screenOff = true;
+        break;
+      case 'locked':
+        _locked = true;
+        break;
+      // Any resume event clears ALL flags — handles macOS quirks where
+      // screenOn is never sent after lock-wake, or awaked skips screenOn etc.
+      case 'awaked':
+      case 'screenOn':
+      case 'unlocked':
+        _systemAsleep = false;
+        _screenOff = false;
+        _locked = false;
+        break;
     }
 
-    // For RESUME events: reset start time so sleep duration is never counted
+    // For RESUME events: reset start time so sleep/off/lock duration
+    // is never counted as app usage
     if (!wasAllowed && _screenStateAllowsTracking) {
       debugPrint('▶️ Resuming tracking');
       if (_trackingMode == TrackingMode.precise) {
         _currentAppStartTime = DateTime.now();
       }
     }
+
+    debugPrint(
+        '   flags → asleep=$_systemAsleep off=$_screenOff locked=$_locked allows=$_screenStateAllowsTracking');
   }
 
   // ============================================================
@@ -157,7 +210,8 @@ class BackgroundAppTracker {
 
       _isTracking = true;
 
-      debugPrint('✅ BACKGROUND TRACKER INITIALIZED — mode: ${_trackingMode.name}');
+      debugPrint(
+          '✅ BACKGROUND TRACKER INITIALIZED — mode: ${_trackingMode.name}');
     } catch (e) {
       debugPrint('❌ Tracking initialization error: $e');
     }
@@ -300,7 +354,8 @@ class BackgroundAppTracker {
       String appTitle = currentAppInfo['title'] ?? '';
 
       if (appTitle.contains("Windows Explorer")) appTitle = "";
-      if (appTitle == "Productive ScreenTime" || appTitle == "screentime") return;
+      if (appTitle == "Productive ScreenTime" || appTitle == "screentime")
+        return;
       if (appTitle == "loginwindow") return;
 
       AppMetadata? metadata = await _getOrCreateMetadata(appTitle);
@@ -309,7 +364,10 @@ class BackgroundAppTracker {
         final now = DateTime.now();
         final startTime = now.subtract(const Duration(minutes: 1));
         await _appDataStore?.recordAppUsage(
-          appTitle, now, const Duration(minutes: 1), 1,
+          appTitle,
+          now,
+          const Duration(minutes: 1),
+          1,
           [TimeRange(startTime: startTime, endTime: now)],
         );
         debugPrint('📊 Polling: $appTitle (+1 min)');
@@ -331,7 +389,8 @@ class BackgroundAppTracker {
       if (_currentApp.isNotEmpty) {
         await _getOrCreateMetadata(_currentApp);
         final now = DateTime.now();
-        await _appDataStore?.recordAppUsage(_currentApp, now, Duration.zero, 1, []);
+        await _appDataStore
+            ?.recordAppUsage(_currentApp, now, Duration.zero, 1, []);
         debugPrint('✅ Re-anchored: $_currentApp');
       }
     } else {
@@ -385,14 +444,18 @@ class BackgroundAppTracker {
     if (idleDetectionEnabled && !_isUserActive) return;
 
     final metadata = _appDataStore?.getAppMetadata(_currentApp);
-    if (metadata != null && (!metadata.isTracking || !metadata.isVisible)) return;
+    if (metadata != null && (!metadata.isTracking || !metadata.isVisible))
+      return;
 
     final now = DateTime.now();
     final elapsed = now.difference(_currentAppStartTime);
     if (elapsed.inSeconds <= 0) return;
 
     _appDataStore?.recordAppUsage(
-      _currentApp, now, elapsed, 0,
+      _currentApp,
+      now,
+      elapsed,
+      0,
       [TimeRange(startTime: _currentAppStartTime, endTime: now)],
     );
     _currentAppStartTime = now;
@@ -408,14 +471,18 @@ class BackgroundAppTracker {
     if (idleDetectionEnabled && !_isUserActive) return;
 
     final metadata = _appDataStore?.getAppMetadata(_currentApp);
-    if (metadata != null && (!metadata.isTracking || !metadata.isVisible)) return;
+    if (metadata != null && (!metadata.isTracking || !metadata.isVisible))
+      return;
 
     final now = DateTime.now();
     final elapsed = now.difference(_currentAppStartTime);
     if (elapsed.inSeconds <= 0) return;
 
     _appDataStore?.recordAppUsage(
-      _currentApp, now, elapsed, 0,
+      _currentApp,
+      now,
+      elapsed,
+      0,
       [TimeRange(startTime: _currentAppStartTime, endTime: now)],
     );
     _currentAppStartTime = now;
@@ -447,7 +514,7 @@ class BackgroundAppTracker {
 
     if (newApp == "Productive ScreenTime") return;
     if (newApp == "screentime") newApp = _selfAppName;
-    if (newApp == "loginwindow" || newApp == "LockApp") return;
+    if (newApp == "loginwindow") return;
 
     if (newApp != _currentApp) {
       _saveCurrentAppTime();
@@ -509,14 +576,18 @@ class BackgroundAppTracker {
     if (_currentApp.isEmpty) return;
 
     final metadata = _appDataStore?.getAppMetadata(_currentApp);
-    if (metadata != null && (!metadata.isTracking || !metadata.isVisible)) return;
+    if (metadata != null && (!metadata.isTracking || !metadata.isVisible))
+      return;
 
     final now = DateTime.now();
     final elapsed = now.difference(_currentAppStartTime);
     if (elapsed.inSeconds <= 0) return;
 
     _appDataStore?.recordAppUsage(
-      _currentApp, now, elapsed, 1,
+      _currentApp,
+      now,
+      elapsed,
+      1,
       [TimeRange(startTime: _currentAppStartTime, endTime: now)],
     ).then((_) {
       debugPrint('💾 Committed: $_currentApp (${elapsed.inSeconds}s)');
@@ -532,7 +603,8 @@ class BackgroundAppTracker {
   // METADATA
   // ============================================================
   Future<AppMetadata?> _getOrCreateMetadata(String appTitle) async {
-    if (appTitle == "Productive ScreenTime" || appTitle == "screentime") return null;
+    if (appTitle == "Productive ScreenTime" || appTitle == "screentime")
+      return null;
 
     if (_appDataStore != null) {
       final existing = _appDataStore!.getAppMetadata(appTitle);
@@ -542,7 +614,8 @@ class BackgroundAppTracker {
       }
     }
 
-    String appCategory = appTitle.isEmpty ? 'Idle' : _categorizeAppWithLocale(appTitle);
+    String appCategory =
+        appTitle.isEmpty ? 'Idle' : _categorizeAppWithLocale(appTitle);
     bool isProductive = !(appCategory == "Social Media" ||
         appCategory == "Entertainment" ||
         appCategory == "Gaming" ||
@@ -579,7 +652,8 @@ class BackgroundAppTracker {
     await _loadMetadataCache();
   }
 
-  Future<void> updateMetadataInCache(String appTitle, AppMetadata metadata) async {
+  Future<void> updateMetadataInCache(
+      String appTitle, AppMetadata metadata) async {
     _metadataCache[appTitle] = metadata;
     if (_appDataStore != null) {
       await _appDataStore!.updateAppMetadata(appTitle,
@@ -621,7 +695,8 @@ class BackgroundAppTracker {
       final locale = ui.Locale(localeCode);
       _localizations = await AppLocalizations.delegate.load(locale);
     } catch (e) {
-      _localizations = await AppLocalizations.delegate.load(const ui.Locale('en'));
+      _localizations =
+          await AppLocalizations.delegate.load(const ui.Locale('en'));
     }
   }
 
@@ -637,13 +712,16 @@ class BackgroundAppTracker {
     if (_localizations == null) return _categorizeAppEnglishOnly(appTitle);
 
     for (var category in AppCategories.categories) {
-      if (category.apps.any((app) => appTitle.toLowerCase().contains(app.toLowerCase()))) {
+      if (category.apps
+          .any((app) => appTitle.toLowerCase().contains(app.toLowerCase()))) {
         return category.name;
       }
     }
     for (var category in AppCategories.categories) {
       for (var app in category.apps) {
-        if (appTitle.toLowerCase().contains(_getLocalizedAppName(app).toLowerCase())) {
+        if (appTitle
+            .toLowerCase()
+            .contains(_getLocalizedAppName(app).toLowerCase())) {
           return category.name;
         }
       }
@@ -653,7 +731,8 @@ class BackgroundAppTracker {
 
   String _categorizeAppEnglishOnly(String appTitle) {
     for (var category in AppCategories.categories) {
-      if (category.apps.any((app) => appTitle.toLowerCase().contains(app.toLowerCase()))) {
+      if (category.apps
+          .any((app) => appTitle.toLowerCase().contains(app.toLowerCase()))) {
         return category.name;
       }
     }
@@ -664,40 +743,74 @@ class BackgroundAppTracker {
     if (_localizations == null) return appName;
     try {
       switch (appName) {
-        case "Microsoft Word":    return _localizations!.appMicrosoftWord;
-        case "Excel":             return _localizations!.appExcel;
-        case "PowerPoint":        return _localizations!.appPowerPoint;
-        case "Google Docs":       return _localizations!.appGoogleDocs;
-        case "Notion":            return _localizations!.appNotion;
-        case "Evernote":          return _localizations!.appEvernote;
-        case "Trello":            return _localizations!.appTrello;
-        case "Asana":             return _localizations!.appAsana;
-        case "Slack":             return _localizations!.appSlack;
-        case "Microsoft Teams":   return _localizations!.appMicrosoftTeams;
-        case "Zoom":              return _localizations!.appZoom;
-        case "Google Calendar":   return _localizations!.appGoogleCalendar;
-        case "Apple Calendar":    return _localizations!.appAppleCalendar;
-        case "Visual Studio Code":return _localizations!.appVisualStudioCode;
-        case "Terminal":          return _localizations!.appTerminal;
-        case "Command Prompt":    return _localizations!.appCommandPrompt;
-        case "Chrome":            return _localizations!.appChrome;
-        case "Firefox":           return _localizations!.appFirefox;
-        case "Safari":            return _localizations!.appSafari;
-        case "Edge":              return _localizations!.appEdge;
-        case "Opera":             return _localizations!.appOpera;
-        case "Brave":             return _localizations!.appBrave;
-        case "Netflix":           return _localizations!.appNetflix;
-        case "YouTube":           return _localizations!.appYouTube;
-        case "Spotify":           return _localizations!.appSpotify;
-        case "Apple Music":       return _localizations!.appAppleMusic;
-        case "Calculator":        return _localizations!.appCalculator;
-        case "Notes":             return _localizations!.appNotes;
-        case "System Preferences":return _localizations!.appSystemPreferences;
-        case "Task Manager":      return _localizations!.appTaskManager;
-        case "File Explorer":     return _localizations!.appFileExplorer;
-        case "Dropbox":           return _localizations!.appDropbox;
-        case "Google Drive":      return _localizations!.appGoogleDrive;
-        default:                  return appName;
+        case "Microsoft Word":
+          return _localizations!.appMicrosoftWord;
+        case "Excel":
+          return _localizations!.appExcel;
+        case "PowerPoint":
+          return _localizations!.appPowerPoint;
+        case "Google Docs":
+          return _localizations!.appGoogleDocs;
+        case "Notion":
+          return _localizations!.appNotion;
+        case "Evernote":
+          return _localizations!.appEvernote;
+        case "Trello":
+          return _localizations!.appTrello;
+        case "Asana":
+          return _localizations!.appAsana;
+        case "Slack":
+          return _localizations!.appSlack;
+        case "Microsoft Teams":
+          return _localizations!.appMicrosoftTeams;
+        case "Zoom":
+          return _localizations!.appZoom;
+        case "Google Calendar":
+          return _localizations!.appGoogleCalendar;
+        case "Apple Calendar":
+          return _localizations!.appAppleCalendar;
+        case "Visual Studio Code":
+          return _localizations!.appVisualStudioCode;
+        case "Terminal":
+          return _localizations!.appTerminal;
+        case "Command Prompt":
+          return _localizations!.appCommandPrompt;
+        case "Chrome":
+          return _localizations!.appChrome;
+        case "Firefox":
+          return _localizations!.appFirefox;
+        case "Safari":
+          return _localizations!.appSafari;
+        case "Edge":
+          return _localizations!.appEdge;
+        case "Opera":
+          return _localizations!.appOpera;
+        case "Brave":
+          return _localizations!.appBrave;
+        case "Netflix":
+          return _localizations!.appNetflix;
+        case "YouTube":
+          return _localizations!.appYouTube;
+        case "Spotify":
+          return _localizations!.appSpotify;
+        case "Apple Music":
+          return _localizations!.appAppleMusic;
+        case "Calculator":
+          return _localizations!.appCalculator;
+        case "Notes":
+          return _localizations!.appNotes;
+        case "System Preferences":
+          return _localizations!.appSystemPreferences;
+        case "Task Manager":
+          return _localizations!.appTaskManager;
+        case "File Explorer":
+          return _localizations!.appFileExplorer;
+        case "Dropbox":
+          return _localizations!.appDropbox;
+        case "Google Drive":
+          return _localizations!.appGoogleDrive;
+        default:
+          return appName;
       }
     } catch (e) {
       return appName;
@@ -714,7 +827,8 @@ class BackgroundAppTracker {
 
   Future<void> updateIdleTimeout(int seconds) async {
     SettingsManager().updateSetting("tracking.idleTimeout", seconds);
-    await _windowFocusPlugin?.setIdleThreshold(duration: Duration(seconds: seconds));
+    await _windowFocusPlugin?.setIdleThreshold(
+        duration: Duration(seconds: seconds));
   }
 
   Future<void> updateAudioMonitoring(bool enabled) async {
@@ -747,8 +861,11 @@ class BackgroundAppTracker {
   // ============================================================
   Future<bool> checkInputMonitoringPermission() async {
     if (_windowFocusPlugin == null) return true;
-    try { return await _windowFocusPlugin!.checkInputMonitoringPermission(); }
-    catch (e) { return false; }
+    try {
+      return await _windowFocusPlugin!.checkInputMonitoringPermission();
+    } catch (e) {
+      return false;
+    }
   }
 
   Future<void> openInputMonitoringSettings() async {
@@ -759,8 +876,11 @@ class BackgroundAppTracker {
     if (_windowFocusPlugin == null) {
       return PermissionStatus(screenRecording: true, inputMonitoring: true);
     }
-    try { return await _windowFocusPlugin!.checkAllPermissions(); }
-    catch (e) { return PermissionStatus(screenRecording: false, inputMonitoring: false); }
+    try {
+      return await _windowFocusPlugin!.checkAllPermissions();
+    } catch (e) {
+      return PermissionStatus(screenRecording: false, inputMonitoring: false);
+    }
   }
 
   // ============================================================
@@ -802,13 +922,16 @@ class BackgroundAppTracker {
         'locked': _locked,
         'allowsTracking': _screenStateAllowsTracking,
       },
-      'currentAppElapsed': DateTime.now().difference(_currentAppStartTime).inSeconds,
+      'currentAppElapsed':
+          DateTime.now().difference(_currentAppStartTime).inSeconds,
       'metadataCacheSize': _metadataCache.length,
-      if (_appDataStore != null) 'runtimeCache': _appDataStore!.getRuntimeCacheStats(),
+      if (_appDataStore != null)
+        'runtimeCache': _appDataStore!.getRuntimeCacheStats(),
     };
   }
 
-  Map<String, AppMetadata> getMetadataCache() => Map.unmodifiable(_metadataCache);
+  Map<String, AppMetadata> getMetadataCache() =>
+      Map.unmodifiable(_metadataCache);
 
   String getStatusSummary() {
     return '''
