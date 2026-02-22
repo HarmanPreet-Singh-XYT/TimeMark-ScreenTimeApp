@@ -356,7 +356,7 @@ class BackgroundAppTracker {
       if (appTitle.contains("Windows Explorer")) appTitle = "";
       if (appTitle == "Productive ScreenTime" || appTitle == "screentime")
         return;
-      if (appTitle == "loginwindow") return;
+      if (appTitle == "loginwindow" || appTitle == "LockApp") return;
 
       AppMetadata? metadata = await _getOrCreateMetadata(appTitle);
 
