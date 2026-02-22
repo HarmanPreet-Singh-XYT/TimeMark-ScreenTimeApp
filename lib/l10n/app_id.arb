@@ -1909,5 +1909,56 @@
   "notTracking": "Tidak Dilacak",
   "allVisibility": "Semua",
   "visible": "Terlihat",
-  "hidden": "Tersembunyi"
+  "hidden": "Tersembunyi",
+  "todaysLimitUsage": "Penggunaan Batas Hari Ini",
+"thisWeekAtAGlance": "Sekilas Minggu Ini",
+"hourlyActivityHeatmap": "Peta Panas Aktivitas Per Jam",
+"sessions": "Sesi",
+"thisWeek": "Minggu Ini",
+"productivityScore": "Skor Produktivitas",
+"streaks": "Hari Berturut-turut",
+"weekOverWeek": "Minggu ke Minggu",
+"sameAsLastWeek": "Sama seperti minggu lalu",
+"moreUsageThanLastWeek": "{percent}% lebih banyak dari minggu lalu",
+"@moreUsageThanLastWeek": {
+  "placeholders": { "percent": { "type": "String" } }
+},
+"lessUsageThanLastWeek": "{percent}% lebih sedikit dari minggu lalu",
+"@lessUsageThanLastWeek": {
+  "placeholders": { "percent": { "type": "String" } }
+},
+"limitExceededBy": "Batas terlampaui sebesar {duration}",
+"@limitExceededBy": {
+  "placeholders": { "duration": { "type": "String" } }
+},
+"timeRemaining": "{duration} tersisa",
+"@timeRemaining": {
+  "placeholders": { "duration": { "type": "String" } }
+},
+"totalSessions": "Total sesi",
+"avgSession": "Rata-rata sesi",
+"longestSession": "Sesi terlama",
+"mostActive": "Paling aktif",
+"peakUsage": "Penggunaan tertinggi",
+"dailyAverage": "Rata-rata harian",
+"daysUsedInARow": "Hari penggunaan berturut-turut",
+"daysSingular": "hari",
+"daysPlural": "hari",
+"daysOverLimitInARow": "Hari berturut-turut melebihi batas",
+"withinLimitAllWeek": "Dalam batas sepanjang minggu",
+"productivityScoreGreat": "Hebat",
+"productivityScoreModerate": "Sedang",
+"productivityScoreNeedsAttention": "Perlu Perhatian",
+"productiveAppMotivation": "Aplikasi produktif — pertahankan",
+"nonProductiveAppSuggestion": "Tidak produktif — pertimbangkan untuk mengurangi",
+"legendUsage": "Penggunaan",
+"legendAverage": "Rata-rata",
+"legendLimit": "Batas",
+"chartPeak": "Puncak",
+"overLimitBy": "+{duration} melebihi batas",
+"@overLimitBy": {
+  "placeholders": { "duration": { "type": "String" } }
+},
+"noData": "Tidak ada data",
+"yesterday": "Kemarin"
 }

@@ -488,7 +488,7 @@ class AppLocalizationsPt extends AppLocalizations {
   String get avgDailyUsage => 'Uso Médio Diário';
 
   @override
-  String get longestSession => 'Sessão Mais Longa';
+  String get longestSession => 'Sessão mais longa';
 
   @override
   String get weeklyTotal => 'Total Semanal';
@@ -1805,7 +1805,7 @@ class AppLocalizationsPt extends AppLocalizations {
   String get focusModeSubtitle => 'Mantenha o foco, seja produtivo';
 
   @override
-  String get thisWeek => 'Esta Semana';
+  String get thisWeek => 'Esta semana';
 
   @override
   String get sessions => 'Sessões';
@@ -2983,4 +2983,114 @@ class AppLocalizationsPt extends AppLocalizations {
 
   @override
   String get hidden => 'Ocultos';
+
+  @override
+  String get todaysLimitUsage => 'Uso do limite de hoje';
+
+  @override
+  String get thisWeekAtAGlance => 'Resumo desta semana';
+
+  @override
+  String get hourlyActivityHeatmap => 'Mapa de calor de atividade por hora';
+
+  @override
+  String get productivityScore => 'Pontuação de produtividade';
+
+  @override
+  String get streaks => 'Sequências';
+
+  @override
+  String get weekOverWeek => 'Semana a semana';
+
+  @override
+  String get sameAsLastWeek => 'Igual à semana passada';
+
+  @override
+  String moreUsageThanLastWeek(String percent) {
+    return '$percent% a mais que a semana passada';
+  }
+
+  @override
+  String lessUsageThanLastWeek(String percent) {
+    return '$percent% a menos que a semana passada';
+  }
+
+  @override
+  String limitExceededBy(String duration) {
+    return 'Limite excedido em $duration';
+  }
+
+  @override
+  String timeRemaining(String duration) {
+    return '$duration restante';
+  }
+
+  @override
+  String get totalSessions => 'Total de sessões';
+
+  @override
+  String get avgSession => 'Sessão média';
+
+  @override
+  String get mostActive => 'Mais ativo';
+
+  @override
+  String get peakUsage => 'Pico de uso';
+
+  @override
+  String get dailyAverage => 'Média diária';
+
+  @override
+  String get daysUsedInARow => 'Dias de uso consecutivos';
+
+  @override
+  String get daysSingular => 'dia';
+
+  @override
+  String get daysPlural => 'dias';
+
+  @override
+  String get daysOverLimitInARow => 'Dias consecutivos acima do limite';
+
+  @override
+  String get withinLimitAllWeek => 'Dentro do limite a semana toda';
+
+  @override
+  String get productivityScoreGreat => 'Ótimo';
+
+  @override
+  String get productivityScoreModerate => 'Moderado';
+
+  @override
+  String get productivityScoreNeedsAttention => 'Precisa de atenção';
+
+  @override
+  String get productiveAppMotivation => 'App produtivo — continue assim';
+
+  @override
+  String get nonProductiveAppSuggestion =>
+      'Não produtivo — considere reduzir o uso';
+
+  @override
+  String get legendUsage => 'Uso';
+
+  @override
+  String get legendAverage => 'Média';
+
+  @override
+  String get legendLimit => 'Limite';
+
+  @override
+  String get chartPeak => 'Pico';
+
+  @override
+  String overLimitBy(String duration) {
+    return '+$duration acima do limite';
+  }
+
+  @override
+  String get noData => 'Sem dados';
+
+  @override
+  String get yesterday => 'Ontem';
 }

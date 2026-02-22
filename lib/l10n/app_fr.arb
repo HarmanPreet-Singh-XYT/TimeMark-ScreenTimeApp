@@ -1912,5 +1912,56 @@
   "notTracking": "Non suivies",
   "allVisibility": "Toutes",
   "visible": "Visibles",
-  "hidden": "Masquées"
+  "hidden": "Masquées",
+  "todaysLimitUsage": "Utilisation de la limite du jour",
+"thisWeekAtAGlance": "Cette semaine en un coup d'œil",
+"hourlyActivityHeatmap": "Carte thermique d'activité horaire",
+"sessions": "Sessions",
+"thisWeek": "Cette semaine",
+"productivityScore": "Score de productivité",
+"streaks": "Séries",
+"weekOverWeek": "Semaine après semaine",
+"sameAsLastWeek": "Identique à la semaine dernière",
+"moreUsageThanLastWeek": "{percent}% de plus que la semaine dernière",
+"@moreUsageThanLastWeek": {
+  "placeholders": { "percent": { "type": "String" } }
+},
+"lessUsageThanLastWeek": "{percent}% de moins que la semaine dernière",
+"@lessUsageThanLastWeek": {
+  "placeholders": { "percent": { "type": "String" } }
+},
+"limitExceededBy": "Limite dépassée de {duration}",
+"@limitExceededBy": {
+  "placeholders": { "duration": { "type": "String" } }
+},
+"timeRemaining": "{duration} restant",
+"@timeRemaining": {
+  "placeholders": { "duration": { "type": "String" } }
+},
+"totalSessions": "Sessions totales",
+"avgSession": "Session moyenne",
+"longestSession": "Session la plus longue",
+"mostActive": "Le plus actif",
+"peakUsage": "Utilisation maximale",
+"dailyAverage": "Moyenne quotidienne",
+"daysUsedInARow": "Jours d'utilisation consécutifs",
+"daysSingular": "jour",
+"daysPlural": "jours",
+"daysOverLimitInARow": "Jours consécutifs au-dessus de la limite",
+"withinLimitAllWeek": "Dans la limite toute la semaine",
+"productivityScoreGreat": "Excellent",
+"productivityScoreModerate": "Modéré",
+"productivityScoreNeedsAttention": "Attention requise",
+"productiveAppMotivation": "Application productive — continuez ainsi",
+"nonProductiveAppSuggestion": "Non productive — envisagez de réduire",
+"legendUsage": "Utilisation",
+"legendAverage": "Moyenne",
+"legendLimit": "Limite",
+"chartPeak": "Maximum",
+"overLimitBy": "+{duration} au-dessus de la limite",
+"@overLimitBy": {
+  "placeholders": { "duration": { "type": "String" } }
+},
+"noData": "Aucune donnée",
+"yesterday": "Hier"
 }

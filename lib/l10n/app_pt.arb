@@ -1909,5 +1909,56 @@
   "notTracking": "Não monitorados",
   "allVisibility": "Todos",
   "visible": "Visíveis",
-  "hidden": "Ocultos"
+  "hidden": "Ocultos",
+  "todaysLimitUsage": "Uso do limite de hoje",
+"thisWeekAtAGlance": "Resumo desta semana",
+"hourlyActivityHeatmap": "Mapa de calor de atividade por hora",
+"sessions": "Sessões",
+"thisWeek": "Esta semana",
+"productivityScore": "Pontuação de produtividade",
+"streaks": "Sequências",
+"weekOverWeek": "Semana a semana",
+"sameAsLastWeek": "Igual à semana passada",
+"moreUsageThanLastWeek": "{percent}% a mais que a semana passada",
+"@moreUsageThanLastWeek": {
+  "placeholders": { "percent": { "type": "String" } }
+},
+"lessUsageThanLastWeek": "{percent}% a menos que a semana passada",
+"@lessUsageThanLastWeek": {
+  "placeholders": { "percent": { "type": "String" } }
+},
+"limitExceededBy": "Limite excedido em {duration}",
+"@limitExceededBy": {
+  "placeholders": { "duration": { "type": "String" } }
+},
+"timeRemaining": "{duration} restante",
+"@timeRemaining": {
+  "placeholders": { "duration": { "type": "String" } }
+},
+"totalSessions": "Total de sessões",
+"avgSession": "Sessão média",
+"longestSession": "Sessão mais longa",
+"mostActive": "Mais ativo",
+"peakUsage": "Pico de uso",
+"dailyAverage": "Média diária",
+"daysUsedInARow": "Dias de uso consecutivos",
+"daysSingular": "dia",
+"daysPlural": "dias",
+"daysOverLimitInARow": "Dias consecutivos acima do limite",
+"withinLimitAllWeek": "Dentro do limite a semana toda",
+"productivityScoreGreat": "Ótimo",
+"productivityScoreModerate": "Moderado",
+"productivityScoreNeedsAttention": "Precisa de atenção",
+"productiveAppMotivation": "App produtivo — continue assim",
+"nonProductiveAppSuggestion": "Não produtivo — considere reduzir o uso",
+"legendUsage": "Uso",
+"legendAverage": "Média",
+"legendLimit": "Limite",
+"chartPeak": "Pico",
+"overLimitBy": "+{duration} acima do limite",
+"@overLimitBy": {
+  "placeholders": { "duration": { "type": "String" } }
+},
+"noData": "Sem dados",
+"yesterday": "Ontem"
 }

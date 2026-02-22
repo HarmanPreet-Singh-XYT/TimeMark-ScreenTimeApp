@@ -2125,5 +2125,56 @@
   "notTracking": "Not Tracked",
   "allVisibility": "All",
   "visible": "Visible",
-  "hidden": "Hidden"
+  "hidden": "Hidden",
+  "todaysLimitUsage": "Today's Limit Usage",
+"thisWeekAtAGlance": "This Week at a Glance",
+"hourlyActivityHeatmap": "Hourly Activity Heatmap",
+"sessions": "Sessions",
+"thisWeek": "This Week",
+"productivityScore": "Productivity Score",
+"streaks": "Streaks",
+"weekOverWeek": "Week over Week",
+"sameAsLastWeek": "Same as last week",
+"moreUsageThanLastWeek": "{percent}% more than last week",
+"@moreUsageThanLastWeek": {
+  "placeholders": { "percent": { "type": "String" } }
+},
+"lessUsageThanLastWeek": "{percent}% less than last week",
+"@lessUsageThanLastWeek": {
+  "placeholders": { "percent": { "type": "String" } }
+},
+"limitExceededBy": "Limit exceeded by {duration}",
+"@limitExceededBy": {
+  "placeholders": { "duration": { "type": "String" } }
+},
+"timeRemaining": "{duration} remaining",
+"@timeRemaining": {
+  "placeholders": { "duration": { "type": "String" } }
+},
+"totalSessions": "Total sessions",
+"avgSession": "Avg session",
+"longestSession": "Longest session",
+"mostActive": "Most active",
+"peakUsage": "Peak usage",
+"dailyAverage": "Daily average",
+"daysUsedInARow": "Days used in a row",
+"daysSingular": "day",
+"daysPlural": "days",
+"daysOverLimitInARow": "Days over limit in a row",
+"withinLimitAllWeek": "Within limit all week",
+"productivityScoreGreat": "Great",
+"productivityScoreModerate": "Moderate",
+"productivityScoreNeedsAttention": "Needs Attention",
+"productiveAppMotivation": "Productive app — keep it up",
+"nonProductiveAppSuggestion": "Non-productive — consider reducing",
+"legendUsage": "Usage",
+"legendAverage": "Average",
+"legendLimit": "Limit",
+"chartPeak": "Peak",
+"overLimitBy": "+{duration} over limit",
+"@overLimitBy": {
+  "placeholders": { "duration": { "type": "String" } }
+},
+"noData": "No data",
+"yesterday": "Yesterday"
 }

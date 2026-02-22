@@ -1918,6 +1918,57 @@
   "notTracking": "ট্র্যাক করা নয়",
   "allVisibility": "সব",
   "visible": "দৃশ্যমান",
-  "hidden": "লুকানো"
+  "hidden": "লুকানো",
+  "todaysLimitUsage": "আজকের সীমা ব্যবহার",
+"thisWeekAtAGlance": "এই সপ্তাহের সংক্ষিপ্ত বিবরণ",
+"hourlyActivityHeatmap": "ঘণ্টাভিত্তিক কার্যকলাপ হিটম্যাপ",
+"sessions": "সেশন",
+"thisWeek": "এই সপ্তাহ",
+"productivityScore": "উৎপাদনশীলতা স্কোর",
+"streaks": "ধারাবাহিকতা",
+"weekOverWeek": "সপ্তাহ তুলনা",
+"sameAsLastWeek": "গত সপ্তাহের মতো",
+"moreUsageThanLastWeek": "গত সপ্তাহের চেয়ে {percent}% বেশি",
+"@moreUsageThanLastWeek": {
+  "placeholders": { "percent": { "type": "String" } }
+},
+"lessUsageThanLastWeek": "গত সপ্তাহের চেয়ে {percent}% কম",
+"@lessUsageThanLastWeek": {
+  "placeholders": { "percent": { "type": "String" } }
+},
+"limitExceededBy": "সীমা {duration} অতিক্রম করেছে",
+"@limitExceededBy": {
+  "placeholders": { "duration": { "type": "String" } }
+},
+"timeRemaining": "{duration} বাকি আছে",
+"@timeRemaining": {
+  "placeholders": { "duration": { "type": "String" } }
+},
+"totalSessions": "মোট সেশন",
+"avgSession": "গড় সেশন",
+"longestSession": "দীর্ঘতম সেশন",
+"mostActive": "সবচেয়ে সক্রিয়",
+"peakUsage": "সর্বোচ্চ ব্যবহার",
+"dailyAverage": "দৈনিক গড়",
+"daysUsedInARow": "পরপর ব্যবহারের দিন",
+"daysSingular": "দিন",
+"daysPlural": "দিন",
+"daysOverLimitInARow": "পরপর সীমা অতিক্রমের দিন",
+"withinLimitAllWeek": "সারা সপ্তাহ সীমার মধ্যে",
+"productivityScoreGreat": "দারুণ",
+"productivityScoreModerate": "মাঝামাঝি",
+"productivityScoreNeedsAttention": "মনোযোগ প্রয়োজন",
+"productiveAppMotivation": "উৎপাদনশীল অ্যাপ — চালিয়ে যান",
+"nonProductiveAppSuggestion": "অনুৎপাদনশীল — কমানোর কথা ভাবুন",
+"legendUsage": "ব্যবহার",
+"legendAverage": "গড়",
+"legendLimit": "সীমা",
+"chartPeak": "শীর্ষ",
+"overLimitBy": "+{duration} সীমা অতিক্রম",
+"@overLimitBy": {
+  "placeholders": { "duration": { "type": "String" } }
+},
+"noData": "কোনো তথ্য নেই",
+"yesterday": "গতকাল"
 
 }

@@ -1918,5 +1918,56 @@
   "notTracking": "未跟踪",
   "allVisibility": "全部",
   "visible": "可见",
-  "hidden": "隐藏"
+  "hidden": "隐藏",
+  "todaysLimitUsage": "今日限额使用情况",
+"thisWeekAtAGlance": "本周概览",
+"hourlyActivityHeatmap": "每小时活动热力图",
+"sessions": "使用时段",
+"thisWeek": "本周",
+"productivityScore": "效率评分",
+"streaks": "连续记录",
+"weekOverWeek": "周环比",
+"sameAsLastWeek": "与上周相同",
+"moreUsageThanLastWeek": "比上周多 {percent}%",
+"@moreUsageThanLastWeek": {
+  "placeholders": { "percent": { "type": "String" } }
+},
+"lessUsageThanLastWeek": "比上周少 {percent}%",
+"@lessUsageThanLastWeek": {
+  "placeholders": { "percent": { "type": "String" } }
+},
+"limitExceededBy": "超出限额 {duration}",
+"@limitExceededBy": {
+  "placeholders": { "duration": { "type": "String" } }
+},
+"timeRemaining": "剩余 {duration}",
+"@timeRemaining": {
+  "placeholders": { "duration": { "type": "String" } }
+},
+"totalSessions": "总使用次数",
+"avgSession": "平均时长",
+"longestSession": "最长时段",
+"mostActive": "最活跃时段",
+"peakUsage": "峰值使用",
+"dailyAverage": "每日平均",
+"daysUsedInARow": "连续使用天数",
+"daysSingular": "天",
+"daysPlural": "天",
+"daysOverLimitInARow": "连续超出限额天数",
+"withinLimitAllWeek": "整周均未超出限额",
+"productivityScoreGreat": "优秀",
+"productivityScoreModerate": "一般",
+"productivityScoreNeedsAttention": "需要关注",
+"productiveAppMotivation": "高效应用——继续保持",
+"nonProductiveAppSuggestion": "低效应用——建议减少使用",
+"legendUsage": "使用量",
+"legendAverage": "平均值",
+"legendLimit": "限额",
+"chartPeak": "峰值",
+"overLimitBy": "超出限额 +{duration}",
+"@overLimitBy": {
+  "placeholders": { "duration": { "type": "String" } }
+},
+"noData": "暂无数据",
+"yesterday": "昨天"
 }

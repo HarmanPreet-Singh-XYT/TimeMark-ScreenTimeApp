@@ -973,7 +973,7 @@ abstract class AppLocalizations {
   /// Stat card label for longest session
   ///
   /// In en, this message translates to:
-  /// **'Longest Session'**
+  /// **'Longest session'**
   String get longestSession;
 
   /// Stat card label for weekly total
@@ -5343,6 +5343,204 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Hidden'**
   String get hidden;
+
+  /// No description provided for @todaysLimitUsage.
+  ///
+  /// In en, this message translates to:
+  /// **'Today\'s Limit Usage'**
+  String get todaysLimitUsage;
+
+  /// No description provided for @thisWeekAtAGlance.
+  ///
+  /// In en, this message translates to:
+  /// **'This Week at a Glance'**
+  String get thisWeekAtAGlance;
+
+  /// No description provided for @hourlyActivityHeatmap.
+  ///
+  /// In en, this message translates to:
+  /// **'Hourly Activity Heatmap'**
+  String get hourlyActivityHeatmap;
+
+  /// No description provided for @productivityScore.
+  ///
+  /// In en, this message translates to:
+  /// **'Productivity Score'**
+  String get productivityScore;
+
+  /// No description provided for @streaks.
+  ///
+  /// In en, this message translates to:
+  /// **'Streaks'**
+  String get streaks;
+
+  /// No description provided for @weekOverWeek.
+  ///
+  /// In en, this message translates to:
+  /// **'Week over Week'**
+  String get weekOverWeek;
+
+  /// No description provided for @sameAsLastWeek.
+  ///
+  /// In en, this message translates to:
+  /// **'Same as last week'**
+  String get sameAsLastWeek;
+
+  /// No description provided for @moreUsageThanLastWeek.
+  ///
+  /// In en, this message translates to:
+  /// **'{percent}% more than last week'**
+  String moreUsageThanLastWeek(String percent);
+
+  /// No description provided for @lessUsageThanLastWeek.
+  ///
+  /// In en, this message translates to:
+  /// **'{percent}% less than last week'**
+  String lessUsageThanLastWeek(String percent);
+
+  /// No description provided for @limitExceededBy.
+  ///
+  /// In en, this message translates to:
+  /// **'Limit exceeded by {duration}'**
+  String limitExceededBy(String duration);
+
+  /// No description provided for @timeRemaining.
+  ///
+  /// In en, this message translates to:
+  /// **'{duration} remaining'**
+  String timeRemaining(String duration);
+
+  /// No description provided for @totalSessions.
+  ///
+  /// In en, this message translates to:
+  /// **'Total sessions'**
+  String get totalSessions;
+
+  /// No description provided for @avgSession.
+  ///
+  /// In en, this message translates to:
+  /// **'Avg session'**
+  String get avgSession;
+
+  /// No description provided for @mostActive.
+  ///
+  /// In en, this message translates to:
+  /// **'Most active'**
+  String get mostActive;
+
+  /// No description provided for @peakUsage.
+  ///
+  /// In en, this message translates to:
+  /// **'Peak usage'**
+  String get peakUsage;
+
+  /// No description provided for @dailyAverage.
+  ///
+  /// In en, this message translates to:
+  /// **'Daily average'**
+  String get dailyAverage;
+
+  /// No description provided for @daysUsedInARow.
+  ///
+  /// In en, this message translates to:
+  /// **'Days used in a row'**
+  String get daysUsedInARow;
+
+  /// No description provided for @daysSingular.
+  ///
+  /// In en, this message translates to:
+  /// **'day'**
+  String get daysSingular;
+
+  /// No description provided for @daysPlural.
+  ///
+  /// In en, this message translates to:
+  /// **'days'**
+  String get daysPlural;
+
+  /// No description provided for @daysOverLimitInARow.
+  ///
+  /// In en, this message translates to:
+  /// **'Days over limit in a row'**
+  String get daysOverLimitInARow;
+
+  /// No description provided for @withinLimitAllWeek.
+  ///
+  /// In en, this message translates to:
+  /// **'Within limit all week'**
+  String get withinLimitAllWeek;
+
+  /// No description provided for @productivityScoreGreat.
+  ///
+  /// In en, this message translates to:
+  /// **'Great'**
+  String get productivityScoreGreat;
+
+  /// No description provided for @productivityScoreModerate.
+  ///
+  /// In en, this message translates to:
+  /// **'Moderate'**
+  String get productivityScoreModerate;
+
+  /// No description provided for @productivityScoreNeedsAttention.
+  ///
+  /// In en, this message translates to:
+  /// **'Needs Attention'**
+  String get productivityScoreNeedsAttention;
+
+  /// No description provided for @productiveAppMotivation.
+  ///
+  /// In en, this message translates to:
+  /// **'Productive app — keep it up'**
+  String get productiveAppMotivation;
+
+  /// No description provided for @nonProductiveAppSuggestion.
+  ///
+  /// In en, this message translates to:
+  /// **'Non-productive — consider reducing'**
+  String get nonProductiveAppSuggestion;
+
+  /// No description provided for @legendUsage.
+  ///
+  /// In en, this message translates to:
+  /// **'Usage'**
+  String get legendUsage;
+
+  /// No description provided for @legendAverage.
+  ///
+  /// In en, this message translates to:
+  /// **'Average'**
+  String get legendAverage;
+
+  /// No description provided for @legendLimit.
+  ///
+  /// In en, this message translates to:
+  /// **'Limit'**
+  String get legendLimit;
+
+  /// No description provided for @chartPeak.
+  ///
+  /// In en, this message translates to:
+  /// **'Peak'**
+  String get chartPeak;
+
+  /// No description provided for @overLimitBy.
+  ///
+  /// In en, this message translates to:
+  /// **'+{duration} over limit'**
+  String overLimitBy(String duration);
+
+  /// No description provided for @noData.
+  ///
+  /// In en, this message translates to:
+  /// **'No data'**
+  String get noData;
+
+  /// No description provided for @yesterday.
+  ///
+  /// In en, this message translates to:
+  /// **'Yesterday'**
+  String get yesterday;
 }
 
 class _AppLocalizationsDelegate

@@ -1808,7 +1808,7 @@ class AppLocalizationsRu extends AppLocalizations {
       'Оставайтесь сосредоточенными, будьте продуктивны';
 
   @override
-  String get thisWeek => 'На этой неделе';
+  String get thisWeek => 'Эта неделя';
 
   @override
   String get sessions => 'Сессии';
@@ -2992,4 +2992,114 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get hidden => 'Скрытые';
+
+  @override
+  String get todaysLimitUsage => 'Использование лимита за сегодня';
+
+  @override
+  String get thisWeekAtAGlance => 'Обзор этой недели';
+
+  @override
+  String get hourlyActivityHeatmap => 'Тепловая карта активности по часам';
+
+  @override
+  String get productivityScore => 'Оценка продуктивности';
+
+  @override
+  String get streaks => 'Серии';
+
+  @override
+  String get weekOverWeek => 'По сравнению с прошлой неделей';
+
+  @override
+  String get sameAsLastWeek => 'Как на прошлой неделе';
+
+  @override
+  String moreUsageThanLastWeek(String percent) {
+    return 'На $percent% больше, чем на прошлой неделе';
+  }
+
+  @override
+  String lessUsageThanLastWeek(String percent) {
+    return 'На $percent% меньше, чем на прошлой неделе';
+  }
+
+  @override
+  String limitExceededBy(String duration) {
+    return 'Лимит превышен на $duration';
+  }
+
+  @override
+  String timeRemaining(String duration) {
+    return 'Осталось $duration';
+  }
+
+  @override
+  String get totalSessions => 'Всего сессий';
+
+  @override
+  String get avgSession => 'Средняя сессия';
+
+  @override
+  String get mostActive => 'Наиболее активный';
+
+  @override
+  String get peakUsage => 'Пиковое использование';
+
+  @override
+  String get dailyAverage => 'Среднее за день';
+
+  @override
+  String get daysUsedInARow => 'Дней использования подряд';
+
+  @override
+  String get daysSingular => 'день';
+
+  @override
+  String get daysPlural => 'дней';
+
+  @override
+  String get daysOverLimitInARow => 'Дней подряд с превышением лимита';
+
+  @override
+  String get withinLimitAllWeek => 'В пределах лимита всю неделю';
+
+  @override
+  String get productivityScoreGreat => 'Отлично';
+
+  @override
+  String get productivityScoreModerate => 'Умеренно';
+
+  @override
+  String get productivityScoreNeedsAttention => 'Требует внимания';
+
+  @override
+  String get productiveAppMotivation => 'Продуктивное приложение — так держать';
+
+  @override
+  String get nonProductiveAppSuggestion =>
+      'Непродуктивное — рассмотрите сокращение';
+
+  @override
+  String get legendUsage => 'Использование';
+
+  @override
+  String get legendAverage => 'Среднее';
+
+  @override
+  String get legendLimit => 'Лимит';
+
+  @override
+  String get chartPeak => 'Пик';
+
+  @override
+  String overLimitBy(String duration) {
+    return '+$duration сверх лимита';
+  }
+
+  @override
+  String get noData => 'Нет данных';
+
+  @override
+  String get yesterday => 'Вчера';
 }

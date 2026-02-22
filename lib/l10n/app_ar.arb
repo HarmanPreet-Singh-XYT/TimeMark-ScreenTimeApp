@@ -1916,5 +1916,56 @@
   "notTracking": "غير متتبعة",
   "allVisibility": "الكل",
   "visible": "مرئية",
-  "hidden": "مخفية"
+  "hidden": "مخفية",
+  "todaysLimitUsage": "استخدام الحد اليومي",
+"thisWeekAtAGlance": "نظرة على هذا الأسبوع",
+"hourlyActivityHeatmap": "خريطة النشاط بالساعة",
+"sessions": "الجلسات",
+"thisWeek": "هذا الأسبوع",
+"productivityScore": "درجة الإنتاجية",
+"streaks": "الأيام المتتالية",
+"weekOverWeek": "مقارنة أسبوعية",
+"sameAsLastWeek": "مثل الأسبوع الماضي",
+"moreUsageThanLastWeek": "أكثر بنسبة {percent}% من الأسبوع الماضي",
+"@moreUsageThanLastWeek": {
+  "placeholders": { "percent": { "type": "String" } }
+},
+"lessUsageThanLastWeek": "أقل بنسبة {percent}% من الأسبوع الماضي",
+"@lessUsageThanLastWeek": {
+  "placeholders": { "percent": { "type": "String" } }
+},
+"limitExceededBy": "تم تجاوز الحد بمقدار {duration}",
+"@limitExceededBy": {
+  "placeholders": { "duration": { "type": "String" } }
+},
+"timeRemaining": "متبقي {duration}",
+"@timeRemaining": {
+  "placeholders": { "duration": { "type": "String" } }
+},
+"totalSessions": "إجمالي الجلسات",
+"avgSession": "متوسط الجلسة",
+"longestSession": "أطول جلسة",
+"mostActive": "الأكثر نشاطًا",
+"peakUsage": "ذروة الاستخدام",
+"dailyAverage": "المتوسط اليومي",
+"daysUsedInARow": "أيام استخدام متتالية",
+"daysSingular": "يوم",
+"daysPlural": "أيام",
+"daysOverLimitInARow": "أيام متتالية فوق الحد",
+"withinLimitAllWeek": "ضمن الحد طوال الأسبوع",
+"productivityScoreGreat": "ممتاز",
+"productivityScoreModerate": "متوسط",
+"productivityScoreNeedsAttention": "يحتاج انتباه",
+"productiveAppMotivation": "تطبيق منتج — استمر",
+"nonProductiveAppSuggestion": "غير منتج — فكّر في تقليل الاستخدام",
+"legendUsage": "الاستخدام",
+"legendAverage": "المتوسط",
+"legendLimit": "الحد",
+"chartPeak": "الذروة",
+"overLimitBy": "+{duration} فوق الحد",
+"@overLimitBy": {
+  "placeholders": { "duration": { "type": "String" } }
+},
+"noData": "لا توجد بيانات",
+"yesterday": "أمس"
 }

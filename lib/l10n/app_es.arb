@@ -1912,5 +1912,56 @@
   "notTracking": "No rastreadas",
   "allVisibility": "Todas",
   "visible": "Visibles",
-  "hidden": "Ocultas"
+  "hidden": "Ocultas",
+  "todaysLimitUsage": "Uso del límite de hoy",
+"thisWeekAtAGlance": "Esta semana de un vistazo",
+"hourlyActivityHeatmap": "Mapa de calor de actividad por hora",
+"sessions": "Sesiones",
+"thisWeek": "Esta semana",
+"productivityScore": "Puntuación de productividad",
+"streaks": "Rachas",
+"weekOverWeek": "Semana a semana",
+"sameAsLastWeek": "Igual que la semana pasada",
+"moreUsageThanLastWeek": "{percent}% más que la semana pasada",
+"@moreUsageThanLastWeek": {
+  "placeholders": { "percent": { "type": "String" } }
+},
+"lessUsageThanLastWeek": "{percent}% menos que la semana pasada",
+"@lessUsageThanLastWeek": {
+  "placeholders": { "percent": { "type": "String" } }
+},
+"limitExceededBy": "Límite excedido por {duration}",
+"@limitExceededBy": {
+  "placeholders": { "duration": { "type": "String" } }
+},
+"timeRemaining": "{duration} restante",
+"@timeRemaining": {
+  "placeholders": { "duration": { "type": "String" } }
+},
+"totalSessions": "Sesiones totales",
+"avgSession": "Sesión promedio",
+"longestSession": "Sesión más larga",
+"mostActive": "Más activo",
+"peakUsage": "Uso máximo",
+"dailyAverage": "Promedio diario",
+"daysUsedInARow": "Días de uso consecutivos",
+"daysSingular": "día",
+"daysPlural": "días",
+"daysOverLimitInARow": "Días consecutivos por encima del límite",
+"withinLimitAllWeek": "Dentro del límite toda la semana",
+"productivityScoreGreat": "Excelente",
+"productivityScoreModerate": "Moderado",
+"productivityScoreNeedsAttention": "Necesita atención",
+"productiveAppMotivation": "App productiva — sigue así",
+"nonProductiveAppSuggestion": "No productiva — considera reducir su uso",
+"legendUsage": "Uso",
+"legendAverage": "Promedio",
+"legendLimit": "Límite",
+"chartPeak": "Máximo",
+"overLimitBy": "+{duration} por encima del límite",
+"@overLimitBy": {
+  "placeholders": { "duration": { "type": "String" } }
+},
+"noData": "Sin datos",
+"yesterday": "Ayer"
 }

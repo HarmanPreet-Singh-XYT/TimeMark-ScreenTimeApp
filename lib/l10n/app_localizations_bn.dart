@@ -2922,4 +2922,113 @@ class AppLocalizationsBn extends AppLocalizations {
 
   @override
   String get hidden => 'লুকানো';
+
+  @override
+  String get todaysLimitUsage => 'আজকের সীমা ব্যবহার';
+
+  @override
+  String get thisWeekAtAGlance => 'এই সপ্তাহের সংক্ষিপ্ত বিবরণ';
+
+  @override
+  String get hourlyActivityHeatmap => 'ঘণ্টাভিত্তিক কার্যকলাপ হিটম্যাপ';
+
+  @override
+  String get productivityScore => 'উৎপাদনশীলতা স্কোর';
+
+  @override
+  String get streaks => 'ধারাবাহিকতা';
+
+  @override
+  String get weekOverWeek => 'সপ্তাহ তুলনা';
+
+  @override
+  String get sameAsLastWeek => 'গত সপ্তাহের মতো';
+
+  @override
+  String moreUsageThanLastWeek(String percent) {
+    return 'গত সপ্তাহের চেয়ে $percent% বেশি';
+  }
+
+  @override
+  String lessUsageThanLastWeek(String percent) {
+    return 'গত সপ্তাহের চেয়ে $percent% কম';
+  }
+
+  @override
+  String limitExceededBy(String duration) {
+    return 'সীমা $duration অতিক্রম করেছে';
+  }
+
+  @override
+  String timeRemaining(String duration) {
+    return '$duration বাকি আছে';
+  }
+
+  @override
+  String get totalSessions => 'মোট সেশন';
+
+  @override
+  String get avgSession => 'গড় সেশন';
+
+  @override
+  String get mostActive => 'সবচেয়ে সক্রিয়';
+
+  @override
+  String get peakUsage => 'সর্বোচ্চ ব্যবহার';
+
+  @override
+  String get dailyAverage => 'দৈনিক গড়';
+
+  @override
+  String get daysUsedInARow => 'পরপর ব্যবহারের দিন';
+
+  @override
+  String get daysSingular => 'দিন';
+
+  @override
+  String get daysPlural => 'দিন';
+
+  @override
+  String get daysOverLimitInARow => 'পরপর সীমা অতিক্রমের দিন';
+
+  @override
+  String get withinLimitAllWeek => 'সারা সপ্তাহ সীমার মধ্যে';
+
+  @override
+  String get productivityScoreGreat => 'দারুণ';
+
+  @override
+  String get productivityScoreModerate => 'মাঝামাঝি';
+
+  @override
+  String get productivityScoreNeedsAttention => 'মনোযোগ প্রয়োজন';
+
+  @override
+  String get productiveAppMotivation => 'উৎপাদনশীল অ্যাপ — চালিয়ে যান';
+
+  @override
+  String get nonProductiveAppSuggestion => 'অনুৎপাদনশীল — কমানোর কথা ভাবুন';
+
+  @override
+  String get legendUsage => 'ব্যবহার';
+
+  @override
+  String get legendAverage => 'গড়';
+
+  @override
+  String get legendLimit => 'সীমা';
+
+  @override
+  String get chartPeak => 'শীর্ষ';
+
+  @override
+  String overLimitBy(String duration) {
+    return '+$duration সীমা অতিক্রম';
+  }
+
+  @override
+  String get noData => 'কোনো তথ্য নেই';
+
+  @override
+  String get yesterday => 'গতকাল';
 }

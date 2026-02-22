@@ -467,7 +467,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get avgDailyUsage => '日均使用';
 
   @override
-  String get longestSession => '最长会话';
+  String get longestSession => '最长时段';
 
   @override
   String get weeklyTotal => '每周总计';
@@ -1748,7 +1748,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get thisWeek => '本周';
 
   @override
-  String get sessions => '会话';
+  String get sessions => '使用时段';
 
   @override
   String get totalTime => '总时间';
@@ -2825,4 +2825,113 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get hidden => '隐藏';
+
+  @override
+  String get todaysLimitUsage => '今日限额使用情况';
+
+  @override
+  String get thisWeekAtAGlance => '本周概览';
+
+  @override
+  String get hourlyActivityHeatmap => '每小时活动热力图';
+
+  @override
+  String get productivityScore => '效率评分';
+
+  @override
+  String get streaks => '连续记录';
+
+  @override
+  String get weekOverWeek => '周环比';
+
+  @override
+  String get sameAsLastWeek => '与上周相同';
+
+  @override
+  String moreUsageThanLastWeek(String percent) {
+    return '比上周多 $percent%';
+  }
+
+  @override
+  String lessUsageThanLastWeek(String percent) {
+    return '比上周少 $percent%';
+  }
+
+  @override
+  String limitExceededBy(String duration) {
+    return '超出限额 $duration';
+  }
+
+  @override
+  String timeRemaining(String duration) {
+    return '剩余 $duration';
+  }
+
+  @override
+  String get totalSessions => '总使用次数';
+
+  @override
+  String get avgSession => '平均时长';
+
+  @override
+  String get mostActive => '最活跃时段';
+
+  @override
+  String get peakUsage => '峰值使用';
+
+  @override
+  String get dailyAverage => '每日平均';
+
+  @override
+  String get daysUsedInARow => '连续使用天数';
+
+  @override
+  String get daysSingular => '天';
+
+  @override
+  String get daysPlural => '天';
+
+  @override
+  String get daysOverLimitInARow => '连续超出限额天数';
+
+  @override
+  String get withinLimitAllWeek => '整周均未超出限额';
+
+  @override
+  String get productivityScoreGreat => '优秀';
+
+  @override
+  String get productivityScoreModerate => '一般';
+
+  @override
+  String get productivityScoreNeedsAttention => '需要关注';
+
+  @override
+  String get productiveAppMotivation => '高效应用——继续保持';
+
+  @override
+  String get nonProductiveAppSuggestion => '低效应用——建议减少使用';
+
+  @override
+  String get legendUsage => '使用量';
+
+  @override
+  String get legendAverage => '平均值';
+
+  @override
+  String get legendLimit => '限额';
+
+  @override
+  String get chartPeak => '峰值';
+
+  @override
+  String overLimitBy(String duration) {
+    return '超出限额 +$duration';
+  }
+
+  @override
+  String get noData => '暂无数据';
+
+  @override
+  String get yesterday => '昨天';
 }

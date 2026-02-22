@@ -480,7 +480,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get avgDailyUsage => 'Avg. Daily Usage';
 
   @override
-  String get longestSession => 'Longest Session';
+  String get longestSession => 'Longest session';
 
   @override
   String get weeklyTotal => 'Weekly Total';
@@ -2952,4 +2952,113 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get hidden => 'Hidden';
+
+  @override
+  String get todaysLimitUsage => 'Today\'s Limit Usage';
+
+  @override
+  String get thisWeekAtAGlance => 'This Week at a Glance';
+
+  @override
+  String get hourlyActivityHeatmap => 'Hourly Activity Heatmap';
+
+  @override
+  String get productivityScore => 'Productivity Score';
+
+  @override
+  String get streaks => 'Streaks';
+
+  @override
+  String get weekOverWeek => 'Week over Week';
+
+  @override
+  String get sameAsLastWeek => 'Same as last week';
+
+  @override
+  String moreUsageThanLastWeek(String percent) {
+    return '$percent% more than last week';
+  }
+
+  @override
+  String lessUsageThanLastWeek(String percent) {
+    return '$percent% less than last week';
+  }
+
+  @override
+  String limitExceededBy(String duration) {
+    return 'Limit exceeded by $duration';
+  }
+
+  @override
+  String timeRemaining(String duration) {
+    return '$duration remaining';
+  }
+
+  @override
+  String get totalSessions => 'Total sessions';
+
+  @override
+  String get avgSession => 'Avg session';
+
+  @override
+  String get mostActive => 'Most active';
+
+  @override
+  String get peakUsage => 'Peak usage';
+
+  @override
+  String get dailyAverage => 'Daily average';
+
+  @override
+  String get daysUsedInARow => 'Days used in a row';
+
+  @override
+  String get daysSingular => 'day';
+
+  @override
+  String get daysPlural => 'days';
+
+  @override
+  String get daysOverLimitInARow => 'Days over limit in a row';
+
+  @override
+  String get withinLimitAllWeek => 'Within limit all week';
+
+  @override
+  String get productivityScoreGreat => 'Great';
+
+  @override
+  String get productivityScoreModerate => 'Moderate';
+
+  @override
+  String get productivityScoreNeedsAttention => 'Needs Attention';
+
+  @override
+  String get productiveAppMotivation => 'Productive app — keep it up';
+
+  @override
+  String get nonProductiveAppSuggestion => 'Non-productive — consider reducing';
+
+  @override
+  String get legendUsage => 'Usage';
+
+  @override
+  String get legendAverage => 'Average';
+
+  @override
+  String get legendLimit => 'Limit';
+
+  @override
+  String get chartPeak => 'Peak';
+
+  @override
+  String overLimitBy(String duration) {
+    return '+$duration over limit';
+  }
+
+  @override
+  String get noData => 'No data';
+
+  @override
+  String get yesterday => 'Yesterday';
 }

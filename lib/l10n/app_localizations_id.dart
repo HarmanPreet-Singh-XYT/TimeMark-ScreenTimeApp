@@ -487,7 +487,7 @@ class AppLocalizationsId extends AppLocalizations {
   String get avgDailyUsage => 'Rata-rata Penggunaan Harian';
 
   @override
-  String get longestSession => 'Sesi Terpanjang';
+  String get longestSession => 'Sesi terlama';
 
   @override
   String get weeklyTotal => 'Total Mingguan';
@@ -2920,4 +2920,114 @@ class AppLocalizationsId extends AppLocalizations {
 
   @override
   String get hidden => 'Tersembunyi';
+
+  @override
+  String get todaysLimitUsage => 'Penggunaan Batas Hari Ini';
+
+  @override
+  String get thisWeekAtAGlance => 'Sekilas Minggu Ini';
+
+  @override
+  String get hourlyActivityHeatmap => 'Peta Panas Aktivitas Per Jam';
+
+  @override
+  String get productivityScore => 'Skor Produktivitas';
+
+  @override
+  String get streaks => 'Hari Berturut-turut';
+
+  @override
+  String get weekOverWeek => 'Minggu ke Minggu';
+
+  @override
+  String get sameAsLastWeek => 'Sama seperti minggu lalu';
+
+  @override
+  String moreUsageThanLastWeek(String percent) {
+    return '$percent% lebih banyak dari minggu lalu';
+  }
+
+  @override
+  String lessUsageThanLastWeek(String percent) {
+    return '$percent% lebih sedikit dari minggu lalu';
+  }
+
+  @override
+  String limitExceededBy(String duration) {
+    return 'Batas terlampaui sebesar $duration';
+  }
+
+  @override
+  String timeRemaining(String duration) {
+    return '$duration tersisa';
+  }
+
+  @override
+  String get totalSessions => 'Total sesi';
+
+  @override
+  String get avgSession => 'Rata-rata sesi';
+
+  @override
+  String get mostActive => 'Paling aktif';
+
+  @override
+  String get peakUsage => 'Penggunaan tertinggi';
+
+  @override
+  String get dailyAverage => 'Rata-rata harian';
+
+  @override
+  String get daysUsedInARow => 'Hari penggunaan berturut-turut';
+
+  @override
+  String get daysSingular => 'hari';
+
+  @override
+  String get daysPlural => 'hari';
+
+  @override
+  String get daysOverLimitInARow => 'Hari berturut-turut melebihi batas';
+
+  @override
+  String get withinLimitAllWeek => 'Dalam batas sepanjang minggu';
+
+  @override
+  String get productivityScoreGreat => 'Hebat';
+
+  @override
+  String get productivityScoreModerate => 'Sedang';
+
+  @override
+  String get productivityScoreNeedsAttention => 'Perlu Perhatian';
+
+  @override
+  String get productiveAppMotivation => 'Aplikasi produktif — pertahankan';
+
+  @override
+  String get nonProductiveAppSuggestion =>
+      'Tidak produktif — pertimbangkan untuk mengurangi';
+
+  @override
+  String get legendUsage => 'Penggunaan';
+
+  @override
+  String get legendAverage => 'Rata-rata';
+
+  @override
+  String get legendLimit => 'Batas';
+
+  @override
+  String get chartPeak => 'Puncak';
+
+  @override
+  String overLimitBy(String duration) {
+    return '+$duration melebihi batas';
+  }
+
+  @override
+  String get noData => 'Tidak ada data';
+
+  @override
+  String get yesterday => 'Kemarin';
 }

@@ -2907,4 +2907,113 @@ class AppLocalizationsUr extends AppLocalizations {
 
   @override
   String get hidden => 'چھپے ہوئے';
+
+  @override
+  String get todaysLimitUsage => 'آج کی حد کا استعمال';
+
+  @override
+  String get thisWeekAtAGlance => 'اس ہفتے کا خلاصہ';
+
+  @override
+  String get hourlyActivityHeatmap => 'فی گھنٹہ سرگرمی ہیٹ میپ';
+
+  @override
+  String get productivityScore => 'پیداواری اسکور';
+
+  @override
+  String get streaks => 'مسلسل دن';
+
+  @override
+  String get weekOverWeek => 'ہفتہ بہ ہفتہ';
+
+  @override
+  String get sameAsLastWeek => 'پچھلے ہفتے جیسا';
+
+  @override
+  String moreUsageThanLastWeek(String percent) {
+    return 'پچھلے ہفتے سے $percent% زیادہ';
+  }
+
+  @override
+  String lessUsageThanLastWeek(String percent) {
+    return 'پچھلے ہفتے سے $percent% کم';
+  }
+
+  @override
+  String limitExceededBy(String duration) {
+    return 'حد $duration سے تجاوز کر گئی';
+  }
+
+  @override
+  String timeRemaining(String duration) {
+    return '$duration باقی';
+  }
+
+  @override
+  String get totalSessions => 'کل سیشنز';
+
+  @override
+  String get avgSession => 'اوسط سیشن';
+
+  @override
+  String get mostActive => 'سب سے زیادہ فعال';
+
+  @override
+  String get peakUsage => 'زیادہ سے زیادہ استعمال';
+
+  @override
+  String get dailyAverage => 'روزانہ اوسط';
+
+  @override
+  String get daysUsedInARow => 'مسلسل استعمال کے دن';
+
+  @override
+  String get daysSingular => 'دن';
+
+  @override
+  String get daysPlural => 'دن';
+
+  @override
+  String get daysOverLimitInARow => 'مسلسل حد سے تجاوز کے دن';
+
+  @override
+  String get withinLimitAllWeek => 'پورے ہفتے حد کے اندر';
+
+  @override
+  String get productivityScoreGreat => 'بہترین';
+
+  @override
+  String get productivityScoreModerate => 'معتدل';
+
+  @override
+  String get productivityScoreNeedsAttention => 'توجہ کی ضرورت ہے';
+
+  @override
+  String get productiveAppMotivation => 'پیداواری ایپ — جاری رکھیں';
+
+  @override
+  String get nonProductiveAppSuggestion => 'غیر پیداواری — کم کرنے پر غور کریں';
+
+  @override
+  String get legendUsage => 'استعمال';
+
+  @override
+  String get legendAverage => 'اوسط';
+
+  @override
+  String get legendLimit => 'حد';
+
+  @override
+  String get chartPeak => 'چوٹی';
+
+  @override
+  String overLimitBy(String duration) {
+    return '+$duration حد سے زیادہ';
+  }
+
+  @override
+  String get noData => 'کوئی ڈیٹا نہیں';
+
+  @override
+  String get yesterday => 'کل';
 }

@@ -484,7 +484,7 @@ class AppLocalizationsHi extends AppLocalizations {
   String get avgDailyUsage => 'औसत दैनिक उपयोग';
 
   @override
-  String get longestSession => 'सबसे लंबा सेशन';
+  String get longestSession => 'सबसे लंबा सत्र';
 
   @override
   String get weeklyTotal => 'साप्ताहिक कुल';
@@ -2914,4 +2914,113 @@ class AppLocalizationsHi extends AppLocalizations {
 
   @override
   String get hidden => 'छिपे हुए';
+
+  @override
+  String get todaysLimitUsage => 'आज की सीमा उपयोग';
+
+  @override
+  String get thisWeekAtAGlance => 'इस सप्ताह की एक झलक';
+
+  @override
+  String get hourlyActivityHeatmap => 'प्रति घंटा गतिविधि हीटमैप';
+
+  @override
+  String get productivityScore => 'उत्पादकता स्कोर';
+
+  @override
+  String get streaks => 'लगातार दिन';
+
+  @override
+  String get weekOverWeek => 'सप्ताह दर सप्ताह';
+
+  @override
+  String get sameAsLastWeek => 'पिछले सप्ताह जैसा ही';
+
+  @override
+  String moreUsageThanLastWeek(String percent) {
+    return 'पिछले सप्ताह से $percent% अधिक';
+  }
+
+  @override
+  String lessUsageThanLastWeek(String percent) {
+    return 'पिछले सप्ताह से $percent% कम';
+  }
+
+  @override
+  String limitExceededBy(String duration) {
+    return 'सीमा $duration से अधिक';
+  }
+
+  @override
+  String timeRemaining(String duration) {
+    return '$duration शेष';
+  }
+
+  @override
+  String get totalSessions => 'कुल सत्र';
+
+  @override
+  String get avgSession => 'औसत सत्र';
+
+  @override
+  String get mostActive => 'सबसे सक्रिय';
+
+  @override
+  String get peakUsage => 'अधिकतम उपयोग';
+
+  @override
+  String get dailyAverage => 'दैनिक औसत';
+
+  @override
+  String get daysUsedInARow => 'लगातार उपयोग के दिन';
+
+  @override
+  String get daysSingular => 'दिन';
+
+  @override
+  String get daysPlural => 'दिन';
+
+  @override
+  String get daysOverLimitInARow => 'लगातार सीमा से अधिक दिन';
+
+  @override
+  String get withinLimitAllWeek => 'पूरे सप्ताह सीमा के भीतर';
+
+  @override
+  String get productivityScoreGreat => 'बढ़िया';
+
+  @override
+  String get productivityScoreModerate => 'मध्यम';
+
+  @override
+  String get productivityScoreNeedsAttention => 'ध्यान देने की आवश्यकता';
+
+  @override
+  String get productiveAppMotivation => 'उत्पादक ऐप — ऐसे ही जारी रखें';
+
+  @override
+  String get nonProductiveAppSuggestion => 'अनुत्पादक — कम करने पर विचार करें';
+
+  @override
+  String get legendUsage => 'उपयोग';
+
+  @override
+  String get legendAverage => 'औसत';
+
+  @override
+  String get legendLimit => 'सीमा';
+
+  @override
+  String get chartPeak => 'शीर्ष';
+
+  @override
+  String overLimitBy(String duration) {
+    return '+$duration सीमा से अधिक';
+  }
+
+  @override
+  String get noData => 'कोई डेटा नहीं';
+
+  @override
+  String get yesterday => 'कल';
 }

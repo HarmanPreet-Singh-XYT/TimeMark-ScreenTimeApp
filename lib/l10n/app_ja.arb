@@ -1916,5 +1916,56 @@
   "notTracking": "未追跡",
   "allVisibility": "すべて",
   "visible": "表示",
-  "hidden": "非表示"
+  "hidden": "非表示",
+  "todaysLimitUsage": "今日の制限使用状況",
+"thisWeekAtAGlance": "今週の概要",
+"hourlyActivityHeatmap": "時間別アクティビティヒートマップ",
+"sessions": "セッション",
+"thisWeek": "今週",
+"productivityScore": "生産性スコア",
+"streaks": "連続記録",
+"weekOverWeek": "前週比",
+"sameAsLastWeek": "先週と同じ",
+"moreUsageThanLastWeek": "先週より{percent}%多い",
+"@moreUsageThanLastWeek": {
+  "placeholders": { "percent": { "type": "String" } }
+},
+"lessUsageThanLastWeek": "先週より{percent}%少ない",
+"@lessUsageThanLastWeek": {
+  "placeholders": { "percent": { "type": "String" } }
+},
+"limitExceededBy": "制限を{duration}超過",
+"@limitExceededBy": {
+  "placeholders": { "duration": { "type": "String" } }
+},
+"timeRemaining": "残り{duration}",
+"@timeRemaining": {
+  "placeholders": { "duration": { "type": "String" } }
+},
+"totalSessions": "合計セッション数",
+"avgSession": "平均セッション",
+"longestSession": "最長セッション",
+"mostActive": "最もアクティブ",
+"peakUsage": "ピーク使用量",
+"dailyAverage": "日次平均",
+"daysUsedInARow": "連続使用日数",
+"daysSingular": "日",
+"daysPlural": "日",
+"daysOverLimitInARow": "連続制限超過日数",
+"withinLimitAllWeek": "今週はすべて制限内",
+"productivityScoreGreat": "素晴らしい",
+"productivityScoreModerate": "普通",
+"productivityScoreNeedsAttention": "注意が必要",
+"productiveAppMotivation": "生産的なアプリ — この調子で",
+"nonProductiveAppSuggestion": "非生産的 — 使用を減らすことを検討",
+"legendUsage": "使用量",
+"legendAverage": "平均",
+"legendLimit": "制限",
+"chartPeak": "ピーク",
+"overLimitBy": "+{duration} 制限超過",
+"@overLimitBy": {
+  "placeholders": { "duration": { "type": "String" } }
+},
+"noData": "データなし",
+"yesterday": "昨日"
 }

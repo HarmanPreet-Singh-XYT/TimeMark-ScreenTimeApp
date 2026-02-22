@@ -2854,4 +2854,113 @@ class AppLocalizationsJa extends AppLocalizations {
 
   @override
   String get hidden => '非表示';
+
+  @override
+  String get todaysLimitUsage => '今日の制限使用状況';
+
+  @override
+  String get thisWeekAtAGlance => '今週の概要';
+
+  @override
+  String get hourlyActivityHeatmap => '時間別アクティビティヒートマップ';
+
+  @override
+  String get productivityScore => '生産性スコア';
+
+  @override
+  String get streaks => '連続記録';
+
+  @override
+  String get weekOverWeek => '前週比';
+
+  @override
+  String get sameAsLastWeek => '先週と同じ';
+
+  @override
+  String moreUsageThanLastWeek(String percent) {
+    return '先週より$percent%多い';
+  }
+
+  @override
+  String lessUsageThanLastWeek(String percent) {
+    return '先週より$percent%少ない';
+  }
+
+  @override
+  String limitExceededBy(String duration) {
+    return '制限を$duration超過';
+  }
+
+  @override
+  String timeRemaining(String duration) {
+    return '残り$duration';
+  }
+
+  @override
+  String get totalSessions => '合計セッション数';
+
+  @override
+  String get avgSession => '平均セッション';
+
+  @override
+  String get mostActive => '最もアクティブ';
+
+  @override
+  String get peakUsage => 'ピーク使用量';
+
+  @override
+  String get dailyAverage => '日次平均';
+
+  @override
+  String get daysUsedInARow => '連続使用日数';
+
+  @override
+  String get daysSingular => '日';
+
+  @override
+  String get daysPlural => '日';
+
+  @override
+  String get daysOverLimitInARow => '連続制限超過日数';
+
+  @override
+  String get withinLimitAllWeek => '今週はすべて制限内';
+
+  @override
+  String get productivityScoreGreat => '素晴らしい';
+
+  @override
+  String get productivityScoreModerate => '普通';
+
+  @override
+  String get productivityScoreNeedsAttention => '注意が必要';
+
+  @override
+  String get productiveAppMotivation => '生産的なアプリ — この調子で';
+
+  @override
+  String get nonProductiveAppSuggestion => '非生産的 — 使用を減らすことを検討';
+
+  @override
+  String get legendUsage => '使用量';
+
+  @override
+  String get legendAverage => '平均';
+
+  @override
+  String get legendLimit => '制限';
+
+  @override
+  String get chartPeak => 'ピーク';
+
+  @override
+  String overLimitBy(String duration) {
+    return '+$duration 制限超過';
+  }
+
+  @override
+  String get noData => 'データなし';
+
+  @override
+  String get yesterday => '昨日';
 }

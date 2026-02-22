@@ -1913,5 +1913,56 @@
   "notTracking": "Не отслеживаемые",
   "allVisibility": "Все",
   "visible": "Видимые",
-  "hidden": "Скрытые"
+  "hidden": "Скрытые",
+  "todaysLimitUsage": "Использование лимита за сегодня",
+"thisWeekAtAGlance": "Обзор этой недели",
+"hourlyActivityHeatmap": "Тепловая карта активности по часам",
+"sessions": "Сессии",
+"thisWeek": "Эта неделя",
+"productivityScore": "Оценка продуктивности",
+"streaks": "Серии",
+"weekOverWeek": "По сравнению с прошлой неделей",
+"sameAsLastWeek": "Как на прошлой неделе",
+"moreUsageThanLastWeek": "На {percent}% больше, чем на прошлой неделе",
+"@moreUsageThanLastWeek": {
+  "placeholders": { "percent": { "type": "String" } }
+},
+"lessUsageThanLastWeek": "На {percent}% меньше, чем на прошлой неделе",
+"@lessUsageThanLastWeek": {
+  "placeholders": { "percent": { "type": "String" } }
+},
+"limitExceededBy": "Лимит превышен на {duration}",
+"@limitExceededBy": {
+  "placeholders": { "duration": { "type": "String" } }
+},
+"timeRemaining": "Осталось {duration}",
+"@timeRemaining": {
+  "placeholders": { "duration": { "type": "String" } }
+},
+"totalSessions": "Всего сессий",
+"avgSession": "Средняя сессия",
+"longestSession": "Самая длинная сессия",
+"mostActive": "Наиболее активный",
+"peakUsage": "Пиковое использование",
+"dailyAverage": "Среднее за день",
+"daysUsedInARow": "Дней использования подряд",
+"daysSingular": "день",
+"daysPlural": "дней",
+"daysOverLimitInARow": "Дней подряд с превышением лимита",
+"withinLimitAllWeek": "В пределах лимита всю неделю",
+"productivityScoreGreat": "Отлично",
+"productivityScoreModerate": "Умеренно",
+"productivityScoreNeedsAttention": "Требует внимания",
+"productiveAppMotivation": "Продуктивное приложение — так держать",
+"nonProductiveAppSuggestion": "Непродуктивное — рассмотрите сокращение",
+"legendUsage": "Использование",
+"legendAverage": "Среднее",
+"legendLimit": "Лимит",
+"chartPeak": "Пик",
+"overLimitBy": "+{duration} сверх лимита",
+"@overLimitBy": {
+  "placeholders": { "duration": { "type": "String" } }
+},
+"noData": "Нет данных",
+"yesterday": "Вчера"
 }

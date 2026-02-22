@@ -1917,5 +1917,56 @@
   "notTracking": "ट्रैक नहीं किए गए",
   "allVisibility": "सभी",
   "visible": "दृश्यमान",
-  "hidden": "छिपे हुए"
+  "hidden": "छिपे हुए",
+  "todaysLimitUsage": "आज की सीमा उपयोग",
+"thisWeekAtAGlance": "इस सप्ताह की एक झलक",
+"hourlyActivityHeatmap": "प्रति घंटा गतिविधि हीटमैप",
+"sessions": "सत्र",
+"thisWeek": "इस सप्ताह",
+"productivityScore": "उत्पादकता स्कोर",
+"streaks": "लगातार दिन",
+"weekOverWeek": "सप्ताह दर सप्ताह",
+"sameAsLastWeek": "पिछले सप्ताह जैसा ही",
+"moreUsageThanLastWeek": "पिछले सप्ताह से {percent}% अधिक",
+"@moreUsageThanLastWeek": {
+  "placeholders": { "percent": { "type": "String" } }
+},
+"lessUsageThanLastWeek": "पिछले सप्ताह से {percent}% कम",
+"@lessUsageThanLastWeek": {
+  "placeholders": { "percent": { "type": "String" } }
+},
+"limitExceededBy": "सीमा {duration} से अधिक",
+"@limitExceededBy": {
+  "placeholders": { "duration": { "type": "String" } }
+},
+"timeRemaining": "{duration} शेष",
+"@timeRemaining": {
+  "placeholders": { "duration": { "type": "String" } }
+},
+"totalSessions": "कुल सत्र",
+"avgSession": "औसत सत्र",
+"longestSession": "सबसे लंबा सत्र",
+"mostActive": "सबसे सक्रिय",
+"peakUsage": "अधिकतम उपयोग",
+"dailyAverage": "दैनिक औसत",
+"daysUsedInARow": "लगातार उपयोग के दिन",
+"daysSingular": "दिन",
+"daysPlural": "दिन",
+"daysOverLimitInARow": "लगातार सीमा से अधिक दिन",
+"withinLimitAllWeek": "पूरे सप्ताह सीमा के भीतर",
+"productivityScoreGreat": "बढ़िया",
+"productivityScoreModerate": "मध्यम",
+"productivityScoreNeedsAttention": "ध्यान देने की आवश्यकता",
+"productiveAppMotivation": "उत्पादक ऐप — ऐसे ही जारी रखें",
+"nonProductiveAppSuggestion": "अनुत्पादक — कम करने पर विचार करें",
+"legendUsage": "उपयोग",
+"legendAverage": "औसत",
+"legendLimit": "सीमा",
+"chartPeak": "शीर्ष",
+"overLimitBy": "+{duration} सीमा से अधिक",
+"@overLimitBy": {
+  "placeholders": { "duration": { "type": "String" } }
+},
+"noData": "कोई डेटा नहीं",
+"yesterday": "कल"
 }

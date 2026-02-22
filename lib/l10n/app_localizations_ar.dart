@@ -2901,4 +2901,113 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get hidden => 'مخفية';
+
+  @override
+  String get todaysLimitUsage => 'استخدام الحد اليومي';
+
+  @override
+  String get thisWeekAtAGlance => 'نظرة على هذا الأسبوع';
+
+  @override
+  String get hourlyActivityHeatmap => 'خريطة النشاط بالساعة';
+
+  @override
+  String get productivityScore => 'درجة الإنتاجية';
+
+  @override
+  String get streaks => 'الأيام المتتالية';
+
+  @override
+  String get weekOverWeek => 'مقارنة أسبوعية';
+
+  @override
+  String get sameAsLastWeek => 'مثل الأسبوع الماضي';
+
+  @override
+  String moreUsageThanLastWeek(String percent) {
+    return 'أكثر بنسبة $percent% من الأسبوع الماضي';
+  }
+
+  @override
+  String lessUsageThanLastWeek(String percent) {
+    return 'أقل بنسبة $percent% من الأسبوع الماضي';
+  }
+
+  @override
+  String limitExceededBy(String duration) {
+    return 'تم تجاوز الحد بمقدار $duration';
+  }
+
+  @override
+  String timeRemaining(String duration) {
+    return 'متبقي $duration';
+  }
+
+  @override
+  String get totalSessions => 'إجمالي الجلسات';
+
+  @override
+  String get avgSession => 'متوسط الجلسة';
+
+  @override
+  String get mostActive => 'الأكثر نشاطًا';
+
+  @override
+  String get peakUsage => 'ذروة الاستخدام';
+
+  @override
+  String get dailyAverage => 'المتوسط اليومي';
+
+  @override
+  String get daysUsedInARow => 'أيام استخدام متتالية';
+
+  @override
+  String get daysSingular => 'يوم';
+
+  @override
+  String get daysPlural => 'أيام';
+
+  @override
+  String get daysOverLimitInARow => 'أيام متتالية فوق الحد';
+
+  @override
+  String get withinLimitAllWeek => 'ضمن الحد طوال الأسبوع';
+
+  @override
+  String get productivityScoreGreat => 'ممتاز';
+
+  @override
+  String get productivityScoreModerate => 'متوسط';
+
+  @override
+  String get productivityScoreNeedsAttention => 'يحتاج انتباه';
+
+  @override
+  String get productiveAppMotivation => 'تطبيق منتج — استمر';
+
+  @override
+  String get nonProductiveAppSuggestion => 'غير منتج — فكّر في تقليل الاستخدام';
+
+  @override
+  String get legendUsage => 'الاستخدام';
+
+  @override
+  String get legendAverage => 'المتوسط';
+
+  @override
+  String get legendLimit => 'الحد';
+
+  @override
+  String get chartPeak => 'الذروة';
+
+  @override
+  String overLimitBy(String duration) {
+    return '+$duration فوق الحد';
+  }
+
+  @override
+  String get noData => 'لا توجد بيانات';
+
+  @override
+  String get yesterday => 'أمس';
 }
